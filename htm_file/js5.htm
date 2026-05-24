@@ -1,0 +1,1070 @@
+﻿<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="keywords" content="java script,html">
+<meta name="author" content="yamaV1.02β">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta name="robots" content="noindex">
+<meta name="description" content="//////////">
+<meta name="reply-to" content="">
+<link rel="shortcutIcon" href="favicon.ico">
+<link rel="start" href="index.htm">
+<link rel="stylesheet" type="text/css" href="leftside1.css">
+
+<title>JavaScript 本格入門　メモ5</title>
+
+  <!-- http://www.mwsoft.jp/programming/javascript/highlight_js.html?style=vs#styles -->
+  <!--http://softwaremaniacs.org/soft/highlight/en/download/-->
+  <!-- stylesの中から好みにあったCSSを選んで、 -->
+  <!-- 1, CSS、JavaScriptファイルを呼び出す -->
+  <!--<link rel="stylesheet" href="../highlight.js/styles/vs.css">-->
+  <!--<script type="text/javascript" src="../highlight.js/highlight.pack.js"></script>-->
+  <!-- 2, onLoad時にinitしてくれる機能を呼び出す -->
+  <!--<script type="text/javascript">hljs.initHighlightingOnLoad();</script>-->
+</head>
+
+<h1>
+JavaScript 本格入門　メモ5
+</h1>
+<h4>
+<a name="SEC2">その振舞いオブジェクト如し -クロージャ-</a>
+</h4>
+<p>
+クロージャとは「ローカル変数を参照している関数内関数」の事。
+</p>
+<pre>
+<code>
+   function closure(init) {
+       var counter = init;
+       
+       return function () {
+          return ++counter;
+       }
+   }
+   var myClosure = closure(1);
+   document.writeln(myClosure() + '&lt;br&gt;'); 
+   // 2
+
+   document.writeln(myClosure() + '&lt;br&gt;'); 
+   // 3
+
+   document.writeln(myClosure() + '&lt;br&gt;'); 
+   // 4
+
+   document.writeln(myClosure() + '&lt;br&gt;'); 
+   // 5
+</code>
+</pre>
+<p>
+引数が戻り値が関数である関数の事を「高階関数」と言うのでした。
+Closure は高階関数です。
+通常、関数内で使われたローカル変数（ここでは変数 counter）は、関数の処理が終了した
+時点で破棄される筈です。しかし、<strong>closure 関数から返された匿名関数 myClosure が
+ローカル変数 counter を参照し続けている </strong> ので、closure 関数の終了後も、
+ローカル変数 counter は保持され続けます。
+</p>
+<p>
+まずは、最初の　closure 関数よびだしで、変数 mClosure に匿名関数がセットされます。
+ここで匿名関数 myClosure は、ローカル変数 counter を維持しつつも、（closure 関数自体は
+終了していますので）もともとの Closure 関数とは独立して動作できるようになります。
+</p>
+<p>
+ここまでの説明なんかまどろっこしい。
+「オブジェクトの如し」などと言わずに、closure をクラスと見立てれば
+別に普通のオブジェクトの動作と言える。
+</p>
+<pre>
+<code>
+   function closure(init) {
+       var counter = init;
+       
+       return function () {
+          return ++counter;
+       }
+   }
+   var myClosure = closure(1);
+   var myClosure2 = closure(1);
+
+   document.writeln(myClosure() + '&lt;br&gt;'); 
+   // 2
+
+   document.writeln(myClosure2() + '&lt;br&gt;'); 
+   // 2
+
+   document.writeln(myClosure() + '&lt;br&gt;'); 
+   // 3
+
+   document.writeln(myClosure2() + '&lt;br&gt;'); 
+   // 3
+
+   document.writeln(myClosure() + '&lt;br&gt;'); 
+   // 4
+
+   document.writeln(myClosure2() + '&lt;br&gt;'); 
+   // 4
+
+   document.writeln(myClosure() + '&lt;br&gt;'); 
+   // 5
+
+   document.writeln(myClosure2() + '&lt;br&gt;'); 
+   // 5
+</code>
+</pre>
+<p>
+closure 関数が呼び出されたタイミングで、
+</p>
+<ul>
+<li>
+匿名関数を表す Call オブジェクト
+</li>
+<li>
+closure 関数の Call オブジェクト
+</li>
+<li>
+グローバルオブジェクト
+</li>
+</ul>
+<p>
+というスコープチェーンが形成されます。Call オブジェクトは関数呼び出しの都度に
+生成されるので、それぞれのスコープチェーンは独立したもの　－　そして、その中で
+管理されるローカル変数 counter もまた「別物」なのです。
+</p>
+<h4>
+<a name="SEC3">クロージャは「シンプルなオブジェクト」</a>
+</h4>
+<table border="1">
+<caption>
+クロージャとオブジェクトの比較
+</caption>
+<tr>
+<th>
+クロージャ
+</th>
+<th>
+オブジェクト
+</th>
+</tr>
+<tr>
+<td>クロージャを括っている親関数</td>
+<td>コンストラクタ</td>
+</tr>
+<tr>
+<td>クロージャから参照されるローカル変数</td>
+<td>プロパティ</td>
+</tr>
+<tr>
+<td>クロージャ自身</td>
+<td>メソッド</td>
+</tr>
+<tr>
+<td>関数の呼び出し</td>
+<td>インスタンス化</td>
+</tr>
+<tr>
+<td>クロージャをを格納する変数</td>
+<td>インスタンス</td>
+</tr>
+</table>
+<p>
+クロージャとオブジェクトは等価ではありません。
+まず、クロージャは、その構造上、ひとつのスクープに対して、持てる処理はひとつだけです。
+上記のサンプルコードであれば、counter をインクリメントする事は出来ても、
+同じローカル変数 counter をデクリメントする仕組みを追加する事が出来ません。
+（厳密には、クロージャの動作を引数で切り替えるようにすれば可能ですが、それは本質的な
+解決ではありません）。
+</p>
+<ul>
+<li>
+変数（群）に伴う処理を一つしか必要としない ⇒　クロージャ
+</li>
+<li>
+複数の処理を必要とするケース　⇒　オブジェクト
+</li>
+</ul>
+<p>
+という使い分けが出来ます。クロージャは処理をひとつしか持たないオブジェクトなのです。
+</p>
+<h4>
+<a name="SEC4">ブックマークレットの話題</a>
+</h4>
+<p><a href="http://suh45.blog9.fc2.com/blog-entry-576.html" target="_blank">
+ブックマークレットとは？
+</a></p>
+<p><a href="https://www.google.co.jp/search?q=%E3%83%96%E3%83%83%E3%82%AF%E3%83%9E%E3%83%BC%E3%82%AF%E3%83%AC%E3%83%83%E3%83%88%E5%85%A5%E9%96%80&ie=utf-8&oe=utf-8&aq=t&rls=org.mozilla:ja:official&hl=ja&client=firefox-a" target="_blank">
+ブックマークレット入門
+</a></p>
+<h2><a name="SEC5">Chapter5　大規模開発でも通用する書き方を身につける～オブジェクト指向構文</a></h2>
+<h3><a name="SEC6">Chapter5-1 JavaScriptにおけるオブジェクト指向の特徴</a></h3>
+<h4>
+<a name="SEC7">「クラス」はなく「プロトタイプ」</a>
+</h4>
+<p>
+JavaScriptは歴（れっき）としたオブジェクト指向言語です。しかし、いわゆるクラスがなく、
+「プロトタイプ」という概念だけが存在します。このため JavaScript のオブジェクト指向は
+<dfn>プロトタイプベースのオブジェクト指向</dfn> と呼ばれる事があります。
+</p>
+<h4>
+<a name="SEC8">もっともシンプルなクラスを定義する</a>
+</h4>
+<p>
+次が中身を持たない（もっともシンプルな）「クラス」です。
+</p>
+<pre>
+<code>
+   var Member = function(){};
+</code>
+</pre>
+<p>
+ただの中身のない関数リテラルを変数に代入したもの。これが JavaScript のクラスなのです。
+実際、この Memberクラスは、new演算子でインスタンス化できます。
+</p>
+<pre>
+<code>
+   var Member = function () { };
+   var mem = new Member();
+   document.writeln(mem.toString());
+   // [object Object] 
+</code>
+</pre>
+<p>
+JavaScript では関数（Function オブジェクト）にクラスとしての役割を与えています。
+</p>
+<h4>
+<a name="SEC9">コンストラクタで初期化する</a>
+</h4>
+<p>
+new 演算子によってオブジェクトを生成する事を想定した関数オブジェクトのことを
+<dfn> コンストラクタ </dfn>と言います。上のサンプルでは Member関数がクラスそのものであり
+コンストラクタです。
+</p>
+<p>
+コンストラクタの名前は、普通の（コンストラクタではない）関数と区別するために、
+大文字で始めるのが一般的です。
+</p>
+<h4>
+<a name="SEC10">プロパティとメソッド</a>
+</h4>
+<p>
+作成したコンストラクタに初期化処理を記述してみます。
+</p>
+<pre>
+<code>
+   var Member = function (firstName, lastName) {
+       this.firstName = firstName;
+       this.lastName = lastName;
+       this.getName = function () {
+          return this.lastName + ' ' + this.firstName;
+       };
+   };
+   var mem = new Member('祥寛', '山田');
+   document.writeln(mem.getName()); 
+   // 山田 祥寛
+</code>
+</pre>
+<p>
+this キーワードは、コンストラクタによって生成されるインスタンス（つまり、自分自身）
+を表すものです。this キーワードに対して変数を指定する事で、インスタンスのプロパティを
+設定できます。
+</p>
+<p>
+また、プロパティには文字列や整数、日付けなどだけではなく、関数オブジェクト（関数リテラル）を
+指定できる点にも注目して下さい。JavaScript においては、厳密にはメソッドという独立した
+概念はなく、<strong> 値が関数オブジェクトであるプロパティがメソッドと看做される </strong>のです。
+ここでは、 getname プロパティに匿名関数を引き渡していますので、いわゆる「getName メソッド」
+を宣言した事になる訳です。
+</p>
+<p>
+コンストラクタ関数は戻り値を返してはいけません。
+</p>
+<h4>
+<a name="SEC11">動的にメソッドを追加する</a>
+</h4>
+<p>
+生成したオブジェクトに、後からメソッドを追加する事も出来ます。
+</p>
+<pre>
+<code>
+   var Member = function (firstName, lastName) {
+       this.firstName = firstName;
+       this.lastName = lastName;
+   };
+   var mem = new Member('祥寛', '山田');
+
+   mem.getName = function () {
+       return this.lastName + ' ' + this.firstName;
+   }
+
+   document.writeln(mem.getName()); 
+   // 山田 祥寛
+</code>
+</pre>
+<p>
+新たにインスタンスを生成して getName メソッドを呼び出すとどうなるのか？
+</p>
+<pre>
+<code>
+   var Member = function (firstName, lastName) {
+       this.firstName = firstName;
+       this.lastName = lastName;
+   };
+   var mem = new Member('祥寛', '山田');
+
+   mem.getName = function () {
+       return this.lastName + ' ' + this.firstName;
+   }
+
+   document.writeln(mem.getName()+'&lt;br&gt;'); 
+   // 山田 祥寛 
+
+   var mem2 = new Member('たろう', 'ほげほげ');
+   
+   /*
+   実行されない。ブラウザによっては
+   「サポートされていません」っぽいエラーメッセージが出る？
+   */
+   document.writeln(mem2.getName());
+</code>
+</pre>
+<p>
+mem2 オブジェクトは getName メソッドは実装されていません。
+要するに、クラスにではなくインスタンスに対してプロパティやメソッドが追加される
+という事です。JavaScript の世界では、
+<strong> 
+同一のクラスをもとに生成されたインスタンスであっても、それぞれが持つメンバは同一であるとは限らない </strong>
+という事です。
+</p>
+<p>
+サンプルでは新たにメンバを追加しているだけですが、 delete 演算子 でインスタンスから既存の
+メンバを削除する事もできます。
+</p>
+<pre>
+<code>
+   delete mem.getName;
+</code>
+</pre>
+<p>
+プロトタイプは「より縛りの弱いクラスのようなもの」。
+</p>
+<h3><a name="SEC12">Chapter5-2 コンストラクタの問題点とプロトタイプ</a></h3>
+<p>
+クラスのインスタンスに実装されるメソッドというのは、
+インスタンスを沢山生成する分コピーされてしまい、実行される処理は同じなのだから
+一つ用意されていれば済むメソッドの為に、多くのメモリが無駄に消費されてしまいます。
+</p>
+<p>
+多くの言語で、この辺の事はメモリが無駄に消費されないように、コピーされるのは
+メンバ変数の分のメモリ領域だけ、という仕様になっているものですが、
+JavaScript では自ら「全てのインスタンスから参照される処理」として明示する必要があります。
+その仕組みを実現するのが prototypeプロパティです。
+</p>
+<p>
+prototype プロパティはObjectオブジェクトのプロパティのようです。
+MSDNには次のように解説されています。
+</p>
+<blockquote>
+組み込み JavaScript オブジェクトはすべて、値の取得のみ可能な prototype プロパティを持っています。 プロパティとメソッドはプロトタイプに追加できますが、オブジェクトを別のプロトタイプに割り当てることはできません。 ただし、ユーザー定義オブジェクトは、新しいプロトタイプに割り当てることができます。
+
+この言語リファレンスには、組み込みオブジェクトごとにメソッドとプロパティの一覧があり、オブジェクトのプロトタイプに含まれているメソッドとプロパティを調べることができます。
+</blockquote>
+<p>
+Member オブジェクトに含まれる getName メソッドをプロトタイプとして定義します。
+</p>
+<pre>
+<code>
+   var Member = function (firstName, lastName) {
+       this.firstName = firstName;
+       this.lastName = lastName;
+   };
+   var mem = new Member('祥寛', '山田');
+
+   Member.prototype.getName = function () {
+       return this.lastName + ' ' + this.firstName;
+   }
+
+   document.writeln(mem.getName()+'&lt;br&gt;'); 
+   // 山田 祥寛 
+
+   var mem2 = new Member('たろう', 'ほげほげ');
+   
+   document.writeln(mem2.getName()); 
+   // ほげほげ たろう
+</code>
+</pre>
+<p>
+JavaScript のクラスってこんなんです。クラスという抽象的な設計図が存在しない。
+JavaScript のクラスにあるのは、あくまで実体化されたオブジェクトだけ。
+新しいオブジェクトを生成するにも（クラスではなく）オブジェクトが元になっているのです。
+そして、新しいオブジェクトを作る為の原型（雛型）を表すのが、それぞれのオブジェクトに属する
+「プロトタイプ」という特別なオブジェクトであるわけです。
+</p>
+<p>
+上記のサンプルコードは、Memberオブジェクトを生成してから getName を定義しています。
+getName を定義してから、Memberオブジェクトを生成してもどちらでも正しいコードです。
+プロトタイプへの変更は随時行う事ができ、リアルタイムに反映されます。
+</p>
+<h4>
+<a name="SEC13">プロトタイプオブジェクトでプロパティを設定した場合の挙動</a>
+</h4>
+<p>
+インスタンス単位で個別に保有するプロパティをプロトタイプオブジェクトで宣言する
+意味はありません（読みとり専用のプロパティは別です）。通常は以下のように使い分けます。
+</p>
+<ul>
+<li>プロパティの宣言　⇒　コンストラクタで</li>
+<li>メソッドの宣言　⇒　プロトタイプで</li>
+</ul>
+<p>
+あえてプロパティをプロトタイプオブジェクトで宣言すると、次のような挙動になります。
+</p>
+<pre>
+<code>
+   var Member = function () {};
+   Member.prototype.sex = '男';
+
+   var mem1 = new Member();
+   var mem2 = new Member();
+   
+   document.writeln(mem1.sex + '|' + mem2.sex + '&lt;br&gt;'); 
+   // 男|男 --①
+
+   mem2.sex = '女';   
+   document.writeln(mem1.sex + '|' + mem2.sex + '&lt;br&gt;'); 
+   // 男|女 --②
+</code>
+</pre>
+<p>
+①ではsexプロパティをmem1・2とも持っていないので、プロトタイプオブジェクトの持つ
+sex プロパティを「暗黙的に参照」します。ところが、②では、mem2のプロパティ
+が置き換えら「インスタンスmem2自身が sex プロパティを持っている」ので、インスタンスmem2は
+プロトタイプを参照する必要が無くなります。
+結果、インスタンスmem2に設定されている sex プロパティが参照されます。
+これを、「インスタンスの sex プロパティがプロトタイプの sex プロパティを <dfn>隠蔽</dfn> する」と言います。
+</p>
+<h5>
+<a name="SEC14">静的プロパティ／静的メソッドを定義する</a>
+</h5>
+<p>
+静的プロパティ／静的メソッドとは、インスタンスを生成ｓｈなくてもオブジェクトから
+直接呼び出せるプロパティ／メソッドのことです。インスタンス経由で呼び出すのが、
+インスタンスプロパティ／インスタンスメソッドと呼ぶのでした。
+</p>
+<p>
+静的プロパティ／メソッドはプロトタイプオブジェクトには登録できません。プロトタイプオブジェクトは
+あくまで「インスタンス」から暗黙的に参照される事を目的としたオブジェクトです。
+静的プロパティ／静的メソッドは、以下のようにコンストラクタ（オブジェクト）に
+直接追加します。
+</p>
+<pre>
+<code>
+   var Area = function () {};
+   // コンストラクタ
+
+   Area.version = '1.0'; 
+   // 静的プロパティの定義
+
+   // 静的メソッド triangle の定義
+   Area.triangle = function (base, height) {
+       return base * height / 2;
+   }
+
+   // 静的メソッド diamond の定義
+   Area.diamond = function (width, height) {
+       return width * height / 2;
+   }
+
+   document.writeln('Areaクラスのバージョン :' + Area.version + '&lt;br&gt;'); 
+   // 1.0
+
+   document.writeln('三角形の面積 :' + Area.triangle(5, 3) + '&lt;br&gt;'); 
+   // 7.5   
+
+   document.writeln('菱形の面積 :' + Area.diamond(10, 2) + '&lt;br&gt;'); 
+   // 10
+   
+   var a = new Area();
+   document.writeln('菱形の面積 :' + a.diamond(10, 2) + '&lt;br&gt;'); 
+   // 実行されない（ エラー）
+</code>
+</pre>
+<h5>
+<a name="SEC15">静的プロパティ／静的メソッドを定義する時の２つの注意点</a>
+</h5>
+<p>
+（１）制定プロパティは、インスタンスプロパティとは異なり、「クラス単位で保有される情報」です。
+つまり、その内容を変更した場合、スクリプト内の全てに変更が反映されてしまう事になります。
+原則として、<strong>静的プロパティで定義する値は、読みとり専用の用途に限定すべきです</strong>
+（静的プロパティを編集する静的メソッドは作るな、という事）。
+</p>
+<p>
+（２）<strong>静的メソッドの中では、this キーワードは使えない、というか使っても意味がない。</strong>
+インスタンスメソッドの中での this キーワードは、インスタンス自身を表します。
+一方、静的メソッドの中での this キーワードはコンストラクタ（関数オブジェクト）を表します。
+インスタンスが内のですから当然ですが、静的メソッドからインスタンスプロパティの値にアクセスする事
+は出来ません。正確には、「静的メソッドの中では、thisキーワードを使っても意味がない」がより
+正しいのですが、インスタンスメソッドと同様の意味での「thisキーワードは使えない」と覚えておくのが
+シンプルです。
+</p>
+<h5>
+<a name="SEC16">なぜ静的メンバを定義するのか</a>
+</h5>
+<p>
+静的メンバは、機能的にはグローバル変数／関数と何ら変わりありません。
+「それならば、別に静的プロパティ／静的メソッドなど使わず、素直にグローバル変数／関数を
+使えばよいのではないか」とおもわれるかもしれませんね。
+</p>
+<p>
+しかし、これは不可です。
+というのも、グローバル変数／関数は、名前が競合する原因となるからです。
+</p>
+<p>
+たとえば１００個のグローバル変数／関数を含んだライブラリを考えてみましょう。
+アプリケーションからこのライブラリを使おうとした場合、ここで定義された
+１００個の名前はいわゆる予約後になりますから、アプリケーションでは利用する事が出来ません。
+もし間違って上書きしてしまった場合に、は、元の機能や情報は失われてしまいます。
+グローバル変数／関数は多くなればなるほど、アプリケーション側では
+名前の場っていんぐを意識してコードを書かなければならなくなってしまうのです。
+</p>
+<p>
+これは当然このましい状態ではありませんので、グローバル変数／缶すうはできるだけ少なくなるように
+するべきです。静的メンバを利用すれば、変数／関数はクラスの配下に属する事になりますので、こうした
+競合の可能性を減らすことが出来ます。
+</p>
+<p>
+グローバル変数／関数はできるだけ減らすこと、そのためには関連する既往や情報は静的メンバに
+まとめること－－－－－－－心かげましょう。
+</p>
+<h4>
+<a name="SEC17">プロトタイプオブジェクトでプロパティを削除した場合の挙動</a>
+</h4>
+<p>
+プロトタイプオブジェクトでプロパティを削除する場合にも、インスタンス単位で行われます。
+</p>
+<pre>
+<code>
+   var Member = function() {};
+   // コンストラクタ
+   
+   Member.prototype.sex = '男';
+   
+   var mem1 = new Member();
+   var mem2 = new Member();
+   
+   document.writeln(mem1.sex + '|' + mem2.sex + '&lt;br&gt;'); 
+   // 男|男
+   
+   mem2.sex = '女';
+   document.writeln(mem1.sex + '|' + mem2.sex + '&lt;br&gt;');  
+   // 男|女
+   
+   delete mem1.sex;
+   // ----①
+
+   delete mem2.sex;
+   // ----②
+   
+   document.writeln(mem1.sex + '|' + mem2.sex + '&lt;br&gt;'); 
+   // 男|男----③
+</code>
+</pre>
+<p>
+①でdelete演算子は「インスタンスmem1の」sex プロパティを削除しようとしますが、
+インスタンスmem1 は sex プロパティを持ちませんので、delete演算子はなにも行いません
+（プロトタイプまで遡って削除することはありません）。結果③でインスタンスmem1 は、
+暗黙の参照をたどってプロトタイプオブジェクトの sex プロパティを返します。
+つまり、結果は「男」になります。
+</p>
+<p>
+一方、②では、インスタンス mem2 が自分自身で sex プロパティを持ちますので、delete演算子は
+これを削除します。結果、③でインスタンス mem2 も暗黙参照をたどって、プロトタイプオブジェクト
+の sex プロパティ「男」を返すことになります。
+</p>
+<p>
+繰り返しになりますが、<strong>
+インスタンス側でのメンバの追加や削除といった操作が、プロトタイプオブジェクトにまで影響を及ぼすことは
+ありません。
+</strong>
+</p>
+<h4>
+<a name="SEC18">インスタンス単位でプロトタイプのメンバを削除する</a>
+</h4>
+<p>
+次のように記述することで、プロトタイプオブジェクトのメンバを削除する事ができます。
+</p>
+<pre>
+<code>
+   delete Member.prototype.sex;
+   document.writeln(mem1.sex + '|' + mem2.sex); 
+   // undefined|undefined
+</code>
+</pre>
+<p>
+この書き方は、プロトタイプを参照しているすべてのインスタンスに影響を及ぼします。
+プロトタイプで定義されたメンバを「インスタンス単位で」削除したい場合、
+ややトリッキーですが、定数 undefined を用いる方法があります。
+</p>
+<pre>
+<code>
+   var Member = function() {};
+   // コンストラクタ
+   
+   Member.prototype.sex = '男';
+   
+   var mem1 = new Member();
+   var mem2 = new Member();
+   
+   document.writeln(mem1.sex + '|' + mem2.sex + '&lt;br&gt;'); 
+   // 男|男   
+
+   mem2.sex = undefined;
+   document.writeln(mem1.sex + '|' + mem2.sex); 
+   // 男|undefined
+</code>
+</pre>
+<p>
+ここでは、sexプロパティの値を定数 undefined で上書きする事で、「擬似的」に
+メンバを無効化しています。値を強制的に未定義にしているだけで、
+メンバを削除しているワケではないので、 for in ループでオブジェクト内のメンバを
+列挙した場合には、sexプロパティは依然として存在するものとして表示される事になります。
+</p>
+<pre>
+<code>
+   function Member() {};
+   
+   var mem = new Member();
+   
+   Member.prototype.sex = '男';
+   Member.prototype.hoge = undefined;
+   
+   
+   for(var prp in mem){            
+       document.writeln(prp + ' : ' + mem[prp] + '&lt;br /&gt;');
+   }
+   /*
+   sex : 男
+   hoge : undefined
+   */
+</code>
+</pre>
+<h4><a name="SEC19">オブジェクトリテラルでプロトタイプを定義する</a>
+</h4>
+<p>
+些細な事ですが、毎回「Member.prototype.～」という記述を繰り返さなければ
+ならないのは面倒ですし、オブジェクト名が変更になった場合、
+全ての定義箇所を書き換えなければならないのは嬉しくありません。
+また、個々のメンバ定義が独立したブロックで記述されている事から、
+「どこからどこまでが同じオブジェクトのメンバ定義であるのか、一見して
+見えにくい」という可読性の問題もあります。
+</p>
+<p>
+そこで登場するのが、オブジェクトリテラル表現です。
+</p>
+<pre>
+<code>
+   /*
+   ドット演算子を使った場合
+   Memberオブジェクト名に変更がはいったら全部直さなくてはならない。
+   独立した個々の文から成るため、どこまでが一つのプロトタイプの
+   定義なのか判別しにくい
+   */
+   var Member = function (firstName, lastName) {
+       this.firstName = firstName;
+       this.lastName = lastName;
+   };
+   Member.prototype.getName = function () {
+       return this.lastName + ' ' + this.firstName;
+   };
+
+   Member.prototype.toString = function () {
+       return this.lastName + this.firstName;
+   };
+
+   var mem = new Member("hogeTaro", "Fujii");
+   window.alert(mem.toString());
+</code>
+</pre>
+<pre>
+<code>
+   /*
+   リテラル表現を使った場合
+   Member.prototype という記述が一つにまとめられて
+   オブジェクト名の変更が容易。
+   定義が一つのブロックにまとまっていて、コードが読み易い。
+   */
+   var Member = function (firstName, lastName) {
+       this.firstName = firstName;
+       this.lastName = lastName;
+   };
+   
+   Member.prototype = {
+       getName: function () { return this.lastName + ' ' + this.firstName; },
+       toString: function () { return this.lastName + this.firstName }
+   };
+
+   var mem = new Member("hogeTaro", "Fujii");
+   window.alert(mem.toString());
+</code>
+</pre>
+<h3><a name="SEC20">Chapter5-3 オブジェクトの継承 - プロトタイプチェーン -</a></h3>
+<h4>
+<a name="SEC21">プロトタイプチェーンの基礎</a>
+</h4>
+<pre>
+<code>
+   var Animal = function(){};
+   Animal.prototype = {
+       Walk : function(){document.writeln('トコトコ…'+'&lt;br /&gt;');}
+   };
+
+   var Dog = function(){};
+   // コンストラクタ
+
+   // Animalクラスを継承
+   Dog.prototype = new Animal();
+
+   // メソッドを差分プログラミング
+   Dog.prototype.bark = function(){
+       document.writeln('ワンワン!' + '&lt;br /&gt;');
+   };
+
+   var d = new Dog();
+   d.Walk(); 
+   // トコトコ…
+   d.bark(); 
+   // ワンワン！
+</code>
+</pre>
+<p>
+JavaScriptではプロトタイプオブジェクトにスーパークラス（基底クラス）
+を参照させる事で<dfn> 継承 </dfn>を実現している。Objectクラスは
+全てのクラスにとってのスーパークラスなので、全てのプロトタイプオブジェクトは
+Objectオブジェクトを暗黙で参照している。
+プロトタイプチェーンは、Objectオブジェクトのプロトタイプオブジェクトまで
+、プロパティやメソッドが見つかるまで検索を遡って実行する。
+</p>
+<p>
+だから、Object.prototype に仕込まれたプロパティ・メソッドは全ての
+オブジェクトで使用可能となる。（影響が大き過ぎるので、やるべきではない、とされる。）
+</p>
+<h4>
+<a name="SEC22">継承関係は動的に変更可能</a>
+</h4>
+JavaやC++のような言語でオブジェクト指向では、継承とはあくまで静的なものである（
+いったん決定した継承関係を途中で変更することはできない）のに対し、
+JavaScriptによる継承は動的なもの。つまり、同一のオブジェクトが、あるタイミングでは、
+オブジェクトXを継承しており、次のタイミングではオブジェクトYを継承している、
+という事も可能。
+<pre>
+<code>
+   var Animal = function(){};
+   Animal.prototype = {
+       Walk : function(){document.writeln('トコトコ…'+'&lt;br /&gt;');}
+   };
+
+   var SuperAnimal = function () { };
+   SuperAnimal.prototype = {
+       walk: function () { document.writeln('ダダダダダ！' + '&lt;br /&gt;'); }
+   };
+
+   var Dog = function () { };
+
+   // DogクラスにAnimalオブジェクトを継承
+   Dog.prototype = new Animal();
+   var d1 = new Dog();
+
+   d1.Walk(); 
+   // トコトコ…
+
+   // DogクラスにSuperAnimalオブジェクトを継承
+   Dog.prototype = new SuperAnimal();
+   var d2 = new Dog();
+
+   d2.walk(); 
+   // ダダダダダ！
+
+   d1.Walk(); 
+   // ？？？？？ ---------①
+</code>
+</pre>
+<p>
+Dogオブジェクトのプロトタイプは Animal オブジェクトです。しかし、
+①の時点では、既に SuperAnimal オブジェクトに差し変わっています。
+</p>
+<p>
+参照がリアルタイムに変更を認識する事を考えれば、①では SuperAnimal オブジェクトの
+ walk メソッドが呼び出され、「ダダダダダ！」が出力されるように思えます。
+しかし、結果は「トコトコ…」Animal オブジェクトの walk メソッドが呼び出されます。
+</p>
+<p>
+JavaScript のプロトタイプチェーンは
+<strong>インスタンスが生成された時点で固定され、その後の変更に関わらず保持されます。</strong>
+</p>
+<h3><a name="SEC23">Chapter5-4 本格的な開発に備えるために</a></h3>
+<h4><a name="SEC24">クラスライクな継承のしくみ</a></h4>
+<h5><a name="SEC25">ユーザー定義関数である <dfn>initializeBase関数</dfn></a></h5>
+<pre>
+<code>
+	/* リスト5-17 */
+
+     /* derive:派生クラス、base:基底クラス,
+     baseArgs:基底クラスコンストラクタの引数配列
+    （引数が無い場合は[] 空の配列を渡す） */
+   function initializeBase(derive, base, baseArgs) {       
+       base.apply(derive, baseArgs); 
+       // --------------①
+       
+       /*
+       apply は関数オブジェクトの（プロトタイプチェーンで継承された）
+       提供するメソッド。
+       派生クラスのメソッドとして親クラスのメソッドを呼び出している。
+       クラスを継承に引数がある場合
+       */
+
+       /* ③プロトタイプのコピー
+       派生クラスのプロトタイプが持っていないプロパティ・メソッドを
+       親クラスのプロトタイプからコピーしている
+       */
+       for (var prop in base.prototype) {
+          var proto = derive.constructor.prototype;
+          // alert(derive.constructor);
+	  //SpecialMemberオブジェクトの関数リテラル
+          // alert(prop); //getName
+          // alert(proto[prop]); // undifined
+          // alert(!proto[prop]); // true 
+
+          if (!proto[prop]) {
+             // alert(base.prototype[prop]);
+	     //getNameメソッドの関数リテラル
+             proto[prop] = base.prototype[prop];
+          }
+       }// --③
+
+   }   
+
+   // Memberクラスを定義
+   var Member = function (firstName, lastName) {
+       this.firstName = firstName;
+       this.lastName = lastName;
+   };
+
+   Member.prototype.getName = function () {
+       return this.lastName + ' ' + this.firstName;
+   }
+   
+   // Member クラスを継承したSpecialMemberクラスを定義
+   var SpecialMember = function (firstName, lastName, role) {
+       initializeBase(this, Member, [firstName, lastName]);
+       this.role = role;
+   }// -------②       
+       
+   SpecialMember.prototype.isAdministrator = function () {
+       return (this.role == 'Administrator');
+   };   
+
+   var mem = new SpecialMember('祥寛', '山田', 'Administrator');   
+
+   document.writeln('名前:' + mem.getName()+'&lt;br /&gt;');
+   // 山田祥寛
+
+   document.writeln('管理者:' + mem.isAdministrator() + '&lt;br /&gt;'); 
+   // true
+</code>
+</pre>
+<p>
+（この項目は難解だったので、以下原文のまま記述してます）
+</p>
+<p>
+ここで注目していただきたいのは、initializeBase関数です。
+initializeBase関数は、派生クラスのコンストラクタの中で呼び出されることを想定した関数で、
+以下のような役割を提供します。
+</p>
+<ul>
+<li>
+基底クラスのコンストラクタを呼び出す
+</li>
+<li>
+基底クラスで定義されたメンバを、派生クラスにコピーする
+</li>
+</ul>
+<p>
+initializeBase関数を呼び出す構文は、以下の通りです。
+</p>
+<pre>
+<code>
+   initializeBase(現在のインスタンス, 親クラス, 引数配列)
+</code>
+</pre>
+<p>
+⇒基底クラスのコンストラクタを呼び出すとともに、現在のクラスに対して
+親クラスで定義されたメンバをコピーします。「引数配列」は親クラスのコンストラクタに
+渡す引数です。（引数がない場合は空の配列「[]」を渡します）
+</p>
+<p>
+以下では、これら引数の意味を念頭に置いたうえで、initializeBase関数の中身を具体的に読み
+解いていくことにしましょう。
+</p>
+<p>
+まず、基底クラスのコンストラクタを呼び出しているのがリスト 5-17① の部分です。
+派生クラスは、基底クラスの初期化処理に独自の初期化処理を対kあする形で初期化するのが
+一般的です。独自の処理は派生クラスのコンストラクタに任せれば良いので、
+initializeBase関数では基底クラスのコンストラクタを呼び出すまでを行うのです。
+</p>
+<table class="bn">
+<tr>
+<td>base.</td><td>apply</td><td>(derive,</td><td>baseArgs);</td>
+</tr>
+<tr>
+<td style="font-weight:bold;">↓</td>
+<td></td>
+<td style="font-weight:bold;">↓</td>
+<td style="font-weight:bold;">↓</td>
+</tr>
+<tr>
+<td>Member</td><td></td><td>this</td><td>[firstName, lastName]</td>
+</tr>
+</table>
+<p>
+applyメソッドは、Functionオブジェクトが提供するメソッドのひとつえ、その関数をあたかも指定
+されたオブジェクト（ここでは引数derive）のメソッドであるかのように呼び出す事ができます。
+</p>
+<p>
+ここでは引数 deriveに、派生クラスのコンストラクタから this キーワードが渡されています。
+つまり、今作成しようとしている派生クラス（インスタンス）のメソッドとして、
+親クラスのコンストラクタ（Member関数）を呼び出しているわけです。メソッド（コンストラクタ
+）呼び出しに必要な引数は、applyメソッドの第２引数で、配列リテラルで指定します。
+</p>
+<p>
+なお、派生クラス独自の初期化処理を追加したい場合には、②のように派生クラスのコンストラクタの中に処理を記述します。
+</p>
+<p>
+次に基底クラスで定義されたメンバを、派生クラスでも使えるようにコピーしているのが
+③の部分です。先述したように、基底クラスで利用可能なメンバ（メソッド）は、
+プロトタイプオブジェクト（prototypeプロパティ）の配下につ六されているはずです。
+そこでここでは、このプロトタイプオブジェクトの内容を for…in ループですべて取り出し、
+そのまま派生クラスのプロトタイプオブジェクトにセットしています。ただし、
+派生クラスで同盟のメソッドが既に定義されいる場合を考慮し、同名のメソッドが
+存在しない場合にだけコピー処理を行うものとします。
+</p>
+<p>
+また、ここで代入する先はインスタンスのプロトタイプオブジェクトではなく、
+コンストラクタ関数（ここではSpecialMember）のプロトタイプオブジェクトである
+点にも注意してください。引数deriveには派生クラスのインスタンスがセットされているはずですので、ここではconstructorプロパティでコンストラクタを取得しています。
+</p>
+<p>
+以上で、継承の手続きは完了です。リスト5-17の④をみても、派生クラスで確かに基底クラスの
+メンバにアクセスできていることが確認できます。
+</p>
+<p>
+いかがですか。initializeBase関数を利用する事でプロトタイプチェーンを利用した場合に
+比べると、かなり直感的な操作で継承できると感じるのではないでしょうか。
+</p>
+<p>
+ただし、この方法を利用した場合には一点だけ注意が必要なのは、
+「継承されるメンバは、インスタンス化の際、静的に決まってしまう」という点です。
+プロトタイプチェーンのときのように、基底クラスのプロトタイプオブジェクトに
+対する変更をリアルタイムに認識することはありません。
+</p>
+<h5>
+<a name="SEC26">補足：基底クラスのメソッドを派生クラスで利用するには</a>
+</h5>
+<p>
+派生クラスでメソッドを定義する場合、単に新たなメソッドを追加するばかりではなく、
+基底クラスで定義されたメソッドをオーバーライド（上書き）する事があります。
+また、その際に一から機能を実装するのではなく、基底クラスで定義された機能を
+流用しながら、差分の機能を追加したいという場合があります。
+</p>
+<p>
+そのような時には、「派生クラスのメソッドから、基底クラスのメソッドを呼び出す」
+という行為が必要になります。
+</p>
+<p>
+具体的な例を見てみましょう。以下は、Memberクラスで定義されたgetNameメソッドを
+上書きして、名前の末尾にロール情報（role）を追加してみます。
+</p>
+<pre>
+<code>
+   /*derive:派生クラス、base:基底クラス,
+     baseArgs:基底クラスコンストラクタの引数配列
+    （引数が無い場合は[] 空の配列を渡す） */
+   function initializeBase(derive, base, baseArgs) {       
+       base.apply(derive, baseArgs); //--------------①
+       
+       /*
+       apply は関数オブジェクトの（プロトタイプチェーンで継承された）
+       提供するメソッド。
+       派生クラスのメソッドとして親クラスのメソッドを呼び出している。
+       クラスを継承に引数がある場合
+       */
+
+       /*③プロトタイプのコピー
+       派生クラスのプロトタイプが持っていない
+       親クラスのプロパティやメソッドや
+       */
+       for (var prop in base.prototype) {
+          var proto = derive.constructor.prototype;
+          // alert(derive.constructor);
+	  //SpecialMemberオブジェクトの関数リテラル
+          // alert(prop); //getName
+          // alert(proto[prop]); // undifined
+          // alert(!proto[prop]); // true 
+          if (!proto[prop]) {
+             // alert(base.prototype[prop]);
+	     //getNameメソッドの関数リテラル
+             proto[prop] = base.prototype[prop];
+          }
+       }// --③
+   }   
+
+   // Memberクラスを定義
+   var Member = function (firstName, lastName) {
+       this.firstName = firstName;
+       this.lastName = lastName;
+   };
+
+   Member.prototype.getName = function () {
+       return this.lastName + ' ' + this.firstName;
+   }
+
+   var SpecialMember = function (firstName, lastName, role) {
+       initializeBase(this, Member, [firstName, lastName]);
+       this.role = role;
+   }
+
+   SpecialMember.prototype.getName = function () {
+       var result = Member.prototype['getName'].apply(this, []); 
+       //---①
+       return result + '(' + this.role + ')';
+   };
+
+   var mem = new SpecialMember('祥寛', '山田', 'Administrator');
+   document.writeln('名前:' + mem.getName()); 
+   // 名前:山田 祥寛(Administrator)
+</code>
+</pre>
+<p>
+ポイントとなるのは①の部分です。基底クラスで定義されたメソッドは、先ほど同様、
+applyメソッドで呼び出します。
+</p>
+<p>
+構文　基底クラスのメソッド呼び出し
+</p>
+<pre>
+<code>
+   基底クラス名.prototype[メソッド名].apply(現在のインスタンス, 引数)
+</code>
+</pre>
+<p>
+⇒ 基底クラスで定義されたメソッドを呼び出します。
+</p>
+<p>
+ここでは、Member.getNameメソッドで得られた結果をいったん変数resultにセットした上で、
+これを加工したものを新たなSpecialMember.getNameメソッドの戻り値として返しているわけです。
+</p>
+<p>
+（原文のママここまで）
+</p>
+<!-- ☜ -->
+<a href="js4.htm">☜☜前へ</a>　<a href="js6.htm">次へ☞☞ 
+</a></p>
+</body>
+</html>	

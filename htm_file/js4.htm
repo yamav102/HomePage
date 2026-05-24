@@ -1,0 +1,973 @@
+﻿<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="keywords" content="java script,html">
+<meta name="author" content="yamaV1.02β">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta name="robots" content="noindex">
+<meta name="description" content="//////////">
+<meta name="reply-to" content="">
+<link rel="shortcutIcon" href="favicon.ico">
+<link rel="start" href="index.htm">
+<link rel="stylesheet" type="text/css" href="leftside1.css">
+
+<title>JavaScript 本格入門　メモ4</title>
+
+  <!-- http://www.mwsoft.jp/programming/javascript/highlight_js.html?style=vs#styles -->
+  <!--http://softwaremaniacs.org/soft/highlight/en/download/-->
+  <!-- stylesの中から好みにあったCSSを選んで、 -->
+  <!-- 1, CSS、JavaScriptファイルを呼び出す -->
+  <!--<link rel="stylesheet" href="../highlight.js/styles/vs.css">-->
+  <!--<script type="text/javascript" src="../highlight.js/highlight.pack.js"></script>-->
+  <!-- 2, onLoad時にinitしてくれる機能を呼び出す -->
+  <!--<script type="text/javascript">hljs.initHighlightingOnLoad();</script>-->
+</head>
+<h1>
+JavaScript 本格入門　メモ4
+</h1>
+<h2>
+<a name="SEC2">Chapter4 繰り返し利用するコードを一箇所にまとめる</a>
+</h2>
+<h3>
+<a name="SEC3">4-1 関数とは</a>
+</h3>
+<h4><a name="SEC4">関数を定義する３つの方法</a></h4>
+<p>
+ユーザー定義関数を定義するには、大きく３つの方法があります。
+</p>
+<ul>
+<li>
+function 命令で定義する
+</li>
+<li>
+Functionコンストラクタ経由で定義する
+</li>
+<li>
+関数リテラル表現で定義する
+</li>
+</ul>
+<h4><a name="SEC5">function 命令で定義する</a></h4>
+<p>
+関数を定義する場合の、最も基本的なアプローチ。
+</p>
+<pre>
+<code>
+   function 関数名([引数1,[引数2],…]){
+      関数内で実行される任意の命令
+      [return 戻り値;]
+   }
+</code>
+</pre>
+<pre>
+<code>
+   // 三角形の面積を返す関数
+   function triangle(base, height) {
+    return base * height / 2;
+   }
+   document.writeln('三角形の面積 ' + triangle(5, 2));
+   // 5
+</code>
+</pre>
+<p>
+関数名は 「showMesage」のように「動詞＋名詞」の形式で命名するのが一般的。
+パラメータを受け取る為の変数は「仮引数」とも言う。
+<dfn>return</dfn> 以降の処理は実行されない。
+return は省略できる。関数はデフォルトで undefined を返す。{}（中カッコ）
+の省略は不可。
+</p>
+<h4>
+<a name="SEC6">Function コンストラクタ経由で定義する</a>
+</h4>
+<p>
+JavaScriptには組み込みオブジェクトとしての <dfn>Functionオブジェクト</dfn> 
+が用意されている。関数は、このFunctionオブジェクトのコンストラクタを利用して
+定義する事ができる。
+</p>
+<pre>
+<code>
+   // 構文
+   var 変数名 = new Function([引数1,[引数2],…], 処理);
+</code>
+</pre>
+<pre>
+<code>
+   /*
+   三角形の面積を返す関数
+   Functionコンストラクタ経由で
+   */
+   var triangle = 
+	new Function('base', 'height', 'return base * height / 2;');
+   document.writeln('三角形の面積 ' + triangle(5, 2)+'&lt;br /&gt;');
+   // 5
+   
+   /*
+    引数部分を分けなくても良い。
+    処理部分は複数行セミコロンで区切っても可
+   */
+   var triangle = 
+      new Function('base, height', 
+            'var arg = base * height /2;return arg;');
+   document.writeln('三角形の面積 ' + triangle(5, 2));
+   // 5
+</code>
+</pre>
+<p>
+Function コンストラクタを使うと、new 演算子を省略して、あたかも
+グローバル関数であるかのように記述する事もできる。
+</p>
+<pre>
+<code>
+   var triangle =  
+	Function('base', 'height', 'return base * height / 2;');
+   document.writeln('三角形の面積 ' + triangle(5, 2)+'&lt;br /&gt;');
+   // 5
+</code>
+</pre>
+<p>
+特別な理由が無い限り、あえて Function コンストラクタを利用するメリットは無い。
+しかし、一点だけFunctionコンストラクタには、function 命令にはない
+重要な特徴がある。それは、「Function コンストラクタでは、引数や
+関数本体を文字列として定義できる」という点。
+以下のようにコードを記述する事もできる。
+</p>
+<pre>
+<code>
+   var param = 'dLine1, dLine2';
+   var formula = 'return dLine1 * dLine2 / 2;';
+   // dLine:Diagonal line(対角線)
+
+   var diamond = new Function(param, formula);
+
+   document.writeln('菱形の面積:' + diamond(5,2)); 
+   // 5
+</code>
+</pre>
+<p>
+引数や関数本体の処理をスクリプトで動的に生成して実行させる場合に
+使える方法。ただし、eval関数と同様に濫用すべきではなく、基本的に function命令、
+または後述する関数リテラルで定義するのが王道。
+</p>
+<p>
+特に evalやFunctionコンストラクタは呼び出される度にコードの解析から関数オブジェクトの生成までを
+行う為、パフォーマンスが悪いのでループの中で使用する事は避けるべき。
+</P>
+<h4>
+<a name="SEC7">関数リテラル表現で定義する</a>
+</h4>
+<p>
+JavaScript において関数はデータ型の一つです。つまり、<strong>
+関数を変数に代入したり、ある関数の引数として渡したり、あるいは、戻り値として関数を返す事すら
+可能です。</strong>
+これによって、JavaScript ではじつに柔軟なコーディングが可能になります。
+</p>
+<pre>
+<code>
+   // 関数リテラル
+   var triangle = function (base, height) {
+       return base * height / 2;
+   };
+   document.writeln('三角形の面積：' + triangle(5, 2)); 
+   // 5
+</code>
+</pre>
+<p>
+関数リテラルの記法は、function命令に良く似ていますが、以下の違いがあります。
+</p>
+<ul>
+<li>
+function命令　⇒　関数triangleを直接定義している
+</li>
+<li>
+「function(base,height){…}」と名前のない関数を定義した上で、変数triangleに格納している
+</li>
+</ul>
+<p>
+関数リテラルは宣言した時点では名前を持たないことから、匿名関数・無名関数と
+呼ばれることもあります。
+</p>
+<h3>
+<a name="SEC8">4-2　関数定義における４つの注意点</a>
+</h3>
+<p>
+コーディング上の誤りを避ける４つのヒント。
+</p>
+<h4>
+<a name="SEC9">return 命令は途中で改行しない</a>
+</h4>
+<p>
+JavaScriptでは、改行、空白、
+タブは無視されるので、以下のように記述しても構文上は正しいし、
+問題なく動作する。
+</p>
+<pre>
+<code>
+   // 関数リテラル
+   var triangle =
+       function (base, height) {
+       return base * height / 2;
+   };
+   document
+       .writeln    ('三角形の面積：' + triangle(5, 2)); 
+   // 5
+</code>
+</pre>
+<p>
+JavaScriptでは文末にセミコロンを付ける事が好ましいが、「必須」ではなく、
+必要に応じてセミコロンが補われて解釈される（おせっかい）な仕様。
+return命令の後に改行を入れてしまうと、<code>return;</code> と解釈され、
+以後のコードが全く実行されなくなってしまう。
+</p>
+<pre>
+<code>
+   // 関数リテラル
+   var triangle =
+       function (base, height) {
+      return
+      base * height / 2;
+   };
+   document
+       .writeln('三角形の面積：' + triangle(5, 2)); 
+   // 三角形の面積：undefined
+</code>
+</pre>
+<p>
+関数のディフォルトである undefined が返ります。同じ理由で、ラベル付きの break/continue命令
+でも途中で改行を加えてはならない。エラーにもならずに意図した動作もしない、発見しにくい問題を
+作りこんでしまいかねない。
+</p>
+<h4>
+<a name="SEC10">関数は Functionオブジェクト型というデータ型の一つ</a>
+</h4>
+<p>
+JavaScript関数の実体は、Functionクラスのオブジェクト。
+JavaScriptにおいて関数はデータ型の一種です。
+関数がデータ型なのですから、以下の書き方が可能になります。
+</p>
+<pre>
+<code>
+   // 関数リテラル
+   var triangle =
+       function (base, height) {
+      return base * height / 2;
+   };
+   document
+       .writeln('三角形の面積：' + triangle(5, 2)+'&lt;br&gt;'); 
+   // 三角形の面積：5
+
+   // Function型を格納した変数に数値を代入する事も問題ない
+   triangle = 0;
+   document.writeln(triangle);
+   // 0
+</code>
+</pre>
+<p>
+関数型を格納した変数をそのまま writeln すると、Function オブジェクトの toString メソッドが
+呼び出されて文字列表現に変換されて出力されます。
+</p>
+<pre>
+<code>
+     // 関数リテラル
+     var triangle =
+      function (base, height) {
+          return base * height / 2;
+     };
+     document
+      .writeln(triangle + '&lt;br&gt;'); 
+   // function (base, height) { return base * height / 2; } 
+
+   /*
+     ↑はFunctionオブジェクトのtoStringが
+     ディフォルトで呼び出されている
+   */
+     document
+      .writeln(triangle.toString());
+</code>
+</pre>
+<h4>
+<a name="SEC11">function命令は静的な構造を宣言する。（function命令はグローバル変数）</a>
+</h4>
+<p>
+関数リテラルは、定義される前に使用出来ないが、function命令は変数なので
+、定義されている位置より前に使用しても呼び出して使用できる
+（function は動的に実行される命令なのではなく、静的な構造を宣言する為のキーワード）。
+</p>
+<pre>
+<code>
+   // triangle は定義前なので、実行出来ない
+   document.writeln(triangle(5, 3));
+
+   // 関数リテラル
+   var triangle =
+       function (base, height) {
+      return base * height / 2;
+   };
+</code>
+</pre>
+<pre>
+<code>
+   // triangle関数の定義位置より前でも(何処からでも)実行出来る。
+   document.writeln(triangle(5, 3)); //7.5
+
+   // function 命令
+   function triangle(base, height){       
+       return base * height / 2;
+   };
+</code>
+</pre>
+<p>
+function 命令は何処からでも呼び出せるが、同じスクリプトブロック&lt;script&gt;～&lt;/script&gt;
+内か、呼び出し側のスクリプトブロックより前のブロックに記述されている必要があります。
+</p>
+<p>
+function 命令が何処からでも呼び出せるのに対し、関数リテラル／ Function コンストラクタは
+実行時（代入時）に評価されます。呼び出し側のコードより先に記述する必要があります。
+</p>
+<h3>
+<a name="SEC12">4-3 変数はどの場所から参照できるか　-スコープ-</a>
+</h3>
+<h4>
+<a name="SEC13">グローバル変数とローカル変数</a>
+</h4>
+<p>
+Private とか Public というアクセス修飾子は JavaScript には無い。
+<dfn>var</dfn>命令を付けて宣言された変数であれば、関数の外側で
+宣言されていればグローバル、内側で宣言されていればローカル変数になる。
+<dfn>var</dfn>命令なしで宣言された変数はグローバル変数になる。
+判りにくくなるので、<dfn>var</dfn>命令は必ず付けて宣言すべきである。
+</p>
+<p>
+プライベート変数は、関数のどの部分で宣言されていても、関数の
+先頭で宣言されているもの、と看做される。
+</p>
+<pre>
+<code>
+   var scope = 'Global Variable';
+
+   function getValue() {
+       document.writeln(scope + '&lt;br&gt;'); 
+       // undefined ----①
+       var scope = 'Local Variable';
+       return scope;
+   }
+
+   document.writeln(getValue() + '&lt;br&gt;');
+   // Local Variable
+
+   document.writeln(scope);
+   // Global Variable
+</code>
+</pre>
+<p>
+①の部分でundefined になるのは、次のように解釈されるから。
+</p>
+<pre>
+<code>
+   function getValue() {
+       var scope;
+       document.writeln(scope + '&lt;br&gt;');//undefined
+       scope = 'Local Variable';
+       return scope;
+   }
+</code>
+</pre>
+<h4>
+<a name="SEC14">仮引数のスコープ -基本型と参照型の違い-</a>
+</h4>
+<p>
+仮引数とは、関数に渡されたパラメーターを受け取る変数の事。
+仮引数が受け取る変数が値型である基本型ならばスコープはローカルになり
+、即ち値渡しとして処理される。仮引数が受け取る変数が参照型ならば、
+参照渡しとして処理されて、即ち仮引数自身のスコープはグローバルという事になる。
+</p>
+<pre>
+<code>
+   var value = 100;
+
+   // 値型のローカルスコープ
+   function func(value) {
+       return ++value;
+   }
+   document.writeln('func(value) = ' + func(value) + '&lt;br&gt;'); 
+   // 101
+   document.writeln('value = ' + value + '&lt;br&gt;'); 
+   // 100
+</code>
+</pre>
+<pre>
+<code>
+   var value = [1,2,3,4];
+
+   // 参照型のグローバルスコープ
+   function func2(value) {
+       value.push(5);
+       return value;
+   }
+   document.writeln('func2(value) = ' + func2(value) + '&lt;br&gt;'); 
+   // 1,2,3,4,5
+
+   document.writeln('value = ' + value + '&lt;br&gt;'); 
+   // 1,2,3,4,5
+</code>
+</pre>
+<h4>
+<a name="SEC15">ブロックレベルのスコープは存在しない</a>
+</h4>
+<p>
+この辺は VBA と同じ。つか、VBAしか知らない人には、この話題がなんなのか判らない。
+JAVA C# VB.net では、以下のようなコードはエラーになる。
+</p>
+<pre>
+<code>
+   // Scope.java
+   if(true) {
+      int i = 5;
+   }
+   System.out.println(i); 
+   // エラー
+</code>
+</pre>
+<p>
+変数 i のスコープが ifブロック内にしか無ければ、ブロック外で i を呼び出せば当然のようにエラーになる。
+JavaScriptの世界では普通に実行できる。スコープは狭いに越した事がないのだが、それが出来ない言語（？）。以下のサンプルのように、with命令でブロック内でだけのスコープを作る事が出来る。
+
+また、VBAと違ってwith を使うと処理が遅くなる。
+そして、with によって修飾されるオブジェクトが判別しにくくなるので「使うべきではない」とまで
+されている。
+</p>
+<p>
+with 命令の（）括弧の中で変数宣言する事は出来ない構文規則なので、
+（）の中にオブジェクトリテラルを入れてやる事でブロックスコープを実現している。
+トリッキーなコードでもあり、推奨されるような記法ではない。	
+</p>
+<pre>
+<code>
+   with ({ i: 0 }){
+       if(true){
+      i = 5;
+      document.writeln(i);
+      // ここは実行される
+       }
+   }
+   document.writeln(i);
+   // iはスコープ外なのでエラーになり実行されない
+</code>
+</pre>
+<h4>
+<a name="SEC16">関数リテラル／ Function コンストラクタにおけるスコープの違い</a>
+</h4>
+<pre>
+<code>
+   var scope = 'Global Variable';
+   
+   function checkScope() {
+       var scope = 'Local Variable';
+   
+       // 関数リテラル
+       var f_lit = function () { return scope;};
+       document.writeln(f_lit() + '&lt;br&gt;'); 
+       // Local Variable
+       
+       // 関数コンストラクタ
+       var f_con = new Function('return scope;');
+
+       document.writeln(f_con()); 
+       // Global Variable 
+   }
+   checkScope();
+</code>
+</pre>
+<p>
+同じ関数内部で定義しているので、関数リテラルも、Functionコンストラクタも
+ローカル変数を参照しそうなものだが、Functionコンストラクタは
+グローバル変数を参照する。
+</p>
+<p>
+これは直感的に判りにくい挙動ですが、Functionコンストラクタはグローバルオブジェクト
+からスコープチェーンを引き継ぐ（？）という仕様なのらしい。
+</p>
+<p>
+Function コンストラクタは原則として利用しない事を前提とすれば、混乱が生じるケースは
+少ないだろうが、「関数の３つの記法は必ずしも意味的に等価ではない」。
+</p>
+<h3>
+<a name="SEC17">4-4 引数情報を管理する - arguments オブジェクト-</a>
+</h3>
+<h4>
+<a name="SEC18">JavaScript は引数の数をチェックしない</a>
+</h4>
+<p>
+以下３つの関数呼び出しはすべてが正しく動作する。
+</p>
+<pre>
+<code>
+   function showMessage(value) {
+       document.writeln(value);
+   }
+
+   showMessage(); 
+   // undefined
+
+   showMessage('山田'); 
+   // 山田
+
+   showMessage('山田', '鈴木'); 
+   //山田
+</code>
+</pre>
+<p>
+用意されている仮引数より余分にした引数は、切り捨てられずに「引数情報」の一つとして保持されている。
+だから、仮引数は無くても引数を渡せてしまう。
+</p>
+<pre>
+<code>
+   function showMessage() {
+       for (var i in arguments) {
+      document.writeln(arguments[i] + '&lt;br&gt;');
+       }
+   }
+
+   showMessage(); 
+   showMessage('山田');
+   showMessage('山田', '鈴木');
+
+   /*
+   山田
+   山田
+   鈴木
+   */
+</code>
+</pre>
+<p>
+「実際に与えられた引数が要求する引数と異なる場合にはエラーを返す」
+という処理は自ら用意する必要がある。
+</p>
+<pre>
+<code>
+   function showMessage(value) {
+       if (arguments.length != 1) {
+      throw new Error('引数の数が間違っています');
+       }
+       document.writeln(value);
+   }
+
+   try{
+       showMessage(); 
+   } catch (e) {
+       window.alert(e.message);
+   }
+</code>
+</pre>
+<p>
+単にひきすうを個数をチェックしているだけですが、引数のデータ型や値の有効範囲などの妥当性
+をチェックすることもできます。
+</p>
+<p>
+arguments オブジェクトの実体は、厳密には「Argumentsオブジェクトを参照する arguments プロパティ」
+です。そのため、入門書によっては argumentsオブジェクトではなく Arguments オブジェクトと記載されている
+ものも多いようです。しかし、（試してみれば判るように）関数の中で Arguments.length と記述することは
+できません。Arguments オブジェクトはあくまで関数内部で暗黙的に生成されるもので、プログラマが
+意識する事すらない存在なのです。本書では、混乱を避けるために、便宜上、「arguments オブジェクト」
+という記述で統一するものとします。
+</p>
+<h4>
+<a name="SEC19">捕捉：引数のデフォルト値を設定する</a>
+</h4>
+<p>
+引数の数をチェックしない－－－－－－ということは、JavaScriptでは<strong>
+すべての引数は省略可能である</strong>という事です。ただし多くのケースでは、
+引数がただ省略されただけでは正しく動作しません。そこで以下のように引数のデフォルト値を
+設定しておく必要があります。
+</p>
+<pre>
+<code>
+   function triangle(base, height) {
+       if (base == undefined) { base = 1; }
+       if (height == undefined) { height = 1; }
+       return base * height / 2;
+   }
+   document.writeln(triangle(5));
+   //2.5
+</code>
+</pre>
+<p>
+引数のデフォルトを指定する構文はありません。baseだけを省略する事はできず、常に後ろに続く
+引数が省略されたものとして看做されます。
+省略可能な引数である事を示す為に o_base, o_height （optional の o）として必須の引数と区別するとコードを読みやすくします。
+</p>
+<h4>
+<a name="SEC20">可変長引数の関数を定義する</a>
+</h4>
+<p>
+引数の数をチェックしない－－－－－－ということは、JavaScriptでは<strong>
+すべての関数は可変長引数を扱かうのがディフォルト</strong>という事です。
+たとえば、以下は引数に与えられた数値を合計する sum 関数を定義する例です。
+</p>
+<pre>
+<code>
+   function sum() {
+      var result = 0;
+
+      for (var i = 0; i < arguments.length; i++) {
+         var tmp = arguments[i];
+         if (isNaN(tmp)) {
+             throw new Error('数値を指定して下さい:' + tmp);
+         }
+         result += tmp;
+      }
+      return result;
+   }
+
+   try{
+       document.writeln(sum(1, 3, 5, 7, 9));
+       //25
+   } catch (e) {
+       window.alert(e.message);
+   }
+</code>
+</pre>
+<h4>
+<a name="SEC21">明示的に宣言された引数と可変長引数を混在させる</a>	
+</h4>
+<p>
+明示的に宣言された引数と可変長引数を混在させる事も出来ます。
+</p>
+<pre>
+<code>
+   function printf(format) {
+       // 引数の２番目以降を順番に処理
+       for (var i = 1; i < arguments.length; i++) {
+      var pattern = new RegExp('\\{' + (i - 1) + '\\}', 'g');
+      format = format.replace(pattern, arguments[i]);
+       }
+       document.writeln(format);
+   }
+   printf(
+      'こんちわ、{0}さん。私は{1}です、{0}さん。', '掛谷', '山田'
+   );
+   // こんちわ、掛谷さん。私は山田です、掛谷さん。
+</code>
+</pre>
+<p>
+printf関数は、第１引数で指定された書式文字列に含まれるプレイスホルダ
+（パラメータの起き場所：{0}、{1}、{2}…）を、第二引数以降の値で置き換えた物を出力する
+関数です。
+argumentsオブジェクトには、明示的に宣言された引数⇒可変長引数の順番で、全ての引数が
+格納されます。可変長引数だけがargumentsオブジェクトで管理されるわけではありません。
+</p>
+<h4>
+<a name="SEC22">可変長引数（無名引数）は必要最小限に</a>
+</h4>
+<p>
+上の例は、構文的には第１引数を用意せず、全ての引数を可変長引数として記述する事も
+できます。しかし、コードの可読性という観点から推奨される書き方とはされません。
+なにからなにまで arguments オブジェクトに委ねるのではなく、内容や個数があらかじめ想定できる引数については、できるだけ明示的に名前を付けておきます。
+</p>
+<h5>
+<a name="#SEC23">可変長の引数にも仮の名前を付ける書き方</a>
+</h5>
+<p>
+コードの可読性のために、可変長引数にも仮の名前をつけておく事が望ましいという
+考え方もあります。たとえば以下のような記述になります。
+</p>
+<pre>
+<code>
+   var buf;
+
+   function printf(format, var_args) {
+       // 引数の２番目以降を順番に処理
+       for (var i = 1; i < arguments.length; i++) {
+      var pattern = new RegExp('\\{' + (i - 1) + '\\}', 'g');
+      format = format.replace(pattern, arguments[i]);
+       }
+       document.writeln(format);
+       buf=var_args
+   }
+
+   printf(
+      'こんちわ、{0}さん。私は{1}です、{0}さん。', '掛谷', '山田'
+   );
+   
+   document.writeln('&lt;br&gt;var_args は、' + buf);
+   /*
+   こんちわ、掛谷さん。私は山田です、掛谷さん。
+   var_args は、掛谷 
+   */
+</code>
+</pre>
+<p>
+この場合の var_args はあくまで便宜的な引数でしかなく、
+実際に可変長引数にアクセスするためには、arguments オブジェクト経由である
+必要があります。
+</p>
+<h4>
+<a name="SEC24">再起呼び出しを定義する - callee プロパティ -</a>
+</h4>
+<p>
+arguments オブジェクトでもうひとつ重要なのが、現在実行中の関数自身を参照するために用意されている
+callee プロパティです。関数など特定の処理の中で自分自身を呼び出す
+<dfn> 再起呼び出し Recursive Call </dfn>の処理を用意に記述でいるようになります。
+</p>
+<pre>
+<code>
+   // 階乗を返す
+   function factorial(n) {
+       if (n != 0) { return n * arguments.callee(n - 1); }
+       return 1;
+   }
+   document.writeln(factorial(5)); 
+   // 120
+</code>
+</pre>
+<p>
+callee を使わなくても、<code>return n * factorial(n - 1);</code> 
+と記述すれば良いのだが、関数リテラルを使う場合は、そもそも呼び出すべき
+関数名が無いので、callee を使わないわけにはいかなくなる。
+</p>
+<pre>
+<code>
+   // 階乗を返す関数リテラル
+   var factorial = function(n) {
+       if (n != 0) { return n * arguments.callee(n - 1); }
+       return 1;
+   }
+   document.writeln(factorial(5)); 
+   // 120
+</code>
+</pre>
+<h3>
+<a name="SEC25">高度な関数のテーマ</a>
+</h3>
+<h4>
+<a name="SEC26">名前付き引数でコードを読みやすくする</a>
+</h4>
+<p>
+関数の引数にオブジェクトリテラルを渡す事で、「名前付き引数」が実現できます。
+呼び出しに名前を指定する事になるので、コードが冗長になるというデメリットもあるが、
+</p>
+<ul>
+<li>
+引数の数が多い場合
+</li>
+<li>
+省略可能な引数が多く、省略パターンがさまざまな組み合わせがある場合
+</li>
+</ul>
+<p>
+などのケースで有効な方法と言える。
+</p>
+<pre>
+<code>
+   function triangle(args) {
+       /*
+       名前付き引数の存在をチェックして、
+       無い場合はディフォルト値を設定する
+       */
+       if (args.base == undefined) { args.base = 1; }
+       if (args.height == undefined) { args.height = 1; }
+       return args.base * args.height / 2;
+   }
+
+   document.writeln(triangle({ base: 5, height: 4 })); 
+   // 10
+</code>
+</pre>
+<h4>
+<a name="SEC27">関数の引数も関数 - 高階関数 -</a>
+</h4>
+<p>
+JavaScriptの関数は型の一種で、<strong>関数を関数の引数として渡し、関数を戻り値として返す</strong>
+ ことが出来る。このような関数を <dfn>高階関数（Higher-Order Function）</dfn> と呼ぶ。
+</p>
+<pre>
+<code>
+   /*
+   ◇ 高階関数 arrayWalk を定義
+   data:配列
+   f   :f(key,value)のシグニチャを持つ何らかの関数
+   */
+   function arrayWalk(data, f) {
+       for (var key in data) {
+      f(key, data[key]);
+       }
+   }
+   
+   // 配列を処理するためのユーザー定義関数
+   function showElement(key, value) {
+       document.writeln(key + ' : ' + value+ '&lt;br&gt;');
+   }
+
+   var ary = [1, 2, 4, 8, 16];
+   arrayWalk(ary, showElement);
+   /*
+   0 : 1
+   1 : 2
+   2 : 4
+   3 : 8
+   4 : 16
+   */
+
+   var obj = { 1: 'a', 2: 'b', 3: 'c' };
+   for (var k in obj) {
+       document.writeln('k= ' + k + '; value= ' + obj[k] + '&lt;br&gt;');
+   }
+   /*for in 構文は配列を処理すると 0 から始まるindex を返し、
+   オブジェクトを処理すると key値を返す
+   k = 1; value = a
+   k = 2; value = b
+   k = 3; value = c
+   */
+</code>
+</pre>
+<p>
+高階関数を使う最大の理由は、ユーザー定義関数を差し替える事ができるから。
+ポリモーフィズムと言いたくなるが、参考書では、その言葉には言及していない。
+</p>
+<pre>
+<code>
+   /*
+   ◇ 高階関数 arrayWalk を定義
+   data:配列
+   f   :f(key,value)のシグニチャを持つ何らかの関数
+   */
+   function arrayWalk(data, f) {
+       for (var key in data) {
+      f(key, data[key]);
+       }
+   }
+   
+   var result = 0;
+	
+	// この関数では key 引数は受け取りはするが使わない
+   function sumElement(key, value) {
+       result += value;
+   }
+
+   var ary = [1, 2, 4, 8, 16];
+   arrayWalk(ary, sumElement);
+   document.writeln('合計値: ' + result); 
+   // 31
+</code>
+</pre>
+<h4>
+<a name="SEC28">「使い捨ての関数」は匿名関数（関数リテラル）で</a>
+</h4>
+<p>
+高階関数は匿名関数（関数リテラル）と密接な関係を持っています。
+高階関数においては、引数として与えられる関数が「その場限り」でしか
+利用されない事がよくあるからです。
+</p>
+<p>
+このような「使い捨ての関数」はあえて名前付きの関数として定義するよりも、
+匿名関数（関数リテラル）として記述した方がコードがシンプルになります。
+</p>
+<pre>
+<code>
+   /*
+   ◇ 高階関数 arrayWalk を定義
+   data:配列
+   f   :f(key,value)のシグニチャを持つ何らかの関数
+   */
+   function arrayWalk(data, f) {
+       for (var key in data) {
+      f(key, data[key]);
+       }
+   }
+
+   var ary = [1, 2, 4, 8, 16];
+   arrayWalk(
+       ary,
+       function (key, value) {
+      document.writeln(key + ' : ' + value + '&lt;br&gt;');
+       }
+   );
+   /*
+   0 : 1
+   1 : 2
+   2 : 4
+   3 : 8
+   4 : 16
+   */
+</code>
+</pre>
+<p>
+一度限りしか使用しない関数に名前を付けずにすみます。
+名前を考えるのも労力の内ですし、「意図せぬ名前の重複を回避できる」というメリットもあります。
+</p>
+<p>
+このような記法は、Ajaxのコールバック関数を記述するうえで重宝しますし、
+外部ライブラリなどを読み解く際にも有用です。
+</p>
+<h4>
+<a name="SEC29">変数はどのような順番で解決されるか　- スコープチェーン -</a>
+</h4>
+<p>
+JavaScriptではスクリプトの実行中に、内部的にGlobalオブジェクトを生成します。
+グローバルオブジェクトは、基本的にプログラマが意識する事の無い「グローバル変数や
+グローバル関数を管理する為の＜便宜的な＞オブジェクト」です。
+グローバル変数やグローバル関数は「グローバルオブジェクトのプロパティやメソッドである」
+と言い換えられます。「とすると、ローカル変数もじつはオブジェクトのプロパティなのでは？」
+と閃いた方はご明察。じつはローカル変数は <dfn>Activation Object</dfn> （通称、 <dfn>Callオブジェクト</dfn>とも）のプロパティなのです。
+</p>
+<p>
+Callオブジェクトは、「関数呼び出しの都度、内部的に自動生成されるオブジェクト」の事。
+ブローバルオブジェクト同様、「関数内で定義されたローカル変数を管理する為の＜便宜的な＞オブジェクト」
+で、じつは先ほど登場した argumentsプロパティも Callオブジェクトのプロパティなのです。
+</p>
+<p>
+さて、このグローバルオブジェクトにCallオブジェクト、プログラマが自ら生成する物でもありませんし、
+それどころか、プログラムから明示的に呼び出せるものでもありませんから、s通常はプログラマが
+意識する事すらありません。それでも、これらの存在を理解しておくことで、変数が解決される
+メカニズムが見えてきます。
+</p>
+<p>
+それがスコープチェーンなのです。スコープチェーンとは、グローバルオブジェクト、Callオブジェクト
+を生成の順に連結したリストの事を言います。
+</p>
+<p>
+JavaScriptでは、このスコープチェーンの先頭に位置するオブジェクトから順にプロパティ（変数）
+を検索し、マッチするプロパティが「初めて」見つかったところで、その値を採用しているのです。
+</p>
+<p>
+たとえば、以下のように入れ子になった関数の例を見て見ましょう。
+</p>
+<pre>
+<code>
+   var y = 'Global';
+   function outerFun() {
+       var y = 'Local Outer';
+
+       function innerFunc() {
+      var z = 'Local Inner';
+      document.writeln(z + '&lt;br&gt;');
+      document.writeln(y + '&lt;br&gt;');
+      document.writeln(x + '&lt;br&gt;');
+      /*
+       xは未定義でエラー
+      で実行されない
+      */
+      document.writeln(y + '&lt;br&gt;');
+      
+       }
+       innerFunc();
+   }
+   outerFun()
+   /*
+   Local Inner
+   Local Outer
+   */
+</code>
+</pre>
+<p>
+outerFun 内の innerFunc が実行されると、先ず z を内側から走査していき、
+z が見つかった時点で Local Inner を採用します。
+次に y を内側から走査していき Local Outer 最初に見つけてを採用し、Global が
+採用される事はありません。<code>// var y = 'Local Outer';</code> とコメントアウト
+してしまうと、より外側にある Global が y の値として採用されます。
+</p>
+<!-- ☜ -->
+<p><a href="js3.htm">☜☜前へ
+</a>　<a href="js5.htm">次へ☞☞ 
+</a></p>
+</body>
+</html>

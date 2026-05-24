@@ -1,0 +1,945 @@
+﻿<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="keywords" content="java script,html">
+<meta name="author" content="yamaV1.02β">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta name="robots" content="noindex">
+<meta name="description" content="//////////">
+<meta name="reply-to" content="">
+<link rel="shortcutIcon" href="favicon.ico">
+<link rel="start" href="index.htm">
+<link rel="stylesheet" type="text/css" href="leftside1.css">
+
+<title>JavaScript 本格入門　メモ6</title>
+
+  <!-- http://www.mwsoft.jp/programming/javascript/highlight_js.html?style=vs#styles -->
+  <!--http://softwaremaniacs.org/soft/highlight/en/download/-->
+  <!-- stylesの中から好みにあったCSSを選んで、 -->
+  <!-- 1, CSS、JavaScriptファイルを呼び出す -->
+  <!--<link rel="stylesheet" href="../highlight.js/styles/vs.css">-->
+  <!--<script type="text/javascript" src="../highlight.js/highlight.pack.js"></script>-->
+  <!-- 2, onLoad時にinitしてくれる機能を呼び出す -->
+  <!--<script type="text/javascript">hljs.initHighlightingOnLoad();</script>-->
+</head>
+
+<h1>
+JavaScript 本格入門　メモ6
+</h1>
+<h4>
+<a name="SEC2">プライベ―トメンバを定義する</a>
+</h4>
+<p>
+JavaScriptでは、なにも考えずにメンバを定義すれば、パブリックメンバとなります。
+JavaScriptでは、厳密にはプライベートメンバを定義するための構文はありません。
+クロージャを利用する事で擬似的にプライベートメンバを定義する事はできます。
+（擬似的な、ということの意味は後述します）
+</p>
+<pre>
+<code>
+   function Triangle() {
+       // プライベートプロパティの定義（底辺／高さを保持）---①
+       var _base;
+       var _height;
+       // プライベートメソッドの定義（引数が正の数値であるかをチェック）
+       var _checkArgs = function (val) {
+         return (!isNaN(val) && val > 0);
+       }
+
+       // プライベートメンバにアクセスするためのメソッドを定義 ----②
+       this.setBase = function (base) {
+          if (_checkArgs(base)) { _base = base; }
+       }
+
+       this.setHeight = function (height) {
+          if (_checkArgs(height)) { _height = height; }
+       }
+
+       this.getBase = function () { return _base; }
+       this.getHeight = function () { return _height; }
+   }
+
+   // プライベートメンバにアクセスしない普通のメソッドを定義
+   Triangle.prototype.getArea = function () {
+       return this.getBase() * this.getHeight() / 2;
+   }
+
+   var t = new Triangle();
+   t._base = 10;
+   t._height = 2;
+
+	// 三角形の面積: NaN // ------③
+   document.writeln('三角形の面積: ' + t.getArea() + '&Lt;br /&gt;'); 
+
+   t.setBase(10);
+   t.setHeight(2);
+
+   document.writeln('三角形の底辺:' + t.getBase() + '&lt;br /&gt;'); 
+   // 三角形の底辺: 10
+
+   document.writeln('三角形の高さ:' + t.getHeight() + '&Lt;br /&gt;');
+   // 三角形の高さ: 2
+
+   document.writeln('三角形の面積:' + t.getArea() + '&lt;br /&gt;');
+   // 三角形の面積: 10
+</code>
+</pre>
+<p>
+注目していただきたいポイントは２点です。
+</p>
+<h5>
+<a name="SEC3">プライベートメンバはコンストラクタ関数で定義する</a>
+</h5>
+<p>
+プライベートメンバは、以下の構文で、「コンストラクタ関数の中で」定義する必要があります。
+</p>
+<p>
+構文　プライベートプロパティ／メソッド
+</p>
+<pre>
+<code>
+   var プロパティ名
+   var メソッド名 = function([引数]){/* メソッドの処理 */}
+</code>
+</pre>
+<p>
+このように、プライベートメンバを定義する場合には、「this.プロパティ名=～」
+「this.メソッド名=～」の <dfn>thisキーワード</dfn> ではなく、 var キーワードで
+宣言する点に注目です。
+</p>
+<p>
+_base／ _heightプロパティ、_checkArgsメソッドがプライベートメンバになります。
+③ではプライベートメンバに外部から直接アクセスしようとしていますが、意図したように
+値がセットできて「いない」ことが確認できます。
+</p>
+
+<h5>
+<a name="SEC4">「特権メソッド」を定義してプライベートメンバにアクセスする</a>
+</h5>
+<p>
+プライベートメンバにアクセスできるメソッドのことを
+<dfn> 特権メソッド（プリビレッジドメソッド）</dfn>と言います。
+特権メソッドは、「コンストラクタ関数の中で定義する」という点以外は、通常のメソッドと同様の方法
+で定義できます。
+</p>
+<p>
+特権メソッドは、コンストラクタの中で入れ子に定義された関数　-　つまり、クロージャとなっています。
+そのため、コンストラクタ関数の中で定義されたプライベートメンバ（要はローカル変数）にも自由に
+アクセスする事が出来ます。
+</p>
+<p>
+クロージャの項を思い出していただければわかるように、ここｋではインスタンスに属する特権メソッド
+（setBase／setHeight／getBase／getHeight）がそれぞれプライベートメンバを参照していますので、
+プライベートメンバは、「特権メソッドによって生かされ続けている」とも言えます。
+</p>
+<p>
+ちなみに、特権メンバには、パブリックメンバやクラス外部から自由にアクセスすることができます。
+</p>
+<h5>
+<a name="SEC5">特権メソッドはJavaScript固有の考え方</a>
+</h5>
+<p>
+JavaやC#のようなオブジェクト指向言語に慣れた方にとって、特権メソッドのような考え方は
+耳慣れないものでしょう。JavaやC#などでは、同じクラス内のメンバであれば、プライベートメンバに
+自由に自由にアクセスできるからです。
+</p>
+<p>
+特権メソッドは、クロージャによって擬似的にプライベートメンバを実現しているJavaScript固有の考え方です。
+JavaScriptのプライベートメンバには、いわゆる普通の（特権を持たない（prototypeオブジェクトの要素としてのメソッド））パブリックメンバからはアクセスできない点に注意して下さい。
+</p>
+<p>
+特権メソッドとは、要するにアクセサメソッド。
+アクセサメソッドは一般的に「get＜プロパティ名＞」「set＜プロパティ名＞」
+の形式で命名します。プロパティ名の頭文字は大文字とします。
+</p>
+<h5>
+<a name="SEC6">そもそもプライベートメンバは使うべきか</a>
+</h5>
+<p>
+ここまで見てきてわかるように、JavaScriptにおけるプライベートメンバの定義方法は一種独特です。
+そもそも以下の区分けは、コードを読みにくくする原因ともなるでしょう。
+</p>
+<ul>
+<li>
+プライベートメソッド　⇒　コンストラクタで
+</li>
+<li>
+パブリックメソッド　⇒　プロトタイプオブジェクトで
+</li>
+<li>
+パブリックメソッドでも特権をもつもの　⇒　コンストラクタで
+</li>
+</ul>
+<p>
+通常のメソッドを特権メソッドにしたい場合に、定義場所を移動させなければならないという問題もあります。
+これは些細な事ですが、意外と間違いのもとです。
+</p>
+<p>
+「それでもプライベートメンバにしたい」局面があるにしても、通常は「すべてパブリックメンバにしてしまう」
+ほうがいいと、筆者は思います。
+ただパブリックメンバにして終わりではなく、プライベートメンバである事を表すために、プロパティ／
+メソッド名の頭にアンダースコアをつけるのです。
+少なくとも、これでプライベートメンバである事を識別できます。これで十分なケースも多いはずです。
+</p>
+<p>
+時と場合によるとは思いますが、開発の生産性／保守性、クラスの安全性などを天秤にかけ、
+プライベートメンバ利用の是非を判断してください。
+</p>
+<h4>
+<a name="SEC7">名前空間／パッケージを作成する</a>
+</h4>
+<p>
+クラスの数が多くなってくると、「クラス名がライブラリ同士、あるいは、ライブラリとライブラリを利用している
+アプリケーションとで競合する」というケースも出てくる。
+</p>
+<p>
+これは、当然好ましいことではないので、ある程度の規模のクラスライブラリを作成する場合には、
+これを名前空間（パッケージ）配下にまとめてしまうことをお勧めします。
+</p>
+<p>
+たとえば、「Wings名前空間に属するMemberオブジェクト」と「Yamada名前空間に属するMemberオブジェクト」
+を別物として区別できるようになります。
+</p>
+<p>
+JavaやC#のような言語では、このような名前空間（パッケージ）のしくみを標準で備えていますが、
+残念ながらJavaScriptにはありません。そこでJavaScriptでは、空のオブジェクトを利用して擬似的に
+「名前空間のようなもの」を作成します。
+</p>
+<pre>
+<code>
+   var Wings = function () { }//--①
+
+   /* ② */
+   Wings.Member = function (firstName, lastName) {
+       this.firstName = firstName;
+       this.lastName = lastName;
+   };
+
+   Wings.Member.prototype = {
+       getName: function () {
+      return this.lastName + ' ' + this.firstName;
+       }
+   };
+   
+   var mem = new Wings.Member('祥寛', '山田');// --③
+   document.writeln(mem.getName());// 山田 祥寛
+</code>
+</pre>
+<p>
+名前空間を定義するには、ただ単に「空のコンストラクタ関数を生成する」だけです。
+①でWings名前空間を定義しています。
+</p>
+<p>
+あとは、Wings名前空間（オブジェクト）に対して、静的プロパティを追加するのと同じ要領で、
+配下に置きたいクラス（コンストラクタ）を定義するだけです（②）。
+これによって、Wings名前空間の配下に属するMemberクラスが定義できました。
+</p>
+<p>
+名前空間配下のクラスをインスタンス化する場合には、名前空間も含んだ名前（完全修飾名）として
+クラス名を指定する必要があります（③）。
+</p>
+<h2><a name="SEC8">Chapter6　ブラウザを自在に操る～ブラウザオブジェクト</a></h2>
+<h3>
+<a name="SEC9">6-1 イベントが発生したら処理を行う -イベントドリブンモデル-</a>
+</h3>
+<h4>
+<a name="SEC10">クライアントサイドJavaScriptとイベントドリブンモデルを理解する</a>
+</h4>
+<p>
+この章の内容はブラウザ環境（クライアントサイドJavaScript）を前提とした内容です。
+ブラウザでしか動作しません。
+</p>
+<p>
+JavaScript、または、JavaScriptをベースとして作られた言語は以下のように様々な環境で
+動作します。
+</p>
+<table border="1">
+<tr>
+<th>環境</th>
+<th>概要</th>
+<th>言語名</th>
+</tr>
+<tr>
+<td>Windows Script Host</td>
+<td>Windows環境のスクリプト実行環境</td>
+<td>JScript</td>
+</tr>
+<tr>
+<td>Internet Information Services</td>
+<td>Windows標準のWebサーバー</td>
+<td>JScript.NET</td>
+</tr>
+<tr>
+<td>Java Platform, Standard Edition 6</td>
+<td>Java言語の基本実行環境</td>
+<td>JavaScript</td>
+</tr>
+<tr>
+<td>Flash Player</td>
+<td>Flashの実行環境</td>
+<td>ActionScript</td>
+</tr>
+</table>
+<p>
+イベントに対応してその処理内容を定義するコードの塊（関数）のことをイベントハンドラと言います。
+以下に、クライアントサイドJavaScriptで利用可能な主なイベント。
+</p>
+<table border="1">
+<tr>
+<th>分類</th><th>イベント名</th><th>発生タイミング</th><th>主な対象要素</th>
+</tr>
+<tr>
+<td rowspan="3">読み込み</td><td>abort</td><td>画像の読み込みが中断された時</td><td>img</td>
+</tr>
+<tr>
+<td>load</td><td>ページ、画像の読み込み完了時</td><td>body, img</td>
+</tr>
+<tr>
+<td>unload</td><td>他ページに移動する時</td><td>body</td>
+</tr>
+<td rowspan="8">マウス</td><td>click</td><td>マウスクリック時</td><td>-</td>
+</tr>
+<tr>
+<td>dblclick</td><td>ダブルクリック時</td><td>-</td>
+</tr>
+<tr>
+<td>mousedown</td><td>マウスボタンを押下した時</td><td>-</td>
+</tr>
+<tr>
+<td>mousemove</td><td>マウスポインタが移動した時</td><td>-</td>
+</tr>
+<tr>
+<td>mouseout</td><td>要素からマウスポインタが外れた時</td><td>-</td>
+</tr>
+<tr>
+<td>mouseover</td><td>要素にマウスポインタが重なった時</td><td>-</td>
+</tr>
+<tr>
+<td>mouseup</td><td>マウスボタンを離した時</td><td>-</td>
+</tr>
+<tr>
+<td>contextmenu</td><td>コンテキストメニューが表示される前</td><td>body</td>
+</tr>
+<tr>
+<td rowspan="3">キー</td><td>keydown</td><td>キーを押下した時</td><td>-</td>
+</tr>
+<tr>
+<td>keypress</td><td>キーを押下中</td><td>-</td>
+</tr>
+<tr>
+<td>keyup</td><td>キーを離した時</td><td>-</td>
+</tr>
+<tr>
+<td rowspan="3">フォーム</td><td>change</td><td>内容が変更された時</td><td>input(text), select</td>
+</tr>
+<tr>
+<td>reset</td><td>リセットボタンが押された時</td><td>form</td>
+</tr>
+<tr>
+<td>submit</td><td>サブミットボタンが押された時</td><td>form</td>
+</tr>
+<tr>
+<td rowspan="2">フォーカス</td><td>blur</td><td>要素からフォーカスが離れた時</td><td>-</td>
+</tr>
+<tr>
+<td>focus</td><td>要素がフォーカスされた時</td><td>-</td>
+</tr>
+<td rowspan="2">その他</td><td>resize</td><td>要素のサイズを変更した時</td><td>-</td>
+</tr>
+<tr>
+<td>scroll</td><td>スクロールした時</td><td>body</td>
+</tr>
+</table>
+<h4>
+<a name="SEC11">イベントとイベントハンドラを関連付ける</a>
+</h4>
+<p>
+イベントドリブンモデルの中心となるのは「イベント」と「イベントハンドラ」です。
+イベントドリブンモデルでは、まず以下の３つを定義しておく必要があります。
+</p>
+<ul>
+<li>
+どの要素で発生した
+</li>
+<li>
+どのイベントを
+</li>
+<li>
+どのイベントハンドラに関連付けるのか
+</li>
+</ul>
+<h5>
+<a name="SEC12">タグ内の属性として宣言する</a>
+</h5>
+<p>
+もっともシンプルな記法。
+</p>
+<pre>
+<code>
+    &lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+    &lt;head&gt;
+        &lt;meta charset="utf-8" /&gt;
+        &lt;!--
+            タブ内でスクリプトを記述する場合には、
+            デフォルトのスクリプト言語を &lt;head&gt; タグ
+            配下の &lt;meta&gt; タグで宣言しておくべきです。
+        //--&gt;
+        &lt;meta http-equiv="Content-Script-Type" 
+				content="text/javascript" /&gt;
+        &lt;title&gt;p199&lt;/title&gt;
+        &lt;script type="text/javascript"&gt;
+            &lt;!--
+            function btn_onclick() {
+                window.alert('ボタンがクリックされました。');
+            }
+            //--&gt;
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;input type="button" value="ダイアログの表示" 
+		onclick="btn_onclick()" /&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+</code>
+</pre>
+<p>
+処理そのものを直接記述する事もできます。
+</p>
+<pre>
+<code>
+   &lt;input type="button" value="ダイアログの表示" 
+      onclick="window.alert('ボタンがクリックされました。');" /&gt;	
+</code>
+</pre>
+<p>
+とはいえ、「ページ構成と処理（スクリプト）とは明確に分離すべし」という昨今のトレンドを
+鑑み、タグ内でのJavaScriptの記述はイベントハンドラの呼び出しに留めるべきです。
+</p>
+<h4>
+<a name="SEC13">JavaScript のコード内で関数をプロパティとして設定</a>
+</h4>
+<p>
+イベントハンドラの呼び出しのみであるとはいえ、本来、レイアウトを定義すべき HTML の中に
+JavaScript のコードを混在させるのは好ましくありません。そこで JavaScript では、
+関連付けとイベントハンドラそのものの宣言とをまとめて、JavaScript のコード内で記述することもできます。
+</p>
+<pre>
+<code>
+    &lt;head&gt;
+        &lt;meta charset="utf-8" /&gt;
+        &lt;title&gt;p205&lt;/title&gt;
+        &lt;script type="text/javascript"&gt;
+            &lt;!--
+            //ページロード時に実行さえるイベントハンドラを登録
+            window.onload = function () {
+                /*
+		ボタン(btn)クリック時に実行される
+		イベントハンドラを登録
+		*/
+                document.getElementById('btn').onclick = 
+		   function () {
+                   	window.alert('ボタンがクリックされました。');
+                   };
+            };
+            //--&gt;
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;input id = "btn" type= "button" value="ダイアログの表示" /&gt;
+    &lt;/body&gt;
+</code>
+</pre>
+<p>
+ここで使用されているのは「匿名関数（関数リテラル）」です。↑
+名前付き関数を使う事も出来ます。↓
+<p>
+<pre>
+<code>
+    &lt;!DOCTYPE html&gt;
+    
+    &lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+    &lt;head&gt;
+        &lt;meta charset="utf-8" /&gt;
+        &lt;title&gt;p205&lt;/title&gt;
+        &lt;script type="text/javascript"&gt;
+            &lt;!--
+            function btnClick() {
+                
+                window.alert('ボタンがクリックされました。');
+            }
+            window.onload =init;
+    
+            function init() {
+                document.getElementById('btn').onclick = btnClick;
+            };
+            //--&gt;
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;input id = "btn" type= "button" value="ダイアログの表示" /&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+</code>
+</pre>
+<p>しかし、イベントハンドラはその性質上
+、複数箇所で使い回す事がほとんどないので、名前付き関数として別に定義するよりも、
+匿名関数として直接定義した方が、グローバルな名前空間を汚す事もありません。
+</p>
+<p>
+この記法を利用する場合は、以下の３点に注意します。
+</p>
+<h5>
+<a name="SEC14">（１）イベント名は全て小文字で記述</a>
+</h5>
+<p>
+<code>window.onLoad</code> <code>～.onClick</code> のような記述は不可です。
+</p>
+<h5>
+<a name="SEC15">（２）プロパティとして設定するのは関数オブジェクト</a>
+</h5>
+<p>
+プロパティとして設定するのは、あくまで関数オブジェクトであって、関数呼び出しではありません。
+たとえば、 onload イベントに init イベントハンドラを関連付ける場合、
+</p>
+<pre>
+<code>
+   window.onload = init();
+</code>
+</pre>
+<p>
+という記述は不可です。正しくは、
+</p>
+<pre>
+<code>
+   window.onload = init;
+</code>
+</pre>
+<p>
+と、記述します。
+</p>
+<h5>
+<a name="SEC16">個別要素のイベントハンドラは onload イベントハンドラ配下に</a>
+</h5>
+<p>
+「document.getElementById.～」の形式でイベントハンドラを登録する場合、
+基本的には onload イベントハンドラの配下に記述する必要があります。
+</p>
+<p>
+getElementById メソッドについては後述しますが、まずは「指定された要素を取得するための
+メソッド」と思っておけばよいでしょう。対象となる要素が読みこまれる前に、このgetElementById
+メソッドを呼び出してしまうと、JavaScriptはエラーを返します。onload イベントハンドラの配下
+に記述することで、文書全体が呼び出された（読みこまれた後に）getElementById メソッドが実行され
+ますので、正しく動作します。
+</p>
+<p>
+イベントハンドラを登録する方法として、addEventListener／attachEvent メソッドを
+利用する方法があります。この方法については Chapter 7 で解説します。
+</p>
+<h4>
+<a name="SEC17">イベント標準の挙動をキャンセルする</a>
+</h4>
+<p>
+アンカータグがクリックされたら「ページを移動する」、サブミットボタンがクリックされたら
+「フォームの内容を送信する」、ページ上で右クリックされたら「コンテキストメニューを表示する」
+などの動作を「イベント標準の挙動」といいます。これらはイベントハンドラでキャンセルする事ができます。
+</p>
+<pre>
+<code>
+        &lt;style type="text/css"&gt;
+            body {
+                margin:0px; padding:0px;
+                border:10px solid red;                
+            }
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body oncontextmenu="return false;"&gt;
+        &lt;p&gt;aaa&lt;/p&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+</code>
+</pre>
+<p>
+右クリック禁止なのは body 内の要素上の範囲だけです。
+（ブラウザの違い、バージョンの違いでも動作は一定ではない）
+</p>
+<h3>
+<a name="SEC18">6-2 ブラウザオブジェクトの基本をおさえる</a>
+</h3>
+<p>
+ブラウザオブジェクトはブラウザベンダ個々で独自に実装したローカルなオブジェクト群です。
+クロスブラウザ問題の問題は完全でないまでも、ブラウザう同士の歩み寄りによって
+解消されつつあります。
+</p>
+<h4>
+<a name="SEC19">ブラウザオブジェクトの階層構造</a>
+</h4>
+<pre>
+
+   グローバルオブジェクト（Windowオブジェクト）
+    ├─ document(Documentオブジェクト)
+    │  ├─ anchors(アンカーの集合=Anchorオブジェクト配列)
+    │  ├─ forms（フォームの集合=Formオブジェクトの配列)
+    │  │   └─ elements(要素の集合)
+    │  │      ├─ Button
+    │  │      ├─ CheckBox
+    │  │      ├─ FileUpload
+    │  │      ├─ Password
+    │  │      ├─ Radio
+    │  │      ├─ Reset
+    │  │      ├─ Select
+    │  │      │   └─ options(オプションの集合)
+    │  │      ├─ Submit
+    │  │      ├─ Text
+    │  │      └─ Textarea
+    │  └─ images(画像の集合=Imageオブジェクト配列)
+    ├─ history(Historyオブジェクト)
+    ├─ location(Locationオブジェクト)
+    ├─ navigator(Navigatorオブジェクト)
+    ├─ parent, self, top, 任意のウィンドウ名（Windowオブジェクト）
+    └─ screen(Screenオブジェクト)
+
+</pre>
+<h4>
+<a name="SEC20">ブラウザオブジェクトへアクセスするには</a>
+</h4>
+<p>
+グローバルオブジェクトはアプリケーション課はつ者が意識することのない
+（また、直接アクセスすることはできない）オブジェクトです。
+つまり、クライアントサイド JavaScript では、基本的に Window オブジェクトを意識する必要はありません。
+</p>
+<pre>
+<code>
+   //window←先頭は小文字
+   window.document.write('こんにちは');
+</code>
+</pre>
+<p>
+のように記述することはできます。しかし、冗長であるだけで、あまり意味がありません。
+この稿ではオブジェクトの従属関係を明示するために window. を省略しない記述を省略しない
+記述をします。
+window は Windowオブジェクトが自分自身への参照を返す windowプロパティです。
+</p>
+<p>
+ちなみに、document は、オブジェクトではなくプロパティ名です。
+document は、あくまで「Document オブジェクトを参照するプロパティ」です。
+しかし、documentプロパティは実体としてオブジェクトを表していることから、便宜上、
+document「オブジェクト」と表記することがよくあります。
+</p>
+<h3>
+<a name="SEC21">6-3 ウィンドウの操作から　ダイアログ／タイマーの制御まで　- Windowオブジェクト -</a>
+</h3>
+<h4>
+<a name="SEC22">alertメソッド（警告ダイアログ）</a>
+</h4>
+<pre>
+<code>
+   &lt;body onload="window.alert('ページが表示されました');"&gt;
+</code>
+</pre>
+<h4>
+<a name="SEC23">confirmメソッド（確認ダイアログ）</a>
+</h4>
+<pre>
+<code>
+   &lt;form method="post" action="hoge.cgi"
+   onsubmit="return window.confirm('actionを実行します')"&gt;
+     &lt;input type="submit" value="送信" /&gt;
+   &lt;/form&gt;
+</code>
+</pre>
+<p>
+form タグの action 属性は、エージェント（仲立ちするもの：処理を実行する為のアプリケーション）
+を指定します。confirm メソッドは「ＯＫ」、「キャンセル」の選択ダイアログを表示し、「ＯＫ」なら
+true、「キャンセル」ならば false を返します。イベントハンドラとして false を返すと、もともとの
+イベントはキャンセルされるのでした。単に false ではなく、<strong>return false</strong> という
+記述と等価になる記述でないと動作しません。
+</p>
+<h4>
+<a name="SEC24">prompt メソッド（入力ダイアログ）</a>
+</h4>
+<pre>
+<code>
+   window.onload = function () {
+       var input = window.prompt('文字列を入力してください', "hoge");
+       window.alert('入力値：' + input);
+</code>
+</pre>
+<p>
+alert／confirm／prompt メソッドはユーザーにとって煩わしいものです。
+原則として、ダイアログは出バック用とやサブミット時の確認など、ごく限られた局面での
+利用に留めるべきです。
+</p>
+<h4>
+<a name="SEC25">サブウィンドウを生成する - openメソッド -</a>
+</h4>
+<p>
+必要最小限で使用すべきメソッドとして、図表やフォームを含んだコンテンツを
+サブウィンドウで表示させたいなどのケースで利用できるのが open メソッドです。
+</p>
+<pre>
+<code>
+    &lt;!DOCTYPE html&gt;
+
+    &lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+    &lt;head&gt;
+        &lt;meta charset="utf-8" /&gt;
+        &lt;title&gt;p213&lt;/title&gt;
+        &lt;script type="text/javascript"&gt;
+            &lt;!--
+            //サブウィンドウを表す Windowオブジェクトを格納する変数
+            var subwin;
+
+            //[サブウィンドウを開く] ボタンクリック時に実行
+            function win_open() {
+                subwin = 
+		   window.open('http://www.wings.msn.to/', 'Sample',
+                   'width=600,height=300, scrollbars=yes, location=yes');
+            }
+
+            //[サブウィンドウを閉じる] ボタンクリック時に実行
+            function win_close() {
+                /*
+		変数 subwin が空でなく、
+		サブウィンドウが閉じられていない時にのみクローズ
+    		*/                                
+                if (subwin && !subwin.closed) {
+                    subwin.close();
+                }
+            }
+            //--&gt;
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;      
+        &lt;input type="button" 
+	 	value="サブウィンドウを開く" onclick="win_open()" /&gt;
+        &lt;input type ="button" 
+		value="サブウィンドウを閉じる" onclick="win_close()" /&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+</code>
+</pre>
+<p>
+openメソッドの構文は、以下のとおりです。
+</p>
+<pre>
+<code>
+   変数 = window.open(URL, ウィンドウ名, オプション）
+</code>
+</pre>
+<p>
+ウィンドウ名はアンカータグの target 属性などで指定できる名前です。オプションは
+「オプション名 = 値, …」の形式で指定します。指定可能なオプションは以下の表を見て下さい。
+</p>
+<table border="1">
+<caption>open メソッドで利用可能な主なオプション</caption>
+<tr>
+<th>オプション</th><th>概要</th>
+</tr>
+<tr>
+<td>width</td><td>ウィンドウの幅</td>
+</tr>
+<tr>
+<td>height</td><td>ウィンドウの高さ</td>
+</tr>
+<tr>
+<td>location</td><td>アドレスバーを表示するか(yes|no)</td>
+</tr>
+<tr>
+<td>scrollbars</td><td>スクロールバーを表示するか(yes|no)</td>
+</tr>
+<tr>
+<td>resizable</td><td>ウィンドウサイズの変更は可能か(yes|no)</td>
+</tr>
+<tr>
+<td>toolbar</td><td>ツールバーを表示するか(yes|no)</td>
+</tr>
+<tr>
+<td>status</td><td>ステータスバーを表示するか(yes|no)</td>
+</tr>
+<tr>
+<td>menubar</td><td>メニューバーを表示するか(yes|no)</td>
+</tr>
+</table>
+<p>
+close メソッドは、window.close() で親ウィンドウを閉じる際にも利用できます。
+</p>
+<h4>
+<a name="SEC26">タイマー機能を実装する -setInterval／setTimeout メソッド -</a>
+</h4>
+<pre>
+<code>
+    &lt;!DOCTYPE html&gt;
+
+    &lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+    &lt;head&gt;
+        &lt;meta charset="utf-8" /&gt;
+        &lt;title&gt;p215&lt;/title&gt;
+        &lt;script type="text/javascript"&gt;
+            &lt;!--
+            // タイマーIDを格納するグローバル変数
+            var timer;
+            // ページロード時にタイマー処理を登録
+            window.onload = function () {
+                timer = window.setInterval(
+                    /* 
+                    現在の時刻を&lt;div id='result'&gt;タグに
+                    表示(1000ミリ秒ごとに更新)
+                    */
+                    function () {
+                        var dat = new Date();
+                        document.getElementById('result').innerHTML = 
+                              dat.toLocaleTimeString();
+                    },
+                    1000
+                );
+            };
+            //--&gt;
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+      
+        &lt;!-- ボタンクリック時にタイマー処理を中止 --&gt;
+        &lt;input type="button" value="タイマー停止" 
+                        onclick="window.clearInterval(timer)" /&gt;
+        &lt;div id="result"&gt;&lt;/div&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+</code>
+</pre>
+<p>
+Window オブジェクトの setInterval は決められた時間感覚で繰り返し
+処理を実行します。setTimeout メソッドは、指定された時間が経過したところで一回だけ処理を実行
+します。いずれもタイマーを一位に識別するためのID値を返します。このID値は、Window オブジェクト clearInterval メソッドを実行すると無効になります。
+</p>
+<pre>
+<code>
+    &lt;!DOCTYPE html&gt;
+
+    &lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+    &lt;head&gt;
+        &lt;meta charset="utf-8" /&gt;
+        &lt;title&gt;p216&lt;/title&gt;
+        &lt;script type="text/javascript"&gt;
+            &lt;!--
+            // タイマーIDを格納するグローバル変数
+            var timer;
+            //ページロード時にタイマー処理を登録
+            window.onload = function () {
+                timer = window.setTimeout(
+                    /* 現在の時刻を
+                    &lt;div id='result'&gt;タグに表示(3000ミリ秒後の一回)
+                    */
+                    function () {
+                        var dat = new Date();
+                        document.getElementById('result').innerHTML = 
+                            dat.toLocaleTimeString();
+                    },
+                    3000
+                );
+            };
+            //--&gt;
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+      
+        &lt;!-- ボタンクリック時にタイマー処理を中止 --&gt;
+        &lt;input type="button" value="タイマー停止" 
+            onclick="window.clearInterval(timer)" /&gt;
+        &lt;div id="result"&gt;&lt;/div&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+</code>
+</pre>
+<h4>
+<a name="SEC27">ウィンドウサイズやスクロール位置を操作する</a>
+</h4>
+<p>
+Window オブジェクトには、ウィンドウサイズやスクロール位置を操作する為のさまざまな
+プロパティ／メソッドが用意されています。
+</p>
+<table border="1">
+<caption>
+ウィンドウを操作するためのプロパティ／メソッド
+</caption>
+<tr>
+<th>メンバ</th><th>概要</th>
+</tr>
+<tr>
+<td>moveBy(x, y)</td><td>ウィンドウ位置を移動（相対座標）</td>
+</tr>
+<tr>
+<td>moveTo(x, y)</td><td>ウィンドウ位置を移動（絶対座標）</td>
+</tr>
+<tr>
+<td>resizeBy(x, y)</td><td>ウィンドウサイズを変更（相対サイズ）</td>
+</tr>
+<tr>
+<td>resizeTo(x, y)</td><td>ウィンドウサイズを変更（絶対サイズ）</td>
+</tr>
+<tr>
+<td>scrollBy(x, y)</td><td>ウィンドウの内容をスクロール（相対位置）</td>
+</tr>
+<tr>
+<td>scrollTo(x, y)</td><td>ウィンドウの内容をスクロール（絶対位置）</td>
+</tr>
+<tr>
+<td>blur()</td><td>ウィンドウからフォーカスをはずす</td>
+</tr>
+<tr>
+<td>focus()</td><td>ウィンドウにフォーカスを当てる（アクティヴにする）</td>
+</tr>
+<tr>
+<td>print()</td><td>ウィンドウの内容を印刷</td>
+</tr>
+</table>
+<p>
+moveBy／resizeBy はブラウザによっては動作しない。
+タブブラウザの場合、複数タブが開いていると動作しない。
+</p>
+<pre>
+<code>
+   &lt;input type="button" 
+      value=
+	"scrollTo" onclick="window.scrollTo(0, 200);alert('t')" /&gt;   
+   &lt;input type="button" 
+      value=
+	"moveBy" onclick="window.moveBy(100, 100); alert('t2')" /&gt;   
+   &lt;input type="button" 
+      value=
+	"resizeBy" onclick="window.resizeBy(50, 50); alert('t3')" /&gt;
+   &lt;p&gt;row&lt;/p&gt;
+   &lt;p&gt;row&lt;/p&gt;
+   &lt;p&gt;row&lt;/p&gt;
+   &lt;p&gt;row&lt;/p&gt;
+   &lt;p&gt;row&lt;/p&gt;
+   &lt;p&gt;row&lt;/p&gt;
+   &lt;p&gt;row&lt;/p&gt;
+   &lt;p&gt;row&lt;/p&gt;
+   &lt;p&gt;row&lt;/p&gt;
+   &lt;p&gt;row&lt;/p&gt;
+   &lt;p&gt;row&lt;/p&gt;
+   &lt;p&gt;row&lt;/p&gt;
+   &lt;p&gt;row&lt;/p&gt;
+   &lt;p&gt;row&lt;/p&gt;
+   &lt;p&gt;row&lt;/p&gt;
+   &lt;p&gt;row&lt;/p&gt;
+   &lt;p&gt;row&lt;/p&gt;
+   &lt;p&gt;row&lt;/p&gt;
+   &lt;p&gt;row&lt;/p&gt;
+   &lt;p&gt;row&lt;/p&gt;
+   &lt;p&gt;row&lt;/p&gt;
+   &lt;p&gt;row&lt;/p&gt;
+   &lt;p&gt;row&lt;/p&gt;
+   &lt;p&gt;row&lt;/p&gt;
+   &lt;p&gt;row&lt;/p&gt;
+   &lt;p&gt;row&lt;/p&gt;
+   &lt;p&gt;row&lt;/p&gt;
+</code>
+</pre>
+
+<!-- ☜ -->
+<a href="js5.htm">☜☜前へ</a>　<a href="js7.htm">次へ☞☞ 
+</a></p>
+</body>
+</html>	

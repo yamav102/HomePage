@@ -1,0 +1,190 @@
+<link href="http://homepage3.nifty.com/homepage_yamaV102/highlight.js/styles/vs.css" rel="stylesheet" />
+<p><script type="text/javascript" src="http://homepage3.nifty.com/homepage_yamaV102/highlight.js/highlight.pack.js"></script><script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+</p>
+
+<div class="myArea">
+<h1>
+AppActivateステートメント メモ
+</h1>
+<p>
+AppActivate ステートメントは、<q>アプリケーション ウィンドウをアクティブ化します。</q>
+</p>
+
+<p>
+「このアプリケーションのこのウィンドウをアクティブにしたい」のに前面に表示されず残念な思いをすることがあります。
+この問題を解決してくれるかもしれないのが AppActivate です。
+</p>
+<div id="code0">
+<pre>
+<code>
+～構文～
+AppActivate title [, wait]
+</code>
+</pre>
+</div>
+<p>
+省略可能な第二引数は、この稿では考えません。
+第一引数の title の<a href="https://msdn.microsoft.com/ja-jp/library/office/gg278643%28v=office.15%29.aspx" target="_blank">ヘルプ<a>の説明は次の通りです。
+</p>
+<blockquote>
+<p>必須。アクティブ化するアプリケーション ウィンドウのタイトル バーに表示されるタイトルを指定する <a href="https://msdn.microsoft.com/ja-jp/library/office/gg264568.aspx">文字列型 (String) の式</a>です。<strong>Shell</strong> 関数から返されるタスク ID を <strong><em>title</em></strong> の代わりに使用してアプリケーションをアクティブ化することもできます。</p>
+</blockquote>
+<p>
+title の値をどう取得するのかが考えどころです。一字一句間違えないように title を自分で記述できれば良いのですが、
+文字列の半角・全角など間違えずに指定するのはとても難しく骨の折れる作業です。また、ファイル名がいつも同じともアレですので、
+ハードコーディングは避けたいところです。
+</p>
+<p>
+ヘルプの解説には次にようにあります。
+</p>
+<blockquote>
+アクティブ化するアプリケーションを判別する際、<strong><em>title</em></strong> が実行中の各アプリケーションのタイトル文字列と比較されます。完全に一致するものが見つからない場合は、タイトル文字列が <strong><em>title</em></strong> で始まるアプリケーションがすべてアクティブ化されます。<strong><em>title</em></strong> に一致するアプリケーションのインスタンスが複数ある場合は、1 つのインスタンスが任意にアクティブ化されます。
+</blockquote>
+<p>
+「完全一致でなくてもいいんだ゜+.(・∀・)゜+.゜」と「これならなんとかやりようがあるか」と希望をもって
+いくつかコードを試してみるのですが、私の試した範囲では、AppActivateステートメントが受け入れてくれる文字列は
+例外もみつけましたが、完全一致した文字列でないと「プロシージャの呼び出し、または引数が不正です。」というエラーになりました。
+また、ヘルプにある次のサンプルコードは動作しませんでした。
+</p>
+<blockquote>
+<pre>
+AppActivate "Microsoft Word" ' Activate Microsoft 
+ ' Word. 
+</pre>
+</blockquote>
+<p>
+Shell関数から返されるタスクIDを指定する例は以下のようになります。
+</p>
+<div id="code0">
+<pre>
+<code>
+Sub appactivateTest()
+    
+    Dim taskID As Integer
+    taskID = Shell("C:\Program Files\Microsoft Office 15\root\office15\winword.exe", vbMaximizedFocus)
+    VBA.AppActivate (taskID)
+    
+End Sub
+</code>
+</pre>
+</div>
+<p>
+アプリケーションのウィンドウだけを
+指定したいのではなく、アプリケーションの更にその中のウィンドウを指定したい場合、このコードは
+役に立ちません。また、Shell関数の第二引数で既にウィンドウにフォーカスを当てることが出来てしまうので、
+AppActivateステートメントをここで使う意味があるとは思えません。
+</p>
+<p>
+エクセル2013 で試した限りでは window の caption を title に指定したところアクティブウィンドウにする事が出来ました。 
+</p>
+<div id="code0">
+<pre>
+<code>
+Sub appactivateTest2()
+    Dim wb As Workbook
+    
+    Set wb = Application.Workbooks.Open(ThisWorkbook.Path & "\sample.xlsx")
+        
+    Debug.Print wb.Windows(1).Caption
+    VBA.AppActivate wb.Windows(1).Caption & " - Excel" '「& " - Excel"」部分は無くてもOK
+    
+End Sub
+</code>
+</pre>
+</div>
+<p>
+ワード2013 で試した限りでは window の caption に " - Word" を連結した文字列を title に指定したところ
+アクティブウィンドウにする事が出来ました。 
+</p>
+<div id="code0">
+<pre>
+<code>
+Sub appactivateTest3()
+   
+    Dim wdapp As Word.Application
+    Set wdapp = New Word.Application
+    
+    With wdapp
+        .Documents.Open ThisWorkbook.Path & "\文書2.docx"
+        .Visible = True
+        Debug.Print .Windows(1).Caption
+        VBA.AppActivate .Windows(1).Caption & " - Word" '「& " - Word"」部分は必須
+    End With
+    
+End Sub
+</code>
+</pre>
+</div>
+<p>
+ACCESSの場合ですが、Windows(1).Caption に当たるプロパティを見つけることが出来ませんでした。
+あきらめて API関数を使うことにします。この関数はエクセルにでもワードにでも使えます。
+</p>
+
+<div id="code0">
+<pre>
+<code>
+'modfunction
+Option Explicit
+
+'API関数の宣言
+'ウィンドウのタイトルバーテキスト取得
+Private Declare Function GetWindowText Lib "user32" _
+    Alias "GetWindowTextA" _
+    (ByVal hwnd As Long, ByVal lpString As String, _
+    ByVal cch As Long) As Long
+    
+'ウインドウハンドルを渡してタイトルバーテキストを返します
+Public Function GetWindowCaption(hwnd As Long) As String
+
+    Dim str As String
+    str = String(255, vbNullChar)
+    
+    'GetWindowText API関数
+    GetWindowText hwnd, str, Len(str)
+    str = Left$(str, InStr(str, vbNullChar) - 1)
+    
+    GetWindowCaption = str
+    
+End Function
+</code>
+</pre>
+</div>
+
+<div id="code0">
+<pre>
+<code>
+Sub appactivateTest4()
+    
+    Dim tgtPath As String
+    
+    tgtPath = ThisWorkbook.Path & "\データベース1.accdb"
+    
+    Dim accApp As Access.Application 'Object
+    
+    Set accApp = VBA.GetObject(tgtPath)
+
+    Dim winTitle As String
+    winTitle = GetWindowCaption(accApp.hWndAccessApp)
+    
+    VBA.AppActivate winTitle
+        
+End Sub
+</code>
+</pre>
+</div>
+
+以上
+</p>
+
+<div>
+<a href="https://twitter.com/share" class="twitter-share-button" data-via="yamav102">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test
+
+(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p
+
++'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 
+
+'twitter-wjs');</script>
+</div>
+
+</div>

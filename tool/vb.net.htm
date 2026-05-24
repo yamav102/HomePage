@@ -1,0 +1,2420 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="ja">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=shift_jis">
+<meta http-equiv="content-style-type" content="text/css">
+<meta http-equiv="content-script-type" content="text/javascript">
+<meta name="keywords" content="VBA.NET Sample,">
+<meta name="description" content="仕事で楽できるツール集">
+<link rel="stylesheet" href="./web/stylexlvba.css" type="text/css">
+<link rev="made" href="mailto:xatsushi&#64;tbb.t-com.ne.jp">
+<link rel="next" href="tsugi.htm">
+<title>VB.NET MEMO</title>
+<style type="text/css">
+<!--
+.clyoko{display:inline;}
+
+-->
+</style>
+</head>
+<body>
+<div id="contents">
+<ul>
+<li class="clyoko"><a href="../">&gt;home</a></li>
+
+</ul>
+<h1>VB.NET Sample 1</h1>
+
+<pre>
+■イミィディエイトウィンドウのクリヤ
+>cls
+
+■イミディエイトウィンドウからフォームのコードをテストする
+
+?(New form1).Textbox1.name
+"TextBox1"
+
+■スペシャルフォルダーの取得
+?Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
+"C:\Documents and Settings\やま\デスクトップ"
+
+■一時フォルダの取得
+System.IO.Path.GetTempPath()
+
+■システムフォルダーの取得
+
+Dim sysdir As String = _
+	System.Environment.GetFolderPath( _
+	System.Environment.SpecialFolder.System)
+
+MsgBox("System.Environment.SpecialFolder.Systemのパスは　" & sysdir, MsgBoxStyle.Information, "TitleTest")
+
+■自プログラムのフルパスを取得
+?system.Windows.Forms.Application.StartupPath
+"C:\Documents and Settings\やま\デスクトップ\VB_renshu\データベース\データベース\bin\Debug"
+
+■対角線の数を求める
+モジュールに記述すると、インスタンスを作成したりImportsを記述する必要がない。
+簡単で便利すぎる。オブジェクト指向の概念が習得できるまではモジュールの使用は避けて通るべき。
+オブジェクト指向でコーディングしない限りVBの威力は発揮されない。
+Module Module1
+
+    Public ThisName As String 'フィールドの宣言
+
+    '■Diagonal
+    ''' <summary>n角形の対角線の数を求めます。</summary>
+    ''' <param name="n">対象の図形の角の数を指定します。</param>
+    ''' <returns>n角形の対角線の数を返します。</returns>
+    Public Function Diagonal(ByVal n As Integer) As Integer
+
+        If n < 2 Then
+            Throw New ArgumentException("nには3以上の整数を指定して下さい。")
+        End If
+
+        Return n * (n - 1) / 2 - n
+
+    End Function
+
+End Module
+
+
+
+  Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+
+    ThisName = "Viva VB"
+
+    Dim Count As Integer
+
+    Count = Diagonal(8) '8角形の対角線の数を求める。
+
+    MsgBox("8角形の対角線の数は" & Count & "です。", MsgBoxStyle.Information, ThisName)
+
+End Sub
+
+■サイコロを振る
+Sub Saikoro()
+	Dim Saikoro As New Random
+	'SikoroはRandomクラスをインスタンス化したもの
+	Dim Number As Decimal
+	'NextはRandomクラスのメソッド⇒だが、Random.Nextとは書くことができず、かならずインスタンス越しに使用する。
+	Number = Saikoro.Next(1, 7)
+	
+	MsgBox(Number)
+End Sub
+
+■substringメソッド
+
+'値.メソッド
+Dim St As String
+
+St = "あいうえお".Substring(1, 2)
+
+MsgBox(St)
+
+'インスタンス.メソッド
+Dim St As String
+
+St = "あいうえお"
+
+St = St.Substring(1, 2)
+
+MsgBox(St)
+
+'クラス名.メソッド
+St = StrConv("楽しいＶＢプログラミング", VbStrConv.Katakana)
+'↑Strings.StrConv:Stringsクラスが省略されている。
+stringsクラスはクラス名を省略できる特殊なクラス⇒このようなメソッドを特に「関数」と呼ぶ事が多い。	
+「関数」はVBのタメに用意されており、VBにしか使えない。
+対して、メソッドとプロパティは.NET frameworkが装備しているものなので
+C++、C#などからも使うことが出来る。
+
+■Left関数
+
+フォームの中で、
+MsgBox(Left("あいうえお", 2))
+こうかくと、フォームのleftプロパティと解釈されエラーになる。
+Left関数というのは、stringsクラスのメソッドなので、
+MsgBox(Strings.Left("あいうえお", 2))　のように書く。
+また、
+MsgBox(Microsoft.VisualBasic.Left("あいうえお", 2))
+また、
+Imports VB = Microsoft.VisualBasic
+MsgBox(VB.Left("あいうえお", 2))
+と書いても可。
+しかし、以下のようにsubstringメソッドで書くのが.NET風
+MsgBox("あいうえお".Substring(0, 2))
+
+■FromFileメソッド
+
+'ImageクラスのFromFileメソッド：画像を返す
+Me.BackgroundImage = Image.FromFile("C:\winnt\隅田川.bmp")
+
+■FromARBGメソッド
+        Me.Label1.BackColor = Color.FromArgb(255, 255, 0, 0)
+        Me.Label2.BackColor = Color.FromArgb(100, 0, 0, 255)
+        Me.BackColor = Color.Green
+Visual Basic (Usage) 
+Dim alpha As Integer
+Dim red As Integer
+Dim green As Integer
+Dim blue As Integer
+Dim returnValue As Color
+
+returnValue = Color.FromArgb(alpha, _
+    red, green, blue)
+
+■列挙体エニューマレーション
+
+'値の指定を省略すると0～3が割り当てられる
+'入力候補の一覧にでるので便利：定数宣言のようにつかえる。
+Public Enum ABBloodType
+    A = 0
+    B = 10
+    AB = 20
+    O = 40
+End Enum
+
+名前を列挙できる
+For Each BlodName As String In [Enum].GetNames(GetType(ABBloodType))
+
+    ListBox1.Items.Add(BlodName)
+
+Next
+別解として、
+ListBox1.Items.AddRange([Enum].GetNames(GetType(ABBoodType)))
+
+名前で無く値を列挙したければ Cint(列挙体メンバー)
+
+
+■IsReference
+
+'全てのクラスは参照型。
+StはStringクラスのインスタンスなので
+"参照型です"と表示される
+Dim St As String
+
+If IsReference(St) Then
+    MsgBox("参照型です。")
+Else
+    MsgBox("値型です。")
+End If
+
+参照型のコピーにはCloneを使う
+MyArray2 = MyArray1.Clone
+
+値型では値にNothingをセットできないが、参照型では値にNothingをセットできる。
+
+■String
+
+文字列型はクラスなので参照型であるが、
+ダブルクォーテーションでくくられた文字列自体が
+文字列型のインスタンスになる。
+プログラム中に直接インスタンスを記述できる珍しい型。
+他の型とは一見異なる動作をする。
+Dim St1 As String
+Dim St2 As String
+
+St1 = "A"
+St2 = St1	'St1もSt2も"A"
+St2 = "B"	St2は"B"というインスタンスを参照するので、St1は影響を受けない
+
+MsgBox(St1)	’"A"が返る
+
+■構造体
+
+クラスに似ているが、値型。
+値型なのでインスタンスを生成する必要がない。
+インスタンスの生成（メモリ確保）には時間がかかるので
+配列を扱う場合はクラスの配列よりも、構造体の配列で処理する方が
+高速になる。一般的には大きなサイズのデータを頻繁に受け渡しする
+場合は、参照型（データのアドレスだけをやり取りする）クラスの方が、
+値を全て構造体メモリーにいちいちコピーする構造体よりも
+処理速度は速くなる。
+
+Public Structure Person
+
+    Private m_Name As String	'フィールド m_というプリフィックスは（モジュールレベルの変数である事を表す）
+    Private m_Age As Integer	'フィールド
+
+    Public Sub New(ByVal name As String, ByVal age As Integer)
+
+        Me.Name = name
+        Me.Age = age
+
+    End Sub
+
+    Public Property Name() As String
+        Get
+            Return m_Name
+        End Get
+        Set(ByVal value As String)
+            m_Name = value
+        End Set
+    End Property
+
+    Public Property Age() As Integer
+        Get
+            Return m_Age
+        End Get
+        Set(ByVal value As Integer)
+            m_Age = value
+        End Set
+    End Property
+
+End Structure
+
+'↑の利用例↓
+Dim Taro As New Person("太郎", 12)'ここでのNewはインスタンスを生成しているわけではなく、コンストラクタを呼び出している。
+Dim Hanako As Person			　’Newがなくて良い。が、あってもエラーにならない。可読性のタメにはNewを付けることが推奨されている。
+
+Hanako.Name = "花子"
+Hanako.Age = 11
+
+MsgBox(Taro.Name & " " & Taro.Age & "才")
+MsgBox(Hanako.Name & " " & Hanako.Age & "才")
+
+
+▼↑のように仰々しく書かなくても、以下の記述で用は足りる。わかってないので違いがわからん。
+
+Public Class Form1
+
+    Private Structure HOGE
+        Dim int_hoge As Integer
+        Dim str_hoge As String
+    End Structure
+
+    Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+
+        Dim TARO As HOGE
+        Dim HANAKO As HOGE
+
+        TARO.int_hoge = 100
+        TARO.str_hoge = "taro"
+        HANAKO.int_hoge = 1000
+        HANAKO.str_hoge = "hanako"
+
+        Trace.WriteLine(TARO.int_hoge & " : " & TARO.str_hoge)
+        Trace.WriteLine(HANAKO.int_hoge & " : " & HANAKO.str_hoge)
+
+        '100:    TARO
+        '1000:   HANAKO
+
+    End Sub
+
+End Class
+
+▼構造体の配列使用例
+
+Public Class Form1
+
+    Private Structure Contry
+        Dim Name As String
+        Dim Population As Integer
+    End Structure
+
+    Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+
+        Dim KUNI(1) As Contry
+
+        With KUNI(0)
+            .Name = "NIHON"
+            .Population = 127767994
+        End With
+
+        With KUNI(1)
+            .Name = "DOKKANOKUNI"
+            .Population = 3
+        End With
+
+        For Each con As Contry In KUNI
+            Trace.WriteLine(con.Name & " : " & con.Population.ToString("#,0") & "人")
+        Next
+
+    End Sub
+
+End Class
+
+NIHON : 127,7	67,994人
+DOKKANOKUNI : 3人
+
+
+
+■例外のサンプル
+
+Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+
+    Try
+
+        Call WriteLog("Button1_Clickを実行します。")
+
+        Call WriteLog("これはテストです。")
+
+    Catch ex As Exception
+        MsgBox("例外が発生しました。" & vbNewLine & ex.Message)
+    Finally
+        'Flnallyは省略可能ですが、この箇所のコードはTｒｙステートメントを
+        '抜ける際に確実に必ず実行されます（Try　や　Catch　でExit Sub していても実行される）。
+    End Try
+
+End Sub
+
+Private Sub WriteLog(ByVal Value As String)
+
+    '▼文字数チェック
+    If Len(Value) > 10 Then
+        Throw New ApplicationException("ログに11文字以上は書き込めません。")
+    End If
+
+    '▼全角文字が混ざっていないかチェック
+    If Len(Value) <> System.Text.Encoding.GetEncoding("Shift-JIS").GetByteCount(Value) Then
+        Throw New ApplicationException("ログには全角文字は書き込めません。")
+    End If
+
+    '▼書き込み実行
+    Dim Writer As New IO.StreamWriter("C:\Log\MyAppLog.txt", True)
+    Dim strTime As String
+
+    strTime = Now.ToString("yyyy/MM/dd HH:mm:ss ")
+    Writer.WriteLine(strTime & Value)
+    Writer.Close()
+
+End Sub
+
+
+■例外のサブクラスを自作する
+
+<em>
+サブクラスの作成には継承 Inherits を使用するが、
+String クラスは継承できない。
+継承させたくないクラスを作成するには、NotInheritable で
+作成すればよい。
+</em>
+
+Public Class Form1
+    Private Sub Button11_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button11.Click
+        Try
+            checkLicense()
+        Catch ex As Exception 'HogeErrException
+            MsgBox(ex.Message + "使用にはライセンス認証が必要です")
+            End
+        End Try
+    End Sub
+
+    Private Sub checkLicense()
+        If Dir("c:\user\license.txt") = "" Then
+            Throw New HogeErrException("ライセンスファイルがありません")
+        End If
+    End Sub
+
+End Class
+------------------------------------------------------------------------
+''' <summary>
+''' この例外クラスはエラーをThrowする際に引数に理由を示す文字列を記述する。
+''' </summary>
+Class HogeErrException
+
+    Inherits Exception 'System.Exceptionを継承する
+
+    Public Sub New(ByVal msg As String)
+
+        'MyBase キーワードは、クラスの現在のインスタンスの基本クラスを参照する
+        'オブジェクト変数と同様に機能します
+        'msg を親クラス(Exceptionクラス)のコンストラクタに引き渡している。
+        'Exceptionクラスにはメッセージを受け取り保持する機能があるので
+        'メッセージの保存はそれに任せている。
+        'MyBaseに対し、自クラスはMyClassキーワードで表す。
+
+        MyBase.New(msg)
+
+    End Sub
+End Class
+------------------------------------------------------------------------
+
+■TextBoxのサブクラスを自作する
+
+自作したサブクラスはツールボックスに表示され、
+使えるようになる。
+
+<img src="./vb_gazo/subclass.png" width="320" height="130" alt="">
+
+''' <summary>
+''' Enterキーで次のコントロールにフォーカスが移動する機能を持つTextBox
+''' </summary>
+Public Class TextBoxEx
+    'TextBoxクラスを基底クラスに指定
+    Inherits System.Windows.Forms.TextBox
+
+    Protected Overrides Sub OnKeyPress(ByVal e As System.Windows.Forms.KeyPressEventArgs)
+
+        'Keypressイベントを発生させる
+        MyBase.OnKeyPress(e)
+
+        'イベントが処理済みなら何もしない
+        'Handled:KeyPress イベントが処理されたかどうかを示す値を取得または設定します。
+        If e.Handled Then
+            Return
+        End If
+
+        'System.Windows.Forms.Keys列挙体
+        'KeyChar:押されキーに対応する文字を返す
+        If e.KeyChar = Chr(Keys.Enter) Then
+
+            'Modifierkeys:Shift/Alt/Ctrlキーの状態を取得する
+            If Control.ModifierKeys = Keys.Shift Then
+
+                'シフトキー押されていれば後方移動
+
+                Me.TopLevelControl.SelectNextControl(Me, False, True, True, True)
+
+                'Meはテキストボックスを表す。Meは常に現在実行中のインスタンスを指す。
+                'ので、一般に↑の行は
+                'フォームの次のコントロールをアクティブにせよ（ _
+                '起点: アクティブなテキストボックス
+                '後方移動：False(つまり前のコントロールをアクティブにする）
+                '入れ子フォームも入れて、
+                '最後まで来たら最初のコントロールに戻って) という意味
+
+
+            Else
+
+                Me.TopLevelControl.SelectNextControl(Me, True, True, True, True)
+
+            End If
+
+            'イベントが処理済みである事をシステムに伝える。
+            '既定のイベントがあった場合でもこの一行によりキャンセルされる。
+            e.Handled = True
+
+        End If
+
+    End Sub
+
+End Class
+
+
+■#Region
+
+#Region "identifier_string"
+	'コードを折りたたむことができる
+#End Region
+
+
+■Dimによる型宣言
+
+'以下の宣言でa～eにintegerが設定される。VBAでこう書いても、e以外の型はemptyにしかならない。
+    Private Sub DimTest()
+        Dim a, b, c, d, e As Integer
+        MsgBox("a の型は　" & TypeName(a), MsgBoxStyle.MsgBoxSetForeground, "DimTest")
+        MsgBox("b の型は　" & TypeName(b), MsgBoxStyle.MsgBoxSetForeground, "DimTest")
+        MsgBox("c の型は　" & TypeName(c), MsgBoxStyle.MsgBoxSetForeground, "DimTest")
+        MsgBox("d の型は　" & TypeName(d), MsgBoxStyle.MsgBoxSetForeground, "DimTest")
+        MsgBox("e の型は　" & TypeName(e), MsgBoxStyle.MsgBoxSetForeground, "DimTest")
+    End Sub
+
+■IEの操作
+
+>System.Diagnostics.Process.Start("IExplore", openURL)
+では，起動した後にIEをコントロールできません。
+
+IEを起動し，コントロールするには，次のようなコードになると思います。
+（Microsoft Internet Controlsを参照設定します。）
+
+Imports SHDocVw
+Imports System.Runtime.InteropServices
+
+Public Class Form1
+
+    Dim ie As New InternetExplorer
+
+    Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        ie.Visible = True
+        ie.Navigate("http://www.yahoo.co.jp")
+    End Sub
+
+    Private Sub Form1_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
+        ie.Quit()
+        Marshal.ReleaseComObject(ie)
+        ie = Nothing
+    End Sub
+
+End Class
+
+■IPアドレス⇔ホスト名変換
+Imports System.Net
+Module Module1
+
+    Sub Main()
+        ' IPアドレスからホスト名を取得する
+        Dim ipAddress As String = "202.93.75.222"
+        Dim hostInfo As IPHostEntry = Dns.GetHostEntry(ipAddress)
+
+        Dim strHostName As String = hostInfo.HostName
+
+        Console.WriteLine(strHostName)
+        Console.WriteLine("Press 'ENTER'")
+
+
+		' ホスト名からIPアドレスを取得する
+        Console.ReadLine()        
+        Dim hostName As String = "ftp.geocities.jp"
+        Dim ipInfo As IPHostEntry = Dns.GetHostEntry(hostName)
+        Dim ipInfoAddress As IPAddress
+        For Each ipInfoAddress In ipInfo.AddressList
+
+            Dim strIP As String = ipInfoAddress.ToString
+
+            Console.WriteLine(strIP)
+            Console.WriteLine("Press 'ENTER'")
+            Console.ReadLine()
+        Next
+
+    End Sub
+
+End Module
+
+■IPアドレス⇔ホスト名変換２
+Imports System.Net
+Imports System.Net.Sockets'ソケットの例外を取得する場合は必要
+    ''' <summary>
+    ''' FTPドメインをIPに変換します    
+    ''' </summary>
+    ''' <param name="ftpDomain">FTPドメイン：ftp47.nifty.com ⇒211.125.48.164</param>
+    ''' <returns>IPアドレス</returns>    
+    Private Function GetStrIP(ByVal ftpDomain As String) As String
+
+        Try
+            Dim ipInfo As IPHostEntry = Dns.GetHostEntry(ftpDomain)
+            Dim ipInfoAddress As IPAddress
+
+            For Each ipInfoAddress In ipInfo.AddressList
+                'MsgBox(ipInfoAddress.ToString)        
+                Return ipInfoAddress.ToString
+                Exit For
+            Next
+        Catch ex As SocketException
+            MsgBox(ex.Message)
+        Catch ex As ArgumentNullException
+            MsgBox(ex.Message)
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+
+    End Function
+
+■型の判定
+
+	Trace.WriteLine("hoge".GetType().FullName)
+	"System.String"が返る
+
+データ型の名前は型を定義する構造体名のエイリアスであり、
+構造体名で宣言しても、エイリアスで宣言しても動作は同じになる。
+
+<TABLE border="1">
+  
+    <TR>
+    <TH>エイリアス(別名) </TH>
+    <TH>構造体のフルネーム</TH>
+  
+    <TR>
+    <TD>Byte </TD>
+    <TD>System.Byte</TD>
+  
+    <TR>
+    <TD>Short </TD>
+    <TD>System.Int16</TD>
+  <td>VB6のIntegerと同じ16ビットの符号付き整数</td>
+    <TR>
+    <TD>Integer </TD>
+    <TD>System.Int32</TD>
+ <td>32ビットPCで使い勝手の良い32ビット符号付き整数</td>
+    <TR>
+    <TD>Long </TD>
+    <TD>System.Int64</TD>
+  <td>64ビット符号付き整数を扱える</td>
+    <TR>
+    <TD>Single </TD>
+    <TD>System.Single</TD>
+  
+    <TR>
+    <TD>Double </TD>
+    <TD>System.Double</TD>
+  
+    <TR>
+    <TD>Decimal </TD>
+    <TD>System.Decimal</TD>
+<td>Currencyの置き換えとして存在する。Currencyはサポートされていない。y型は -922,337,203,685,477.5808から922,337,203,685,477.5807までの範囲の値を扱う固定小数点数値である。小数部は4桁に固定されている。それに対して、Decimal型は -79,228,162,514,264,337,593,543,950,335から79,228,162,514,264,337, 593,543,950,335までの値を扱う小数点数値であるが、小数部の桁数は1つに決まっておらず、必要に応じて小数点の位置を変えていく仕組みである。しかし、浮動小数点型とは異なり、10進表記で小数点の位置を扱うことで、丸め誤差が	出ないようになっている。</td> 
+    <TR>
+    <TD>Boolean </TD>
+    <TD>System.Boolean</TD>
+  
+    <TR>
+    <TD>Date </TD>
+    <TD>System.DateTime</TD>
+  
+    <TR>
+    <TD>Char </TD>
+    <TD>System.Char</TD>
+  
+    <TR>
+    <TD>String </TD>
+    <TD>System.String</TD>
+
+  
+</TABLE>
+
+
+また、Variant型はすべてObject型として宣言しなくてはならない。
+.netでは全てのデータ型をObjectとして扱えるのでVariantは不要に
+なっているし、使う事も出来ない。
+そして、VB6のObjectとVB.netのObjectは同じでもない。
+
+VB6で使用されていた型記号を使う事もできるが、Byte型、Short型の
+型記号は用意されていない。以下はVB.netで登場する記法。
+
+123S：	Short型
+123I：	Integer型
+123L：	Long型
+1.23F：	Single型
+1.23R：	Double型
+1.23D：	Decimal型
+"A"c：	Char型
+String型とは別に一文字だけを表すChar型が登場した。
+文字の後ろに"c"を書けば文字リテラルとみなされる
+"A"c　とは書けるが、"AB"cは誤りである。
+
+■日付リテラルは　#月/日/年#で記述する。
+
+#1/2/2002 1:02:03 AM#
+"2002/01/02/ 01:02:03"という書き方は判り易いが、システムの設定に依存するので
+動作の保証がない。
+
+VB6では#2002/2/1#と書いても自動で変換してくれたが、
+VB.netではそのようなサービスをしてくれなくなっているので
+月/日/年の書き方をしなくてはならない。
+
+日時は、西暦１年1月1日午前0時～10000年1月1日の100ナノ秒前までを計算出来る。
+１が１００ナノ秒なので、起点から２４時間後は↓になる。
+
+?Format(New Date(10000000#*60*60*24),"yyyy/MM/dd hh:mm:ss")
+"0001/01/02 12:00:00"
+↑１２：００というのは、"hh:mm"の指定で１２時間制の表記になる。
+０：００と表示させたければ、"HH:mm"と指定する。
+午前午後を表示させたければ、"yyyy/MM/dd hh:mm:ss tt" と記述する。
+
+ヨタ(Y,yotta): 10^24 
+ゼタ(Z,zetta): 10^21 
+エクサ(E,exa): 10^18 
+ペタ(P,peta): 10^15 
+テラ(T,tera): 10^12 
+ギガ(G,giga): 10^9 
+メガ(M,mega): 10^6 
+キロ(k,kilo): 10^3 
+ヘクト(h,hecto): 10^2 
+デカ(da,deca): 10 
+デシ(d,deci): 1/10 
+ミリ(m,milli): 1/10^3 
+マイクロ(μ,micro): 1/10^6 
+<strong>ナノ(n,nano) : 1/10^9 </strong>
+ピコ(p,pico) : 1/10^12 
+フェムト(F,femto) : 1/10^15 
+アト(at,atto) : 1/10^18 
+ゼプト(z,zepto) : 1/10^21 
+ヨクト(y,yocto) : 1/10^24
+
+ちなみに、
+VB6の起点は
+?format(0,"yyyy/mm/dd hh:mm:ss")
+1899/12/30 00:00:00
+エクセルワークシートの起点は
+1900/1/0 0:00
+
+■四半期の表現
+
+?DatePart(DateInterval.Quarter, #3/1/2009#) & "半期"
+"1半期"
+
+▼年度の四半期に換算する場合は、
+?DatePart(DateInterval.Quarter, Dateserial(year(#4/1/2009#),iif(Month(#4/1/2009#)-3<1,12-(Month(#4/1/2009#)-3),Month(#4/1/2009#)-3),1)) & "半期"
+"1半期"
+
+■引数の値渡し・参照渡しのディフォルト
+
+VB6・VBAではByval Byref を省略すると参照渡しとして処理される。
+しかし、VB.netではディフォルトが値渡しとなっている。
+VBのコーディングではByval Byref を省略しない事が吉。
+
+VB6・VBAではプロパティの参照渡しが機能せず、値として
+渡される（場合がある？）が、VB.netでは参照渡しとして機能する。	
+
+Private Sub UserForm_Initialize()
+    
+    Chg_capt (Me.Caption)
+        
+End Sub
+
+'ByRefで渡しているのにCaptionには反映されない
+'不具合とも思える仕様。
+Sub Chg_capt(ByRef a As String)
+    
+    a = a & "!"
+    
+End Sub
+
+■VB.NETでは可変長引数は値渡しになり、参照渡しにはできない。
+ Private Sub test(<strong>ByVal</strong> ParamArray a() As Object)
+ParamArrayを使う場合はByvalでしか宣言出来ない。
+VB6.VBAでは、参照渡しとしてしか機能せず、値渡しにはできなかった。
+
+
+■Nothingはどのデータ型にも代入できる。
+
+Nothingを代入すると、型の初期値になる。
+Public Class Form1
+
+    Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        Dim a As Integer
+
+        a = Nothing
+
+        Trace.Write("a = " & a)
+        'a = 0
+    End Sub
+End Class
+
+■描画の停止
+　　　'.BeginUpdate()　～　.EndUpdate()
+
+        Dim ary1(1000) As Integer
+        Dim i As Integer
+
+        i = 0
+
+        With Me.ListBox1
+
+            '.MultiColumn = True'複数フィールドが扱えるわけではなく
+	'項目の表示が縦にあふれた分が横に横に表示される。
+	'複数フィールドを扱いたい場合は ListView を使用する。
+            .ColumnWidth = 100
+
+            .BeginUpdate()
+
+            For Each o As Object In ary1
+
+                .Items.Add("iは " & ary1(i))                
+                i = i + 1
+            Next
+
+            .EndUpdate()
+
+        End With
+
+■データをテキストファイルに保持する
+'''FSOを使う方法が以下サンプル。COMを使用するので、実行にはdllファイルがセットで必要になる。
+IO.StreamReader StreamWriterクラスを使って書くのが.net風。
+文字コードはディフォルトでUTF-8なので、コードの指定方法も知っておく必要がある。
+
+一つ下が.net風のサンプルで、文字コードの指定ができる点がFSOやVB6には無いメリット。
+Shif_JIS より UTF-8の方が日本語の文字数が多いので環境が許すならUTF-8を使った方がよい。
+Excelで作られるテキストファイルもUTF-８なので、Shift_JISだと文字化けする事態も起きる。
+
+UTF-8は1文字２バイトとは限らず、日本語は一文字３バイト～４バイトのサイズになる方式なので
+データ量が大きくなってしまうデメリットもある。
+
+Public Class Form1
+
+    ''' <remarks>COM の Microsoft Scrinting Runtimeに参照追加</remarks>
+    Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+
+        Dim fs As Scripting.FileSystemObject, wfile As Scripting.TextStream, rfile As Scripting.TextStream
+        Dim myTxt As String = "c:\test.txt"
+        'fs = CreateObject("Scripting.FileSystemObject")
+        fs = New Scripting.FileSystemObject
+        wfile = fs.CreateTextFile(myTxt, Overwrite:=True)
+
+
+        With wfile
+            .Write("Test")
+            .WriteLine("Data")
+            .WriteLine("テストデータ")
+            .Write("ファイル番号は")
+            .WriteLine("使用していません")
+            .WriteLine("A" & Space(1) & "B" & Space(5) & "C")
+            .WriteLine(True & "," & False)
+            .WriteLine(Today)
+            .Close()
+        End With
+
+        Const ForReading = 1
+        rfile = fs.OpenTextFile(myTxt, ForReading)
+        Dim s As String
+
+        While Not rfile.AtEndOfStream
+            s = rfile.ReadLine
+            Trace.WriteLine(s)
+        End While
+
+        rfile.Close()
+    End Sub
+
+End Class
+
+ Imports System.IO　'StreamReader_Writerクラスの為に
+ Imports System.Text　'Encodeing クラスの為に
+ 
+ Public Class Form1
+   Inherits System.Windows.Forms.Form
+ 
+ …Windows フォーム デザイナで生成されたコード…
+ 
+   Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+     Dim writer As StreamWriter, reader As StreamReader
+
+     writer = New StreamWriter("c:\test.txt", False, Encoding.GetEncoding("Shift_JIS"))
+     writer.Write("Test")
+     writer.WriteLine(" Data")
+     writer.WriteLine("テストデータ")
+     writer.Write("ファイル番号は")
+     writer.WriteLine("使用していません")
+     writer.WriteLine("A" & Space(1) & "B" & Space(5) & "C")
+     writer.WriteLine(True & "," & False)
+     writer.WriteLine(Today)
+     writer.Close()
+
+     reader = New StreamReader("c:\test.txt", Encoding.GetEncoding("Shift_JIS"))
+     Do
+       Dim s As String
+       s = reader.ReadLine()
+       If s = Nothing Then Exit Do
+       Trace.WriteLine(s)
+     Loop
+     reader.Close()
+   End Sub
+ End Class
+
+
+■DebugオブジェクトとTraceオブジェクトの違い。
+
+大雑把に、
+Debugオブジェクトの動作はリリース版では動作しない。
+Traceオブジェクトの動作はリリース版上でも動作する。
+と言える。
+
+■String関数
+
+VBのString関数は.netには無い。が、
+Stringクラスのコンストラクタとして以下のように書ける。
+
+        Trace.WriteLine(New System.String("A", 11))
+	'AAAAAAAAAAA
+        Trace.WriteLine(New System.String("ABC", 1, 2))
+	'BC　インデックス１から２文字を取り出している
+
+■AndAlso　と　OrElse　ショートサーキット演算子
+
+And Or と違い、条件の片方を検査すれば結果が判ってしまう場合は
+結果が分かった時点で演算子の後ろにある計算はしないので
+その分処理が速くなる。C／C++／Java／C#　の&& || も同様に動作する（らしい）
+
+ Private Function DummySearch(ByVal val As Boolean) As Boolean
+   Trace.WriteLine("時間のかかる検索処理を行っています。")
+   DummySearch = val
+ End Function
+ 
+ Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+   If DummySearch(False) AndAlso DummySearch(True) Then
+     Trace.WriteLine("第1の条件は満たされています。")
+   Else
+     Trace.WriteLine("第1の条件は満たされていません。")
+   End If
+   If DummySearch(True) OrElse DummySearch(False) Then
+     Trace.WriteLine("第2の条件は満たされています。")
+   Else
+     Trace.WriteLine("第2の条件は満たされていません。")
+   End If
+ End Sub
+
+ 時間のかかる検索処理を行っています。
+ 第1の条件は満たされていません。
+ 時間のかかる検索処理を行っています。
+ 第2の条件は満たされています。
+
+■　NULL　は無くなり　Nothing　で記述する。
+
+VBから.netへの構文の変更点
+オブジェクト指向が完成しているのだから、Nothingなんだろう。。。
+
+■$付きの関数
+VBで$付きの関数は文字列を処理し、付かない場合はVariant
+を処理していた。.netにはVariantが存在しないので
+Left関数の場合LeftでもLeft$でも同様に文字列を処理する。
+$を付けても動作するが、何のメリットもない。
+
+■クラス
+
+▼実行順
+
+出力結果
+'Class1.New Called　←インスタンス作成時にすぐ実行される。VB6だと「Dim myClas As New Class1()」した段階ではクラスの初期化はされず、Testを実行する直前に初期化されていた。
+.netではNewした時点でインスタンスが作成される。
+VB6では実行しなければ作成されない。
+
+'Dim myClas As New Class1()
+'Test called
+'Class1.Finalize Called
+
+Public Class Class1
+
+    Public Sub New()
+        Trace.WriteLine("Class1.New Called")
+    End Sub
+
+
+    Protected Overrides Sub Finalize()
+        'デストラクタ（インスタンスを消滅させるメカニズム）が実行されるタイミングは
+　　　　'ガベージコレクタ（ごみ掃除機能）次第であり、プログラマは制御できない。
+　　　　'解放するタイミングを明示的に行うために、<a href = "#dispose">Disposeパターン・例外処理のFinallyブロック</a>を
+　　　　'使用する。
+        MyBase.Finalize()
+        Trace.WriteLine("Class1.Finalize Called")
+
+    End Sub
+
+    Public Sub Test()
+        Trace.WriteLine("Test called")
+    End Sub
+End Class
+
+'--------------------------------------------------
+Public Class Form1
+    Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        Dim myClas As New Class1()
+        Trace.WriteLine("Dim myClas As New Class1()")
+        myClas.Test()
+
+    End Sub
+End Class
+'--------------------------------------------------
+
+■オーバーロード
+.netでは引数の異なる（数の違い、数が同じでも型の違い）同じ名前のメソッド・コンストラクタ・プロパティを複数作成できる。
+    Public Overloads Sub Test()
+        Trace.WriteLine("Test called")
+    End Sub
+
+    Public Overloads Sub test(ByVal str As String)
+        MsgBox(str)
+    End Sub
+
+    Public Overloads Sub test(ByVal int As Integer)
+        MsgBox(int)
+    End Sub
+Overloadsは省略できるが、一つのプロシージャに使ったら他を省略する事はできない。
+
+
+■クラス
+
+▼クラスのコンストラクタに引数を渡す
+'Class1.vb---------------------------------------------
+Public Class Class1
+
+    Private name As String
+    Private age As Integer
+
+    Public Sub outputData()
+        Trace.WriteLine(name)
+        Trace.WriteLine(age)
+    End Sub
+
+    Public Sub <strong>New</strong>(ByVal a As Integer, ByVal n As String)
+        name = n
+        age = a
+    End Sub
+
+End Class
+'--------------------------------------------------
+'Form1.vb ------------------------------------------
+Public Class Form1
+
+    Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+        Dim taro As New Class1(17, "Taro")
+        taro.outputData()
+
+    End Sub
+
+End Class
+'--------------------------------------------------
+
+▼インターフェイス（プロトタイプ）越しにクラスのメソッドを呼び出す
+
+'Class_Interface.vb-----------------------------------
+'インターフェイス「Class_Interface」を定義する
+'インターフェイスには、メンバ プロシージャの定義だけが含まれる
+'プロトタイプ
+
+Public Interface Class_Interface
+    Sub OutputMessage(ByVal msg As String)
+End Interface
+
+'--------------------------------------------------
+'Class_Interfaceを実装するClass1------------------------
+
+Public Class Class1
+    'Implements 1 つ以上のインターフェイス (インターフェイス メンバ) を指定します。
+    Implements Class_Interface
+
+    Public Sub OutputMessage(ByVal msg As String) Implements Class_Interface.OutputMessage
+        MsgBox(msg)
+    End Sub
+End Class
+'--------------------------------------------------
+'Form1.vb-------------------------------------------
+
+'インターフェイス経由でクラスのメソッドを呼び出す
+Public Class Form1
+
+    Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+        Dim obj As Class1
+        obj = New Class1
+        Dim interf As Class_Interface
+        interf = obj
+        interf.OutputMessage("Hello!")
+    End Sub
+
+End Class
+
+'--------------------------------------------------
+
+▼Set　して　Getする
+'--------------------------------------------------
+Public Class Class2
+
+    Private str As String
+    Private obj As Object
+
+    'VB.NETには、SetとGetしか存在しない(オブジェクト指向なのでLetは無い）
+    Public Property GetSetStr() As String
+        Get
+            Return str
+        End Get
+        Set(ByVal value As String)
+            str = value
+        End Set
+    End Property
+
+    Public Property GetSetObject() As Object
+        Get
+            Return obj
+        End Get
+        Set(ByVal value As Object)
+            obj = value
+        End Set
+    End Property
+
+End Class
+
+'--------------------------------------------------
+'--------------------------------------------------
+Public Class Form1
+
+    Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click
+        Dim obj As New Class2
+
+        obj.GetSetStr = "Hello World!"
+        MsgBox(obj.GetSetStr)
+
+        obj.GetSetObject = sender 'sender は Button2
+        MsgBox(obj.GetSetObject.Text)
+        '"Button2" が表示される
+	
+    End Sub
+End Class
+'--------------------------------------------------
+
+■インスタンスなしでメソッドを動かすSharedキーワード
+
+'--------------------------------------------------
+Public Class Shared_test
+    Public <strong>Shared</strong> Sub testShare()
+        MsgBox("TestShare!")
+    End Sub
+End Class
+
+Public Class Form1
+'--------------------------------------------------
+'--------------------------------------------------
+    Private Sub Button3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button3.Click
+        'Dim Instance as New Shared_testと書かずとも動作する
+        Shared_test.testShare()
+    End Sub
+
+End Class
+'--------------------------------------------------
+
+↑では、PublicでSharedしたメソッドを作成しているが、
+同じクラス内からではPrivateでも実行できるので、
+PrivateでSharedしたメソッドを呼ぶPublicなメソッドを
+クラス内に作成し、クラス利用者からメソッドを隠す書き方もある。
+
+'■引数のあるプロパティにはディフォルトを設定出来る
+'--------------------------------------------------
+Public Class Default_test
+    Private str(9) As String　'１０個の配列
+
+    <strong>Default</strong> Public Property prop_Test(ByVal index As Integer) As String
+        Get
+            Return str(index)
+        End Get
+        Set(ByVal value As String)
+            str(index) = value
+        End Set
+    End Property
+End Class
+'--------------------------------------------------
+'--------------------------------------------------
+    Private Sub Button4_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button4.Click
+        Dim cls As New Default_test()
+        Dim i As Integer
+
+        For i = 0 To 4　'　１０を超えると'indexの境界外'というエラーになる。
+            cls(i) = "sample" & i
+            'cls.prop_Test(i) = "sample" & i と書くべきところを省略できる
+        Next
+
+        For i = 0 To 4
+            Debug.Print(cls(i))
+            'Debug.Print(cls.prop_Test(i))　と書くべきところを省略できる
+        Next
+
+    End Sub
+
+'出力↓
+sample0
+sample1
+sample2
+sample3
+sample4
+'--------------------------------------------------
+
+        MsgBox(Me.Controls(1).Name)
+        'このコードは MsgBox(Me.Controls.Item(1).Name) と書くべきところを
+        'System.Windows.Forms.Controlクラスにおいて
+        'Itemプロパティはディフォルト指定されているので
+        'Itemが省略できるのも同様の理屈によるもの。
+
+■<a name="dispose">Disposeパターン・例外処理のFinallyブロック</a>
+
+Finallyブロックによって、Disposeメソッドを確実に実行させることで、確実な終了処理が達成できる。
+'--------------------------------------------------
+Public Class Form1
+    Private Sub Button7_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button7.Click
+        Dim instance As New dispose_test
+
+        Try
+            instance.SomeProcess()
+        Catch ex As Exception
+            MsgBox(ex.Message, MsgBoxStyle.Exclamation, "ERRORのTitle")
+        Finally
+            instance.Dispose()
+        End Try
+    End Sub
+End Class
+'--------------------------------------------------
+'--------------------------------------------------
+    'Implements 1 つ以上のインターフェイス (インターフェイス メンバ) を指定します。
+Public Class dispose_test
+    Implements IDisposable 'Systemクラスのメンバー
+'既存のIDisposableインターフェイスを指定している
+'この一行を記述すると<i style="color:#669">斜体部分のコード</i>が自動で挿入される
+<i style="color:#669">
+
+    Private disposedValue As Boolean = False        ' 重複する呼び出しを検出するには
+
+    ' IDisposable
+    Protected Overridable Sub Dispose(ByVal disposing As Boolean)
+        If Not Me.disposedValue Then
+            If disposing Then
+                ' TODO: 他の状態を解放します (マネージ オブジェクト)。
+            End If
+
+            ' TODO: ユーザー独自の状態を解放します (アンマネージ オブジェクト)。
+            ' TODO: 大きなフィールドを null に設定します。
+
+
+        End If
+        Me.disposedValue = True
+    End Sub
+
+#Region " IDisposable Support "
+    ' このコードは、破棄可能なパターンを正しく実装できるように Visual Basic によって追加されました。
+    Public Sub Dispose() Implements IDisposable.Dispose
+        ' このコードを変更しないでください。クリーンアップ コードを上の Dispose(ByVal disposing As Boolean) に記述します。
+        Dispose(True)
+        GC.SuppressFinalize(Me)
+</i>
+        MsgBox("クラスが解放された！") '一行追加
+<i style="color:#669">
+    End Sub
+#End Region
+</i>
+    Public Sub SomeProcess()
+        MsgBox("クラスを用いた何らかの処理")
+        Dim i As Int16 '符号付き１６ビット整数：Short
+        i = 32767 '最大値の上限
+        i = i + 1 'エラーを発生させる
+        Trace.Write(i)
+    End Sub
+
+    Public Sub New()
+        MsgBox("クラスの初期化処理")
+    End Sub
+End Class
+'--------------------------------------------------
+
+■名前空間とは、クラス（等）が所属する世界をわけるもの。
+
+名前空間が異なっていれば同じ名前のクラス、同じ名前のメソッドを作成できる。
+'--------------------------------------------------
+Namespace MySpace1
+    Public Class Myclass1
+        Public Shared Sub MyMethod1()
+            Trace.WriteLine("MySpace1.Myclass1.MyMethod1")
+        End Sub
+    End Class
+End Namespace
+'--------------------------------------------------
+Namespace MySpace2
+    Public Class Myclass1
+        Public Shared Sub MyMethod1()
+            Trace.WriteLine("MySpace2.Myclass1.MyMethod1")
+        End Sub
+    End Class
+End Namespace
+'--------------------------------------------------
+Public Class hoge
+    Shared Sub geho()
+	'同じクラス名・メソッド名だがエラーにならず実行できる。
+	'"MySpace1"は名前空間ではあるが、[プロジェクト名].MySpace1 が暗黙に
+	'省略されているので、[プロジェクト名].MySpace1。MyMethod1()と書いても
+	'問題なく動作する。
+        <strong>MySpace1</strong>.Myclass1.MyMethod1()
+        <strong>MySpace2</strong>.Myclass1.MyMethod1()
+    End Sub
+End Class
+'--------------------------------------------------
+
+■Imports はディフォルトの名前空間を設定する。
+
+Imports  Sample001n.MySpace1
+
+        Myclass1.MyMethod1()　'←　名前空間の指定が無い場合MySpace1に記述されたMyMethod1が実行される
+        MySpace2.Myclass1.MyMethod1()
+
+プロジェクトにはディフォルトでインポートされている名前空間があり、
+プロジェクトのプロパティの「参照」で確認する事ができる。
+どの項目がインポートされているかは、プロジェクトの種類によって
+異なる。
+
+インポートされている名前空間は、名前空間名を省略して記述する事が出来る。
+	例）：WindowsApplicationにおける Arraylist
+	        Dim ar As New ArrayList  '必要に応じてサイズが動的に増加する配列
+		'System.Collections.ArrayListと書かかなくてもエラーにならず実行できる。
+	        ar.Add("b")
+	        ar.Add("a")
+
+	        ar.Sort()
+
+	        For Each itm As String In ar
+            		Debug.Print(itm)
+	        Next
+		'a
+		'b
+参照設定に表示されているSystemやSystem Dataなどはアセンブリの名前で
+あり、名前空間の名前ではない。
+名前空間はアセンブリに含まれるもので、１対１で対応しているわけではない。
+ArrayListの名前空間であるSystem.Collectionsは mscorlib というアセンブリの
+中にあることがオブジェクトブラウザで確認できるが、参照設定の中に
+mscorlib は見当たらない。
+
+mscorlib と Microsoft Visual Basic .NET Runtimeの２つのアセンブリは、
+システムが暗黙のうちに参照するモジュールなので、参照設定には表示
+されない。参照設定されているアセンブリを全て削除しても参照されている
+アセンブリが存在する。
+
+■Imports で名前空間に別名を割り当てる
+
+Imports a = Sample001n.hoge
+
+    Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+
+        a.geho()　'a は Sample001n.hoge と等価のキーワードとして機能する。
+　　　　'Importsは複数記述できるので、紛らわしい名前空間を整理してプログラミングする事が
+　　　　'可能になる。
+
+    End Sub　　　　
+
+■コントロールのレイアウト変更にともなうイベントを抑止する
+	
+　　　抑止したい範囲を、
+　　　Me.SuspendLayout() ～ Me.ResumeLayout(False)で
+　　　囲む。
+　　　以下はフォームデザイナに自動生成されたコードで
+　　　使用されている例。
+	
+
+    '↓この属性はこのメソッド内ではデバッガが停止しないことを指定している
+    <System.Diagnostics.DebuggerStepThrough()> _
+    Private Sub InitializeComponent()
+        Me.Button1 = New System.Windows.Forms.Button
+        <strong>Me.SuspendLayout()</strong>
+        '
+        'Button1
+        '
+        Me.Button1.Location = New System.Drawing.Point(80, 97)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(75, 23)
+        Me.Button1.TabIndex = 0
+        Me.Button1.Text = "Button1"
+        Me.Button1.UseVisualStyleBackColor = True
+        '
+        'FM_Sample
+        '
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.BackColor = System.Drawing.Color.Yellow
+        Me.ClientSize = New System.Drawing.Size(292, 266)
+        Me.Controls.Add(Me.Button1)
+        Me.Name = "FM_Sample"
+        Me.Text = "Fm_Sampletxt"
+        <strong>Me.ResumeLayout(False)</strong>
+
+■StringBuilderクラスで処理する
+
+Public Class FM_Sample
+
+    '文字列結合の'&'演算子の使用は、メモリの確保と解放を繰り返す可能性があるので
+    '実行速度面で効率がよくない。
+    'クラスライブラリより System.Text。StringBuilder クラスを使用すると
+    '劇的な速度アップを期待できる。
+    Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click
+        Dim i As Integer
+        Const limit As Integer = 100000
+        Dim from1, to1, from2, to2 As Date
+
+        MsgBox("start")
+
+
+        '"&"で処理する
+
+        from1 = Date.Now
+        Dim s As String
+        s = Nothing
+
+        For i = 1 To limit
+            s = s & "A"
+            With Me.ProgressBar1
+                .Value = .Maximum / limit * i
+            End With
+
+        Next
+
+        to1 = Date.Now
+
+        'StringBuilderクラスで処理する
+        Dim sb As New System.Text.StringBuilder
+        from2 = Date.Now
+
+
+        For i = 1 To limit
+
+            sb.Append("A")
+            With Me.ProgressBar1
+                .Value = .Maximum / limit * i
+            End With
+        Next
+
+        Trace.WriteLine(sb.ToString())
+        Trace.WriteLine(s)
+
+        to2 = Date.Now
+        If s = sb.ToString Then
+            Trace.WriteLine("同じ値を作成した")
+        End If
+        'DateTime.Subtract メソッド (DateTime)
+        'このインスタンスから指定した日付と時刻を減算します。
+        Trace.WriteLine(to1.Subtract(from1).ToString()) '15秒かかった
+        Trace.WriteLine(to1.Subtract(from2).ToString()) '一秒かからない　圧倒的に速い
+
+        MsgBox("done!")
+
+    End Sub
+
+End Class
+
+■メールを送信する
+
+Imports System.Net.Mail
+
+    Private Sub Button4_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button4.Click
+        Dim ml As New Mail_TEST
+
+        ml.SendEMail("HELLO!")
+
+        ml = Nothing
+
+        MsgBox("done!")
+    End Sub
+End Class
+
+Public Class Mail_TEST
+
+    Public Sub SendEMail(ByVal msg As String)
+        'メールの作成
+        Dim myMail As New MailMessage()
+
+        With myMail
+            '送信者
+            .From = New MailAddress("hebo@nifty.com", "怪人X")
+            '宛先
+            .To.Add(New MailAddress("hoge@fushu.com", "変体Y"))
+            '件名
+            .Subject = "TEST_MAIL"
+            '本文
+            .Body = msg
+        End With
+
+        'SMTPサーバーの指定
+        Dim sc As New SmtpClient()
+        sc.Host = "smtp.nifty.com" 'smtpサーバー
+        sc.Send(myMail)
+
+        '後始末
+        myMail.Dispose()
+    End Sub
+End Class
+
+■Inheritsステートメントによる継承機能
+
+Inheretsするとあるクラスに含まれるメソッドを利用可能にする
+<em>Inheretsを付けなくても既定でObjectクラスを継承する事ができる。
+基底クラスで Overridable Overrides が付いているメソッドのみ
+継承する事ができる。(継承するときに[Overridesでメソッドを作成するときに]
+)Overridable Overrides が付いているメソッド以外はインテリセンスの
+候補に表示されない</em>
+
+<em>
+・コンストラクタは継承できない。
+・基底クラスに引数付きのコンストラクタのみある場合は、サブクラスには
+コンストラクタが無ければならない。そうしないと、コンパイラがサブクラスの
+インスタンス生成の方法が判らない。
+（既定クラスのインスタンスが生成されなければ何も始められない）
+</em>
+
+--------------------------------------------------------
+Public Class Form1
+    Private Sub Button10_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button10.Click
+        Dim cls As New Test2_cls
+
+　　　　'Test2_clsにはTest1_clsがInheritsされているので
+　　　　'Test2_cls越しにTest1をcall出来る。
+
+        cls.Test1() 
+
+    End Sub
+End Class
+--------------------------------------------------------
+Class Test1_cls
+    Public Sub Test1()
+        Trace.WriteLine("Test1 called")
+    End Sub
+End Class
+--------------------------------------------------------
+Class Test2_cls
+    Inherits Test1
+    Public Sub Test2()
+        Trace.WriteLine("Test2 called")
+    End Sub
+End Class
+--------------------------------------------------------
+
+継承は循環できない。⇒↑の例だと、Test1_clsにTest2_clsをInheritsする事は
+できない。
+継承していても、Private で宣言されたメソッドは呼び出せない。
+
+Test1_clsはTest2_clsの「スーパークラス」、
+Test2_clsはTest1._clsの「サブクラス」であるという。
+
+継承の機能を用いると、既存のクラスを書き換えることなく
+独自機能を付け加えて利用する事が可能になる。
+
+■Shadowsキーワードでスーパークラスのメソッドの動作を変更する
+<em>Shadowsには継承関係を台無しにする可能性が秘められている</em>
+--------------------------------------------------------
+Public Class Form1
+
+    Private Sub Button10_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button10.Click
+        Dim cls As New Test2_cls
+        cls.Test1()
+        '"Test2 called"
+    End Sub
+End Class
+--------------------------------------------------------
+Class Test1_cls
+    Public Sub Test1()
+        Trace.WriteLine("Test1 called")
+    End Sub
+End Class
+--------------------------------------------------------
+Class Test2_cls
+    Inherits Test1_cls
+
+    'スーパークラスと同名のメソッドを
+    'Shadowsキーワードで記述し、
+    'メソッドの動作を変更している
+    Public Shadows Sub Test1()
+        Trace.WriteLine("Test2 called")
+    End Sub
+End Class
+--------------------------------------------------------
+
+
+■Overridable-Overridesキーワードでスーパークラスの動作を変更する
+--------------------------------------------------------
+スーパークラスの継承される可能性のあるメソッドにOverridableキーワードを
+付けなければならない手間がある。パフォーマンスもShadowsに劣る。
+
+Public Class Form1
+    Private Sub Button10_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button10.Click
+        Dim cls As New Test2_cls
+        cls.Test1()
+        '"Test2 called"
+
+        Dim cls2 As Test1_cls
+
+        'Overridable～Overrridsを使うと
+        'Test1_cls型で宣言した変数からでも
+        'Test2_clsのメソッドを呼び出せる。
+        'Shadowsキーワードでは宣言した型で呼ばれるメソッドが決定するので
+        '"Test1 called"という結果になる。
+
+        cls2 = cls
+        cls2.Test1()
+        '"Test2 called"
+    End Sub
+End Class
+--------------------------------------------------------
+Class Test1_cls
+    Public <strong>Overridable</strong> Sub Test1()
+        Trace.WriteLine("Test1 called")
+    End Sub
+End Class
+--------------------------------------------------------
+Class Test2_cls
+    Inherits Test1_cls
+
+    Public <strong>Overrides</strong> Sub Test1()
+        Trace.WriteLine("Test2 called")
+    End Sub
+
+End Class
+--------------------------------------------------------
+
+■MustInherit－MustOverrride-Overridesキーワードで
+中身のないメソッドに動作を与える
+--------------------------------------------------------
+Public Class Form1
+    Private Sub Button10_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button10.Click
+        Dim cls As New Test_cls
+
+        '中身のないメソッド HOGE を継承して動作を与える
+
+        cls.HOGE()        
+
+         '"HOGE called"
+
+    End Sub
+End Class
+--------------------------------------------------------
+'MustInheritキーワードで宣言したクラスは必ず継承されなければ使用出来ない。
+'また、Class_mustは中身のない仮想的なメソッドなのでClass_mustクラスの
+（Newをつけるて宣言して)インスタンスを作成できない。
+Class_mustを継承したクラスのOverridesしているメソッドに'Newを付けてインスタンス化する。
+'（参照：ポリモーフィズムに則ったコーディング例)
+Public <strong>MustInherit</strong> Class Class_must
+    Public <strong>MustOverride</strong> Sub HOGE()
+End Class
+--------------------------------------------------------
+Class Test_cls
+    Inherits Class_must
+    Public <strong>Overrides</strong> Sub HOGE()
+        Trace.WriteLine("HOGE called")
+    End Sub
+End Class
+
+■Protectedキーワードで、
+スーパークラス（基底クラス・ベースクラス）か
+サブクラス（派生クラス・子クラス）からのみ呼び出せるメソッドを作成する
+（継承を多用するプログラミングで活用される、というか継承の為にあるキーワード（らしい）)
+Protected と Friend は同時に宣言でき、同じプロジェクト内からのみアクセスできるように
+する場合に使用する。
+
+--------------------------------------------------------
+Public Class Form1
+    Private Sub Button10_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button10.Click
+        Dim instanceA As New A
+        Dim instanceB As New B
+
+        'instanceA.Sample1() 'できない
+        instanceA.Sample2() 'できる
+
+        instanceB.Sample2() 'できる
+        'instanceB.Sample1() 'できない
+    End Sub
+End Class
+--------------------------------------------------------
+Public Class A
+    Protected Sub Sample1()
+        Trace.WriteLine("AクラスのSample1が呼ばれました")
+    End Sub
+
+    Public Sub Sample2()
+        Sample1()
+    End Sub
+End Class
+--------------------------------------------------------
+Public Class B
+    Inherits A
+
+    Public Sub Sample3()
+        Sample1()
+    End Sub
+End Class
+--------------------------------------------------------
+
+■NoInheritableキーワードを使用したクラスは継承する事が出来ない
+--------------------------------------------------------
+Public <strong>NotInheritable</strong> Class A
+    Sub Sample1()
+        Trace.WriteLine("AクラスのSample1が呼ばれました")
+    End Sub
+End Class
+--------------------------------------------------------
+Public Class B
+    Inherits A
+
+    Public Sub Sample3()
+        Sample1()　'←ビルドエラーになる
+    End Sub
+End Class
+--------------------------------------------------------
+
+■　イベントログを書き込む
+--------------------------------------------------------
+    Private Sub ReportToEventLog(ByVal msg As String)
+        If Not EventLog.SourceExists("SampleSource") Then
+            EventLog.CreateEventSource("SampleSource", "SampleNewLog")
+        End If
+        Dim myLog As New EventLog
+        With myLog
+            .Source = "SampleSource"            
+            .WriteEntry(msg)
+        End With
+    End Sub
+--------------------------------------------------------
+    Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+        Dim msg As String
+        msg = "エラーが発生しました"
+                ReportToEventLog(msg)
+
+    End Sub
+--------------------------------------------------------
+<img src="./vb_gazo/evlog.png" width="722" height="585" alt="">
+
+
+■ポリモーフィズム
+<table>
+<td>
+<img src="./vb_gazo/porimo.png" width="300" height="300" alt="Form1">
+</td>
+<td>
+ポリモーフィズムでコーディングしない場合、
+以下コードの機能を実装しようとすれば
+Select Case 等でRunされるメソッドを切り分ける事になる。
+切り分けを判りやすくするために列挙体を作るだろうし、
+<li>列挙した項目と切り分けのコードの整合性を間違うリスクがあり
+<li>直接実行メソッドを（誤って呼び出すコーディングをしてしまう）リスクもあり、
+実行メソッドの種類を拡張する際、上記２点に注意しなければならない。
+以下コードは呼び出すメソッドを、　
+<p><code>myReporter.ReportMessage("エラーが発生しました")</code></p>
+という１つのメソッドの集約を実現している。
+拡張の際、クラスを増やしていけばよく、実行コードに手を加える
+必要がない。
+</td>
+</table>
+'ポリモーフィズムに則ったコーディング例
+Imports System.Net.Mail
+'--------------------------------------------------------------------
+Public Class Form1
+    Private myReporter As Reporter
+
+    Private Sub Form1_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        myReporter = New ToMessageBox
+    End Sub
+    Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+        myReporter.ReportMessage("エラーが発生しました")
+    End Sub
+
+    Private Sub RadioButton1_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles RadioButton1.CheckedChanged
+        myReporter = New ToMessageBox
+    End Sub
+
+    Private Sub RadioButton2_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles RadioButton2.CheckedChanged
+        myReporter = New ToEventlog
+    End Sub
+
+    Private Sub RadioButton3_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles RadioButton3.CheckedChanged
+        myReporter = New ToEmail
+    End Sub
+End Class
+'--------------------------------------------------------------------
+Public MustInherit Class Reporter
+    Public MustOverride Sub ReportMessage(ByVal msg As String)
+End Class
+'--------------------------------------------------------------------
+Public Class ToMessageBox
+    Inherits Reporter
+
+    Public Overrides Sub ReportMessage(ByVal msg As String)
+        MessageBox.Show(msg)
+    End Sub
+End Class
+'--------------------------------------------------------------------
+Public Class ToEventlog
+    Inherits Reporter
+
+    Public Overrides Sub ReportMessage(ByVal msg As String)
+        If Not EventLog.SourceExists("SmpleSource") Then
+            EventLog.CreateEventSource("SampleSource", "SampleNewLog")
+        End If
+        Dim myLog As New EventLog
+        With myLog
+            .Source = "SampleSource"
+            .WriteEntry(msg)
+        End With
+    End Sub
+End Class
+'--------------------------------------------------------------------
+Public Class ToEmail
+    Inherits Reporter
+
+    Public Overrides Sub ReportMessage(ByVal msg As String)
+        Dim myMail As New MailMessage
+
+        With myMail
+            .From = New MailAddress("hogehoge@fushu.com")
+            .To.Add(New MailAddress("gehogeho@hebo.com"))
+            .Subject = "Err_Report"
+            .Body = msg
+        End With
+
+        Dim sc As New SmtpClient
+        With sc
+            .Host = "smtp.nifty.com"
+            .Send(myMail)
+        End With
+
+        myMail.Dispose()
+    End Sub
+End Class
+
+'--------------------------------------------------------------------
+</pre>
+<h3>ポリモーフィズムでコーディングするメリット</h3>
+<blockquote site="http://www.atmarkit.co.jp/fdotnet/vb6tonet2/vbnet2_10/vbnet2_10_05.html">
+<ul>
+<li> コンパクトさ　・・・・・	レポートの出力を管理する専用クラスや出力の種類を示すための列挙型の定義などが不要になっている
+<li> 安全性　・・・・・・・・・	出力に使用できるクラスはすべてReporterクラスを継承したクラスでなければならず、そうではないクラスをReporter型の変数に入れようとしても、コンパイラがエラーを報告してくれる
+<li> 分かりやすさ　・・・・	継承関係を見るだけで、出力に使用できるクラスとそうではないクラスを区別することができ、プログラマー間の約束事などをいちいち確認する必要がない
+<li> 拡張性　・・・・・・・・・	（このソースの場合）出力先の種類を増やすとき、ただ単にReporterクラスを継承したクラスを新しく作るだけでよい
+</ul>
+<p>
+　列挙型で区別する場合は、列挙型の項目を増やし、それと同時に、列挙型の値を見て処理を区別するメソッドにも判定項目を増やす必要がある。これが正しく同期して記述されなければ正常には動作しないが、正しく同期させるのはプログラマーの仕事である。これに対して、ポリモーフィズムを用いた方法の場合、Reporterクラスを継承していないクラスのインスタンスを代入しようとしたり、継承していてもReportMessageメソッドを実装していないクラスを利用しようとしたりすれば、コンパイル時にエラーになり、間違いを早期に察知することができる。
+</p>
+</blockquote>
+<pre>
+
+■ポリフォーリズム例１
+
+Imports System.Drawing.Imaging 'for EMFファイル
+'System.Drawing.Imaging.MetafileクラスとSystem.drawing.Bitmapクラスは、共に
+'System.Drawing.Imageクラスを継承している。
+'Metafileクラスだろうと、Bitmapクラスだろうと
+'System.Drawing.ImageクラスのImageプロパティに
+'インスタンスを渡せるのは、ポリフォーリズムのおかげ。
+'------------------------------------------------------------------
+Public Class Form1
+
+    'System.drawing名前空間はディフォルトの設定なので
+    '記述の必要がない。
+    'Dim img As System.Drawing.Image
+    Dim img As Image
+'------------------------------------------------------------------
+
+    Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+        'New System.Drawing.Bitmap("c:\test.bmp")
+        img = New Bitmap("c:\test.bmp")
+    End Sub
+'------------------------------------------------------------------
+
+    Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click
+        'New System.Drawing.Imaging.Metafile("c:\test.emf")
+        img = New Metafile("c:\test.emf")
+    End Sub
+'------------------------------------------------------------------
+    Private Sub Button3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button3.Click
+        PictureBox1.Image = img
+    End Sub
+
+End Class
+
+<img src="./vb_gazo/drawing.image.png" width="854" height="123" alt="drawing_help">
+
+■System.Drawing.Image.FromFile()メソッド
+''' <remarks>
+''' FromFileメソッドの戻り値の型はSystem.Drawing.Imageであるが、
+''' 実際に返されているのは、System.Drawing.Bitmapクラスであったり、
+''' System.Drawing.Imaging.Metafileクラスであったりしている。
+''' </remarks>
+Public Class Form1
+    Dim img As Image
+
+
+    Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+        img = Image.FromFile("c:\test.bmp")
+    End Sub
+
+    Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click
+        img = Image.FromFile("c:\test.emf")
+    End Sub
+
+    Private Sub Button3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button3.Click
+        PictureBox1.Image = img
+        Label1.Text = img.GetType().FullName
+    End Sub
+End Class
+
+■デリゲート（Delegate）
+デリゲートはデータ型の一種。
+デリゲートはインスタンスとメソッドの情報を扱う。（Shared：共有メソッドを使う場合はインスタンスではなく、クラスを直接指定)
+メソッドを呼び出すだけでなく、呼び出し時にどのインスタンスが
+使われるかを明示する必要がある。戻り値と引数が合えば委譲できる。
+
+'デリゲートのデータ型（引数と戻り値を定義する）を決める。SampleDelegateがデータ型の名前
+'名前を変えれば、戻り値や引数の異なるデータ型をいくらでも定義して利用できる。
+Delegate Function SampleDelegate(ByVal x As Integer, ByVal y As Integer) As Integer
+
+Public Class Form1
+    Private Sub Form1_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        Dim SampleInstance As New SampleClass
+
+        'AdressOf演算子はデリゲートのインスタンスを作成する機能を持つ。
+        'SampleInstanceのSampleMethodに処理を委譲（デリゲート）せよ、という意味になる。
+        '▼ここを変えれば、他のインスタンスの他のメソッドに委譲先を変更できる。
+        Dim sample As SampleDelegate = AddressOf SampleInstance.SampleMethod
+
+        '別記法 ↓これでもコンパイルエラーにならない
+        'Dim sample As New SampleDelegate(AddressOf SampleInstance.SampleMethod)
+
+        '▼一見なんの変哲もないメソッドを呼び出しているように見えるのがデリゲートのポイント
+        Dim result As Integer = sample(2, 3)
+        Trace.WriteLine(result.ToString())
+        '6 が返る
+    End Sub
+End Class
+
+
+Public Class SampleClass
+    Public Function SampleMethod(ByVal x As Integer, ByVal y As Integer) As Integer
+        Return x * y
+    End Function
+End Class
+
+
+■デリゲードで一つのメソッドで複数の処理を行う
+
+Delegate Function SampleDelegate( _
+    ByVal x As Integer, _
+    ByVal y As Integer) As Integer
+
+Public Class Form1
+    Private Sub Form1_Load( _
+        ByVal sender As Object, _
+        ByVal e As System.EventArgs) Handles Me.Load
+
+        Dim instance As New SampleClass
+
+        '一つのcalcメソッドで複数の計算を実現している
+        '第3引数でデリゲートのインスタンスを渡し、
+        '処理のロジックを指定している。
+        calc(2, 3, AddressOf instance.MethodMult)
+        calc(2, 3, AddressOf instance.MethodPlus)
+        '6
+        '5 が返る
+    End Sub
+
+    Private Sub calc( _
+        ByVal x As Integer, _
+        ByVal y As Integer, _
+        ByVal calcMethod As SampleDelegate)
+
+        Dim result As Integer = calcMethod(x, y)
+        Trace.WriteLine(result)
+
+    End Sub
+End Class
+
+Public Class SampleClass
+    Public Function MethodMult( _
+        ByVal x As Integer, _
+        ByVal y As Integer) As Integer
+
+        Return x * y
+
+    End Function
+
+    Public Function MethodPlus( _
+        ByVal x As Integer, _
+        ByVal y As Integer) As Integer
+
+        Return x + y
+
+    End Function
+End Class
+
+■デリゲート：複数インスタンスのメソッドを委譲先として使う
+
+Delegate Function SampleDelegate( _
+    ByVal x As Integer, _
+    ByVal y As Integer) As Integer
+
+Public Class Form1
+    Private Sub Form1_Load( _
+        ByVal sender As Object, _
+        ByVal e As System.EventArgs) Handles Me.Load
+
+        '複数インスタンスのメソッドを委譲先として使う
+        Dim instance1 As New SampleClass
+        Dim instance2 As New SampleClass
+
+        Dim d1 As SampleDelegate = AddressOf instance1.SampleMethod
+        Dim d2 As SampleDelegate = AddressOf instance2.SampleMethod
+        d1(2, 3)
+        d2(4, 5)
+        Trace.WriteLine(instance1.result)
+        Trace.WriteLine(instance2.result)
+        '6
+        '20
+    End Sub
+
+    
+End Class
+
+Public Class SampleClass    
+    Public result As Integer
+
+    Public Function SampleMethod( _
+        ByVal x As Integer, _
+        ByVal y As Integer) As Integer
+
+        result = x * y
+
+    End Function
+
+End Class
+
+■System.Delegate.Combine メソッド
+委譲先の複数のメソッドを１つに合成する。
+(委譲先リストと呼ばれる)
+異なるデリゲートのメソッドは合成出来ない。
+デリゲートが異なる時点で「型」が異なると判定される。
+
+'Delegateステートメント
+Delegate Sub Sampledelegate()
+
+Public Class Class1
+    Public Sub Method1()
+        Trace.WriteLine("Method1 called")
+    End Sub
+
+    Public Sub Method2()
+        Trace.WriteLine("Method2 called")
+    End Sub
+End Class
+Public Class Form1
+
+    Private Sub Form1_HOGE( _
+        ByVal sender As System.Object, _
+        ByVal e As System.EventArgs) Handles MyBase.Load
+
+        Dim instance As New Class1
+        Dim sample1 As Sampledelegate = AddressOf instance.Method1
+        sample1()
+        'Method1 called
+
+        Dim sample2 As Sampledelegate = AddressOf instance.Method2
+        sample2()
+        'Method2 called
+
+<strong>
+        'SystemのDelegateメンバ
+        Dim sample3 As Sampledelegate = System.Delegate.Combine(sample1, sample2)
+        sample3()
+        'Method1 called
+        'Method2 called
+</strong>
+    End Sub
+End Class
+
+■委譲先リストを変更する
+
+Delegate Sub SampleDelegate()
+
+Public Class SampleClass
+    Private name As String
+    Public Sub New(ByVal name As String)
+        MyBase.New()
+        Trace.WriteLine(MyBase.ToString)
+        'deligate1.SampleClass
+        Me.name = name
+    End Sub
+
+    Public Sub Method()
+        Trace.WriteLine(name)
+    End Sub
+End Class
+
+Public Class Form1
+    Private Sub Form1_Load( _
+        ByVal sender As System.Object, _
+        ByVal e As System.EventArgs) Handles MyBase.Load
+
+
+        Dim samples As SampleDelegate = AddressOf New SampleClass("hoge1").Method
+        'samples = AddressOf New SampleClass("hoge1").Method
+        Dim sample2 As SampleDelegate = AddressOf New SampleClass("hoge2").Method
+        Dim sample3 As SampleDelegate = AddressOf New SampleClass("hoge3").Method
+        Dim sample4 As SampleDelegate = AddressOf New SampleClass("hoge4").Method
+
+        Trace.WriteLine("call 1 method")
+        samples()
+　　　　'call 1 method
+　　　　'hoge1
+
+        samples = System.Delegate.Combine(samples, sample2)
+        samples = System.Delegate.Combine(samples, sample3)
+        samples = System.Delegate.Combine(samples, sample4)
+
+        Trace.WriteLine("call 4 method")
+        samples()
+
+       'call 4 method
+       'hoge1
+       'hoge2
+       'hoge3
+       'hoge4
+<strong>
+        '委譲リストからメソッドを一つ取り除く
+        samples = System.Delegate.Remove(samples, sample2)
+</strong>
+        Trace.WriteLine("call 3 method")
+        samples()
+
+        'call 3 method
+        'hoge1
+        'hoge3
+        'hoge4
+
+    End Sub
+End Class
+
+■イベントの引数sender と　e
+
+    Private Sub form1_MouseMove( _
+	ByVal sender As Object, _
+	ByVal e As <strong>System.Windows.Forms.MouseEventArgs</strong>) Handles Me.MouseMove
+        'マウスのイベント情報は
+        'MouseEventArgs(Systen.EventArgsを継承している)クラスにある。
+        'イベントハンドラの引数は常に２つ。
+
+        Label1.Text = e.X & "," & e.Y
+        'マウスポインターの座標
+        Label2.Text = e.Button.ToString
+        'None Left Right ボタンの状態
+        Label3.Text = sender.text
+        'form1
+    End Sub
+
+■イベントを自作する
+
+Public Class form1
+    Private WithEvents instance As New SampleClass
+
+    Private Sub SampleEventHandler( _
+        ByVal sender As System.Object, _
+        ByVal e As SampleEventArgs) Handles instance.Sample
+
+        MsgBox("SampleEventHandler called:" + e.msg)
+
+    End Sub
+
+    Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+        instance.InvokeEvent()
+    End Sub
+End Class
+
+Public Class SampleEventArgs
+    Inherits System.EventArgs
+    Public msg As String
+End Class
+
+Public Class SampleClass
+    'イベントの定義（引数は必ず２つ。第２引数はSystem.EventArgsかSystem.EventArgsを継承したクラス）
+    Public Event Sample( _
+        ByVal sender As Object, _
+        ByVal e As SampleEventArgs)
+
+    Public Sub InvokeEvent()
+        Dim args As New SampleEventArgs
+        args.msg = "Hoge!"
+        'イベント発生
+        RaiseEvent Sample(Me, args)
+    End Sub
+End Class
+
+■Option Explicit Off
+
+VB.netではディフォルトでOption Explicit On。
+Offを指定すると、変数宣言なしのコードでも
+実行できてしまう。
+
+■Option Base
+
+VB.netには存在しない
+
+■［整数オーバーフローのチェックを解除］
+プロジェクトのプロパティにあるこの設定を
+チェックすると（解除すると）、正しくない
+計算がされるリスクがある。
+
+例）：
+        Dim a As Short '16ビット符号付き -32768～+32767
+        a = 32767
+        a = a + 1　'←オーバーフローする
+        Trace.WriteLine(a)
+
+チェックを解除すると、エラーにはならないが、
+符号ビットに１が立った状態の、
+
+        -32768
+
+という結果になる。
+
+が、Debugモードで解除せずテストし、
+動作を確信できるのであれば、Releaseモードで
+解除の設定をすると、処理が速くなるという
+メリットがある。
+
+■Option Strict
+以下の項目が制限される。
+
+・明示的なキャスト演算子を使用しない縮小変換
+
+        Dim a As Long
+        Dim b As Integer
+        a = 123
+        b = a 'Integer に Longを入れるとコンパイルを通らなくなる。
+
+継承したクラス（型）で宣言する場合、
+サブクラスからスーパークラスへの変換はエラーにならないが、
+逆はコンパイルを通らなくなる。
+
+        Dim A As ClassSuper
+        Dim B As ClassSub
+
+        A = New B 'コンパイル通る
+        B = A 'コンパイル通らない
+        'B = Ctype(A, B) と型変換してやるとコンパイルできる。
+        'DirectCast(A, B)とは書けない。DirectCastは継承関係のある下方変換のみで、値型は扱えない。
+        '機能が無い分高速。　       
+        
+　　　　
+・遅延バインディング
+
+       Object型（Variant型に相当するもの）で宣言しておいて、
+       実行時に型を判断させるという事は出来なくなる。
+
+       Dim A As Object
+       A = Me
+       Trace.Writeline(A.Text)     'というコーディングは出来なくなる。
+
+       ・Formで宣言するか、
+       ・Trace.Writeline(Directcast(A,Form).Text)で回避できるが
+       Aに変換できないデータ型が入ればエラーになる。
+
+・Object 型での=、<>、TypeOf～Is～、およびIs以外の演算はできない。
+(=、<>、TypeOf～Is～、およびIs の演算は許される）
+
+        Dim a As Object, b As Object, c As Object
+        a = 1
+        b = 2
+        c = a + b　'←はStrict On ではエラーになる。(Object型の"+"演算ができないので）
+
+        Trace.WriteLine(TypeOf c Is Integer)'←エラーにならない
+        'True
+        Trace.WriteLine(c)
+        '3
+
+        
+
+・宣言でのAs句の省略
+
+        Dim A
+
+        という書いてObject型と判断させる事はできず、エラーになる。
+        ⇒　適切なデータ型で宣言する事で解決する。
+
+■Option Compare
+
+Text | Binaryが指定できる。ディフォルトはBinary。
+
+        Binary：文字コードでの大小比較　"B"(66) > "a"(97)⇒False
+        Text：言語・国に固有の情報に依存する比較するので、
+        動作の検証を慎重に行わなければならない。　"B" > "a"⇒True
+
+■ジェネリック
+</pre>
+<p>
+<b>System.Collections.Generic </b>
+名前空間には、ジェネリック コレクションを定義するインターフェイスとクラスが含まれています。
+このコレクションを使用することにより、ユーザーは、
+汎用的でない厳密に型指定されたコレクションに比べてタイプ セーフでパフォーマンスが高い、
+厳密に型指定されたコレクションを作成できるようになります。
+</p>
+<pre>
+List<(Of <(T>)>) クラス 
+T はリスト内の要素の型。
+
+オブジェクト型のコレクションを扱う場合(Strict Onだと)キャストが必要になるが、
+ジェネリックを使うと指定した型専用のコレクションを作成できるので、
+パフォーマンスが良くなる。
+
+■タイプセーフ（型セーフ）
+
+型セーフなもの⇒コンパイル時点でエラーが出る（危険を事前に察知しやすい）
+型セーフじゃないもの⇒コンパイルが通る（危険を察知しにくい）
+
+■StatusStrip
+
+'ステータスバーの機能拡張版らしい。
+'このコントロールの使い方は理解できない。
+'以下のコーディングで動作した。
+'System.Windows.Forms.ToolStripStatusLabel　のインスタンスを
+'作成してItemとしてAddしてやる必要があるらしい。
+'他に、System.Windows.Forms.ToolStripProgressBar のインスタンスを作れば、
+'進捗表示もできそう。
+
+        Dim label As New ToolStripStatusLabel
+
+        '表示するテキストを設定
+        label.Text = "hogehoge"
+
+        With StatusStrip1.Items
+            .Clear()
+            .Add(label)
+        End With
+
+
+        Trace.WriteLine(Me.StatusStrip1.Items(0).Text)
+        'hogehoge
+
+■このメソッドは O(1) 操作です。（オーワン？と読むのかな？）
+
+アルゴリズムを表す用語で、ランダウのＯ-記法という。
+Oはアルファベットのオーだが、もともとはギリシャ文字のΟ（オミクロン）。
+
+O(1)は、個数によらず一定の時間や手間がかかる操作、という意味らしい。
+O(n)は、個数(n)に比例して時間や手間がかかる操作、という意味らしい。
+
+■キュー：Queueコレクションの継承による機能変更
+
+''' <summary>
+''' 追加できる項目数の上限は３つで、初めに登録された項目から削除されます
+''' </summary>
+Public Class SmallQueue
+    'キュー：先入れ・先だしコレクション
+    '実際にキューに追加する部分は基底クラスにまかせて
+    '自分ではコーディング不要であることが、継承の肝
+    Inherits System.Collections.Queue
+    
+    Public Overrides Sub Enqueue(ByVal obj As Object)
+
+        If Me.Count = 3 Then
+            Me.Dequeue() '登録順が速いものから抹消される
+        End If
+        MyBase.Enqueue(obj)
+    End Sub
+
+End Class
+
+'-----------------------------------------------------------
+Public Class Form1
+
+    Private Sub Button3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button3.Click
+        Dim q As New SmallQueue
+
+        With q
+            .Enqueue("アメンボ")
+            .Enqueue("イノシシ")
+            .Enqueue("ウマ")
+            .Enqueue("エリマキトカゲ")
+        End With
+
+        MsgBox(q.Dequeue) 'イノシシ
+        MsgBox(q.Dequeue) 'ウマ
+        MsgBox(q.Dequeue) 'エリマキトカゲ
+        'DesqueueはReturnしてRemoveする
+        'MsgBox(q.Dequeue)'キューが空なのでエラーになる
+    End Sub
+
+End Class
+
+■ユーザー定義のエラー----------------------------------------------------
+Class LicenseErrorException
+    Inherits Exception
+    Public Sub New(ByVal msg As String)
+        MyBase.New(msg)
+    End Sub
+
+End Class
+
+Public Class Form1
+
+    Private Sub checkLicense()
+        If Dir("c:\user\License.txt") = "" Then
+            Throw New LicenseErrorException("ライセンスファイルがありません")
+        End If
+    End Sub
+
+    Private Sub Form1_Load(sender As Object, e As System.EventArgs) Handles Me.Load
+
+        Try
+            checkLicense()
+        Catch ex As LicenseErrorException
+            MsgBox(ex.Message & "ライセンス認証が必要です")
+
+        End Try
+    End Sub
+End Class
+'----------------------------------------------------------------------------
+</pre>
+</body>
+</html>

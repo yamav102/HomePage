@@ -1,0 +1,633 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="ja">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=shift_jis">
+<meta http-equiv="content-style-type" content="text/css">
+<meta http-equiv="content-script-type" content="text/javascript">
+<meta name="keywords" content="EXCELVBA,HTML雛型,">
+<meta name="description" content="仕事で楽できるツール集">
+<link rel="stylesheet" href="./web/stylexlvba.css" type="text/css">
+<link rev="made" href="mailto:xatsushi&#64;tbb.t-com.ne.jp">
+<link rel="next" href="tsugi.htm">
+<title>Excel VBA Sample</title>
+<style type="text/css">
+<!--
+.clyoko{display:inline;
+}body{
+	background-color:#eee;
+}pre{
+	padding:.7em;
+	margin:0% 5% 0% 5%;
+	background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAYAAACEhIafAAAAEElEQVQImWP4////fwYsBAD5HxPtUUiuKwAAAABJRU5ErkJggg==");	
+
+	background-color:white;
+}hr{
+	border-style:solid;
+	border-width:100%;
+	
+}
+-->
+</style>
+</head>
+<body>
+<div id="contents">
+<ul>
+<li class="clyoko"><a href="../">&gt;home</a></li>
+<h1>OUTLOOK VBA Sample</h1>
+<p>
+<a href="VbaProject.OTM">保存済みメール、保存失敗メールを報告するOUTLOOKプロジェクトのダウンロード</a>
+</p>
+<pre>
+
+'標準モジュール
+
+'標準モジュール
+Option Explicit
+
+'API(GetDim関数で使用)
+Private Declare Function SafeArrayGetDim Lib "oleaut32.dll" (ByVal psa As Long) As Long
+Private Declare Sub GetMem4 Lib "msvbvm60" (ByVal ptr As Long, ByRef ert As Long)
+
+'メールの保存に成功したグループと失敗したグループをコレクションしておく
+Private mSucc As Collection
+Private mfail As Collection
+
+'collectionに登録する内容のクラス
+'Class1
+'Public itm As Object
+'Public msgFileName As String
+'Public comment As String
+'-----------------------------
+
+'msgアイテムのプロパティを格納する構造体
+Private Type typMsgPrps
+    SentOn As Date
+    ReceivedTime As Date
+    Subject As String
+    SenderName As String
+    ReceiveByName As String
+    Body As String
+    attCnt As Long
+    attfName() As String
+    TO As String
+    CC As String
+    BCC As String
+End Type
+
+
+'ActiveFolder.Items.Item
+Public Sub CrrFldrMsgSave()
+
+    Dim i As Long
+    Dim msg As Object
+    Dim myExplorer As Explorer
+    Dim strOutFolder As String
+    Dim strSaveName As String
+    Dim rpt As New Class1
+    Dim Fso As New Scripting.FileSystemObject
+    Dim ttlCnt As Long
+    
+    On Error Resume Next
+
+    Set mSucc = New Collection
+    Set mfail = New Collection
+
+
+    Set myExplorer = Outlook.ActiveExplorer
+    strOutFolder = FolderPicker
+    If strOutFolder = "" Then
+        Exit Sub
+    End If
+
+    If myExplorer.CurrentFolder.Items.Count = 0 Then
+        MsgBox "フォルダは空です"
+        Exit Sub
+    End If
+    ttlCnt = myExplorer.CurrentFolder.Items.Count
+    For i = 1 To ttlCnt
+        Set msg = myExplorer.CurrentFolder.Items.Item(i)
+
+        strSaveName = mkFileName(msg)
+        
+        Call saveCore(strOutFolder, strSaveName, msg, Fso)
+        With rpt
+            Set .Itm = msg
+            .msgFileName = strSaveName & ".msg"
+            .comment = ""
+        End With
+        
+        If Err.Number = 0 Then
+            msg.SaveAs strOutFolder & "\" & strSaveName & ".msg"
+            mSucc.Add rpt
+        Else
+            rpt.comment = Err.Number & ":" & Err.Description
+            mfail.Add rpt
+            Err.Clear
+        End If
+        Debug.Print i & "/" & ttlCnt & "済み"
+    Next
+
+    On Error GoTo 0
+
+    Call Report(rpt)
+
+    Set mSucc = Nothing
+    Set mfail = Nothing
+    Set rpt = Nothing
+    Set Fso = Nothing
+    
+End Sub
+
+'ActiveExplorer.Selection
+Public Sub SelectedMsgSave()
+
+    Dim i As Long
+    Dim msg As Object
+    Dim Itms As Outlook.Selection
+    Dim strOutFolder As String
+    Dim strSaveName As String
+    Dim rpt As New Class1
+    Dim Fso As New Scripting.FileSystemObject
+    Dim ttlCnt As Long
+    
+    On Error Resume Next
+
+    Set mSucc = New Collection
+    Set mfail = New Collection
+
+    strOutFolder = FolderPicker
+    If strOutFolder = "" Then
+        Exit Sub
+    End If
+
+    Set Itms = Outlook.ActiveExplorer.Selection
+    ttlCnt = Itms.Count
+    
+    If ttlCnt = 0 Then
+        MsgBox "保存するメールを選択されていません"
+        Exit Sub
+    End If
+
+    For i = 1 To ttlCnt
+        Set msg = Itms.Item(i)
+        
+        strSaveName = mkFileName(msg)
+        
+        Call saveCore(strOutFolder, strSaveName, msg, Fso)
+        With rpt
+            Set .Itm = msg
+            .msgFileName = strSaveName & ".msg"
+            .comment = ""
+        End With
+    
+        If Err.Number = 0 Then
+            msg.SaveAs strOutFolder & "\" & strSaveName & ".msg"
+            mSucc.Add rpt
+        Else
+            rpt.comment = Err.Number & ":" & Err.Description
+            mfail.Add rpt
+            Err.Clear
+        End If
+        Debug.Print i & "/" & ttlCnt & "済み"
+    Next
+
+    On Error GoTo 0
+    Call Report(rpt)
+
+    Set mSucc = Nothing
+    Set mfail = Nothing
+    Set rpt = Nothing
+    Set Fso = Nothing
+    
+End Sub
+
+Private Sub saveCore( _
+    strOutFolder As String, _
+    strSaveName As String, _
+    msg As Object, _
+    Fso As Scripting.FileSystemObject)
+
+    Dim j As Long
+    Dim tmpName As String
+    Dim tmpName2 As String
+
+    If Fso.FileExists(strOutFolder & "\" & strSaveName & ".msg") Then
+        If IsEqualMail(strOutFolder & "\" & strSaveName & ".msg", msg) Then
+
+            Err.Raise 514, , "同じメールが既に保存されています"
+        Else
+            Stop
+            j = 2
+            tmpName = strSaveName
+            tmpName2 = tmpName
+            Do _
+                Until Fso.FileExists( _
+                strOutFolder & "\" & tmpName2 & ".msg") = False
+
+                tmpName2 = tmpName & "(" & j & ")"
+                j = j + 1
+
+            Loop
+            strSaveName = tmpName2
+        End If
+    End If
+End Sub
+
+'結果報告
+Sub Report(rpt As Class1)
+    Dim i As Long
+    
+    '成功
+    If mSucc.Count &gt; 0 Then
+        Debug.Print "以下は正常に保存されました。(" & mSucc.Count & " 件)" & vbNewLine & _
+        "------------------------------------------"
+        For i = 1 To mSucc.Count
+            Set rpt = mSucc.Item(i)
+            Debug.Print rpt.msgFileName
+        Next
+    End If
+
+    '失敗
+    If mfail.Count &gt; 0 Then
+        Debug.Print "以下、保存に失敗しました(" & mfail.Count & " 件)" & vbNewLine & _
+        "------------------------------------------"
+        For i = 1 To mfail.Count
+            Set rpt = mfail.Item(i)
+            Debug.Print rpt.comment, rpt.msgFileName
+        Next
+    End If
+
+End Sub
+
+'アイテムからファイル名を作成
+Private Function mkFileName(Itm As Object) As String
+    Dim sntOn As Date
+    Dim strSntOn As String
+    Dim sbj As String
+    
+    sntOn = Itm.SentOn
+    sbj = Itm.Subject
+    sntOn = VBA.DateAdd("s", 30, sntOn)
+    strSntOn = Format$(sntOn, "yyyymmdd(aaa)hhmm")
+    
+    sbj = Replace(sbj, " ", "_")
+    sbj = Replace(sbj, ":", "_")
+    sbj = Replace(sbj, "/", "_")
+    sbj = Replace(sbj, "\", "_")
+    sbj = Replace(sbj, "?", "_")
+    sbj = Replace(sbj, "&lt;", "_")
+    sbj = Replace(sbj, "&gt;", "_")
+    sbj = Replace(sbj, "*", "_")
+    sbj = Replace(sbj, """", "_")
+    sbj = Trim$(sbj)
+
+    mkFileName = strSntOn & sbj
+
+End Function
+
+'Microsoft Shell Controls And Automation参照設定要
+'フォルダーピッカー
+Function FolderPicker() As String
+    Dim Folder As Shell32.Folder
+    Dim Shell As Shell32.Shell
+    Const cnsCaption As String = "保存先フォルダを選択して下さい"
+
+    Const cnsWndParent = 0
+    Const cnsUlFlags = 0
+
+    Set Shell = New Shell32.Shell
+    Set Folder = Shell.BrowseForFolder(cnsWndParent, cnsCaption, cnsUlFlags)
+
+    If Folder Is Nothing Then
+        FolderPicker = ""
+    Else
+        FolderPicker = Folder.Items.Item.Path
+    End If
+End Function
+
+'タイムスタンプ
+Private Function TimeSamp() As String
+    Dim str As String
+    str = Format$(Now(), "yyyymmddhhmmss")
+    TimeSamp = str
+End Function
+
+'保存フォルダー内ITEMデータリスト表示
+Sub showExcelList()
+    Dim xlAPP As New Excel.Application
+    Dim wb As Excel.Workbook
+    Dim ws As Excel.worksheet
+    Dim FoundFiles() As String
+    Dim i As Long
+    Dim tgtFldr As String
+    Dim Fso As New Scripting.FileSystemObject
+
+    Const cnsCptXlfdr As String = "アイテムリスト"
+
+    Set wb = xlAPP.Workbooks.Add
+
+    xlAPP.DisplayAlerts = False
+    With wb
+        Do Until .Sheets.Count = 1
+            .Sheets(.Sheets.Count).Delete
+        Loop
+    End With
+    xlAPP.DisplayAlerts = True
+
+    Set ws = wb.Sheets(1)
+    ws.Name = TimeSamp & "_" & cnsCptXlfdr
+    tgtFldr = FolderPicker
+
+    If tgtFldr = "" Then
+        Exit Sub
+    End If
+
+    FoundFiles() = GetFiles(Fso.GetFolder(tgtFldr))
+
+    If GetDim(FoundFiles) &gt; 0 Then
+        For i = 0 To UBound(FoundFiles)
+            Call PutMsgPrps(FoundFiles(i), ws, i + 1)
+        Next
+    Else
+        ws.Cells(1).Value = tgtFldr & " に .msg ファイルは保存されていません"
+    End If
+    xlAPP.Visible = True
+    Set ws = Nothing
+    Set wb = Nothing
+    Set xlAPP = Nothing
+    Set Fso = Nothing
+End Sub
+
+'配列の中身を判定する関数
+Private Function GetDim(ByVal sa As Variant) As Long
+    If IsArray(sa) Then
+        Dim p As Long
+        GetMem4 VarPtr(sa) + 8, p
+        If p = 0 Then
+            GetDim = 0 '初期化されていない配列
+        Else
+            GetDim = SafeArrayGetDim(p) '次元数
+        End If
+    Else
+        GetDim = 1 '配列では無い
+    End If
+End Function
+
+'再帰処理なしにサブディレクトリまで検索するコード
+'Windows Script Host Object Modelに参照設定
+Private Function GetFiles(Filename As String) As String()
+    Dim tmpPath As String
+    Dim sCmd As String
+    Dim ko As Long
+    Dim ff() As String
+
+    tmpPath = Environ$("Temp") & "\Dir.tmp" '作業用ファイル名
+    sCmd = "DIR """ & Filename & """ /b/s > """ & tmpPath & """" 'Dirコマンド
+
+    Dim WSO As New WshShell
+    With WSO
+        ko = .Run("CMD /C" & sCmd, 7, True)
+    End With
+
+    Dim io As Integer
+    Dim buf() As Byte
+    Dim flg As Boolean
+    io = FreeFile()
+
+    Open tmpPath For Binary As io
+        If LOF(io) &gt; 0 Then
+            flg = True
+            ReDim buf(1 To LOF(io))
+            Get #io, , buf
+        End If
+    Close io
+
+    Kill tmpPath
+
+    If flg Then
+        ff() = Split(StrConv(buf, vbUnicode), vbCrLf)
+    End If
+
+    GetFiles = ff()
+End Function
+
+'ワークシートにmsgファイル情報を出力
+Private Sub PutMsgPrps(msgPth As String, ws As Excel.worksheet, Rw As Long)
+    Dim msgPrps As typMsgPrps
+    Dim Fso As New Scripting.FileSystemObject
+    msgPrps = GetItmPrps(msgPth)
+    With ws
+        With .Cells(Rw, 1)
+            .Value = Fso.GetBaseName(msgPth)
+            .Hyperlinks.Add .Range(.Cells(Rw, 1)), msgPth
+        End With
+
+        .Cells(Rw, 4).Value = msgPrps.SentOn
+        .Cells(Rw, 5).Value = msgPrps.ReceivedTime
+        .Cells(Rw, 6).Value = msgPrps.Subject
+        .Cells(Rw, 7).Value = msgPrps.SenderName
+        .Cells(Rw, 8).Value = msgPrps.ReceiveByName
+        .Cells(Rw, 9).Value = msgPrps.Body
+
+        Dim i As Long
+
+        .Cells(Rw, 10).Value = msgPrps.attCnt
+
+        If msgPrps.attCnt &gt; 0 Then
+            If msgPrps.attCnt &gt; 1 Then
+                For i = 1 To msgPrps.attCnt
+                    .Cells(Rw, 10).Value = _
+                        .Cells(Rw, 10).Value & "/" & _
+                        msgPrps.attfName(i)
+                Next i
+            Else
+                .Cells(Rw, 10).Value = _
+                    msgPrps.attfName(i)
+            End If
+        End If
+
+        .Cells(Rw, 11).Value = msgPrps.TO
+        .Cells(Rw, 12).Value = msgPrps.CC
+        .Cells(Rw, 13).Value = msgPrps.BCC
+
+    End With
+
+End Sub
+
+'文字列中のUNICODE（でしか表現できない）文字を"□"に置き換えて返す
+Function cnvUnicodeRplcRect(str As String) As String
+    Dim c As String
+    Dim strRslt As String
+    Dim i As Long
+    Const altChr As String = "□"
+    strRslt = str
+
+    For i = 1 To Len(strRslt)
+        c = Chr(Asc(Mid$(str, i, 1)))
+        If c = "?" Then
+            strRslt = VBA.Replace(strRslt, ChrW(AscW(Mid$(str, i, 1))), altChr)
+        End If
+    Next
+    cnvUnicodeRplcRect = strRslt
+End Function
+
+'フォルダーに保存された msgファイルパスを渡してアイテムのプロパティを返す
+Private Function GetItmPrps(msgPth As String) As typMsgPrps
+    Dim oNamespace As NameSpace
+    Dim oItem As Object
+    Dim oFolder As MAPIFolder
+    Dim i As Long
+    Const cnsDiscard = 1 '破棄
+
+    'Messaging Application Program Interface
+    Set oNamespace = Outlook.GetNamespace("MAPI")
+    '受信トレイ フォルダ
+    Set oFolder = oNamespace.GetDefaultFolder(6) 'olFolderInbox=6
+
+    'msgファイルを開く
+    If CInt(Left$(Application.Version, 2)) &gt; 11 Then
+        Set oItem = oNamespace.OpenSharedItem(msgPth) '2007～
+        
+    Else
+        Set oItem = Outlook.CreateItemFromTemplate(msgPth)
+    End If
+
+    With GetItmPrps
+        .attCnt = oItem.Attachments.Count
+
+        If .attCnt &gt; 0 Then
+            ReDim .attfName(1 To .attCnt)
+            For i = 1 To .attCnt
+                .attfName(i) = _
+                    oItem.Attachments(i).Filename
+            Next
+        Else
+            ReDim .attfName(1 To 1)
+            .attfName(1) = ""
+        End If
+        .BCC = oItem.BCC
+        .Body = cleanEndCrLf(oItem.Body)
+        .CC = oItem.CC
+        .ReceiveByName = oItem.ReceivedByName
+        .ReceivedTime = oItem.ReceivedTime
+        .SenderName = oItem.SenderName
+        .SentOn = oItem.SentOn
+        .Subject = oItem.Subject
+        .TO = oItem.TO
+    End With
+    oItem.Close cnsDiscard
+
+    Set oItem = Nothing
+    Set oItem = Nothing
+    Set oFolder = Nothing
+    Set oNamespace = Nothing
+
+End Function
+
+'（MailItem|MeetingItem）アイテムの中身を比較
+'差異があれば False なければ True
+Private Function IsEqualMail( _
+    sameNameFile As String, crrntObj As Object) As Boolean
+
+    Dim prps As typMsgPrps 'ローカルファイルから取得したメールプロパティ
+    Dim crntPrps As typMsgPrps 'カレントフォルダから取得したメールプロパティ
+    Dim attnames() As String
+    Dim crrntAttCnt As Long
+    Dim i As Long, j As Long
+    Dim sameFlg As Boolean
+    prps = GetItmPrps(sameNameFile)
+    
+    If prps.BCC &lt;&gt; crrntObj.BCC Then
+        IsEqualMail = False
+        Exit Function
+    End If
+Stop
+'    Dim xlAPP As New Excel.Application
+'    Dim wb As Workbook
+'    Dim ws As worksheet
+'    Set wb = xlAPP.Workbooks.Add
+'    Set ws = wb.Sheets(1)
+'    ws.Cells(1).Value = prps.Body
+'    ws.Cells(2).Value = crrntObj.Body
+'    xlAPP.Visible = True
+    If prps.Body &lt;&gt; cleanEndCrLf(crrntObj.Body) Then
+        IsEqualMail = False
+        Exit Function
+    End If
+
+    If prps.CC &lt;&gt; crrntObj.CC Then
+        IsEqualMail = False
+        Exit Function
+    End If
+
+    If prps.CC &lt;&gt; crrntObj.CC Then
+        IsEqualMail = False
+        Exit Function
+    End If
+
+    If prps.SenderName &lt;&gt; crrntObj.SenderName Then
+        IsEqualMail = False
+        Exit Function
+    End If
+
+    If prps.SentOn &lt;&gt; crrntObj.SentOn Then
+        IsEqualMail = False
+        Exit Function
+    End If
+
+    If prps.Subject &lt;&gt; crrntObj.Subject Then
+        IsEqualMail = False
+        Exit Function
+    End If
+
+    If prps.TO &lt;&gt; crrntObj.TO Then
+        IsEqualMail = False
+        Exit Function
+    End If
+
+    If prps.attCnt &lt;&gt; crrntObj.Attachments.Count Then
+        IsEqualMail = False
+        Exit Function
+    End If
+
+    crrntAttCnt = crrntObj.Attachments.Count
+
+    If crrntAttCnt &gt; 0 Then
+        ReDim attnames(1 To crrntAttCnt)
+        For i = 1 To crrntAttCnt
+            sameFlg = False
+            For j = 1 To prps.attCnt
+                If _
+                    crrntObj.Attachments(i).Filename = _
+                    prps.attfName(j) Then
+                    sameFlg = True
+                    Exit For
+                End If
+                If sameFlg = False Then
+                    IsEqualMail = False
+                    Exit Function
+                End If
+            Next
+        Next
+    End If
+
+    IsEqualMail = True
+
+End Function
+
+'Bodyを取得する際の文末に改行が入ったり入らなかったりするので
+'文末に改行があれば取り除いて返す
+Public Function cleanEndCrLf(str As String) As String
+    Dim strTmp As String
+    strTmp = str
+    Do While Right$(strTmp, 1) = vbCr Or Right$(strTmp, 1) = vbLf
+        strTmp = Left$(strTmp, Len(strTmp) - 1)
+    Loop
+    cleanEndCrLf = strTmp
+End Function
+</pre>
+<hr>
+<address>yamaV1.02β</address>
+</div>
+</body>
+</html>

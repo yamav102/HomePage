@@ -1,0 +1,566 @@
+﻿<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="keywords" content="java script,html">
+<meta name="author" content="yamaV1.02β">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta name="robots" content="noindex">
+<meta name="description" content="//////////">
+<meta name="reply-to" content="">
+<link rel="shortcutIcon" href="favicon.ico">
+<link rel="start" href="index.htm">
+<link rel="stylesheet" type="text/css" href="leftside1.css">
+
+<title>JavaScript 本格入門　メモ9</title>
+
+  <!-- http://www.mwsoft.jp/programming/javascript/highlight_js.html?style=vs#styles -->
+  <!--http://softwaremaniacs.org/soft/highlight/en/download/-->
+  <!-- stylesの中から好みにあったCSSを選んで、 -->
+  <!-- 1, CSS、JavaScriptファイルを呼び出す -->
+  <!--<link rel="stylesheet" href="../highlight.js/styles/vs.css">-->
+  <!--<script type="text/javascript" src="../highlight.js/highlight.pack.js"></script>-->
+  <!-- 2, onLoad時にinitしてくれる機能を呼び出す -->
+  <!--<script type="text/javascript">hljs.initHighlightingOnLoad();</script>-->
+</head>
+<h1>
+JavaScript 本格入門　メモ9
+</h1>
+<p>
+たとえば、「特定の&lt;select&gt;タグ配下に含まれる&lt;option&gt;タグ
+を取り出したい」という場合は、以下のように記述します。
+</p>
+<pre>
+<code>
+   &lt;!DOCTYPE html&gt;
+   &lt;html lang="ja" xmlns="http://www.w3.org/1999/xhtml"&gt;
+   &lt;head&gt;
+      &lt;meta charset="utf-8" /&gt;
+      &lt;title&gt;p261&lt;/title&gt;
+      &lt;script type="text/javascript"&gt;
+         &lt;!--
+         // ページロード時に実行するイベントハンドラ
+         window.onload = function () {
+            // オプションリストを格納するための配列を用意
+            var result = [];
+            // &lt;select id="food"&gt;を取得
+            var s = document.getElementById('food');
+            // &lt;select&gt;タグ配下の子ノードを取得
+            var opts = s.childNodes;
+            // 子ノードを順に取得
+            for (var i = 0; i &lt; opts.length; i++) {
+               var opt = opts.item(i);
+               /*子ノードが要素ノードである場合にのみ、
+               その値を配列 result に追加*/
+               if (opt.nodeType == 1) {
+                  result.push(opts.item(i).value);
+               }
+            }
+            // 配列の内容をカンマ区切りで連結し、ダイアログ表示
+            window.alert(result.join(','));
+         }
+         //--&gt;
+      &lt;/script&gt;
+   &lt;/head&gt;
+   &lt;body&gt;
+      &lt;form name="fm"&gt;
+         一番好きな食べ物は？：
+         &lt;select id="food" name="food"&gt;
+            &lt;option value="ラーメン"&gt;ラーメン&lt;/option&gt;
+            &lt;option value="餃子"&gt;餃子&lt;/option&gt;
+            &lt;option value="焼き肉"&gt;焼き肉&lt;/option&gt;
+         &lt;/select&gt;
+         &lt;input type="submit" value="送信" /&gt;
+      &lt;/form&gt;
+   &lt;/body&gt;
+   &lt;/html&gt;
+</code>
+</pre>
+<p>
+要素直下の子ノード群を取得するのは、childNodes プロパティの役割です。
+childNodes プロパティは、getElementsByTagName メソッド同様、
+取得したノード群を NodeList オブジェクトとして返しますが、
+リストに含まれるノードは「要素だけではない」という点に要注意です。
+</p>
+<p>
+タグの間にある改行や空白はテキストノードと看做されます。
+そのため、childNodes プロパティもまた、要素ノードとテキストノードを取得する
+可能性があるわけです。
+</p>
+<p>
+今回のように &lt;option&gt; タグだけを取り出したい場合には、
+取り出したノードが要素ノードであるかどうかを確認する必要があります。
+ノードの種類を判定するのは、nodeType プロパティの役割です。
+</p>
+<table border="1">
+<caption>
+nodeType プロパティの戻り値
+</caption>
+<tr>
+<th>戻り値</th><th>概要</th>
+</tr>
+<tr>
+<td>1</td><td>ELEMENT_NODE：要素ノード</td>
+</tr>
+<tr>
+<td>2</td><td>ATTRIBUTE_NODE：属性ノード</td>
+</tr>
+<tr>
+<td>3</td><td>TEXT_NODE：テキストノード</td>
+</tr>
+<tr>
+<td>4</td><td>CDATA_SECTION_NODE：CDATAセクション　
+Characterデータ ⇔ PCDATA:構文解析対象データ
+(Parsed Character Data)
+</td>
+</tr>
+<tr>
+<td>5</td><td>ENTITY_REFERENCE_NODE：実体参照ノード</td>
+</tr>
+<tr>
+<td>6</td><td>ENTITY_NODE：実体宣言ノード</td>
+</tr>
+<tr>
+<td>7</td><td>PROCESSING_INSTRUCTION_NODE：処理命令ノード</td>
+</tr>
+<tr>
+<td>8</td><td>COMMENT_NODE：コメントノード</td>
+</tr>
+<tr>
+<td>9</td><td>DOCUMENT_NODE：文書ノード</td>
+</tr>
+<tr>
+<td>10</td><td>DOCUMENT_TYPE_NODE：文書型宣言ノード</td>
+</tr>
+<tr>
+<td>11</td><td>DOCUMENT_FRAGMENT_NODE：文書の断片（フラグメント）</td>
+</tr>
+<tr>
+<td>12</td><td>NOTATION_NODE：記法宣言ノード</td>
+</tr>
+</table>
+
+<p>
+childNodes プロパティを使わず、firstChild/nextSiblingプロパティを利用すると、
+次のように書き換える事もできます。lastChild/previousSibling プロパティを使っても、
+同じ要領で記述できます。
+</p>
+
+<pre>
+   &lt;!DOCTYPE html&gt;
+   &lt;html lang="ja" xmlns="http://www.w3.org/1999/xhtml"&gt;
+   &lt;head&gt;
+      &lt;meta charset="utf-8" /&gt;
+      &lt;title&gt;p261&lt;/title&gt;
+      &lt;script type="text/javascript"&gt;
+         &lt;!--
+         // ページロード時に実行するイベントハンドラ
+         window.onload = function () {
+            // オプションリストを格納するための配列を用意
+            var result = [];
+            // &lt;select id="food"&gt;を取得
+            var s = document.getElementById('food');
+            // &lt;select&gt;要素の最初の子ノードを取得
+            var child = s.firstChild;
+            // 子ノードが存在する間、ループを繰り返し
+            while (child) {
+               if (child.nodeType == 1) {
+                  result.push(child.value);
+               }
+	       // 次の子ノード（弟ノード）を取得
+	       child = child.nextSibling;
+            }
+            // 配列の内容をカンマ区切りで連結し、ダイアログ表示
+            window.alert(result.join(','));
+         }
+         //--&gt;
+      &lt;/script&gt;
+   &lt;/head&gt;
+   &lt;body&gt;
+      &lt;form name="fm"&gt;
+         一番好きな食べ物は？：
+         &lt;select id="food" name="food"&gt;
+            &lt;option value="ラーメン"&gt;ラーメン&lt;/option&gt;
+            &lt;option value="餃子"&gt;餃子&lt;/option&gt;
+            &lt;option value="焼き肉"&gt;焼き肉&lt;/option&gt;
+         &lt;/select&gt;
+         &lt;input type="submit" value="送信" /&gt;
+      &lt;/form&gt;
+   &lt;/body&gt;
+   &lt;/html&gt;
+</pre>
+<h3><a name="SEC24">
+7-3 属性値を取得/設定する</a>
+</h3>
+<h4><a name="SEC25">
+多くの属性は「要素ノードの同名のプロパティ」としてアクセスできる
+</a>
+</h4>
+<p>
+要素ノードにさえアクセスできてしまえば、属性値にアクセスするのは簡単です。
+多くの属性は「要素ノードの同名のプロパティ」としてアクセスできるからです。
+</p>
+<pre>
+&lt;!DOCTYPE html&gt;
+
+&lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+&lt;head&gt;
+    &lt;meta charset="utf-8" /&gt;
+    &lt;title&gt;p264&lt;/title&gt;
+    &lt;script type="text/javascript"&gt;
+        window.onload = function () {
+            var result = [];
+            var s = document.getElementsByTagName("a");
+            for (var i = 0; i &lt; s.length; i++) {
+		//target属性の取得
+                result.push(s.item(i).<strong>target</strong>);
+		//href属性の設定
+                s.item(i).<strong>href</strong> = "https://www.google.co.jp/search?q=yamav102&ie=utf-8&oe=utf-8&hl=ja"
+            }
+            window.alert(result.join(','));
+        }
+    &lt;/script&gt;
+    
+&lt;/head&gt;
+
+&lt;body&gt;
+    &lt;p&gt;&lt;a href="http://hogehoge.url/" target="_blank"&gt;hogehoge&lt;/a&gt;&lt;/p&gt;
+    
+    &lt;p&gt;&lt;a href="http://fugafuga.url/" target="_parent"&gt;fugafuga&lt;/a&gt;&lt;/p&gt;
+    &lt;p&gt;&lt;/p&gt;&lt;a href="http://fushufushu.url/" target="_self"&gt;fushufushu&lt;/a&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+<h4><a name="#SEC26">
+不特定の属性を取得する
+</a></h4>
+<p>
+特定の要素ノードに属するすべての属性を取得したい場合には、attributesプロパティ
+を取得します。以下は、取得した<img>タグにふくまれる全ての属性を一覧表示するコードです。
+</p>
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+&lt;head&gt;
+    &lt;meta charset="utf-8" /&gt;
+    &lt;title&gt;p265&lt;/title&gt;
+    &lt;script type="text/javascript"&gt;
+        &lt;!--
+        window.onload = function () {
+            // &lt;img id="logo"&gt;を取得
+            var logo = document.getElementById('logo');
+            // &lt;img&gt;タグに含まれる属性リストを取得
+            var attrs = logo.attributes;
+            var result = [];
+            // 属性リストから順に属性を取り出し、その値が空でない場合のみ配列に追加
+            for (var i = 0; i &lt; attrs.length; i++) {
+                var attr = attrs.item(i);
+                if (attr.nodeValue) {
+                    result.push(attr.nodeName + ':' + attr.nodeValue);
+                }
+            }
+            //配列resultの内容を改行区切りでダイアログに表示
+            window.alert(result.join('\r\n'));
+
+        }
+       
+        //--&gt;
+    &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;img id ="logo" src="http://www.wings.msn.to/image/wings.jpg"
+        height="67" width="215" border="0" alt="WINGS(www INtegrated Guide on Server-architecture)" /&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>
+attributesプロパティは、要素ノードに含まれる全属性のリストを NamedNodeMap オブジェクトと
+して返します。NamedNodeMap オブジェクトは、先述した NodeListオブジェクトにも似ていますが、
+「個別のノードに名前、インデックス番号のいずれを使ってもアクセスできる」という特徴があります。
+</p>
+<p>
+NamedNodeMapオブジェクトに含まれるノード（属性）を順に取得する流れは、NodeListオブジェクト
+の場合と同様です。インデックス数を 0 ～Length-1 まで変化させる事で、リストから属性ノードを
+ひとつずつ取り出しています。
+</p>
+<p>
+取り出した属性ノードの名前／値にアクセスするには、nodeName／nodeValueプロパティを使用します。
+両プロパティの戻り値は、使用するノードの種類によって異なりますが、属性ノードの場合は属性名／値を返します。
+</p>
+<table border="1">
+<caption>
+nodeName／nodeValueプロパティの戻り値（主要なもの）
+</caption>
+<tr>
+<th>ノードの種類</th>
+<th>nodeName</th>
+<th>nodeValue</th>
+</tr>
+<tr>
+<td>要素</td>
+<td>タグ名</td>
+<td>null</td>
+</tr>
+<tr>
+<td>属性</td>
+<td>属性名</td>
+<td>属性値</td>
+</tr>
+<tr>
+<td>テキスト</td>
+<td>#text</td>
+<td>テキスト</td>
+</tr>
+<tr>
+<td>コメント</td>
+<td>#comment</td>
+<td>テキスト</td>
+</tr>
+<tr>
+<td>CDATAセクション</td>
+<td>#cdata-section</td>
+<td>テキスト</td>
+</tr>
+<tr>
+<td>処理命令</td>
+<td>ターゲット名</td>
+<td>データ部</td>
+</tr>
+<tr>
+<td>実体参照</td>
+<td>実体参照名</td>
+<td>null</td>
+</tr>
+<tr>
+<td>文書</td>
+<td>#document</td>
+<td>null</td>
+<tr>
+<td>文書型宣言</td>
+<td>文書型宣言名</td>
+<td>null</td>
+</tr>
+</tr>
+</table>
+<p>
+ただし、Internet Explorer の attributes プロパティでは、タグに実際に指定していない属性も含めて
+（タグで利用可能なすべての属性が）出力されてしまいます。ここでは最低限 nodeValue プロパティが空
+でない属性についてのみ出力するようにフィルタしています。
+</p>
+<h3><a name="SEC25">
+7-4 ノードを追加／置換／削除する</a>
+</h3>
+<h4>
+innerHTMLプロパティとどのように使い分けるか
+</h4>
+<p>
+ドキュメントの編集には、先述したinnerHTMLプロパティを利用する事も出来ます。
+しかし、innterHTML
+プロパティがコンテンツを文字列として操作する必要があるのに対して、本節で紹介する方法ならば
+オブジェクト吊り―として操作できるため、「対象となるコンテンツが複雑になった場合にも、
+コードの可読性が劣化しにくい」というメリットがあります。基本的には、以下のように使い分けて
+いくといいでしょう。
+</p>
+<ul>
+<li>シンプルなコンテンツの編集　⇒　innnterHTMLプロパティ</li>
+<li>複雑なコンテンツの編集　⇒　本節のアプローチ</li>
+</ul>
+<h4>
+新規にノードを作成する
+</h4>
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html lang="ja" xmlns="http://www.w3.org/1999/xhtml"&gt;
+&lt;head&gt;
+    &lt;meta charset="utf-8" /&gt;
+    &lt;title&gt;p268&lt;/title&gt;
+    &lt;script type="text/javascript"&gt;
+        &lt;!--
+        //[追加]ボタンをクリックした対民ングで実行される add関数
+        function add(f) {           
+            //&lt;a&gt;タグを生成
+            var anchor = document.createElement('a');
+            //&lt;a&gt;タグのhref属性を設定
+            anchor.href = f.url.value;
+            anchor.target = "_blank";
+            //テキストノードを生成し、&lt;a&gt;タグの直下に追加
+            var name = document.createTextNode(f.name.value);
+            anchor.appendChild(name);
+            
+            //&lt;br&gt;タグを生成
+            var br = document.createElement('br');
+            //&lt;div id="list"&gt;を取得
+            var list = document.getElementById('list');
+            //&lt;div&gt;タグ直下に&lt;a&gt;、&lt;br&gt;タグの順番で追加
+            list.appendChild(anchor);
+            list.appendChild(br);
+        }
+       
+        //--&gt;
+    &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;form&gt;
+        &lt;label&gt;サイト名：&lt;br /&gt;
+            &lt;input type="text" name="name" size="30" /&gt;&lt;/label&gt;&lt;br /&gt;
+        &lt;label&gt;URL：&lt;br /&gt;
+            &lt;input type="text" name="url" size="50" /&gt;
+        &lt;/label&gt;&lt;br /&gt;
+        &lt;input type="button" value="追加" onclick="add(this.form)" /&gt;
+    &lt;/form&gt;
+    &lt;div id="list"&gt;&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+<p>
+<h5>
+要素／テキストノードを作成する
+</h5>
+<p>
+コンテンツを追加するにはまず、createElement／createTextNode メソッドを利用して、新たに挿入する要素
+／テキストノードを生成します。
+<pre>
+&lt;!-- 構文：createElement／createTextNodeメソッド --&gt;
+document.createElement(要素名)
+document.createTextNode(テキスト)
+⇒新たに要素／テキストノードを生成します。
+</pre>
+<p>
+createXxxxメソッドには、その他にも、生成するノードに応じて次ページの表のような
+メソッドがあります。
+</p>
+<table border="1">
+<caption>
+主なcreateXxxxxxメソッド
+</caption>
+<tr>
+<th>メソッド</th>
+<th>生成するノード</th>
+</tr>
+<tr>
+<td>createElement(要素名)</td>
+<td>要素ノード</td>
+</tr>
+<tr>
+<td>createAttribute(属性名)</td>
+<td>属性ノード</td>
+</tr>
+<tr>
+<td>createTextNode(テキスト)</td>
+<td>テキストノード</td>
+</tr>
+<tr>
+<td>createCDATASection(テキスト)</td>
+<td>CDATAセクション</td>
+</tr>
+<tr>
+<td>createComment(テキスト)</td>
+<td>コメントノード</td>
+</tr>
+<tr>
+<td>createEntityReference(実体名)</td>
+<td>実態参照ノード</td>
+</tr>
+<tr>
+<td>createProcessingInstruction(ターゲット名,データ)</td>
+<td>処理命令ノード</td>
+</tr>
+<tr>
+<td>createDocumentFragment()</td>
+<td>ドキュメントの断片</td>
+</tr>
+</table>
+<p>
+createXxxxxメソッドで喉を生成する時点では、まだお互いの階層関係を意識する必要はありません。
+生成された個々のノードは、パズルのピースのように、どこにも関連付けられず、バラバラに散らばっている状態です。
+</p>
+<h5>
+ノード同士を組み立てる
+</h5>
+<p>
+次に、このバラバラに散らばっているだけのノード群を組み立て、ドキュメントに追加する作業が必要になります。
+この作業を行うのがappendChildメソッドの役割です。appnedChildメソッドは、追加された順番に
+「一番最後の子要素として」指定された要素を追加します。
+</p>
+<pre>
+&lt;構文：appendChildメソッド&gt;
+要素ノード.appendChild(追加するノード)
+⇒要素ノード直下の最後の子ノードとしてノードを追加します。
+</pre>
+<p>
+ここでは、まずテキストノードnameを要素ノードanchorに追加した上で、この要素ノードanchorとbrとを、
+文書ツリー内の要素ノードlist配下に追加しています。
+</p>
+<p>
+ちなみに、appendChildメソッドはinsertBeforeメソッドで置き換える事も出来ます。たとえば、
+以下の２文は同意です。
+</p>
+<pre>
+list.appendChild(anchor);
+list.insertBefore(anchor, null);
+</pre>
+<p>
+insertBeforeメソッドでは、第１引数で指定したノードを第２引数で指定した子ノードの
+直前に挿入します。appendChildメソッドと同様、最後尾にノードを追加したい場合には、第２引数に
+null を指定します。
+</p>
+<p>
+逆に、先頭の子ノードとして追加したいと言う場合にには、以下のように書き換える事もできます。
+</p>
+<pre>
+list.appencChild(anchor);
+list.appendChild(br);
+</pre>
+↓
+<pre>
+list.insertBefore(br,list.firstChild);
+list.insertBefore(anchor, br);
+</pre>
+<h5>
+属性ノードを追加する
+</h5>
+<p>
+P.264でも述べたように、属性ノードを設定するには属性と同名のプロパティを設定するだけです。
+ここでもその方法を用いていますが、createAttributeメソッドで属性ノードを生成することもできます。
+プロパティを経由する場合に比べるとコードは冗長にないｒますが、属性名を文字列で指定できることから、
+「スクリプトから動的に属性名を変更できる」というメリットがあります。より汎用的なコードを記述する
+場合には利用する事もあるかと思いますので、リスト7-08の以下の部分をcreateAttributeメソッドで書き換えて見ましょう。
+</p>
+<pre>
+anchor.href=f.url.value;
+</pre>
+<p>
+書き換えたコードは以下のとおりです。
+</p>
+<pre>
+var href = document.createAttribute('href');
+href.nodeValue = f.url.value;
+anchor.setAttributeNode(href);
+</pre>
+<p>
+属性ノードの値を設定するには、nodeValueプロパティを使用します。
+</p>
+<p>
+また、属性ノードを要素ノードに関連付けるには、appendChild／insertBeforeメソッドではなく、
+setAttributeNodeメソッドを使用する点に注意して下さい。属性ノードは要素ノードの「子」ノードではなく、
+属性という扱いだからです。
+</p>
+<h6>
+Note:setAttributeメソッドでも代用可能
+</h6>
+<p>
+ここではcreateAttributeメソッドを使った例を示したましたが、P264で紹介したsetAttributeメソッド
+を使用してもかまいません。
+</p>
+<h4>
+属性ノードを置換／削除する
+</h4>
+<p>
+次は、既存のノードを置き換えたり、ｻｸｼﾞｮしたりする方法を見ていきましょう。以下は、書名リストを
+クリックすると、該当する書籍の表紙画像を表示するサンプルです。[削除]ボタンをクリックする事で、
+表紙画像を非表示にすることもできます。
+</p>
+
+<!-- ☜ -->
+<a href="js8.htm">☜☜前へ</a>　<a href="js10.htm">次へ☞☞ 
+</a></p>
+</body>
+</html>	

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="content-style-type" content="text/css">
+<meta http-equiv="content-script-type" content="text/javascript">
+<meta name="keywords" content="EXCELVBA,HTML雛型,">
+<meta name="description" content="仕事で楽できるツール集">
+<link rel="stylesheet" href="./web/stylexlvba.css" type="text/css">
+<link rev="made" href="mailto:xatsushi&#64;tbb.t-com.ne.jp">
+<link rel="next" href="tsugi.htm">
+<title>Excel VBA Sample</title>
+<style type="text/css">
+<!--
+.clyoko{display:inline;
+}body{
+	background-color:#eee;
+}pre{
+	padding:.7em;
+	margin:0% 5% 0% 5%;
+	background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAYAAACEhIafAAAAEElEQVQImWP4////fwYsBAD5HxPtUUiuKwAAAABJRU5ErkJggg==");	
+
+	background-color:white;
+}hr{
+	border-style:solid;
+	border-width:100%;
+	
+}
+-->
+</style>
+  <!-- http://www.mwsoft.jp/programming/javascript/highlight_js.html?style=vs#styles -->
+  <!--http://softwaremaniacs.org/soft/highlight/en/download/-->
+  <!-- stylesの中から好みにあったCSSを選んで、 -->
+  <!-- 1, CSS、JavaScriptファイルを呼び出す -->
+  <link rel="stylesheet" href="http://homepage3.nifty.com/homepage_yamaV102/highlight.js/styles/vs.css">
+  <script type="text/javascript" src="http://homepage3.nifty.com/homepage_yamaV102/highlight.js/highlight.pack.js"></script>
+  <!-- 2, onLoad時にinitしてくれる機能を呼び出す -->
+  <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+
+</head>
+<body>
+<div id="contents">
+<ul>
+<li class="clyoko"><a href="../">&gt;home</li>
+<li class="clyoko"><a href="./excel_vba1.htm">1</a></li>
+<li class="clyoko"><a href="./excel_vba2.htm">2</a></li>
+<li class="clyoko"><a href="./excel_vba3.htm">3</a></li>
+<li class="clyoko"><a href="./excel_vba4.htm">4</a></li>
+<li class="clyoko"><a href="./excel_vba5.htm">5</a></li>
+<li class="clyoko"><a href="./excel_vba6.htm">6</a></li>
+<li class="clyoko"><a href="./excel_vba7.htm">7</a></li>
+<li class="clyoko"><a href="./excel_vba8.htm">8</a></li>
+<li class="clyoko"><a href="./excel_vba9.htm">9</a></li>
+<li class="clyoko"><a href="./excel_vba10.htm">10</a></li>
+</ul>
+<h1>Excel VBA Sample 10</h1>
+
+
+<h2>▼ThisWorkbook.Path が OneDriveのURLを返す環境で、ローカルパスに変換する関数</h2>
+<pre>
+<code>
+Public Function OneDrivePath(S_Url As String) As String
+
+    Const Cns_OneDrive法人パターン As String = "my.sharepoint.com"
+    '法人向けOneDriveのURLか否かを判定するためのLike右辺値
+
+    Static S_path区切り As String
+    Static S_OneDrive法人Path As String
+    Static S_OneDrive個人Path As String
+
+    Dim S_パス位置 As Long
+
+    '引数がURLでない場合、引数はローカルパスと判断してそのまま返す。
+    If Not (S_Url Like "https://*") Then
+        OneDrivePath = S_Url
+        Exit Function
+    End If
+
+    If (S_path区切り = "") Then
+        S_path区切り = Application.PathSeparator
+
+        '法人向けOneDrive(OneDrive for Business)のパス
+        S_OneDrive法人Path = Environ("OneDriveCommercial")
+        If (S_OneDrive法人Path = "") Then
+            S_OneDrive法人Path = Environ("OneDrive")
+        End If
+
+        '個人向けOneDriveのパス
+        S_OneDrive個人Path = Environ("OneDriveConsumer")
+        If (S_OneDrive個人Path = "") Then
+            S_OneDrive個人Path = Environ("OneDrive")
+        End If
+
+    End If
+
+    '法人向けOneDrive:S_Url="https://会社名-my.sharepoint.com/personal/ユーザー名_domain_com/Documentsファイルパス")
+    If (S_Url Like "*" & Cns_OneDrive法人パターン & "*") Then
+
+        S_パス位置 = InStr(1, S_Url, "/Documents") + 10                         '10 = Len("/Documents")
+        OneDrivePath = S_OneDrive法人Path & Replace(Mid(S_Url, S_パス位置), "/", S_path区切り)
+
+    '個人向けOneDrive:S_Url="https://d.docs.live.net/CID番号/ファイルパス"
+    Else
+
+
+        S_パス位置 = InStr(9, S_Url, "/")                                       '9 = Len("https://") + 1
+        S_パス位置 = InStr(S_パス位置 + 1, S_Url, "/")
+        OneDrivePath = S_OneDrive個人Path & Replace(Mid(S_Url, S_パス位置), "/", S_path区切り)
+
+    End If
+
+End Function
+</code>
+</pre>
+<h2>▼VBAエディタ上で文字をCP932として扱う</h2>
+<pre>
+<code>
+
+' Windows APIのGetACP関数を宣言
+Private Declare PtrSafe Function GetACP Lib "kernel32" () As LongPtr
+
+Sub バイト数で2バイト文字交じりの文字列を分割()
+
+    Const JAPANESE_CODEPAGE As Long = 932 ' Shift-JISのコードページ
+    
+    ' システムのコードページをチェック
+    If GetACP() <> JAPANESE_CODEPAGE Then
+        MsgBox "このプロシージャは日本語環境（Shift-JIS、コードページ 932）でのみ動作します。" & vbCrLf & _
+               "現在のコードページ: " & GetACP() & " では正しく動作しません。", vbExclamation, "コードページエラー"
+        Exit Sub
+    End If
+
+    Dim tgtData As String
+    tgtData = [a1].Value
+    Dim strJis As String
+    
+    '"a"を1バイトとする文字体系に変換
+    'vbFromUnicode:128　文字列をUnicodeからシステムの既定のコードページに変換
+    strJis = StrConv(tgtData, vbFromUnicode)
+    
+    Dim arrStr(1 To 1, 1 To 3) As String
+    
+    'バイト数で分割した値を再度UNICODE文字列に戻す
+    arrStr(1, 1) = StrConv(MidB(strJis, 1, 3), vbUnicode) ' 1バイト目から3バイト分抽出
+    arrStr(1, 2) = StrConv(MidB(strJis, 4, 4), vbUnicode) ' 4バイト目から4バイト分抽出
+    arrStr(1, 3) = StrConv(MidB(strJis, 8, 6), vbUnicode) ' 8バイト目から6バイト分抽出
+    
+    [b1:d1].Value = arrStr
+    ' a1 が "あiうえおかき" の場合、b1:あi, c1:うえ, d1:おかき と抽出される。
+    
+End Sub
+</code>
+</pre>
+<h2>▼文字列連結でメモリ確保を事前に行う事でパフォーマンスをよくする</h2>
+<pre>
+<code>
+Sub 文字列連結でメモリ確保を事前に行う事でパフォーマンスをよくする()
+    Dim stt As Single
+    stt = Timer()
+    Dim arrStr() As String
+    Dim mx As Long: mx = 9999
+    ReDim arrStr(0 To mx)
+    Dim i As Long
+    For i = 0 To mx
+        arrStr(i) = "abcasdfasdfasdfasdfasdfasdfasdfasdfsadasdasdfasdfsadfsdf"
+    Next
+    Debug.Print Join(arrStr, ",")
+    Debug.Print Format((Timer() - stt) * 1000, "0.000ミリ秒") '15.625ミリ秒
+End Sub
+
+Sub 文字列連結でメモリ確保を事前に行う事でパフォーマンスをよくする_比較用()
+    Dim stt As Single
+    stt = Timer()
+    Dim mx As Long: mx = 9999
+    Dim joinStr As String
+    Dim i As Long
+    For i = 0 To mx
+        joinStr = joinStr & "," & "abcasdfasdfasdfasdfasdfasdfasdfasdfsadasdasdfasdfsadfsdf"
+    Next
+    Debug.Print joinStr
+    Debug.Print Format((Timer() - stt) * 1000, "0.000ミリ秒") '710.938ミリ秒
+
+    '解説：文字列変数はイミュータブル（変更不可能）であるため、
+    's = s & "@" をループで連結すると,変数:s はループ毎に破棄されて1巡目から毎回作り直され
+    '処理に時間がかかる、という理屈。
+End Sub
+</code>
+</pre>
+<hr>
+<address>yamaV1.02β</address>
+</div>
+</body>
+</html>

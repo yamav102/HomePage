@@ -1,0 +1,341 @@
+﻿<html lang="ja">
+<meta http-equiv="Content-Type" content="text/html; charset="utf-8"/>
+<pre>
+<code>
+'// module2
+
+Option Explicit
+
+'// 先頭列、間の列、最終列、それぞれの区切り文字を返すためのモード指定
+Public Enum enmSparateMode
+    StartChr
+    MidChr
+    EndChr
+End Enum
+
+Private Sub KaishiShori()
+    Call Shori(False)
+    With Application
+        .Calculation = xlCalculationManual
+        .StatusBar = False
+    End With
+End Sub
+
+Private Sub OwariShori()
+    Call Shori(True)
+    With Application
+        .Calculation = xlCalculationAutomatic
+        .StatusBar = False
+    End With
+End Sub
+
+Private Sub Shori(flg As Boolean)
+    With Application
+        .ScreenUpdating = flg
+        .Interactive = flg
+        .DisplayAlerts = flg
+        .ShowWindowsInTaskbar = flg
+        .AskToUpdateLinks = flg
+        .EnableEvents = flg
+        .EnableAnimations = flg
+    End With
+End Sub
+
+Sub test()
+    Dim t0 As Single
+    t0 = Timer()
+    Call KaishiShori
+    Call ImportData("D:\yamaDeskTop\連番.xlsx")
+    Call OwariShori
+    Debug.Print Timer() - t0
+End Sub
+
+Sub GetWorkbooksData()
+    Dim fldrPth As String
+    fldrPth = ThisWorkbook.Path
+    
+    Dim fso As Scripting.FileSystemObject
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    
+    Dim fldr As Folder
+    Set fldr = fso.GetFolder(fldrPth)
+    
+    Dim fls As File
+    
+    Dim filesCnt As Long
+    filesCnt = fldr.Files.Count
+    
+    Dim extnt As String
+    Dim i As Long
+    
+    For Each fls In fldr.Files
+        Application.StatusBar = i & "/" & filesCnt
+        extnt = StrConv(fso.GetExtensionName(fls.Path), vbLowerCase)
+        If extnt = "xls" Or extnt = "xlsx" Or extnt = "xlsm" Then
+            Call ImportData(fls.Path)
+        End If
+    Next
+End Sub
+
+
+Sub ImportData(WbPth As String)
+    If IsLockedBook(WbPth, IsOpenCntinue:=True) Then
+        Debug.Print "パスワードが掛かっています"
+        Exit Sub
+    End If
+    
+    Dim tgtWB As Workbook
+    Set tgtWB = Workbooks(Right$(WbPth, Len(WbPth) - InStrRev(WbPth, "\")))
+    
+    Dim ShNumberNames() As String
+    Dim errMsg As String
+    
+    If GetShNumberNames(tgtWB, ShNumberNames, errMsg) = False Then
+        Debug.Print errMsg
+    End If
+    
+    Dim OutArr(1 To 1, 1 To 250) As String '250:取り出す項目の数
+    
+    Dim loopCnt As Long
+    Dim ListRW As Long
+    Dim ListRngArr()
+    Dim atai
+    
+    With ThisWorkbook.Worksheets("リスト")
+        ListRngArr = .Range("a2:c" & .Range("a" & .Rows.Count).End(xlUp).Row).Value
+    End With
+    
+    For loopCnt = LBound(ShNumberNames) To UBound(ShNumberNames)
+        With tgtWB
+            With .Worksheets(ShNumberNames(loopCnt))
+                
+                'ワークシート名、セルアドレス、フォーマットのリストシートを参照
+                For ListRW = 1 To UBound(ListRngArr)
+                
+                    '番号シートの場合
+                    If IsNumeric(ListRngArr(ListRW, 1)) Then
+                        atai = tgtWB.Worksheets(ShNumberNames(loopCnt)).Range(ListRngArr(ListRW, 2))
+                    Else
+                    '番号シートの以外の場合
+                        atai = tgtWB.Worksheets(ListRngArr(ListRW, 1)).Range(ListRngArr(ListRW, 2))
+                    End If
+                    
+                    'フォーマット
+                    If ListRngArr(ListRW, 3) <> vbNullString Then
+                        atai = Format$(atai, CStr(ListRngArr(ListRW, 3)))
+                    End If
+                    
+                    OutArr(1, ListRW) = atai
+                              
+                    GetOutRowRng.Value = OutArr
+                    
+                Next '// For ListRW = 1 To UBound(ListRngArr)
+                
+            End With '// With .Worksheets(ShNames(loopCnt))
+        End With '// With tgtWB
+    Next '// For loopCnt = LBound(ShNames) To UBound(ShNames)
+End Sub
+
+'OutPut シートの新規行データ入力範囲を返す
+Function GetOutRowRng() As Range
+    '// ToDo
+    
+End Function
+
+'SheNameArr に番号シート名の配列を作成
+'エラーがあればTrueを返す
+Function GetShNumberNames(wb As Workbook, ByRef ShNameArr() As String, ByRef errMsg As String) As Boolean
+    Dim ws As Worksheet
+    Dim wsCnt As Long
+    Dim wsNames As New Collection
+    
+    For Each ws In wb.Worksheets
+        If IsNumeric(ws.Name) Then
+            wsNames.Add ws.Name
+        End If
+    Next
+    
+    'エラー検証:番号シートが複数ある場合連番である事を確認
+    Dim loopCnt As Long
+    
+    For loopCnt = 1 To wsNames.Count
+        If IsExistsWS(CStr(loopCnt), wb) = False Then
+            errMsg = "シート数:" & wsNames.Count & "[" & loopCnt & "] シートがありません"
+            GetShNumberNames = False
+            Exit Function
+        End If
+    Next
+    GetShNumberNames = True
+    ReDim ShNameArr(1 To wsNames.Count)
+End Function
+
+'wb ブックに wsname シートが無ければ False を返す
+Function IsExistsWS(wsname As String, wb As Workbook) As Boolean
+    Dim str As String
+    On Error Resume Next
+    str = wb.Worksheets(wsname).Name
+    If Err.Number <> 0 Then
+        IsExistsWS = False
+    Else
+        IsExistsWS = True
+    End If
+    On Error GoTo 0
+End Function
+
+'パスワード保護されているブックで TRUE を返す
+Function IsLockedBook(tgtPth As String, Optional IsOpenCntinue = False) As Boolean
+
+  Dim wb As Workbook
+  Dim errDescription As String
+  Dim errNum As Long
+ 
+  '日本語版限定
+  If Application.LanguageSettings.LanguageID(msoLanguageIDInstall) <> 1041 Then
+    Err.Raise 65534, "", "IsLockedBook関数は日本語以外の環境をサポートしていません"
+  End If
+ 
+  On Error Resume Next
+  Set wb = Workbooks.Open(tgtPth, Password:=vbNullString)
+  errDescription = Err.Description
+  errNum = Err.Number
+  On Error GoTo 0
+ 
+  Const cnsMsg As String = _
+    "入力したパスワードが間違っています。" & _
+    "CapsLock キーの状態に注意して、" & _
+    "大文字と小文字が正しく使われていることを確認してください。"
+ 
+  If errDescription = cnsMsg Then
+    IsLockedBook = True
+  
+  ElseIf Err.Number = 0 Then
+ 
+   IsLockedBook = False
+  
+  If IsOpenCntinue = False Then
+    wb.Close SaveChanges:=False
+    End If
+  Else
+    Err.Raise errNum
+  End If
+ 
+End Function
+
+Sub test2()
+    Call KaishiShori
+    Call MkCsvFile("4")
+    Call OwariShori
+End Sub
+
+Sub MkCsvFile(wsname As String)
+    
+    Dim WsOut As Worksheet
+    Set WsOut = ThisWorkbook.Worksheets(wsname)
+    
+    Dim DataBox()
+    
+    DataBox = WsOut.UsedRange.Value
+    
+    Dim fso As Scripting.FileSystemObject
+    
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    
+    Dim ts As TextStream
+    
+    Set ts = fso.CreateTextFile(GetCsvName, False, Unicode:=False)
+    
+    Dim RwCnt   As Long     '// 行ループカウンタ
+    Dim strLine As String
+    
+    Dim mxCnt As Long
+    mxCnt = UBound(DataBox, 1)
+    
+    For RwCnt = LBound(DataBox, 1) To mxCnt
+        strLine = GetRowCsvData(DataBox, RwCnt)
+        
+        ts.WriteLine strLine
+        Application.StatusBar = RwCnt & "/" & mxCnt
+    Next
+    
+    ts.Close
+    Set ts = Nothing
+    Set fso = Nothing
+    
+End Sub
+
+Function GetRowCsvData(ByRef DataBox, rw As Long) As String
+    Dim clm         As Long
+    Dim strRec      As String
+    Dim Delimiter   As String
+    
+    For clm = LBound(DataBox, 2) To UBound(DataBox, 2)
+        Delimiter = vbNullString
+        If clm = LBound(DataBox, 2) Then
+            Delimiter = GetDelimiter(clm, StartChr)
+            strRec = Delimiter
+        End If
+        If clm <> UBound(DataBox, 2) Then
+            Delimiter = GetDelimiter(clm, MidChr)
+        End If
+        strRec = strRec & DataBox(rw, clm) & Delimiter
+    Next
+    
+    strRec = _
+        strRec & _
+        GetDelimiter(UBound(DataBox, 2), enmSparateMode.EndChr)
+        
+    GetRowCsvData = strRec
+    
+End Function
+
+Function GetDelimiter(clm As Long, mode As enmSparateMode) As String
+    Dim str As String
+
+    Select Case clm
+        Case 1
+            If mode = enmSparateMode.StartChr Then
+                GetDelimiter = """"
+            End If
+            If mode = enmSparateMode.MidChr Then
+                GetDelimiter = ""","""
+            End If
+            If mode = enmSparateMode.EndChr Then
+                GetDelimiter = """"
+            End If
+        Case Else
+            If mode = enmSparateMode.StartChr Then
+                GetDelimiter = """"
+            End If
+            If mode = enmSparateMode.MidChr Then
+                GetDelimiter = ""","""
+            End If
+            If mode = enmSparateMode.EndChr Then
+                GetDelimiter = """"
+            End If
+    End Select
+End Function
+
+Function GetCsvName() As String
+    Const OUTCSV As String = "OUTCSV"
+    Const EXTNTN As String = ".csv"
+    Dim fileNum     As Long
+    Dim fileName    As String
+    
+    fileName = OUTCSV & EXTNTN
+    
+    Do
+        With CreateObject("Scripting.FileSystemObject")
+            If .FileExists(ThisWorkbook.Path & "\" & fileName) Then
+                fileNum = fileNum + 1
+                fileName = OUTCSV & "(" & fileNum & ")" & EXTNTN
+            Else
+                Exit Do
+            End If
+        End With
+    Loop
+    
+    GetCsvName = fileName
+End Function
+</code>
+</pre>
+</html>

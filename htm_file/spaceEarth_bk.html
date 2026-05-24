@@ -1,0 +1,124 @@
+<style type ="text/css">
+*{
+	/* IE用 */
+	border:none;
+	overflow:hidden;
+	
+}#space{
+	margin:auto;
+	margin-left:auto;
+	margin-top:30px;
+	background-color:darkblue;
+	z-index:1;
+	width:50%;
+	height:250px;
+	background-image:url("http://yamav102.cocolog-nifty.com/photos/uncategorized/2012/03/02/sun.gif");
+	background-repeat:no-repeat;
+	background-position:50% 50%;
+}#space span{
+	color:yellow;
+	font-size:30%;
+}#earth{
+	position:absolute;
+	z-index:2;
+}
+</style>
+<script type="text/javascript">
+<!--//
+	var deg = 0;//角度
+	var pi = Math.PI;//円周率
+	var x, y;//座標
+
+	function EarthRotation(){
+
+		var img1 = document.getElementById('earth');
+		var field1 = document.getElementById('space');
+		with(field1){
+			var axisX = offsetLeft + offsetWidth / 2 - img1.offsetWidth / 2;
+			var axisY = offsetTop + offsetHeight / 2 - img1.offsetHeight / 2;
+		}
+		deg++;
+		if(deg >= 360){
+			deg = 0;
+		}
+		
+		var r = field1.offsetWidth / 3;
+		
+		var mvSize = r * Math.cos(deg / 180 * pi)
+		
+		x = axisX - mvSize;
+
+		if(deg > 180){
+			y = axisY + Math.sqrt(Math.pow(r, 2) - Math.pow(mvSize, 2));
+		}else{
+			y = axisY - Math.sqrt(Math.pow(r, 2) - Math.pow(mvSize, 2));
+		}
+
+		with(img1){
+			style.left = x;
+			style.top = y;
+		}
+
+		setTimeout("EarthRotation()", 30);//ミリ秒
+	}
+//-->
+</script>
+<body onload="EarthRotation();">
+<div id = "earth">
+	<img src="http://yamav102.cocolog-nifty.com/photos/uncategorized/2012/03/02/earth04.gif" width="32" height="32" alt=" ぱたぱたアニメ館 > 浮遊アニメ > アース君 Earth">
+</div>
+
+<div style="text-align:center;"><!--IEのバグ吸収用-->
+	<div id = "space">
+<span>
+　　　　　　　★　　　　　　　　　　　　　　　　　　　　　　　　　　　　★<br>
+★<br>  
+<br>
+　　　　　　　★<br>
+<br> 
+<br>
+★　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　★<br>
+<br><br>
+★　　　　　　　★　　　　　　　　　　　　　★　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　★<br>　
+<br><br>
+　　　　　　　★　　　　　　　　　　　　　　　　　　　　　　　　　　　　★<br>
+★<br>  
+<br>
+　　　　　　　★<br>
+<br> 
+<br>
+★　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　★<br>
+<br><br>
+★　　　　　　　★　　　　　　　　　　　　　★　　　　　　　　　　　　　　　　　　　★<br>　
+<br><br>
+　　　　　　　★　　　　　　　　　　　　　　　　　　　　　　　　　　　　★<br>
+★<br>  
+<br>
+　　　　　　　★<br>
+<br> 
+<br>
+★　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　★<br>
+<br><br>
+★　　　　　　　　　　　　　　　　　　★　　　　　　　　　　　　　★　　　　　　　　　　　　　　　　　　　★<br>　
+
+
+★　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　★<br>
+<br><br>
+★　　　　　　　★　　　　　　　　　　　　　★　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　★<br>　
+<br><br>
+　　　　　　　★　　　　　　　　　　　　　　　　　　　　　　　　　　　　★<br>
+★<br>  
+<br>
+　　　　　　　★<br>
+<br> 
+<br>
+★　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　★<br>
+<br><br>
+★　　　　　　　★　　　　　　　　　　　　　★　　　　　　　　　　　　　　　　　　　★<br>　
+<br><br>
+
+
+</span>
+</div>
+</div>
+</body>

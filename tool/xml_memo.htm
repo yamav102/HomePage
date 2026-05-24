@@ -1,0 +1,1774 @@
+<title>
+	XMLメモ
+</title>
+<h1>XMLメモ</h1>
+<pre>
+・XML文書：構造化されたテキスト
+・XSLT：XML文書から特定のノードを抽出し、加工するための言語
+	eXtensible Stylesheet Language Transformations
+	要するにスタイルシートだが、cssのようなきめ細かな指定をするものではない。
+	拡張子は ".xsl"
+	◎スナップショット的
+・DOM：Document Object Model
+	XML文書から特定のノードを抽出し、加工するための言語
+	◎動的。DOMを活用する事で、HTMLには無い電子文書の恩恵を受けられる。
+・DTD：Document Type Definition （文書型宣言）
+・XML parser：XML文書を、アプリケーションソフトが利用しやすい形に変換するソフトウェア
+・XMLの構文にあっているXMLを Well-Formed XML と呼び,
+XML の構文と DTD に従っている XML を Valid XML と呼ぶ。
+Valid XML でなければ XML parser を通らない。
+・DTDはXMLで記述されていない過去の資産であり、
+XMLにはなじまない。とって代わる技術はXML Schema
+
+■要素名(タグ)に使える文字
+・先頭文字に使える文字：アルファベット、全角かな、漢字、コロン（：）、アンダーバー（_)
+・２文字目以降に使える文字：上記の文字、数字、ピリオド(．)、ハイフン(-)
+・場所によらず使えない文字：半角ｶﾅ、全角数字、全角アルファベット
+
+■XML宣言
+
+  &lt;?xml version="1.0" encoding="Shift_JIS" standalone="yes" ?&gt; (? の前の半角スペースは無くてもOK）
+
+&lt;? ～ ?&gt;			：処理命令
+xml version="1.0"		：バージョン
+encoding="Shift_JIS"	：文字コード。DefalutはUnicode(UTF-8 UTF-16)で、省略してもよい。
+standalone="yes"		：外部DTDを読み込むかどうか。no は読み込まなければならない設定。
+			DTDはXMLにとって必須ではない。
+			XML本文内に記述された、内部DTDは必ず読み込まれる。省略してもよい。
+
+■終了タグは省略できない
+
+空要素は、	&lt;img src="hoge.jpg"&gt;&lt;/img&gt;
+か、
+		&lt;img src="hoge.jpg" /&gt;
+と記述する。
+
+■大文字小文字は区別される
+
+■属性名はダブルクォーテーションで囲まねばならない
+
+■属性名は例外なく「属性名="属性値"」の形式で記述されなければならない。
+
+■要素主体の書き方と属性主体の書き方
+
+・要素主体
+&lt;book&gt;
+	&lt;author&gt;
+		Myouji Namae
+	&lt;/autor&gt;
+&lt;/book&gt;
+
+・属性主体
+&lt;book author="Myouji Namae" /&gt;
+
+属性主体の方がコンパクト。
+要素主体の書き方は以下のように拡張が容易。
+
+&lt;book&gt;
+	&lt;author&gt;
+		&lt;firstname&gt;Myouji&lt;/firstname&gt;
+		&lt;lastname&gt;Namae&lt;/lasutname&gt;
+	&lt;/autor&gt;
+&lt;/book&gt;
+
+■コメント
+&lt;!--コメント--&gt;
+
+■スタイルシートへの関連付け
+books.xml--------------------------------------------
+&lt;?xml version="1.0" encoding="Shift_JIS" standalone="yes" ?&gt;
+&lt;?xml-stylesheet type="text/xsl" href="./books.xsl" ?&gt;
+----------------------------------------------------
+
+type="text/css"も指定できる。
+type　=　"text/css"　でも　type="text/css"　と書いてもこの辺は結果に影響ない。
+cssへの関連付けはXSL中で、↓の要領で行う。
+
+	&lt;xsl:template match="/"&gt;
+		&lt;html&gt;
+		&lt;head&gt;
+		&lt;title&gt;
+		&lt;xsl:value-of select="books/@title" /&gt;
+		&lt;/title&gt;
+
+		&lt;link rel="stylesheet" type="text/css"
+		href="books.css" /&gt;
+
+		&lt;/head&gt;
+
+sample
+<a href="./XML_sample/music.xml" target="_blank">music.xml</a>
+<a href="./XML_sample/music.xsl" target="_blank">music.xsl</a>
+
+
+■XSLTスタイルシート(.xsl)自体もXMLなので一行目は&lt;?xml ?&gt;処理命令(宣言とも）で始める
+&lt;?xml version = "1.0" ?&gt;
+で、XSLTスタイルシート(.xsl)のルート要素は以下の開始/終了タグになるので、
+&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"&gt;
+&lt;/xsl:stylesheet&gt;
+
+↑の３行はXSLTのお約束事であり、固定のフォーマットとなる。バージョンの指定も必須。
+&lt;xsl:stylesheet～&gt;は必然的に&lt;?xml ?&gt;処理命令の直後に記述することになり、
+これがxslのルート要素になる。
+
+
+■XSLTスタイルシートで出力方法を宣言する
+&lt;xsl:output method="html" encoding="Shift_JIS" /&gt;
+
+method属性	：上の例はhtmlでの出力
+encoding属性	：XML文書が記述されている文字コードを指定する。
+		xslの文字コードの事ではない。
+
+&lt;xsl:output&gt;要素は省略出来る。が、確認の為にあった方がよい。
+
+&lt;xsl:output method="出力形式(xml | html | text)。ディフォルトはhtml。
+[version="バージョン"]
+[encodint="文字コード"]
+[indent="インデントを付けるかどうか(yes|no)"]
+[media-type="MIMEタイプ(text/htmlなど)"]　'マイムタイプ：Multipurpose Internet Mail Extensions。Webサーバーが利用する拡張子のようなもので、タイプ/サブタイプの形式でファイルの内容を明示する。
+
+
+■xslの子要素は&lt;xsl:template&gt;が必ず一つ存在し、XML文書のルート要素に適用される
+テンプレートは省略する事が出来ない。
+
+&lt;xsl:template match="/"&gt;
+～
+&lt;/xsl:template&gt;
+
+match属性 はテンプレートが適用される要素を指定する。
+"/"はXML文書のルートを指す。
+
+■XSLで固定的なテキストを表示する
+	&lt;p&gt;&lt;xsl:text&gt;固定的なテキスト&lt;/xsl:text&gt;&lt;/p&gt;
+&lt;xsl:text&gt;&lt;/xsl:text&gt;は省略出来る。無くても別段問題ない。
+
+■XSL　&lt;xsl:value-of&gt;要素で select 属性を使い
+ルート要素("/")を起点として要素の内容を取得し出力する
+
+&lt;xsl:value-of select="xPath式" /&gt;
+↓&lt;books&gt;がルート要素の場合
+xml--------------------------------------------
+&lt;books title="web関連書籍一覧"&gt;
+	&lt;owner address="CQW15204@nifty.com"&gt;
+		Yoshihiro.Yamada&lt;/owner&gt;
+/xml-------------------------------------------
+xsl---------------------------------------------
+&lt;div&gt;&lt;xsl:value-of select="books/owner" /&gt;&lt;/div&gt;
+/xsl--------------------------------------------
+html---------------------------------------------
+&lt;div&gt;Yoshihiro.Yamada&lt;/div&gt;
+/html---------------------------------------------
+
+■XSL　&lt;xsl:value-of&gt;要素で select 属性を使い
+ルート要素("/")を起点として要素の属性を取得し出力する
+xml--------------------------------------------
+&lt;books title="web関連書籍一覧"&gt;
+/xml-------------------------------------------
+xsl---------------------------------------------
+&lt;title&gt;&lt;xsl:value-of select="books/@title" /&gt;&lt;/title&gt;
+/xsl--------------------------------------------
+html---------------------------------------------
+&lt;title&gt;web関連書籍一覧&lt;/title&gt;
+/html---------------------------------------------
+
+■xPathでの記号
+/	直下の要素	book/author
+			&lt;book&gt;要素直下の&lt;author&gt;要素
+//	全ての子孫	books//name
+			&lt;books&gt;要素配下の全ての&lt;name&gt;要素
+.	現在の要素	./category
+			現在のノード直下にある&lt;category&gt;要素
+*	全ての子要素	book/* &lt;book&gt;要素直下の全要素
+@	属性名の接頭辞	book/@isbn &lt;book&gt;要素のisbn属性
+:	名前空間のセパレータ
+
+
+■ｘPathでのノード表現
+text()			match属性の値として使うと、平のテキストにマッチする
+comment()		コメントのノードにマッチする
+node()			全種類のノードにマッチする
+processing-instruction()	処理命令のノードにマッチする
+
+■xPath関数{ノードセット関数、文字列関数、ブーリアン関数、数値関数、XSLT関数}の区分がある
+number()			引数を数値にキャストする
+				&lt;xsl:choose&gt;
+					&lt;xsl:when test="price[number(.) ＆ｌｔ；=3000]"&gt;
+						&lt;b&gt;
+							&gt;xsl:value-of select="price" /&gt;円
+						&lt;/b&gt;
+					&lt;/xsl:when&gt;
+					&lt;xsl:otherwise&gt;
+							&lt;xsl:value-of select="price" /&gt;円
+					&lt;/xsl:otherwise.
+				&lt;/xsl:choose&gt;
+				return: 2999 | &gt;b&gt;3001&gt;/b&gt;
+name()			カレント要素の要素名を返す			
+				&lt;xsl:if test="name()='chapter'&gt;				
+					&lt;xsl:text&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;/xsl:text&gt;
+						&gt;xsl:value-of select="chapter" /&gt;
+					&lt;xsl:text&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;/xsl:text&gt;
+				&lt;/xsl:if&gt;			
+format-number(要素名,書式)	数値を整形して表示する
+			xml:&lt;price&gt;1234&lt;/price&gt;
+			&lt;xsl:value-of select="format-number(price,'#,###')" /&gt;円
+			return:1,234円
+sum()			合計を表示する
+				&lt;xsl:value-of select="sum(books//price)" /&gt;円
+count()		要素数をカウントする
+				&lt;xsl:value-of select="count(books//price)" /&gt;円
+				sum()と組み合わせて平均を求める
+				&lt;xsl:value-of select="sum(books//price) div count(books//price)" /&gt;円
+
+■xPATH関数まとめ
+
+【ノードセット関数】
+document(ノード名[,ノード名,…])	ノードセットが返る
+							ノード値が示す外部のXML文書を返す
+							document(@url)/books//book
+last()						現在のノードセットのノード数を返す
+name([ノード名,…])				ノード名(名前空間のプレフィックスを含む)が返る
+namespace-uri([ノード名,…])		ノードセットが属する名前空間のURIが返る
+position()						何番目の子ノードかの数値が返る
+
+【文字列関数】
+concat(文字列[,文字列,…])		文字列を連結
+							concat(title,subTitle)	&lt;title&gt;要素と
+							&lt;subTitle&gt;要素を連結
+contains(文字列１,文字列２)		True/False 文字列１が文字列２を含めばTRUE
+							contains(keyword,'ASP') &lt;keyword&gt;要素に
+							文字列'ASP'が含まれればTRUE
+normalize-space([文字列,…])		文字列の前後からスペースを除去
+							normalise-space(author) &lt;suthor&gt;要素の
+							前後から空白を取り除く
+start-with(str1,str2)			TRUE/FALSE str1がstr2で始まっていればTRUE
+							start-with(title,'XML') &lt;title&gt;要素が文字列XML
+							で始まっていればTRUE
+string([ノード名,…])				ノードを文字列に変換 
+							string(price) &lt;price&gt;要素の中身を文字列に変換
+string-length([文字列,…])		文字列長の数値を返す
+substring(文字列、開始位置、抽出する文字数)
+							substring(@isbn,5,20) isbn属性の5ケタ目から２０文字分を
+							抽出
+substring-after(文字列１,文字列２)	文字列１を文字列２で区切った時の後半部分
+							substring-after(url,'://') &tl;url&gt;要素を「://」で
+							区切ったときの後半文字列
+substring-before(文字列１,文字列２)前半部分
+
+【ブーリアン関数】
+boolean(ノード名)				ノードをブール値に変換
+false()						FALSEが返る
+lang(文字列)					xml:lang属性が指定された文字列を含めばTRUE
+not()							TUREであればFALSE、FALSEであればTRUE
+true()						TRUE
+
+【数値関数】
+ceiling(数値)					指定した数値より小さくない最小の整数を返す
+floor(数値)					指定した数値より大きくない最大の整数を返す
+number(ノード名)				与えられたノードの値を数値に変換
+							number(price) &lt;price&gt;要素の値を数値に変換
+round(数値)					四捨五入して返す
+sum(数値)					合計を返す
+
+【XSLT関数】					
+current()						コンテキスト (現在の) ノードを返す
+element-available(文字列)		指定された要素名が現在のXSLTプロセッサで使えればTRUE
+							element-available('xsl:template') &lt;xsl:template&gt;要素が
+							使えればTRUE
+format-number(数値,文字列)		数値を指定された書式に変換		
+							format-number(price,'#,###,00') 3桁区切りで小数点第二位まで表示
+function-available(文字列)		指定された関数が仕様できるかどうか
+							function-available('format-number')
+							format-number関数が使えればTRUE
+system-property(string)			指定された文字列(xsl:version,xsl:vendor,xsl:vendor-urlなど)
+							で表されるシステムプロパティ
+							system-property('msxml:version') MSXMLのバージョンを返す
+
+							
+
+■テンプレートからテンプレートを呼ぶ
+XSL内に&lt;xsl:apply-templates select="books" /&gt;と記述した箇所に
+別の場所にあるtemplate
+&lt;xsl:template match="books"&gt;～&lt;/xsl:template&gt;の内容を表示させる。
+わざわざ別の場所に記述しなくてはならない理由（判りやすくなるとか）
+があれば使い道のある仕様。
+テンプレートは入れ子に記述することは出来ない。
+
+&lt;xsl:template match="books"&gt;～&lt;/xsl:template&gt;が存在しなくても
+エラーにはならない。xml文書に&lt;books&gt;要素があれば平文のテキストで
+出力され、&lt;books&gt;要素が無ければ、なにも表示されない。
+
+
+■繰り返し指定要素にアクセスする
+&lt;xsl:for-each select="book"&gt;
+～
+&lt;/xsl:for-each&gt;
+XML文書の&lt;book&gt;要素のそれぞれを処理する。
+
+▼並び換えxsl:sort
+book要素を並び換える。記述順に第一キー第二キーとなる。
+xsl:sortはxsl:for-eachの出力順を制御する要素なのでfor-each内に記述する。
+data-type="text"で、文字としての並び換えに対応。
+data-type="number"として、数値としての並び換えに対応。
+文字列の並び換えに "number " を指定してもエラーにはならないが、
+並び換えはされない。data-type="hoge"ではエラーになる。
+
+書式：
+&lt;xsl:sort select="ソートする対象の要素、属性を示すxPath式"
+	[data-type="データ型(text | number) "]
+	[order="並び換えの種類(ascending | descending)] /&gt;
+
+		&lt;xsl:for-each select="book"&gt;
+
+			&lt;xsl:sort select="publish" data-type="text"
+			order="ascending" /&gt;
+			&lt;xsl:sort select="pDate" data-type="text"
+			order="descending" /&gt;
+
+			&lt;tr&gt;
+			 &lt;td&gt;&lt;xsl:value-of select="@isbn" /&gt;&lt;/td&gt;
+			 &lt;td&gt;&lt;xsl:value-of select="name" /&gt;&lt;/td&gt;
+			 &lt;td&gt;&lt;xsl:value-of select="author" /&gt;&lt;/td&gt;
+			 &lt;td&gt;&lt;xsl:value-of select="publish" /&gt;&lt;/td&gt;
+			 &lt;td&gt;&lt;xsl:value-of select="price" /&gt;&lt;/td&gt;
+			 &lt;td&gt;&lt;xsl:value-of select="pDate" /&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+
+		&lt;/xsl:for-each&gt;
+
+▼連番を表示する
+xsl:for-each要素の中に以下の記述をすると連番が表示される。
+&lt;xsl:number format="01" /&gt;
+
+"001"と表記すると3ケタ表示された。"100"を指定しても"2"を指定しても１から連番される。
+他に、(i,I,a)も指定できる。
+&lt;xsl:number&gt;要素の書式
+&lt;xsl:number [level="ナンバリングのレベル"]
+	[count="カウントする対象の要素や属性を特定するためのxPath式"]
+	[from="XML文書上は兄弟関係にあるものの、ナンバリングに際しては
+	親子関係を持つノードについて、どこからカウントを始めるかを指定"]
+	[format="ナンバリングの出力形式"] /&gt;
+
+level属性の設定値
+single	兄弟関係にあるノード単位にナンバリングを行う（ディフォルト）
+multiple	single指定によって出力されるナンバーの頭に親ノード単位の
+	ナンバリングを付加したもの。
+any	count属性で指定された式にマッチした順にナンバリングを行う。
+
+
+
+
+■リンクを生成する
+xml-----------------------------------------
+&lt;url&gt;http://www.hogehoge.ne.jp/fushufushu/&lt;/url&gt;
+&lt;name&gt;Click Me!&lt;/name&gt;
+/xml----------------------------------------
+
+	&lt;xsl:element name="a"&gt;
+		&lt;xsl:attribute name="href"&gt;
+			&lt;xsl:value-of select="url" /&gt;
+		&lt;/xsl:attribute&gt;
+		&lt;xsl:value-of select="name" /&gt;
+	&lt;/xsl:element&gt;
+
+で、
+&lt;a href="http://www.hogehoge.ne.jp/fushufushu/"&gt;Click Me!&lt;/a&gt;
+というhtmlが生成される。
+
+xsl:element要素は省略可能なので、以下の記述でも同じ動作になる。
+
+	&lt;a&gt;
+		&lt;xsl:attribute name="href"&gt;
+			&lt;xsl:value-of select="url" /&gt;
+		&lt;/xsl:attribute&gt;
+		&lt;xsl:value-of select="name" /&gt;
+	&lt;/a&gt;
+
+
+■条件分岐：xsl:choose
+test属性に条件式を指定する。
+	&lt;xsl:choose&gt;
+		&lt;xsl:when test="ファイルパターン(条件式)"&gt;
+			条件に合致した場合の振る舞い
+		&lt;/xsl:when&gt;
+		&lt;xsl:otherwise&gt;
+			条件に合致しなかった場合の振る舞い
+		&lt;/xsl:otherwise&gt;
+	&lt;/xsl:choose&gt;
+
+	test="要素名" とすると、xml文書にその要素名があれば TRUE 
+	を返し、なければ FALSE を返す。
+
+■条件分岐：xsl:if
+	&lt;xsl:if test="ファイルパターン（条件式)"&gt;
+		条件に合致した場合の振る舞い
+	&lt;/xsl:if&gt;
+
+▼条件式：ファイルパターンの構文
+起点となる要素[number(.) ＆ｌｔ；= 3000]
+↑(.)は起点となる要素そのもので、number関数で数値にキャストし、&lt;=3000 と比較している。
+
+■xPathで使える演算子
+
+[ ]	：ファイルパターン	book[category="ASP"]
+			配下の&lt;category&gt;要素が"ASP"である&lt;book&gt;要素
+
+			&lt;xsl:for-each select="book[contains(name,'ASP')]"&gt;
+				book要素配下のname要素に'ASP'の文字列を含むbook要素に対し繰り返しの処理をする
+			&lt;/xsl:for-each&gt;
+
+			&lt;xsl:value-of select="sum(books/book[contains(name,'ASP')]//price)" /&gt;円
+			books要素配下のbook要素に'ASP'の文字列を含む全ての子孫のprice要素の合計を表示する
+			
+
+( )	：グルーピング	book[(author='Yamamoto' or author="'Mochiduki') and category='XML']
+			配下の&lt;author&gt;要素が'Yamamoto'または'Mochiduki'で、かつ
+			&lt;category&gt;要素がXMLであるbook要素
++	：加算		number(price)+number(send)
+			&lt;price&gt;と&lt;send&gt;要素の値を加算
+-	：減算		number(price)-number(send)
+			&lt;price&gt;から&lt;send&gt;要素の値を減算
+div	：除算		number(total) div number(number)	
+			&lt;total&gt;要素を&lt;number&gt;要素の値で除算
+*	：積算		number(total) * number(number)
+			&lt;total&gt;要素を&lt;number&gt;要素の値で積算
+mod	：剰余		number(total) mod number(number)
+			&lt;total&gt;要素を&lt;number&gt;要素の値で除算した余り
+and	：論理積		book[url and logo]
+			配下に&lt;url&gt;要素と&lt;logo&gt;要素を含む&lt;book&gt;要素
+or	：論理和		book[url or logo]
+			配下に&lt;url&gt;要素または&lt;logo&gt;要素を含む&lt;book&gt;要素			
+not	：否定		book[not(category='XML')]
+			配下の&lt;category&gt;要素が'XML'でない&lt;book&gt;要素
+=	：等しい		book[@isbn='ISBN9-999']
+			isbn属性が'ISBN9-999'である&lt;book&gt;要素
+!=	：等しくない	book[@isbn!='ISBN9-999']
+			isbn属性が'ISBN9-999'でない&lt;book&gt;要素	
+&lt;	：より小さい	book[number(price)&lt;3000]
+			配下の&lt;price&gt;要素が3000未満の&lt;book&gt;要素
+&lt;=	：以下		book[number(price)&lt;=3000]
+			配下の&lt;price&gt;要素が3000以下の&lt;book&gt;要素
+&gt;	：より大きい	book[number(price)&gt;3000]
+			配下の&lt;price&gt;要素が3000より大きい&lt;book&gt;要素
+&gt;=	：以上		book[number(price)&gt;=3000]
+			配下の&lt;price&gt;要素が3000以上の&lt;book&gt;要素
+|	：結合		book/(chapter|section)
+			&lt;book&gt;要素配下の&lt;chapter&gt;要素と&lt;section&gt要素
+
+■画像を表示する
+xml-------------------------------------------
+&lt;logo&gt;xml.jpg&lt;/logo&gt;
+/xml------------------------------------------
+  &lt;xsl:element name="img"&gt;
+  	&lt;xsl:attribute name="src"&gt;
+		&lt;xsl:value-of select="logo" /&gt; 
+	&lt;/xsl:attribute&gt;
+	&lt;xsl:attribute name="width"&gt;120&lt;/xsl:attribute&gt; 
+	&lt;xsl:attribute name="height"&gt;150&lt;/xsl:attribute&gt; 
+  &lt;/xsl:element&gt;
+
+■NaN 表示を置き換える
+
+XSLで指定した属性が見つからない、数値に変換できない値を数値に
+しようとすると、 NaN と表示される。
+XSLで、処理前の行に以下記述しておくと
+&lt;xsl:decimal-format NaN = "不明" /&gt;
+と記述しておくと、NaNの表示を'不明'に置き換えて表示する。
+
+他、以下の数値表現の置き換えができる。
+
+&lt;xsl:decimal-format [name="フォーマット名]
+			[decimal-separator="小数点(「.」など)"]
+			[grouping-separator="桁区切り文字(「,」など)"]
+			[minus-sign=マイナス文字(「-」など)"]
+			[NaN="数字でない場合の表記(「NaN」など)"]
+			[percent="パーセント文字(「%」など)"]
+			[digit="0の場合の表記(「0」など)"] /&gt;
+
+
+■表示処理を中止させる xsl:message要素
+xsl:if xslchooseと組み合わせて使う。
+&lt;xsl:message terminate="yes" | "no"&gt;
+表示したいメッセージ
+&lt;/xsl:message&gt;
+空要素で記述（終了タグを省略する記法）でも記述できる。
+
+■変数の定義
+XSL上で複数個所から参照される値は変数で宣言しておくと
+メンテナンスが容易になる。
+▼宣言書式
+&lt;xsl:variable name="変数名"&gt;置き換える値（数値・文字列）&lt;/xsl:variable&gt;
+▼参照例
+&lt;xsl:for-each select"=book[contains(category,$変数名)]"&gt;
+宣言された変数は「$変数名」で参照できる。
+book要素で配下のcategory要素に変数で定義された文字列が含まれれば
+抽出される。
+
+■属性をまとめて定義する xsl:attribute-set 要素 と xsl:use-attribute-sets属性
+XSL上で同じ属性値のセットを複数個所で使用している場合、記述のパターンを
+属性名セットにまとめる事ができ、メンテナンス性も向上する。
+
+▼宣言書式：
+&lt;xsl:attribute-set name="属性セット名"&gt;
+	&lt;xsl:attribute name="属性名1"&gt;属性値&lt;/xsl:attribute&gt;
+	&lt;xsl:attribute name="属性名2"&gt;属性値&lt;/xsl:attribute&gt;
+	&lt;xsl:attribute name="属性名3"&gt;属性値&lt;/xsl:attribute&gt;
+	…
+&lt;/xsl:attribute-set&gt;
+
+▼参照例：
+&lt;table xsl:use-attribute-sets="属性セット名"&gt;
+	複数の属性をまとめて指定する事が出来る。
+&lt;/table&gt;
+
+■外部XSLTを参照する xsl:include 要素
+&ltxsl:include href="hoge.xsl" /&gt;
+と記述することで、外部XSLTを読み込める。
+テンプレートを部品化する事で、使い回しが出来ることで
+メンテナンス性が向上する。	
+
+■DOM
+DOMを動作させるのは、Msxml2.DOMDocumentというオブジェクト（らしい）
+このオブジェクトを操作する言語は何でもよいが、javascriptからインスタンスを生成するには、
+
+	var objDoc=new ActiveXObject("Msxml2.DOMDocument");
+	objDoc.async=false;//XML文書の非同期呼び出しを可能にするかどうかをfalseに設定
+	objDoc.load("books.xml");
+	window.alert(objDoc.xml);
+
+こんな感じ。
+OPERAでは動作しなかった。
+つか、XML文書自体OPERAは解釈しない。
+もっと汎用性のある言語かと思っていたのでがっかり。
+例えば、XMLのリンク仕様（xLink)（というものがあるらしい）
+を実装したブラウザは現実には開発されていない。(2010.1現在)。
+
+
+DOMオブジェクトにはMsxml2とMsxml4があるらしく、環境によって
+かき分ける必要があるらしい。
+
+▼objDoc.async=false;
+//XML文書の非同期呼び出しを可能にするかどうかを決めている。
+false：非同期でない⇒つまり同期させる
+true：非同期である
+非同期呼び出しを有効に下場合、XML文書自体が読み込まれていない
+内に次の動作にはいろうとした場合エラーが発生する事になる。
+
+▼window.alert(objDoc.xml);
+.xmlはDOMのプロパティ。xml文書がアラートされる。
+xsl文書の呼び出しにもxmlプロパティを使用する。
+xsl文書もxml文書の規則で書かれたxml文書である。
+
+▼window.alert(objDoc.text);
+配下のテキストがアラートされる。
+
+■ルート要素から直下の全ての子要素にアクセスする（for文）
+
+	var objDoc=new ActiveXObject("Msxml2.DOMDocument");
+	objDoc.async=false;
+	objDoc.load("books.xml");
+	var objRoot=objDoc.documentElement;
+	var clnCld=objRoot.childNodes;
+	for(i=0;i&lt;clnCld.length;i++){
+		var objNod=clnCld.item(i);
+		window.alert(objNod.xml);
+	}
+
+▼documentElementプロパティ
+DOMツリーの最上位要素（ルート要素）を取得するXMLDOMNodeオブジェクトを返す。
+▼childNodesプロパティ
+XMLDOMNodeListオブジェクトを返す。XMLCOMNodeオブジェクトの
+集合体。直下の子要素ノードを表す。
+
+■ルート要素から直下の全ての子要素にアクセスする（最初の子要素から順）
+
+	var objDoc=new ActiveXObject("Msxml2.DOMDocument");
+	objDoc.async=false;
+	objDoc.load("books.xml");
+	var objRoot=objDoc.documentElement;
+	var objCld=objRoot.firstChild;
+	while(objCld!=null){
+		window.alert(objCld.xml);
+		var objCld=objCld.nextSibling;
+	}
+▼firstChildプロパティ
+現在のノードの最初の子要素を返す。要素が無ければnull(NULLではない)を返す。
+▼nextSiblingプロパティ
+兄弟関係にある要素から次の子要素を返す。要素が無ければnullを返す。
+
+■ルート要素から直下の全ての子要素にアクセスする（最後の子要素から順）
+	var objDoc=new ActiveXObject("Msxml2.DOMDocument");
+	objDoc.async=false;
+	objDoc.load("books.xml");
+	var objRoot=objDoc.documentElement;
+	var objCld=objRoot.lastChild;
+	while(objCld!=null){
+		window.alert(objCld.xml);
+		var objCld=objCld.previousSibling;
+	}
+▼lastChildプロパティ
+現在のノードの最後の子要素を返す。要素が無ければnull(NULLではない)を返す。
+▼previousSiblingプロパティ
+兄弟関係にある要素からひとつ前の子要素を返す。要素が無ければnullを返す。
+
+■子要素から親ノードを取得する
+	var objDoc=new ActiveXObject("Msxml2.DOMDocument");
+	objDoc.async=false;
+	objDoc.load("books.xml");
+	var objRoot=objDoc.documentElement;
+
+	var clnCld=objRoot.childNodes;
+	for(i=0;i&lt;clnCld.length;i++){
+		var objNod=clnCld.item(i);
+		window.alert(objNod.parentNode.xml);
+	}
+	//親ノードのXML文書が子要素の個数分アラートされる。
+
+▼parentNodeプロパティ
+親要素を返す。
+
+■XML文書から属性値を取り出す
+
+	var objDoc=new ActiveXObject("Msxml2.DOMDocument");
+	objDoc.async=false;
+	objDoc.load("books.xml");
+	var objRoot=objDoc.documentElement;
+	var clnCld=objRoot.childNodes;
+
+	for(i=0;i&lt;clnCld.length;i++){
+		var objNod=clnCld.item(i);
+		var clnAtr=objNod.attributes;
+		var objAtr=clnAtr.item(0)
+		window.alert(objAtr.text);
+	}
+
+▼attributesプロパティ
+全属性群を含むXMLDOMNameNodeMapオブジェクトを返す。
+XMLDOMNamedNodeMapオブジェクトはぞk末井ノードを示すXMLDOMNode
+オブジェクトの集合体。
+
+●getNamedItem
+XMLDOMNamedNodeMapオブジェクトに対して、インデックスではなく
+属性名でアクセスする手段。
+
+	for(i=1;i&lt;clnCld.length;i++){
+		var objNod=clnCld.item(i);
+		var clnAtr=objNod.attributes;
+		var objAtr=clnAtr.getNamedItem("isbn")
+		window.alert(objAtr.text);
+	}
+
+●getQualifiedItemメソッド
+XMLDOMNameNodeMapオブジェクトに対して、インデックスではなく
+属性名でアクセスする手段（その２）
+第2引数は、xsl:use-attribute-sets="属性セット名"　を使用した場合の
+名前空間（属性セット名）の指定し使う。
+
+	for(i=1;i&lt;clnCld.length;i++){
+		var objNod=clnCld.item(i);
+		var clnAtr=objNod.attributes;
+		var objAtr=clnAtr.getQualifiedItem("isbn","");
+		window.alert(objAtr.text);
+	}
+
+●getAttributeNode
+getAttributeNodeメソッドは、親要素を表すXMLDOMNodeオブジェクト
+に対して、属性名をキーにアクセスします。属性ノードを返します。
+XMLDOMNameMapオブジェクトを介さないので、より簡潔な記述で済む。
+
+	for(i=1;i&lt;clnCld.length;i++){
+		var objNod=clnCld.item(i);
+		var objAtr=objNod.getAttributeNode("isbn");
+		window.alert(objAtr.text);
+	}
+
+
+●getAttributeメソッド
+getAttributeはXMLDOMNodeオブジェクトに属性名でダイレクトにアクセスする。
+
+	for(i=1;i&lt;clnCld.length;i++){
+		var objNod=clnCld.item(i);
+		window.alert(objNod.getAttribute("isbn"));
+	}
+
+■ダイレクトに要素を抽出する
+selectNodesメソッドでXML文書の要素にアクセスする
+
+書式：-----------------------------------------------------------------
+	<var>XMLDOMNodelistオブジェクト型の変数 </var>
+	=<var>( XMLDOMNodeオブジェクト｜XMLDOMDocument2オブジェクト)</var>
+	.selectNodes("<dfn>xPath式</dfn>");
+----------------------------------------------------------------------
+
+	var objDoc=new ActiveXObject("Msxml2.DOMDocument");
+	objDoc.async=false;
+	objDoc.load("books.xsl");
+	var clnSrt=objDoc.<big>selectNodes</big>("xsl:stylesheet//xsl:sort");
+/*
+	var clnSrt=objDoc.selectNodes("xsl:stylesheet//xsl:sort<em>/@select</em>");
+	↑こう書けば属性に対してダイレクトにアクセスできる。
+	属性もノードとして扱われる事は見落としがち。
+*/
+
+/*
+	selectNodes の他、
+	var clnSrt=objDoc.<big>getElementByTagName("xsl:sort")</big>;
+	でも、XMLDOMNodeListオブジェクトが返る。
+	
+	どちらにしろ、兎に角XML文書内にある特定の要素を全て抽出する。
+	xPath式の「//」演算子も、負荷の大きい処理だが、
+	getElementByTagNameメソッドの負荷は更に大きい。
+*/
+
+		
+/*
+	xsl文書
+	&lt;xsl:for-each select="book[contains(name,'ASP')]"&gt;
+	&lt;xsl:sort select="pDate" data-type="text" order="descending" /&gt;
+	～～～～
+	&lt;/xsl:for-each&gt;
+*/
+	//抽出した要素のプロパティを出力する
+	with(document){
+		write("prefix = " + clnSrt.item(0).prefix + "&lt;br&gt;");		
+		//	xsl:
+		write("namespaceURI = " + clnSrt.item(0).namespaceURI + "&lt;br&gt;");	
+		//	http://www.w3.org/1999/XSL/Transform
+		write("baseName = "+ clnSrt.item(0).baseName + "&lt;br&gt;");
+		//	sort
+		write("nodeName = " + clnSrt.item(0).nodeName + "&lt;br&gt;");
+		//	xsl:sort
+		write("nodeType = " + clnSrt.item(0).nodeType	 + "&lt;br&gt;");
+		//	1	'ノードのタイプを数値で返す。
+		write("nodeTypeString = " + clnSrt.item(0).nodeTypeString	 + "&lt;br&gt;");
+		//	elsement	'ノードのタイプを文字列で返す。
+		write("dataType = " + clnSrt.item(0).dataType	 + "&lt;br&gt;");
+		//	null	'XMLSchemaにおいてノードのデータ型
+		write("hasChildNodes() = " + clnSrt.item(0).hasChildNodes() + "&lt;br&gt;");
+		//	false
+	}
+
+■selectSingleNodeメソッド
+
+引数のxPath式に合致するノードを１つだけ抽出するためのメソッド。
+単位値のノードを示すXMLDOMNodeオブジェクトを返す。
+
+	var objDoc=new ActiveXObject("Msxml2.DOMDocument");
+	objDoc.async=false;
+	objDoc.load("books.xsl");
+
+/*
+	xsl文書
+	&lt;xsl:for-each select="book[contains(name,'ASP')]"&gt;
+	&lt;xsl:sort select="pDate" data-type="text" order="descending" /&gt;
+	～～～～
+	&lt;/xsl:for-each&gt;
+*/
+
+	var clnSrt=objDoc.<big>selectSingleNode("xsl:stylesheet//xsl:sort")</big>;
+
+	if(clnSrt!=null){
+		window.alert("ノードが見つかりました");
+	}
+■XML文書にノードを追加する
+
+'books_test.xml-----------------------------------
+<?xml version="1.0" ?>//UTF-8で作成する事
+<root><kiten /></root>
+'-----------------------------------------------
+
+	//スクリプトは<b>htmlファイルを独立して作成し
+	その中にに記述する。</b>
+	//xsl内にあるhtml部分に記述しても
+	//そのxslを参照するxml文書には反映されなかった。
+	//(alertとかdocument.writeとかは有効なのだが・・・
+	//納得いかない)　⇒そもそも編集したXML文書をアラートしても
+	//意味が無い。save(ファイル名)メソッドで独立したファイルとして
+	//保存できなければ意味が無いが、この動作はサーバーサイド
+	//プログラムとしてしか使う事ができない。
+
+	var objDoc=new ActiveXObject("Msxml2.DOMDocument");
+	objDoc.async=false;
+	objDoc.load("books_test.xml")//要素を追加するxml文書をロードする
+
+	//xml文書のルートを取得する
+	var objRoot=objDoc.documentElement;
+	//book要素の作成
+	var objBook=objDoc.createElement("book");
+	//isbn属性の作成
+	var objISBN=objDoc.createAttribute("isbn");
+	objISBN.text="ISBN9-99999-999-9";
+
+	/*↑2行の<em>別記法：
+	objBook.setAttribute("isbn","ISBN9-99999-999-9");</em>
+	*/
+
+	//hoge1,hog2…複数の要素を作成
+	var objHoge1=objDoc.createElement("hoge1");
+	var objHoge2=objDoc.createElement("hoge2");
+	//…
+
+	//book要素に…
+	with(objBook){
+		//isbn属性を追加				
+		setAttributeNode(objISBN);
+		
+		/*↑の別記法
+		var clnAtr=objBook.attributes;
+		clnAtr.setNamedItem(objISBN);
+		*/
+
+		//子要素を追加
+		appendChild(objHoge1);
+		appendChild(objHoge2);
+		//…
+
+	}
+			
+	//ルート要素の子要素にbook要素を追加
+	objRoot.appendChild(objBook);
+
+	/*objRoot.insertBefore(objRoot.firstChild);
+	ルートの冒頭に挿入する
+	*/
+
+	/*objRoot.insertBefore(objBook,objRoot.childNodes(1));
+	ルートの2番目の要素として挿入する
+	２番目が見つからないと null が返され最後の要素として
+	挿入される
+	*/
+
+	/*objRoot.insertBefore(objBook,null);
+	最後の要素として挿入される
+	*/
+	window.alert(objDoc.xml);
+
+<img src="./xml_gazo/appendchild0.png" width="514" height="121" alt="">
+
+<table border="1">
+	<caption>create～系のメソッド</caption>
+	<tr>
+		<th>メソッド名</th>
+		<th></th>
+		<th></th>	
+	</tr>
+	<tr>
+		<td rowspan="3">createCDATASection</td>
+		<th>生成するノード</th>
+		<td>CDATAセクションノード</td>	
+	</tr>
+	<tr>
+		<th>構文</th>
+		<td>var objDCAT=objDoc.createCDATASection(strDat)</td>	
+	</tr>
+	<tr>
+		<th>引数</th>
+		<td>
+			objDCAT：XMLDOMCDATASectionオブジェクト<br>
+			strDat：文字データ
+		</td>	
+	</tr>
+	<tr>
+		<td rowspan="3">createComment</td>
+		<th>生成するノード</th>
+		<td>コメントノード</td>	
+	</tr>
+	<tr>
+		<th>構文</th>
+		<td>var objDoc.createComment(strDat)</td>	
+	</tr>
+	<tr>
+		<th>引数</th>
+		<td>
+			objCOM：XMLDOMCommentオブジェクト<br>
+			strDat：文字データ
+		</td>	
+	</tr>
+	<tr>
+		<td rowspan="3">createDocumentFragment</td>
+		<th>生成するノード</th>
+		<td>ドキュメントの断片</td>	
+	</tr>
+	<tr>
+		<th>構文</th>
+		<td>var objFrg=objDoc.createDocumentFragment()</td>	
+	</tr>
+	<tr>
+		<th>引数</th>
+		<td>
+			objFrg：XMLDOMDocumentFragmentオブジェクト
+		</td>	
+	</tr>
+	<tr>
+		<td rowspan="3">createEntityReference</td>
+		<th>生成するノード</th>
+		<td>実体参照ノード</td>	
+	</tr>
+	<tr>
+		<th>構文</th>
+		<td>var objER=objDoc.createEntityReference(strER)</td>	
+	</tr>
+	<tr>
+		<th>引数</th>
+		<td>
+			objER：XMLDOMEntityReferenceオブジェクト<br>
+			strER：実体参照名
+		</td>	
+	</tr>
+	<tr>
+		<td rowspan="3">createProcessingInstruction</td>
+		<th>生成するノード</th>
+		<td>処理命令ノード</td>	
+	</tr>
+	<tr>
+		<th>構文</th>
+		<td>var objPL=objDoc.createProcessingInstruction(strTrgt.strDat)</td>	
+	</tr>
+	<tr>
+		<th>引数</th>
+		<td>
+			objPL：XMLDOMProcessingInstructionオブジェクト<br>
+			strTrgt：ターゲット名、strDat：アプリケーションに渡すデータ
+		</td>	
+	</tr>
+	<tr>
+		<td rowspan="3">createTextNode</td>
+		<th>生成するノード</th>
+		<td>テキストノード</td>	
+	</tr>
+	<tr>
+		<th>構文</th>
+		<td>var objTxt=objDoc.createTextNode(strDat)</td>	
+	</tr>
+	<tr>
+		<th>引数</th>
+		<td>
+			objTxt：XMLDOMTextNodeオブジェクト<br>
+			strDat：テキストデータ
+		</td>	
+	</tr>
+</table>
+
+■属性を削除する。要素を削除する。要素を置き換える。
+
+	var objDoc=new ActiveXObject("Msxml2.DOMDocument");
+	objDoc.async=false;
+	objDoc.load("books.xml");
+	var objRoot=objDoc.documentElement;
+
+	//title属性の削除
+	objRoot.removeAttribute("title");
+
+/*属性削除の別記法
+	▼
+	var clnAtr=objRoot.attributes;
+	clnAtr.removeQualifiedItem("tiltle","");
+	
+	属性群(XMLDOMNamedNodeMapオブジェクト)から特定の属性を削除。
+	第一引数の要素名、第2引数に名前空間プレフィックス。
+	名前空間を伴った属性の操作に使用する。
+
+	▼また、
+	var clnAtr=objRoot.attributes;
+	clnAtr.removeNamedItem("title");
+	とも記述できる。
+	属性群(XMLDOMNamedNodeMapオブジェクト)から特定の属性を削除。
+
+	▼さらに、
+	var objTtle=objRoot.getAttributeNode("title");
+	objRoot.removeAttributeNode(objTtle);	
+	XMLDOMNodeオブジェクトに属するメソッド。
+	引数：属性ノード
+*/
+		
+	var clnChld=objRoot.childNodes;
+	// 冒頭の要素の削除
+	objRoot.removeChild(clnChld.item(0));
+
+	var objBook=objDoc.createElement("book");
+	
+	//最後の要素と入れ替え
+	objRoot.replaceChild(objBook,objRoot.lastChild);
+/*
+	3つの変数は全て、XMLDOMNodeオブジェクト	
+*/
+
+
+	window.alert(objDoc.xml);
+
+	//objDoc.save("output.xml");
+/*
+	↑saveメソッドはクライアントの環境では動作しない。
+	サーバーサイドプログラムとして有効（らしい）。
+	編集したXML文書を単独のファイルとして保存する。
+*/
+
+■DTD宣言：Document Type Definition：文書型宣言
+
+DOMと連携することで、XML文書を動的に検証し、不正な記述に対してアラームを発する。
+DTDは・内部サブセット・外部サブセットがある。
+<table border="11">
+	<caption>XML文書の骨格</caption>
+	<tr><td style="background:#aff;text-align:center;padding:.5em;">
+		<table border="1">
+			<tr>
+				<td style="text-align:center;">
+					XML宣言<br>
+					(&lt;xml?&gt;)
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align:center;">
+					DTD(文書型定義)<br>
+					※外部DTDの引用も出来る<br>
+					要素型宣言、属性リスト宣言、実体宣言、記法宣言
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align:center;">
+					XML文書本体<br>
+					(インスタンス)
+				</td>
+			</tr>
+		</table>
+	</td></tr>
+</table>
+
+■内部サブセットのフォーマット
+
+&lt;!DOCTYPE ルート要素名[ ～]&gt;
+
+DTDを伴うXML文書はXML本文上もDTD規則に即している必要があり
+Well-Formed（整形式）なXML文書と呼ぶ。
+DTDを伴わないXML構文規則にのみ従うXML文書をValid（妥当）なXML文書と言う。
+
+■要素型を宣言する
+
+&lt;!ELEMENT books (owner,book*)&gt;
+↑ルート要素 books の配下に 
+owner book の記述順に(,)
+owner 要素が一つ、book 要素が0回以上(*)登場する。
+
+<table border="1">
+	<caption>記号</caption>
+	<tr>
+		<th>記号</th><th>説明</th>
+	</tr>
+	<tr>
+		<th>なし</th><td>必ず1回登場</td>
+	</tr>
+	<tr>
+		<th>?</th><td>0回か1回</td>
+	</tr>
+	<tr>
+		<th>*</th><td>0回以上(つまり、何回でもかまわない)</td>
+	</tr>
+	<tr>
+		<th>+</th><td>1回以上</td>
+	</tr>
+	<tr>
+		<th>,</th><td>記述順に要素が登場する</td>
+	</tr>
+	<tr>
+		<th>|</th><td>並列に記述された要素がいずれか１つ登場する</td>
+	</tr>
+</table>
+
+■要素に含まれるデータを定義する
+
+&lt;ELEMENT owner (#PCDATA)&gt;
+↑owner 要素が、配下に文字データ (#PCDATA) のみ持つ。
+"owner" と "("の間にはスペースがないとエラーになる。
+
+<table border="1">
+	<caption>データを表すキーワード</caption>
+	<tr>
+	<th>キーワード</th><th>説明</th>
+	</tr>
+	<tr>
+	<th>#PCDATA</th><td>文字データのみが含まれる</td>
+	</tr>
+	<tr>
+	<th>ANY</th><td>ありとあらゆる要素、文字データが含まれる</td>
+	</tr>
+	<tr>
+	<th>EMPTY</th><td>要素配下には何も含まれない</td>
+	</tr>
+</table>
+
+&lt;!ELEMENT memo (#PCDATA | keyword | ref)*&gt;
+memo 要素に・文字データ　・kyeword 要素 ・ref要素 が、
+順不同(|)で、０回以上（任意の回数*)
+この場合の文字データ(#PCDATA)は、memoタグに囲まれた文字列で、
+keyword タグにも refタグ にも囲まれていない部分を指す。
+文字データと要素を並列に記述する場合は、必ず#PCDATAを
+先頭に記述しなくてはならない。
+
+&lt;!Element  要素１(要素a,要素b,要素c,要素d,要素e,要素f,要素g,要素h?)&gt;
+↑要素１の配下にa～hの順で各１回要素が登場し、hは登場しなくてもよい。
+
+■属性リストを宣言する
+
+&lt;ATTLIST books tiltle CDATA #IMPLIED&gt;
+↑books 要素に文字データ(CDATA)の title 属性が任意で(#IMPLIED)登場する。
+
+▼属性を並列に記述してもよい
+&lt;ATTLIST book isbn CDATA #REQUIRED cdrom CDATA #IMPLIED&gt;
+
+<table border="1">
+	<caption>属性リスト宣言で使用できるデータ型一覧</caption>
+		<tr>
+			<th>データ型</th><th>説明</th><th>例</th>
+		</tr>
+		<tr>
+			<td>CDATA</td><td>文字列</td><td>&lt;ATTLIST book name CDATA&gt;</td>
+		</tr>
+		<tr>
+			<td>enumeration(列挙)</td><td>候補値の一覧(|区切りで空白文字を含めない。後に続く"文字列は"ディフォルト値でたぶん無くてもよい。IEで値にカタカナを使用するとエラー扱いされるのはおそらくIEのバグ。ひらがな・カタカナ共に使う事が出来ない場合、漢字かローマ字で代替するしかなさそう。)</td><td>&lt;ATTLIST book category(ASP | XML | JSP) "XML"&gt;</td>
+		</tr>
+		<tr>
+			<td>ENTITY</td><td>実体参照</td><td>&lt;ATTLIST memo ref ENTITY #IMPLIED&gt;</td>
+		</tr>
+		<tr>
+			<td>ENTITIES</td><td>ENTITYを空白区切りで並べたもの</td><td>&lt;ATTLIST memo ref ENTITIES #IMPLIED&gt;</td>
+		</tr>
+		<tr>
+			<td>ID</td><td>一意の識別子</td><td>&lt;ATTLIST book isbn ID #REQUIRED&gt;</td>
+		</tr>
+		<tr>
+			<td>IDREF</td><td>IDを参照</td><td>&lt;ATTLIST related ref IDREF #REQUIRED&gt;</td>
+		</tr>
+		<tr>
+			<td>IDREFS</td><td>IDREFを空白区切りで複数並べたもの</td><td>&lt;ATTLIST related ref IDREFS #REQUIRED&gt;</td>
+		</tr>
+		<tr>
+			<td>NMTOKEN</td><td>名前トークン</td><td>&lt;ATTLIST book name NMTOKEN #REQUIRED&gt;</td>
+		</tr>
+		<tr>
+			<td>NMTOKENS</td><td>NMTOKENを空白区切りで複数並べたもの</td><td>&lt;ATTLIST book author NMTOKENS #REQUIRED&gt;</td>
+		</tr>
+</table>
+
+データ型を'ID'にした場合には、特殊キーワードが必須となる。
+
+<table border="1">
+	<tr>
+		<th>キーワード</th><th>説明</th><th>例</th>
+	</tr>
+	<tr>
+		<td>#REQUIRED</td><td>必須</td><td>&lt;ATTLIST book isbn ID #REQUIRED&gt;</td>
+	</tr>
+	<tr>
+		<td>#IMPLIED</td><td>任意</td><td>&lt;ATTLIST memo ref ENTITIES #IMPLIED&gt;</td>
+	</tr>
+	<tr>
+		<td>#FIXED</td><td>固定値</td><td>&lt;ATTLIST book cdrom CDATA #FIXED "ture"&gt;</td>
+	</tr>
+</table>
+
+■外部DTD（外部サブセット）
+
+▼外部DTDには、
+&lt;!Doctype  ルート要素名[
+	～
+]&gt;
+の、「～」の部分のみを記述する。
+
+▼外部DTDを参照
+&lt;?xml version="1.0" ?&gt;
+&lt;!DOCTYPE <var>books</var> SYSTEM "<var>books</var>.dtd"&gt;
+
+▼外部DTDと内部DTDを一緒に記述する記法
+&lt;!DOCTYPE books SYSTEM "books.dtd"[
+	～ここにDTDを書く～
+]&gt;
+
+■DTD内に記述する実体参照
+
+▼長い文字列を実体参照させる
+
+	&lt;!ENTITY asp "Active Sever Pages"&gt;
+
+
+こう書いておけば、"&asp;" と記述した部分が "Active Sever Pages" に置き換えられる。
+
+▼xmlファイルを実体参照させる
+
+	&lt;!ENTITY <var>book1</var> SYSTEM "<var>book1</var>.xml"&gt;
+
+↑DTDにこう書いておけば、
+&lt;? xml version="1.0" ?&gt;
+&lt;ルート要素名&gt;
+	&book1;
+&lt;!-- ここにbook1.xmlのxml文書が挿入される --&gt;
+	&book2;
+	&book3;
+	&book4;
+	…
+&lt;!--
+	 この手法を用いればxml文書を部品化してコンパクトにまとめられ
+	保守性が向上する。
+ --&gt;
+&lt;/ルート要素名&gt;
+
+▼特殊文字を実体参照させる
+
+xml文書に限らず、htmlでも半角文字で ＆ｌｔ； をブラウザ上に表示できないが、
+[&#]+[文字コード;]で表記可能となる。
+
+十進でa:97 、16進でa:x61 の要領。
+
+&[&#]+[108;]+[&#]+[116;;] で、
+&&#108;&#116;; となる。
+
+
+■XML Schema
+
+XML SchemaはXML文書であり、DTDに変わり得る文書型記述の方法。
+拡張子はXSD。
+
+DTDより細やかにデータ型を制約できる。
+
+XSD文書とXML文書の関連付けは謎だが、XML文書のルート要素に、
+
+&lt;ルート要素名 <em>xmlns="urn:"</em><strong>拡張子を付けないXSD文書名？(謎)</strong>&gt;
+
+属性を追加記述する。
+例えば、<a href="./XML_sample/schema_detail/validate.html">XML SchemaでXML文書の構文チェック</a>
+の実例を見ても上記の記述部分は何の役割はなく、上記の追加記述がなくとも動作する。
+
+<a href="./XML_sample/books.xml" target="_blank">XMLsample</a>
+<a href="./XML_sample/books.xsd" target="_blank">XSDsample</a>
+
+■XSD宣言
+
+&lt;xml version="1.0" encoding="Shift_JIS" ?&gt;
+&lt;xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+～～～
+	文書定義の記述
+～～～
+&lt;/xsd:schema&gt;
+
+■配下にテキストしかもたない要素の定義
+
+&lt;xsd:element name="要素名" type="データ型" /&gt;
+
+例：&lt;xsd:element name="price" type="xsd:positiveInteger"&gt;
+
+xsd:positiveInteger は、０を含まない正の整数。
+
+<table border="1">
+	<caption>XML Schemaで使えるデータ型</caption>
+	<tr>
+		<th>データ型</th><th>説明</th>
+	</tr>
+	<tr>
+		<td>string</td><td>文字列</td>
+	</tr>
+	<tr>
+		<td>binary</td><td>バイナリデータ</td>
+	</tr>
+	<tr>
+		<td>boolean</td><td>真偽（true,false)</td>
+	</tr>
+	<tr>
+		<td>byte</td><td>バイト型(-127～128)</td>
+	</tr>
+	<tr>
+		<td>century</td><td>世紀(例：20)</td>
+	</tr>
+	<tr>
+		<td>date</td><td>日付型(例：2001-09-10)</td>
+	</tr>
+	<tr>
+		<td>decimal</td><td>10進数</td>
+	</tr>
+	<tr>
+		<td>double</td><td>64ビット倍精度浮動小数点</td>
+	</tr>
+	<tr>
+		<td>ENTITY</td><td>実体型</td>
+	</tr>
+	<tr>
+		<td>float</td><td>32ビット単精度浮動小数点</td>
+	</tr>
+	<tr>
+		<td>ID</td><td>ID型</td>
+	</tr>
+	<tr>
+		<td>IDREF</td><td>ID参照型</td>
+	</tr>
+	<tr>
+		<td>IDREFS</td><td>ID参照型の集合体</td>
+	</tr>
+	<tr>
+		<td>integer</td><td>整数型（-2147483648～2147483647</td>
+	</tr>
+	<tr>
+		<td>long</td><td>長整数型(-9223372036854775808～9223372036854775807</td>
+	</tr>
+	<tr>
+		<td>month</td><td>月(例：2001-09)</td>
+	</tr>
+	<tr>
+		<td>NAME</td><td>名前(XML1.0)</td>
+	</tr>
+	<tr>
+		<td>NCNAME</td><td>コロンなしの名前</td>
+	</tr>
+	<tr>
+		<td>negativeInteger</td><td>負の整数(0を含まない)</td>
+	</tr>
+	<tr>
+		<td>NMTOKEN</td><td>NMTOKEN型</td>
+	</tr>
+	<tr>
+		<td>NMTOKENS</td><td>NMTOKEN型の集合体</td>
+	</tr>
+	<tr>
+		<td>nonNegativeInteger</td><td>０以上の整数（０を含む）</td>
+	</tr>
+	<tr>
+		<td>nonPositiveInteger</td><td>０以下の整数（０を含む）</td>
+	</tr>
+	<tr>
+		<td>NOTATION</td><td>記法型</td>
+	</tr>
+	<tr>
+		<td>positiveInteger</td><td>正の整数（０を含まない)</td>
+	</tr>
+	<tr>
+		<td>QNAME</td><td>名前(XML Namespaces)</td>
+	</tr>
+	<tr>
+		<td>short</td><td>短整数型(-32768～32767</td>
+	</tr>
+	<tr>
+		<td>time</td><td>時刻型(例：20:15:12.000)</td>
+	</tr>
+	<tr>
+		<td>timeDuration</td><td>期間(例：P2Y10M15DT15H30M10.97[２年１０カ月15日と15時間30分１０．９７秒])</td>
+	</tr>
+	<tr>
+		<td>unsignedByte</td><td>符号なしバイト型(0～255)</td>
+	</tr>
+	<tr>
+		<td>unsignedInt</td><td>符号なし整数型(0～4294967295)</td>
+	</tr>
+	<tr>
+		<td>unsignedLong</td><td>符号なし長整数型(0～18446744073709551615)</td>
+	</tr>
+	<tr>
+		<td>unsignedShort</td><td>符号なし短整数型(0～65535)</td>
+	</tr>
+	<tr>
+		<td><del>uriReference</del><ins>anyURIを使うべきなのか？uriReferenceを使用するとDOMがXML Schemaを解釈しない？謎。</ins></td><td>URI(Uniform Resource Identifier:ネットワーク上の位置情報)(例：http://www.w3.org/2001/XMLSchema)</td>
+	</tr>
+	<tr>
+		<td>year</td><td>年(例：2001)</td>
+	</tr>
+</table>
+
+
+<p>「XML Schemaで使えるデータ型」表で、uriReferenceがエラーになって俄かに信じがたいので
+以下ヘルプから引用しておく</p>
+<blockquote>
+<img src="./xml_gazo/datatype.png" width="720" height="722" alt="XML Data Type Reference">
+</blockquote>
+
+■配下に子要素を持つ要素と、子要素も属性も持たない要素
+
+▼子要素も属性も持たない要素の定義(つまり、テキストデータのみの要素)
+xml----------------------
+&lt;price&gt;2800&lt;/price&gt;
+-------------------------
+
+&lt;xsd:element name="price" type="xsd:positiveInteger"&gt;
+
+だが、これは、
+
+&lt;xsd:element name="price"&gt;
+	&lt;xsd:<strong>simpleType</strong>&gt;
+		&lt;xsd:restriction base="xsd:positiveInteger" /&gt;
+	&lt;/xsd:<strong>simpleType</strong>&gt;
+&lt;/xsd:element&gt;
+
+という厳密な記法が用意されている。
+
+restriction とは、「制約」の事。
+restriction 要素の base属性でデータ型を指定する時、element要素の type属性による
+データ型指定は出来ない。
+
+restriction はsimpleType とセットで記述する（たぶん）
+
+▼子要素あるいは属性を持つ要素の定義
+
+&lt;xsd:element name="books"&gt;
+	&lt;xsd:<strong>complexType</strong>&gt;
+
+		&lt;!-- 各子要素は記述した順番で出現する書き方。
+		子要素が１つしかない場合も sequence を指定して良い。
+		順不同の場合には、&lt;xsd:all&gt;～&lt;/xsd:all&gt;。
+		この指定は省略できない--&gt;
+
+		&lt;xsd:sequence&gt; 
+			&lt;xsd:element name="owner" type="ownerType"
+			minOccurs="1" maxOccurs="1" /&gt;
+			…
+			&lt;xsd:element name="book" type="bookType"
+			minOccurs="0" maxOccurs="unbounded" /&gt;	
+			…
+			…
+			&lt;xsd:attribute name="title" type="xsd:string" use="optional" /&gt;
+
+			&lt;!-- use属性には optional(任意)の他、
+			required(必須) default(既定値指定) fixed(固定値指定) がある--&gt;
+
+		&lt;/xsd:sequence&gt;
+	&lt;/xsd:<strong>complexType</strong>&gt;
+&lt;/xsd:element&gt;
+
+▼要素の登場回数を制限する
+
+	&lt;xsd:element name="owner" type="ownerType"
+	minOccurs="1" maxOccurs="1" /&gt;
+
+↑最低１回、最大１回、なので、owner要素は必ず１回記述するという意味になる。
+	minOccurs  maxOccurs が共に省略された場合、ディフォルトで
+	その要素は「必ず１回登場」するという指定になる
+
+<table border="1">
+	<caption>minOccurs maxOccursの組み合わせによる意味</caption>
+	<tr>
+		<th>minOccurs</th><th>maxOccurs</th><th>登場回数</th>
+	</tr>
+	<tr>
+		<td>省略</td><td>省略</td><td>必ず1回登場</td>
+	</tr>
+	<tr>
+		<td>1</td><td>1</td><td>必ず1回登場</td>
+	</tr>
+	<tr>
+		<td>0</td><td>1</td><td>0回か1回登場</td>
+	</tr>
+	<tr>
+		<td>0</td><td>unbounded</td><td>0回以上登場</td>
+	</tr>
+	<tr>
+		<td>1</td><td>unbounded</td><td>1回以上登場</td>
+	</tr>
+</table>
+
+▼要素にテキストデータと子要素、或いは属性が含まれる事を明示する mixed 属性
+
+&lt;xsd:element name="owner"&gt;
+	&lt;xsd:complexType <strong>mixed="true"</strong>&gt;
+		&lt;xsd:attribute name="address" type="xsd:string" use="required" /&gt;
+	&lt;/xsd:complexType&gt;
+&lt;/xsd:element name="owner"&gt;
+
+owner 要素はmixed="true" なので、
+&lt;owner address="XXXX@nifty.com"&gt;
+	MYOUJI NAMAE
+&lt;owner&gt;
+
+と、テキストデータを含める事ができる。
+mixed="false" であればテキストデータを記述する事はできない。
+省略した場合は（たぶん）false になる（ように感じる)。
+
+▼孫要素（属性を持つ子要素を含む）があっても階層構造で記述しない記法
+
+owner 属性には address 属性があり、book 要素は複数の子要素が含まれるが、
+books 要素の定義部分には books 要素の中身にたいする記述だけで済ませる。
+
+address 属性やbook要素の子要素の記述は別の場所に記述する。
+この記法を可能にしているのが、
+
+&lt;xsd:element name="owner" <strong>type="ownerType"</strong> /&gt;
+
+↑の type 属性。↓のname 属性で関連付けをして、<em>element 要素で囲まないで記述する。</em>
+onerType の宣言をしている部分。
+
+&lt;xsd:complexType <strong>name="ownerType"</strong> mixed="true"&gt;
+	&lt;xsd:attribute name="address" type="xsd:string" use="required" /&gt;
+&lt;/xsd:complexType&gt;
+
+■要素のデータ型の制約を細やかに定義する記法
+
+<a href="./XML_sample/schema_detail/books.xml" target="_blank">books.xml</a>
+<a href="./XML_sample/schema_detail/books.xsd" target="_blank">books.xsd</a>
+<a href="./XML_sample/schema_detail/bookSub.xsd" target="_blank">bookSub.xsd</a>
+
+▼要素名の揺らぎを吸収する xsd:choice 要素
+
+要素名の規則に従っていない（文化が異なるとか等の理由で）規則を
+定義する書き方。xsd:choice 要素で挟んである要素の何れかが使われる。
+
+&lt;xsd:choice&gt;
+	&lt;xsd:element name="要素１" /&gt;
+	…
+	&lt;xsd:element name="要素N" /&gt;
+&lt;/xsd:choice&gt;
+
+▼共通の属性を一つにまとめる記法 xsd:attributeGroup name="属性グループ名" 要素
+
+複数の要素に共通の属性がある場合、（例えば、htmlにおける border や align 等の属性は、
+img table frame 等複数の要素で共通して使用される。)それぞれの定義を各々の要素の
+中で定義していくのは効率が悪く、定義に変更が発生した場合の保守性も悪くなる為、
+attributeGroup 要素が用意されている。
+
+データ型が時刻型でなければならない hoge_time 属性を複数の要素で共有する場合、
+
+&lt;xsd:attributeGroup name="hoge_timeAttr"&gt;
+	&lt;xsd:attribute name="hoge_time" use="required"&gt;
+
+		&lt;!--simpleType は属性の定義に対しても使用される  --&gt;
+		&lt;xsd:sinpleType&gt; 
+			&lt;xsd:restriction base="xsd:time /&gt;
+		&lt;/xsd:sinpleType&gt; 
+
+	&lt;/xsd:attribute&gt;
+&lt;/xsd:attributeGroup&gt;
+
+と記述し(時刻型であることと、属性の記述が必須である事を制約）
+、この属性を受け取る側の要素の定義には、
+
+&lt;xsd:complexType name="要素Type"&gt;
+	&lt;xsd:element name="＝～…
+	&lt;xsd:element name="＝～…
+	…
+
+	<strong>&lt;xsd:attributeGroup ref="hoge_timeAttr" /&gt;</strong>
+&lt;/xsd:complexType&gt;
+
+と name属性と ref属性とを対応させて関連付けする事ができる。
+
+▼要素または属性の値を幾つかの候補に限定する xsd:enumeration 要素
+
+&lt;xsd:element name="category"&gt;
+	&lt;xsd:simpleType&gt;
+		&lt;xsd:restriction base="xsd:string"&gt;
+			&lt;xsd:enumeration value="ASP" /&gt;
+			&lt;xsd:enumeration value="XML" /&gt;
+			&lt;xsd:enumeration value="JSP・Servlet" /&gt;
+		&lt;/xsd:restriction&gt;
+	&lt;/xsd:simpleType&gt;
+&lt;xsd:element&gt;
+
+▼文字列のパターンチェック：正規表現を定義する xsd:pattern要素
+
+書式：
+&lt;xsd:pattern value="正規表現" /&gt;
+
+例１：）　[0-9]{1} ⇒ 0 ～ 9 の文字で１桁、の指定。
+
+例２：）[\w\.-]+(\+[\w-]*)?@([\w-]+\.)+[\w-]+
+
+	「[ ]」は、囲まれた中の何れかの文字の意味。
+	「+」は直前の文字が最低一回は繰り返されるという意味。
+	「\w」 は[a-zA-Z0-9_](アルファベット、数字、下線)の略記法。
+	「.」はとにかく何でもいい一文字だが、「\」が付いているので「.」そのものを表す
+	「?」は直前の文字が全くないか、１つだけあるという意味。直前の文字が「( )」でグループ化されている。
+	「*」は直前の文字が全くないか、１つ以上連続するという意味。ワイルドカードの「*」とは異なる。
+	
+	「\+」の部分は「+」そのものを表す（筈）。
+	ここには無いけど「＾」は否定。^a　で、a以外の文字を表す。
+
+他は正規表現の解説書を勉強する。。。
+秀丸エディタの正規表現では、
+	. は改行以外の一文字をあらわす
+	&lt;a href=""&gt;text&lt;/a&gt; からリンクを解除したければ、
+	&lt;(a|A) [^&gt;]+&gt; と &lt;/(a|A)&gt; を空白文字列で置き換えればよい（たぶん）。
+	　　　　　　
+
+▼XML Schemaで定義できるその他の制約条件
+
+<table border="1">
+	<caption>XML Schemaで定義できるその他の制約条件</caption>
+	<tr>
+		<th>要素</th><th>説明</th><th>指定値</th>
+	</tr>
+	<tr>
+		<td>&lt;xsd:encoding&gt;</td><td>エンコード型を制限<br>(hex,base64)</td><td>バイナリ型にのみ有効</td>
+	</tr>
+	<tr>
+		<td>&lt;xsd:length&gt;</td><td>文字列長、リストの個数を制限<br>(hex,base64)</td><td>負でない整数</td>
+	</tr>
+	<tr>
+		<td>&lt;xsd:maxExclusive&gt;</td><td>データが指定された値未満である事</td><td>対象となるデータ型と等しいデータ型</td>
+	</tr>
+	<tr>
+		<td>&lt;xsd:maxInclusive&gt;</td><td>データが指定された値以下である事</td><td>対象となるデータ型と等しいデータ型</td>
+	</tr>
+	<tr>
+		<td>&lt;xsd:maxLength&gt;</td><td>文字列長、リストの個数の最大値</td><td>負でない整数</td>
+	</tr>
+	<tr>
+		<td>&lt;xsd:minInclusive&gt;</td><td>データが指定された値以上であること</td><td>対象となるデータ型と等しいデータ型</td>
+	</tr>
+	<tr>
+		<td>&lt;xsd:minExclusive&gt;</td><td>データが指定された値より大きい事</td><td>対象となるデータ型と等しいデータ型</td>
+	</tr>
+	<tr>
+		<td>&lt;xsd:minlength&gt;</td><td>文字列長、リストの個数などの最小値</td><td>対象となるデータ型と等しいデータ型</td>
+	</tr>
+	<tr>
+		<td>&lt;xsd:precision&gt;</td><td>最大桁数</td><td>正の整数</td>
+	</tr>
+	<tr>
+		<td>&lt;xsd:scale&gt;</td><td>有効小数点数</td><td>負でない整数</td>
+	</tr>
+</table>
+
+▼値がリストである要素を定義する xsd:list itemType-"値のデータ型" 要素
+
+XML Schema では、半角スペース区切りの値リストを持つ要素である事を定義できる。
+
+xml-------------------------------
+&lt;author&gt;著者１ 著者２&lt;author&gt;
+----------------------------------
+
+何のデータ型のリストを定義するのか、別の場所に定義を作っておき、
+
+	&lt;xsd:simpleType name="authorType"&gt;
+		&lt;list itmeType="xsd:string" /&gt;
+	&lt;/xsd:simpleType&gt;
+
+restriction属性で定義を指定する。
+
+	&lt;xsd:element name="author"&gt;
+		&lt;xsd:simpleType&gt;
+			&lt;xsd:restriction base="authorType"&gt;
+				&lt;xsd:maxLength value="3" /&gt;
+			&lt;/xsd:restriction&gt;
+		&lt;/xsd:simpleType&gt;
+	&lt;xsd:element&gt;
+
+▼XML Schema を分割する xmd:include schemaLocation="xsdファイルパス"
+
+&lt;xsd:include schemaLocation="bookSub.xsd" /&gt;
+
+と書いて、他のxsdファイルを参照することができる。
+ルート要素定義の手前に（xsd:schema 宣言の直後に記述しないとエラーになる？）
+
+<h2>XML文書の構文をMSXML2.DOMDocument.4.0でチェックするスクリプト</h2>
+
+xmlcheck.html---------------------------------------------------------------------------------
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;XML文書の構文をMSXML2.DOMDocument.4.0でチェックする&lt;/title&gt;
+        &lt;meta http-equiv="Content-Script-Type" content="text/javascript"&gt;
+        &lt;script type="text/jscript"&gt;
+        &lt;!--
+            var strX;
+            function xmlchk() {
+                strX = document.fm1.ta1.value;
+                //alert(strX);
+                var objDoc = new ActiveXObject("MSXML2.DOMDocument.4.0");
+                objDoc.async = false
+                objDoc.loadXML(strX);
+                var objErr = objDoc.parseError;
+
+                if (objErr.errorCode != 0) {
+                    var str = objErr.errorCode + "\n";
+                    str += objErr.line + "行 " + objErr.srcText + "\n";
+                    str += objErr.reason;
+                    window.alert(str);
+                } else {
+                window.alert("XML文書はスキーマに従っています");
+                }
+            }                      
+        //--&gt;
+        &lt;/script&gt;
+    &lt;/head&gt;
+
+    &lt;body&gt;
+
+        &lt;h1&gt;XML文書の構文をMSXML2.DOMDocument.4.0でチェックする&lt;/h1&gt;
+
+        &lt;form name="fm1" action=""&gt;
+            &lt;input type="button" value="Check" onclick="xmlchk()" &gt;
+            &lt;input type="reset" value="Reset"&gt;
+            &lt;br&gt;
+            &lt;textarea name="ta1" cols="80" rows="30"&gt;XML文書を貼り付けて[Check]します&lt;/textarea&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+    
+&lt;/html&gt;
+
+/xmlcheck.html--------------------------------------------------------------------------------
+
+<h2>XSLにスクリプトを記述する</h2>
+■CDATAセクション
+
+&lt;?xml version="1.0"?&gt;
+
+&lt;sample&gt;
+	sampleです
+
+	&lt;![CDATA[
+
+		CDATAセクション
+		CDATA Section
+		<sample>sampleです</sample>
+
+	]]&gt;
+
+	&lt;!-- 
+		コメントです
+		CDATAセクションに書かれた文字をXMLパーサは無視する。
+		タグを書いても、タグとして解釈されない。
+		コメントとの使い分けがピンと来ないが、CDATAセクションに
+		にしないで、&lt;&gt;を＆ｌｔ；＆ｇｔ；と記述することと同じに機能する
+		
+		DOMプログラムをXSLの中に記述する場合htmlタグをそのまま
+		記述できるようになるので便利（らしい）。
+
+		XSLの中にスクリプトを記述する場合は、CDATAセクション内に記述しないと
+		IEで開いたときにスクリプト部分の改行が無視されて表示され読みづらくなるので
+		原則として&lt;![CDATA[　～　]]&gt;内にスクリプトを記述する。
+
+		囲まれた範囲のタグはタグとして解釈されなくなるので&lt;script&gt;と&lt;/script&gt;
+		部分はCDATAセクションに入れないように囲まないと、、スクリプトの文字列がそのまま
+		ブラウザに表示されてしまうという間抜けなことになる。
+	--&gt;
+
+&lt;/sample&gt;
+
+■すでに読み込まれているXMLファイルを参照する場合
+MSXML2.DOMDocument.4.0 オブジェクトをインスタンス化必要は無い。
+
+	var objDoc=document.XMLDocument;
+	var objStl=document.XSLDocument;
+
+	とすれば、XML、XSL文書を取得できる。
+
+
+■動的のソースを入れ替える
+
+<var>HTML上のid</var>.innerHTML=<var>xmlドキュメントオブジェクト</var>.documentElement.transformNode(<var>xslドキュメントオブジェクト</var>);
+
+　↑、HTMLid部分に 変更したxslの部分をxmlのルートノードに対して差し替えている？
+　難解なコードだ。
+
+<a href ="./XML_sample/douteki/books.xml" target="_blank">xml_sample</a>
+<a href ="./XML_sample/douteki/books.xsl" target="_blank">xsl_sample</a>
+<a href ="./XML_sample/douteki/books.css" target="_blank">css_sample</a>
+
+▼XMLDocumentのメンバとメソッド
+
+　　●documentElement
+      ドキュメントのルート XmlElement を取得します。
+      
+      alert(objDoc.documentElement.nodeName); //例えば books というノード名が返る。
+
+　　●transformNodeメソッド
+
+	strValue = oXMLDOMNode.transformNode(objStylesheet);
+
+　　パラメタ
+	objstylesheet
+	オブジェクト。 このノードの変換を指示するXSLT要素から成る有効なXMLドキュメントかDOMノード。
+
+　　リターン値
+	文字列。 XSLTスタイルシートに基づくこのXMLドキュメントの変換の製品を含むストリングを返します。
+</pre>

@@ -1,0 +1,77 @@
+	table{
+		width:100%;
+		border:solid;
+		border-collapse:collapse;		
+		border-color: gray;
+		table-layout:fixed;	
+	}
+	.hand{
+		cursor:hand;
+	}
+	.red{
+		color:red;
+		text-align:center;
+		line-height:85%;
+		font-weight:bold;
+	}
+	.yellow{
+		background-color:yellow;
+		text-align:center;
+		font-weight:bold;
+	}
+	.blue{
+		color:blue;		
+	}.shukuname{
+		font-size:37%;
+		font-weight:bold;
+		color:darkgreen;
+		line-height:85%;			
+	}.orange{
+		color:orangered;
+		font-weight:bold;
+	}td{
+		border:solid;
+		border-collapse:collapse;
+		border-color: gray;
+		text-align:center;
+	}.sun{
+
+	/* òfêØÉCÉâÉXÉgThanks to:http://ayfreenet.web.infoseek.co.jp/image_icons/space_fantasy/icon_space_planet.html */
+
+		background-color:midnightblue;
+		background-image:url(./sun.gif);
+		background-position:50% 50%;
+		background-repeat:no-repeat;
+	}.mon{
+		background-color:midnightblue;
+		background-image:url(./space_moon.gif);
+		background-position:50% 50%;
+		background-repeat:no-repeat;
+	}.tue{
+		background-color:midnightblue;
+		background-image:url(./space_mars.gif);
+		background-position:50% 50%;
+		background-repeat:no-repeat;
+	}.wed{
+		background-color:midnightblue;
+		background-image:url(./space_mercury.gif);
+		background-position:50% 50%;
+		background-repeat:no-repeat;
+	}.thu{
+		background-color:midnightblue;
+		background-image:url(./space_jupiter.gif);
+		background-position:50% 50%;
+		background-repeat:no-repeat;
+	}.fri{
+		background-color:midnightblue;
+		background-image:url(./space_venus.gif);
+		background-position:50% 50%;
+		background-repeat:no-repeat;
+	}.sat{
+		background-color:midnightblue;
+		background-image:url(./space_saturn.gif);
+		background-position:50% 50%;
+		background-repeat:no-repeat;
+	}.komoji{
+		font-size:40%;
+	}

@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="content-style-type" content="text/css">
+<meta http-equiv="content-script-type" content="text/javascript">
+<meta name="keywords" content="EXCELVBA,HTML雛型,">
+<meta name="description" content="仕事で楽できるツール集">
+<link rel="stylesheet" href="./web/stylexlvba.css" type="text/css">
+<link rev="made" href="mailto:xatsushi&#64;tbb.t-com.ne.jp">
+<link rel="next" href="tsugi.htm">
+<title>Excel VBA Sample</title>
+<style type="text/css">
+<!--
+.clyoko{display:inline;
+}body{
+	background-color:#eee;
+}pre{
+	padding:.7em;
+	margin:0% 5% 0% 5%;
+	background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAYAAACEhIafAAAAEElEQVQImWP4////fwYsBAD5HxPtUUiuKwAAAABJRU5ErkJggg==");	
+
+	background-color:white;
+}-->
+</style>
+  <!-- http://www.mwsoft.jp/programming/javascript/highlight_js.html?style=vs#styles -->
+  <!--http://softwaremaniacs.org/soft/highlight/en/download/-->
+  <!-- stylesの中から好みにあったCSSを選んで、 -->
+  <!-- 1, CSS、JavaScriptファイルを呼び出す -->
+  <link rel="stylesheet" href="http://homepage3.nifty.com/homepage_yamaV102/highlight.js/styles/vs.css">
+  <script type="text/javascript" src="http://homepage3.nifty.com/homepage_yamaV102/highlight.js/highlight.pack.js"></script>
+  <!-- 2, onLoad時にinitしてくれる機能を呼び出す -->
+  <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+
+</head>
+<body>
+<div id="contents">
+
+<h1>Style Test</h1>
+<pre>
+<code>Option Explicit
+
+Private y As New Class1
+Const msgRwlimit = "これ以上登録できません"
+
+'シリアル値を渡して年度年を返します
+Function GetNendoYear(argDay As Date) As Long
+    Dim nen As Long
+    nen = <strong>VBA.DateTime</strong>.Year(argDay)
+    
+    '1,2,3月の年度は年から1を引く
+    If <strong>VBA.DateTime</strong>.Month(argDay) < 4 Then
+        GetNendoYear = nen - 1
+    Else
+        GetNendoYear = nen
+    End If
+End Function</code><code>
+Sub test()
+    Dim nen As Long
+    Dim ws As Worksheet
+    Set ws = Sheet1
+    With ws.Cells(lastRw(ws, <strong>DataWsClm</strong>.Day), <strong>PrntWsClm</strong>.Day)
+        .Value = GetNendoYear(Date)
+        .Interior.ColorIndex = <strong>XlColorIndex</strong>.xlColorIndexNone
+    End With
+    With ws.Cells(lastRw(ws, <strong>DataWsClm</strong>.Month), <strong>PrntWsClm</strong>.Day)
+        .Value = <strong>y</strong>.Year
+        .Interior.ColorIndex = <strong>XlColorIndex</strong>.xlColorIndexNone
+    End With
+    
+End Sub
+
+Function lastRw(ws As Worksheet, clm As Long) As Long
+    Dim rw As Long
+    With ws
+        rw = _
+            .Cells(.Rows.Count, clm).End(xlUp).Row
+    End With
+    If rw = <strong>DataWsRw</strong>.titleRw Then
+        Err.Raise 65535, , msgRwlimit, ThisWorkbook.Name
+    End If
+    lastRw = rw
+End Function
+</code>
+</pre>
+<hr>
+<address>yamaV1.02β</address>
+</div>
+</body>
+</html>

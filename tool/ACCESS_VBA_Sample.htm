@@ -1,0 +1,2549 @@
+﻿<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="content-style-type" content="text/css">
+<meta http-equiv="content-script-type" content="text/javascript">
+
+
+<link rel="stylesheet" href="./web/stylexlvba.css" type="text/css">
+<style = "type/css">
+	img{
+		margin:1em;
+	}
+</style>
+  <!-- http://www.mwsoft.jp/programming/javascript/highlight_js.html?style=vs#styles -->
+  <!--http://softwaremaniacs.org/soft/highlight/en/download/-->
+  <!-- stylesの中から好みにあったCSSを選んで、 -->
+  <!-- 1, CSS、JavaScriptファイルを呼び出す -->
+  <link rel="stylesheet" href="http://homepage3.nifty.com/homepage_yamaV102/highlight.js/styles/vs.css">
+  <script type="text/javascript" src="http://homepage3.nifty.com/homepage_yamaV102/highlight.js/highlight.pack.js"></script>
+  <!-- 2, onLoad時にinitしてくれる機能を呼び出す -->
+  <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+</head>
+<pre>
+
+ＭＳヘルプはＳＱＬ，ＤＡＯ，ＡＤＯに関する記述を素直に検索できないのが
+非っ常に不満。
+
+以下の場所にあったりするので、直接ファイルを読もう。
+
+C:\Program Files\Common Files\Microsoft Shared\OFFICE11\1041　以下の
+
+DAO360.CHM
+ADO210.CHM
+JETSQL40.CHM
+
+<h2>index</h2>
+<ul>
+<li><a href="#tateyoko">■縦横入れ替え Treansform</a></li>
+<li><a href="#adoImport">■ADO、ADOXで他データベースのTABLEをインポートする</a></li>
+<li><a href="#autofit">■データシートビューでの列のオートフィット</a></li>
+<li><a href="#listSelectUpDown">■リストボックスの選択項目を上下に移動する</a></li>
+<li><a href="#ctrlsaccess">■サブフォームを含むコントロール部品へのアクセス</a></li>
+<li><a href="#adoTransaction">■ADOのトランザクション処理</a></li>
+<li><a href="#anotherdbtbl">■他のACCESSファイルのテーブルへのアクセス</a></li>
+<li><a href="#accessOpen">■他のACCESSファイルを起動する</a></li>
+<li><a href="#navihide">■ナビゲーションウィンドウを非表示</a></li>
+<li><a href="#ribonhide">■リボンの非表示</a></li>
+<li><a href="#insertSlect">■Select文をInsertする</a></li>
+<li><a href="#listselect">■リストボックスの選択</a></li>
+<li><a href="#autofit">■データシートビューフォーム列のオートフィット</a></li>
+<li><a href="#picker">■ファイル／フォルダーピッカー</a></li>
+<li><a href="#reccnt">■レコードのカウント</a></li>
+<li><a href="#save">■レコードの保存</a></li>
+<li><a href="#jun">■順位を振る</a></li>
+<li><a href="#max">■Max自作関数</a></li>
+<li><a href="#fuku">■複数行選択可のリストボックスの選択項目を削除する</a></li>
+<li><a href="#zen">■全ツールバーの非表示とリセット</a></li>
+<li><a href="#ris">■リストボックスの選択レコードを削除する</a></li>
+<li><a href="#det">■DAOでテーブル・クエリを洗い出す</a></li>
+<li><a href="#ado">■ADOでレコード数を取得する関数(接続のサンプルとしてはともかく低速。「レコードのカウント」を見よ)</a></li>
+<li><a href="#delt">■テーブルを削除する</a></li>
+<li><a href="#invisi">■見えないテーブルの修復</a></li>
+<li><a href="#reg">■正規表現を使う</a></li>
+<li><a href="#opt">■オプションの設定</a></li>
+<li><a href="#round">■Round銀行式まるめから数学式丸めへ</a></li>
+<li><a href="#idou">■リストのダブルクリックで選択レコードに移動</a></li>
+<li><a href="#bkup">■自動バックアップ作成</a></li>
+<li><a href="#err">■エラー番号からエラーの内容を調べる</a></li>
+<li><a href="#find">■Find系メソッドで検索</a></li>
+<li><a href="#seek">■Seekで検索する</a></li>
+<li><a href="#seek2">■Seekで検索する(複合キーの場合）</a></li>
+<li><a href="#union">■Unionクエリの書き方。データの出所がわかるようにAs句でフィールド作成</a></li>
+<li><a href="#table">■テーブルの作成とインデックスの設定</a></li>
+<li><a href="#table2">■テーブルの作成と主キーインデックスの設定</a></li>
+<li><a href="#imp">■テキストファイルのインポート</a></li>
+<li><a href="#dao">■DAOでレコードセットを取得する</a></li>
+<li><a href="#link">■リンクテーブルのパスの取得</a></li>
+<li><a href="#relink">■リンクテーブルのパスの変更する</a></li>
+<li><a href="#txt">■テキストファイルのフィールド名をチェックする</a></li>
+<li><a href="#xls">■エクセルファイルを出力</a></li>
+<li><a href="#hoka">■SQLで他のデータベースにテーブルを作成</a></li>
+<li><a href="#cmp">■他mdbの最適化</a></li>
+<li><a href="#cmp2">■自mdbの最適化</a></li>
+<li><a href="#cmp3">■バックエンドの最適化</a></li>
+<li><a href="#vbs">■MDACとVBSを使った最適化</a></li>
+<li><a href="#key">■テーブルに主キーを設定します</a></li>
+<li><a href="#del_f">■t_testテーブルからf2フィールドを削除します</a></li>
+<li><a href="#keydel">■テーブルから主キーを削除します</a></li>
+<li><a href="#subq">■サブクエリのサンプル</a></li>
+<li><a href="#having">■HAVING句の使い方</a></li>
+<li><a href="#ZipCodeUpdate">■郵便番号フィールドの更新</a></li>
+<li><a href="#formUpdate">■フォームに表示される値を一定時間ごとに更新する</a></li>
+<li><a href="#allowbypasskey">■ShiftKey起動を無効にするAllowBypassKey</a></li>
+<li><a href="#letFatDb">■最適化のテストの為にDBを肥大化させるコード</a></li>
+<li><a href="#recSelectorCnt">■フォームの移動ボタンにある位置カウンター自作</a></li>
+<li><a href="#CreateTableADO">■ADOでCreateTable</a></li>
+<li><a href="#CreateTableDAO">■DAOでCreateTable</a></li>
+
+
+</ul>
+<h2 id="tateyoko">■縦横入れ替え Treansform</h2>
+<h3>1列の入れ替え</h3>
+<img src="./ac_gazo/TV1.png" alt="" width="491" height="292" />
+<pre>
+<code>
+TRANSFORM Sum(TV.値) AS 値の合計
+SELECT TV.会社ID, TV.年
+FROM TV
+GROUP BY TV.会社ID, TV.年
+ORDER BY TV.会社ID
+PIVOT TV.月 In ('01月','02月','03月','04月','05月','06月','07月','08月','09月','10月','11月','12月');
+</code>
+</pre>
+<img src="./ac_gazo/QH.png" alt="" width="914" height="131" />
+
+<h3>2列の入れ替え</h3>
+<p>
+Transform の Inner Join 式はACCESSにとってイレギュラーな書き方らしく、
+クエリに保存しても、式を何かのタイミングで書き換えてしまい、気が付くと
+壊れていた、という経験を何度かした。<strong>VBA上に記述して使うように。
+一番外側のフィールド名を角括弧 [] で囲むことは重要。</strong>
+</p>
+<img src="./ac_gazo/TV2.png" alt="" width="383" height="169" />
+<pre>
+<code>
+SELECT q1.会社ID, q1.年, q1.[1月], q1.[2月], q1.[3月], q3.[a], q3.[b], q3.[c] 
+FROM 
+
+(SELECT q.* FROM 
+[TRANSFORM Sum(q.値) AS 値の合計 SELECT q.会社ID, q.年 
+FROM (SELECT TV.会社ID, TV.年, TV.値, TV.月 FROM TV)  AS q 
+GROUP BY q.会社ID, q.年 PIVOT q.月 In ('1月','2月','3月');]. as q 
+)  AS q1 
+
+INNER JOIN 
+
+(SELECT q2.* FROM 
+[TRANSFORM Sum(q2.値) AS 値の合計 SELECT q2.会社ID, q2.年 
+FROM (SELECT TV.会社ID, TV.年, TV.値, TV.月2 FROM TV)  AS q2 
+GROUP BY q2.会社ID, q2.年 PIVOT q2.月2 In ('a','b','c'); ]. as q2 
+)  AS q3 
+ON (q1.年 = q3.年) AND (q1.会社ID = q3.会社ID); 
+</code>
+</pre>
+<img src="./ac_gazo/QH2.png" alt="" width="397" height="93" />
+
+
+<h3>3列の入れ替え</h3>
+
+<img src="./ac_gazo/TV3.png" alt="" width="483" height="164" />
+<pre>
+<code>
+SELECT q3.会社ID, q3.年, q1.[1月], q1.[2月], q1.[3月], q3.[a], q3.[b], q3.[c], q5.[あ], q5.[い], q5.[う]
+FROM (SELECT q0.*
+ from 
+ [
+  TRANSFORM Sum(q0.値) AS 値の合計
+  SELECT q0.会社ID, q0.年
+  FROM (SELECT TV.会社ID, TV.年, TV.値, TV.月3 FROM TV)  AS q0
+  GROUP BY q0.会社ID, q0.年
+  PIVOT q0.月3 In ('あ','い','う');
+ ]. as q0
+)  AS q5 I
+
+NNER JOIN 
+ (SELECT q3.会社ID, q3.年, q1.[1月], q1.[2月], q1.[3月], q3.[a], q3.[b], q3.[c]
+  FROM 
+
+  (SELECT q.*
+   from 
+   [
+    TRANSFORM Sum(q.値) AS 値の合計
+    SELECT q.会社ID, q.年
+    FROM (SELECT TV.会社ID, TV.年, TV.値, TV.月 FROM TV)  AS q
+    GROUP BY q.会社ID, q.年
+    PIVOT q.月 In ('1月','2月','3月');
+   ]. as q
+  )  AS q1 
+
+ INNER JOIN 
+
+  (SELECT q2.*
+   from 
+   [
+    TRANSFORM Sum(q2.値) AS 値の合計
+    SELECT q2.会社ID, q2.年
+    FROM (SELECT TV.会社ID, TV.年, TV.値, TV.月2 FROM TV)  AS q2
+    GROUP BY q2.会社ID, q2.年
+    PIVOT q2.月2 In ('a','b','c');
+   ]. as q2
+  )  AS q3 
+
+ ON (q1.年 = q3.年) AND (q1.会社ID = q3.会社ID)
+)  AS q4 ON (q4.会社ID = q5.会社ID) AND (q4.年 = q5.年);
+
+</code>
+</pre>
+<img src="./ac_gazo/QH3.png" alt="" width="523" height="93" />
+
+</h2>
+<h2 id="adoImport">■ADO、ADOXで他データベースのTABLEをインポートする</h2>
+<pre>
+<code>
+Option Compare Database
+Option Explicit
+
+'ADO、ADOXで他データベースのTABLEをインポートする
+'tgtDBのコンテンツを一度有効にしてから実行しないとセキュリティの警告がテーブルの数だけ表示される
+Sub importAllTables()
+    Dim tgtDBPath As String
+    tgtDBPath = CurrentProject.Path & "\住所録.mdb"
+    
+    Dim cnctStr As String
+    cnctStr = _
+        "Provider=Microsoft.ACE.OLEDB.12.0;User ID=Admin;Data Source=" & tgtDBPath & ";"
+    
+    Dim cn As Object 'ADODB.Connection
+    Dim ctlg As Object 'ADOX.Catalog
+    Dim tbl As Object 'ADOX.Table
+    
+    Set cn = VBA.CreateObject("ADODB.Connection")
+    Set ctlg = VBA.CreateObject("ADOX.Catalog")
+    
+    cn.Open cnctStr
+    ctlg.ActiveConnection = cn
+    
+    For Each tbl In ctlg.Tables
+        'システムテーブルは取り込まない
+        'acTable を差し替えればモジュールをを取り込める（たぶん）
+        
+        If tbl.Type = "TABLE" Then
+            DoCmd.TransferDatabase acImport, "Microsoft Access", tgtDBPath, acTable, tbl.Name, tbl.Name
+        End If
+    Next
+    
+End Sub
+
+'自DBのテーブル名とタイプをADOXで書き出し
+Sub printTableNameAndType()
+    Dim tbl As ADOX.Table
+    Dim ctlg As New ADOX.Catalog
+    ctlg.ActiveConnection = CurrentProject.Connection
+    For Each tbl In ctlg.Tables
+        Debug.Print tbl.Name, tbl.Type
+    Next
+End Sub
+</code>
+</pre>
+<h2 id="autofit">■データシートビューでの列のオートフィット</h2>
+<pre>
+<code>
+Option Compare Database
+'module1
+Option Explicit
+'データシートビューのフォームの列をオートフィットする
+Sub autofit(fm As Object)
+    Dim ctl As Control
+    Const cnsAutoFit As Long = -2
+    Const cns非表示 As Long = 0
+    
+    For Each ctl In fm.Controls
+        If _
+            (ctl.ControlType = acTextBox) Or _
+            (ctl.ControlType = acComboBox) Or _
+            (ctl.ControlType = acCheckBox) Then
+            
+            Select Case ctl.Name
+                'オプション
+                Case "ID"
+                    ctl.ColumnWidth = 1000 '1cm:567twips
+                Case Else
+                    ctl.ColumnWidth = cnsAutoFit
+            End Select
+            
+        End If
+    Next
+End Sub
+
+Option Compare Database
+Option Explicit
+'form2
+Private Sub Form_Open(Cancel As Integer)
+    On Error GoTo err_handle
+    Call Module1.autofit(Me.f.Form) 'サブフォーム
+    Call Module1.autofit(Me.埋め込み15.Form) 'サブフォーム
+    Call Module1.autofit(Me.f_のコピー.Form.f.Form) 'サブフォームのサブフォーム
+end_handle:
+    Exit Sub
+err_handle:
+    MsgBox Err.Description, vbExclamation, CurrentProject.Name
+    Resume end_handle
+End Sub
+
+</code>
+</pre>
+<h2 id="listSelectUpDown">■リストボックスの選択項目を上下に移動する</h2>
+<pre>
+<code>
+'フォームにリストボックス list1 を用意して
+'コマンド1_Click を実行後、btn_Click で動作確認してから使う
+Private Sub コマンド1_Click()
+    With list1
+         .RowSource = ""
+        .RowSourceType = "value list"
+        .ColumnCount = 2
+        .ColumnWidths = "2cm;2cm"
+        .AddItem "Title;Theme"
+        .AddItem "a;apple"
+        .AddItem "b;ball"
+        .AddItem "c;cap"
+        .AddItem "d;dog"
+        .ColumnHeads = True
+    End With
+End Sub
+
+Private Sub btn_Click()
+    'リストボックスで選択した項目を上下に移動
+    Call selectedMove(True)
+End Sub
+
+'リストボックスで選択した項目を上下に移動
+Private Sub selectedMove(IsUpmode As Boolean)
+
+    Dim n As Long
+    Dim v
+    Dim items As New Collection
+    Dim keys As New Collection
+    
+    Dim direction As Long
+    
+    If IsUpmode Then
+        direction = -1
+    Else
+        direction = 1
+    End If
+    
+    With list1
+        If .ItemsSelected.Count = 0 Then Exit Sub
+        
+        For Each v In .ItemsSelected
+             items.Add .Column(0, v) & ";" & .Column(1, v)
+             keys.Add v
+        Next
+        
+        If IsUpmode Then
+            If keys(1) + direction <= IIf(.ColumnHeads, 0, -1) Then
+                Exit Sub
+            End If
+            For n = 1 To keys.Count
+                If keys(n) + direction > IIf(.ColumnHeads, 0, -1) Then
+                    .RemoveItem keys(n)
+                    .AddItem items(n), keys(n) + direction
+                End If
+            Next
+        End If
+        
+        If IsUpmode = False Then
+            
+            If keys(keys.Count) + direction >= .ListCount Then
+                Exit Sub
+            End If
+            
+            For n = keys.Count To 1 Step -1
+                If keys(n) + direction < .ListCount Then
+                    .RemoveItem keys(n)
+                    .AddItem items(n), keys(n) + direction
+                End If
+            Next
+        End If
+        
+        For n = 1 To keys.Count
+            .Selected(keys(n) + direction) = True
+        Next
+        
+    End With
+    
+End Sub
+
+</code>
+</pre>
+<h2 id="ctrlsaccess">■サブフォームを含むコントロール部品へのアクセス</h2>
+<pre>
+<code>
+Sub サブフォームを含むコントロール部品へのアクセス()
+
+    Dim frm As Form
+    DoCmd.OpenForm ("フォーム")
+    
+    Set frm = Forms!フォーム
+    
+    Call コントロール部品の書き出し(frm)
+    
+End Sub
+
+Sub コントロール部品の書き出し(fm As Object)
+    Dim ctrl As Access.Control
+        
+    For Each ctrl In fm.Controls
+        
+        Debug.Print ctrl.Name & " " & TypeName(ctrl)
+        
+        If TypeOf ctrl Is SubForm Then
+            Call コントロール部品の書き出し(ctrl)
+        End If
+        
+    Next
+           
+End Sub
+</code>
+</pre>
+
+<h2 id="adoTransaction">■ADOのトランザクション処理</h2>
+<pre>
+<code>
+Option Explicit
+
+'ADOのトランザクション処理
+Sub transactionADO()
+    Dim adoCn As ADODB.Connection
+    Set adoCn = CurrentProject.Connection
+    
+    adoCn.BeginTrans
+    
+    Dim sql As String
+    
+    sql = "delete * from t1"
+    adoCn.Execute sql
+    
+    Stop
+    
+    'ここで t1 テーブルに新規レコードを追加しようとしても
+    'テーブルがロックされているので追加できない。
+    
+    sql = "insert into t1 (f1) values('a')"
+    adoCn.Execute sql
+    
+    If CBool(adoCn.Errors.Count) Then
+        adoCn.RollbackTrans
+        
+        Dim dbErr As ADODB.Error
+        Dim lstMsg As String
+        
+        For Each dbErr In adoCn.Errors
+            lstMsg = lstMsg & dbErr.Description & vbNewLine
+        Next
+        
+        lstMsg = lstMsg & String(2, vbNewLine) & "登録中にエラー。操作はキャンセルされました。"
+        Err.Raise 65535, , lstMsg, CurrentProject.Name
+        
+    Else
+        adoCn.CommitTrans
+        MsgBox "登録されました", vbInformation, CurrentProject.Name
+    End If
+End Sub
+</code>
+</pre>
+<h2 id="anotherdbtbl">■他のACCESSファイルのテーブルへのアクセス</h2>
+<pre>
+<code>
+'変数をモジュールレベルにしておかないと
+'プロシージャを抜けた途端解放されて消滅してしまう。
+'見せたくないならそれもアリだが。
+Private app As Access.Application
+
+'このロジックを使えば他DBのリンクテーブルの貼り直しも思いのまま
+Sub 他のACCESSファイルのテーブルにアクセスする()
+
+    Dim db As DAO.Database
+    Set app = New Access.Application
+    
+    'OpenCurrentDababase は「起動」という雰囲気では開かない
+    '別ACCESSを起動させたいなら「ACCESSの起動」が吉
+    app.OpenCurrentDatabase "C:\Users\yama\Desktop\a.accdb", Exclusive:=True
+    Set db = app.CurrentDb
+    
+    app.Visible = True
+    
+    Debug.Print db.TableDefs("テーブル1").Fields.Count
+    
+End Sub
+</code>
+</pre>
+<h2 id="accessOpen">■他のACCESSファイルを起動する</h2>
+<pre>
+<code>
+Sub ACCESSの起動()
+    
+    Const vbMaximizedFocus = 3 '最大化、最前面のウィンドウ
+    Dim bWaitOnReturn As Boolean
+    Dim strPath As String
+    Dim f As Object
+    strPath = "C:\Users\yama\Desktop\a.accdb"
+    Set f = VBA.CreateObject("Scripting.FileSystemObject").GetFile(strPath)
+    'strPath = f.ShortName RUNメソッドはショートネームで指定しろ、と書いてあるが、実際ショートネームを指定すると失敗する
+    bWaitOnReturn = False
+
+    '処理待ちしていすると"処理を待つことが出来ません"というエラーになる、最大化の指定も無視された
+    VBA.CreateObject("WScript.Shell").Run strPath, vbMaximizedFocus, bWaitOnReturn
+                                                           
+End Sub
+</code>
+</pre>
+
+<h2 id="navihide">■ナビゲーションウィンドウを非表示</h2>
+<pre>
+<code>
+
+VBAを使ってナビゲーションウィンドウを非表示にしたい場合は、以下の様なコマンドを実行します。
+
+http://propg.ee-mall.info/%E3%83%87%E3%83%BC%E3%82%BF%E3%83%99%E3%83%BC%E3%82%B9/access2010-%E3%83%8A%E3%83%93%E3%82%B2%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%82%A6%E3%82%A3%E3%83%B3%E3%83%89%E3%82%A6%E3%82%92%E9%9A%A0%E3%81%99/	
+Sub HideNavigationPane()
+    DoCmd.NavigateTo "acNavigationCategoryObjectType", ""
+    DoCmd.RunCommand acCmdWindowHide
+End Sub
+
+この場合は、ナビゲーションウィンドウそのものが完全に非表示になり、再度表示させるためには、
+プログラムから表示させるか、ショートカットキーを使う必要があります。
+
+プログラムから表示させる場合は、以下の様なコマンドです。
+
+Sub ShowNavigationPane()
+    DoCmd.NavigateTo "acNavigationCategoryObjectType", ""
+    DoCmd.RunCommand acCmdWindowShow
+End Sub
+
+隠している場合にわざわざ表示させる場面はあまりないと思いますが…
+
+普段はナビゲーションウィンドウは不要だけど、たまに使いたい時があるような場合は、
+完全に消すのではなく、最小化状態にしておいたほうが使い勝手は良いです。
+	
+Sub MinimuizeNavigationPane()
+    DoCmd.NavigateTo "acNavigationCategoryObjectType", ""
+    DoCmd.RunCommand acCmdDocMinimize
+End Sub
+
+最小化しておけば、クリックするだけで再度ナビゲーションウィンドウを表示させることができます。
+</code>
+</pre>
+
+<h2 id="ribonhide">■リボンの非表示</h2>
+DoCmd.ShowToolbar "Ribbon", acToolbarNo
+
+上記のコードを実行するとAccess 2007のリボンを丸ごと非表示にすることができます。
+
+非表示になっているリボンを表示するには、
+DoCmd.ShowToolbar "Ribbon", acToolbarYes
+
+<h2 id="insertSlect">■Select文をInsertする</h2>
+<pre>
+<code>
+<a href="../htm_file/adoCnInsertInto2.zip">sample</a>
+'daoで自mdb内 Table に INSET INTO
+Sub daoVer()
+    
+    Dim db As DAO.Database
+    
+    On Error Resume Next
+    
+    Set db = Application.CurrentDb
+    
+    sql = "insert into " & cnTdest
+    sql = sql & " select * from " & cnTsource
+    
+    'dbFailOnError：エラー発生でロールバックします
+    db.Execute sql, dbFailOnError
+    
+    Set db = Nothing
+    
+    If Err.Number = 0 Then
+        MsgBox "done"
+    Else
+        MsgBox "error"
+    End If
+    
+End Sub
+
+'ado接続で自mdb内 Table に INSET INTO
+Sub adoVer()
+    
+    Dim cn As ADODB.Connection
+    
+    On Error Resume Next
+    
+    Set cn = CurrentProject.Connection
+    
+    sql = "insert into " & cnTdest
+    sql = sql & " select * from " & cnTsource
+    
+    cn.BeginTrans
+    cn.Execute sql
+    cn.CommitTrans
+    
+    If Err.Number = 0 Then
+        MsgBox "done"
+    Else
+        MsgBox Err.Description
+        cn.RollbackTrans
+    End If
+    
+    Set cn = Nothing
+    
+End Sub
+
+</code>
+</pre>
+
+<pre>
+<code>
+<h2 id="listselect">■リストボックスの選択</h2>
+Private Sub Form_Open(Cancel As Integer)
+
+    'フォームオープン時にリストの
+    '最終行から一つ前を選択させるサンプル
+    
+    With Me.list1
+        .Selected(.ListCount - 2) = True
+    End With
+    '無いとフォーム上のコントロールが選択出来なくなる。
+    '↓必要：
+    Me.Requery
+    
+End Sub
+</code>
+</pre>
+<h2 id="autofit">■データシートビューフォーム列のオートフィット</h2>
+<pre>
+<code>'フォーム。データシートビューで列の AutoFit
+Private Sub Form_Open(Cancel As Integer)
+ 
+    Dim ctrl As Control
+    '-2 は列の幅ダイアログの[自動調整(B)]に当たるらしい
+    'この定数は既定では用意されていない
+    Const cnsAutoFit As Long = -2
+    
+    For Each ctrl In Me.Controls
+        If ctrl.ControlType = acTextBox Then
+           ctrl.ColumnWidth = cnsAutoFit
+        End If
+    Next
+<img src="./ac_gazo/autofit.png" alt="列のオートフィット" width="370" height="342" />
+    
+End Sub
+</code>
+</pre>
+
+<h2><a name="picker">■ファイル／フォルダーピッカー</a></h2>
+<p>
+ファイル／フォルダー取得ダイアログ
+<code>
+'ファイル/フォルダーピッカー
+<strong>'Microsoft OfficeXX.X Object Library参照設定要</strong>
+'ファイル参照ダイアログを表示してファイルパスを返します
+'ファイル種類のFilters はAC2000では無視されます。
+'このコードはエクセルVBAでも同じです。
+'引数省略可：ダイアログのタイトル
+Function filePicker(Optional dlgTitle As String) As Variant
+    Dim fd As FileDialog
+    Set fd = Application.FileDialog(msoFileDialogFilePicker)
+    With fd
+        .Title = dlgTitle
+        If Application.Version > 10 Then
+            .Filters.Clear
+            .InitialFileName = ""
+            'Position引数はドロップダウンに表示される順番
+            .Filters.Add "エクセルかCSV", "*.xls,*.csv", Position:=1
+            
+            '.Filters.Add "hoge", "*.mdb,*.*"
+            '.FilterIndex = 1 'デフォルト "hoge", "*.mdb,*.*"" で絞られる
+        End If
+        '複数ファイル選択
+'        .AllowMultiSelect = False
+'
+'        If .Show Then
+'            '.Execute ファイルを開くmsoFileDialogOpenの時に使えるメソッド
+'            filePicker = .SelectedItems(1)
+'        End If
+        .AllowMultiSelect = True
+        If .Show Then
+            Set filePicker = .SelectedItems
+        End If
+    End With
+    Set fd = Nothing
+End Function
+'ファイルピッカーのテスト
+Sub test()
+    Dim s As String
+    'Debug.Print filePicker("hogehoge")
+    Dim v As Variant
+    
+    For Each v In filePicker("gehogeho")
+        Debug.Print v
+    Next
+End Sub
+
+<p><b>Yu_tangさんのファイルフォルダーピッカー</b></p>
+http://www.f3.dion.ne.jp/~element/msaccess/AcTipsGetFileName.html
+
+Option Compare Database
+Option Explicit
+
+'modFileFolderPickerモジュール-------------------
+
+'ファイルピッカー＆フォルダーピッカー
+'------------------------------------------------
+    ' ------------//列挙定数宣言部//-------------  
+    ' View 引数用  
+    Public Enum enmGetFileNameView  
+        gfnViewDetail  
+        gfnViewPreview  
+        gfnViewProperty  
+        gfnViewList  
+        gfnViewLargeIcons  
+        gfnViewSmallIcons  
+        gfnViewTiles = 8  
+    End Enum  
+      
+    ' View 引数用  
+    Public Enum enmGetFileNameFlags  
+        gfnFlagsOverWritePrompt = &H1  
+        gfnFlagsSetCurDir = &H4  
+        gfnFlagsAllowMultiSelect = &H8  
+        gfnFlagsSelectFolder = &H20  
+        gfnFlagsEnableView = &H40  
+    End Enum  
+      
+    ' fOpen 引数用  
+    Public Enum enmGetFileNameFOpen  
+        gfnFOpenOpen = -1  
+        gfnFOpenSaveAs = 0  
+    End Enum  
+      
+    '------------------------------------------------------------  
+    ' 関数名：wh_GetFileName  
+    ' 目的：[ファイルを開く/名前を付けて保存] ダイアログを表示し、選択された  
+    '       ファイルあるいはフォルダのパスを返します。  
+    ' 作成者：YU-TANG@http://www.f3.dion.ne.jp/~element/msaccess/  
+    ' 更新履歴：  
+    '       2003/11/10 作成・公開。  
+    '       2004/01/11 View, flags, fOpen 引数用の列挙定数を追加。  
+    '       2007/05/25 ファイル名に初期値代入可能に拡張 by クロさん。  
+    '       2008/08/28 View 引数に gfnViewLargeIcons 以下を追加。  
+    '       refer to http://sql.ru/forum/actualthread.aspx?bid=4&tid=99425&pg=4#3716697  
+    ' 引数：下記 URL を参照。  
+    '       http://www.f3.dion.ne.jp/~element/msaccess/AcTipsGetFileName.html  
+    ' 戻り値：文字列型でフルパスを返します。キャンセル時は空文字列を返します。  
+    ' 留意事項：2007/05/25 の拡張で、引数の順番が変更されています。  
+    '       それ以前のモジュールをお使いで、InitialDir 以降の仮引数の指定を  
+    '       名前付きではなく無名で行っている場合は、そのままバージョンアップ  
+    '       すると動作しなくなる恐れがあります。呼び出し側における InitialDir  
+    '       以降の仮引数の指定を一つ後ろにずらすか、または下記関数宣言部の  
+    '       引数 File を最後に移動してください。  
+    '------------------------------------------------------------  
+      
+    ' *********************************************************  
+    ' * 非公開クラスを使用するため、動作保証は一切致しません。*  
+    ' * @your own risk でお願いします。                       *  
+    ' *********************************************************  
+      
+    ' ------------//関数定義部//-------------  
+    Function wh_GetFileName( _  
+            Optional hwndOwner As Long, _  
+            Optional AppName As String, _  
+            Optional DlgTitle As String, _  
+            Optional OpenTitle As String, _  
+            Optional File As String, _  
+            Optional InitialDir As String, _  
+            Optional Filter As String, _  
+            Optional FilterIndex As Long, _  
+            Optional View As enmGetFileNameView, _  
+            Optional flags As enmGetFileNameFlags, _  
+            Optional fOpen As enmGetFileNameFOpen = gfnFOpenOpen _  
+        ) As String  
+      
+        ' 定数/変数宣言部  
+        Const ENABLE_WIZHOOK = 51488399  
+        Const DISABLE_WIZHOOK = 0  
+        Dim strFile   As String   ' 選択ファイルのフルパス  
+        Dim lngResult As Long     ' 戻り値(正常時 0)  
+      
+        ' 引数を初期化します。  
+        If (hwndOwner = 0) Then hwndOwner = Application.hWndAccessApp  
+        If (AppName = "") Then AppName = Application.Name  
+        strFile = File  
+        If (Filter = "") Then Filter = "すべてのファイル (*.*)|*.*"  
+        WizHook.Key = ENABLE_WIZHOOK    ' WizHook 有効化  
+      
+        ' ダイアログを表示します。  
+        lngResult = WizHook.GetFileName( _  
+                        hwndOwner, _  
+                        AppName, _  
+                        DlgTitle, _  
+                        OpenTitle, _  
+                        strFile, _  
+                        InitialDir, _  
+                        Filter, _  
+                        FilterIndex, _  
+                        View, _  
+                        flags, _  
+                        fOpen)  
+      
+        WizHook.Key = DISABLE_WIZHOOK    ' WizHook 無効化  
+          
+        ' 戻り値をセットします。  
+        wh_GetFileName = strFile  
+      
+    End Function  
+
+'使い方サンプル
+
+'ファイルピッカー
+Sub SimpleTest()
+    Dim strFile As String
+    strFile = wh_GetFileName()
+    If strFile = vbNullString Then
+        strFile = "キャンセルされました"
+    End If
+    MsgBox strFile
+End Sub
+
+'フォルダーピッカー
+Sub FldPicker()
+    Dim strFolder As String
+    strFolder = _
+        wh_GetFileName(, _
+        "私のアプリ", "たいとるー", "これがオープンタイトル" _
+        , , , "*.*(*.*)", , gfnViewDetail, _
+        gfnFlagsSelectFolder, gfnFOpenOpen)
+        
+    If strFolder = vbNullString Then
+        strFolder = "キャンセルされました"
+    End If
+    MsgBox strFolder
+End Sub
+
+'名前をつけて保存
+Sub AdvansedTest()
+    Const DLG_TITLE = "社員の顔写真を出力"
+    Const OPEN_TITLE = "準備ＯＫ"
+    Const INITIAL_DIR = "X:\総務\ライブラリ\社員\写真"
+    Const FILTER_ = "ビットマップ (*.bmp;*.dib)|*.bmp;*.dib" _
+            & "|JPEG (*.JPG;*.JPEG;*.JPE;*.JFIF)" _
+            & "|*.JPG;*.JPEG;*.JPE;*.JFIF" _
+            & "|PNG (*.PNG)|*.PNG"
+    Const FILTER_INDEX = 2   ' 3 行目を既定で選択する。
+    Dim strFile As String
+    ' 保存先ファイル名を取得します。
+    strFile = wh_GetFileName(, , _
+                DLG_TITLE, OPEN_TITLE, , INITIAL_DIR, FILTER_, _
+                FILTER_INDEX, , gfnFlagsOverWritePrompt, _
+                gfnFOpenSaveAs)
+    If strFile = vbNullString Then strFile = "キャンセルされました。"
+    MsgBox strFile
+End Sub
+
+
+
+</code>
+<h2><a name="reccnt">■レコードのカウント</a></h2>
+<p>
+テーブル、クエリーのレコード数を返します。テーブルのレコード数は
+<code>
+    'CurrentDb.TableDefs(テーブル名).RecordCount
+</code>
+で求めるのが最も高速です。が、リンクテーブルのレコード数を数える事が出来ません。
+また、QueryDefs は RecordCount プロパティを持ちません。<br>
+ DAO ADO 何れかの Recordset オブジェクトの RecordCount プロパティは、
+DAO は MoveLast しないとカウントできず、ADOに至っては RS.EOF まで総なめで
+i = i + 1 していかないとカウントできません（たぶん）。
+集計SQLの結果を取得するやり方が、高速に数えられる方法です。
+ADO/DAO どちらが高速かという程の違いはないと思われます。
+</p>
+<code>
+'DAO
+Function getRecCnt(TbleOrQryName As String) As Long
+    Dim sql As String
+    Dim rs As dao.Recordset
+    sql = "SELECT COUNT(*) AS CNT FROM " & TbleOrQryName
+    
+    Set rs = CurrentDb.OpenRecordset(sql)
+    getRecCnt = rs!CNT
+End Function
+
+'ADO
+Function getRecCnt(TbleOrQryName As String) As Long    
+    Dim cn As ADODB.Connection
+    Dim rs As ADODB.Recordset
+    
+    Set cn = Access.CurrentProject.Connection
+    Set rs = cn.Execute("select count(*) as recCnt from " & TbleOrQryName)
+    
+    getRecCnt = rs!recCnt    
+End Function
+
+</code>
+
+
+<h2><a name="save">■レコードの保存</a></h2>
+<p>
+レコードの追加を許可していないフォームや、
+[Tabキー移動]プロパティを[カレントレコード]にしたフォームでは
+Tabキーをいくら連打しても、次のレコードに移動しないので
+レコードの保存の操作に戸惑ったり、保存しないままディフォルトのエラーメッセージが
+表示されユーザーを困惑させる事態になるかもしれない。
+編集中のレコードを保存するするには、<img src="./ac_gazo/save.png" height="26" width="24" alt="保存">
+をクリックするか、Alt+sの操作をしないと保存できないので、
+<img src="./ac_gazo/save2.png" height="32" width="154" alt="保存する">
+みたいな機能をつけておくのがいいと思う。
+</p>
+<code>
+Function レコードの保存()
+On Error GoTo レコードの保存_Err
+
+    With CodeContextObject
+        On Error Resume Next
+        If (.Form.Dirty) Then
+            DoCmd.RunCommand acCmdSaveRecord
+        End If
+        If (.MacroError.Number <> 0) Then
+            Beep
+            MsgBox .MacroError.Description, vbOKOnly, ""
+            Exit Function
+        End If
+        On Error GoTo 0
+        DoCmd.GoToRecord , "", acNewRec
+        DoCmd.GoToControl "Title"
+    End With
+
+
+レコードの保存_Exit:
+    Exit Function
+レコードの保存_Err:
+    MsgBox Error$
+    Resume レコードの保存_Exit
+
+End Function
+</code>
+<h2>ショートカットAlt + G Alt + F11を無効にする</h2>
+
+<img src="./ac_gazo/kill_shortcut.png" width="605" height="275" alt="ショートカットの無効">
+
+<h2><a name="jun">■順位を振る</a></h2>
+
+SELECT 
+T_sample.ID, 
+T_sample.Score, 
+
+<strong>DCount("ID","T_sample","[Score]<" & [Score])+1 AS 順位</strong>
+
+FROM T_sample
+ORDER BY DCount("ID","T_sample","[Score]<" & [Score])+1;
+
+<br>
+<h3>T_sample</h3>
+<img src="./ac_gazo/T_1.png" width = "210" height = "182" alt="T_sample">
+<br>
+<h3>出力</h3>
+<img src="./ac_gazo/Q_1.png" width = "309" height = "187" 
+alt="出力">
+
+
+<h2><a name="max">■Max自作関数</a></h2>
+
+ACCESSのモジュールにはエクセルシートMax関数のような
+ものがないので、役に立つ場合があるかも。
+
+Option Compare Database
+
+Sub test()
+            
+    MsgBox myMax(1, 2, 3, 4, 5)
+    '5が返る
+    
+End Sub
+
+Function myMax(ParamArray varA()) As Variant
+
+'varA():キーワードParamArray を使っての引数は、
+'バリアント型の配列として宣言する必要がある。
+
+    Dim i As Integer
+    
+    For i = LBound(varA()) To UBound(varA())
+        If Nz(myMax) < varA(i) Then
+            myMax = varA(i)
+        End If
+    Next i
+    
+End Function
+
+<h2><a name="fuku">■複数行選択可のリストボックスの選択項目を削除する</a></h2>
+Private Sub btn_del_Click()
+
+    Dim varItem As Variant
+
+    With Me.lsttest
+
+        For Each varItem In .ItemsSelected
+            CurrentDb.Execute "delete T_test.* from T_test" _
+                            & " where T_test.f3 = " & .ItemData(varItem)
+
+        'f3に主キー
+        Next varItem
+        .Requery
+
+    End With
+End Sub
+
+Private Sub Form_Open(Cancel As Integer)
+
+    With Me.lsttest
+
+	.RowSourceType = "table/query"
+	.RowSource = "T_test"
+	.ColumnCount = 3
+	.ColumnWidths = "1.5cm;1.5cm"
+	.BoundColumn = 3 '連結列
+	.ColumnHeads = True
+
+    End With
+    
+End Sub
+
+<h2><a name="zen">■全ツールバーの非表示とリセット</a></h2>
+
+'Microsoft Office ##.# Object Library要参照
+Sub Macro1()
+
+    Dim cb As CommandBar
+    Dim Bs As CommandBars
+    Set Bs = Application.CommandBars
+    
+    For Each cb In Bs
+    
+        '40:Menu Bar;13:DataBase
+        If cb.Index = 40 Or cb.Index = 13 Then _
+            DoCmd.ShowToolbar cb.Name, acToolbarYes '表示
+            'DoCmd.ShowToolbar cb.Name, acToolbarNo'非表示
+             
+        '別解
+'        With CommandBars
+'            .Item(40).Visible = True
+'            .Item(13).Visible = True
+'        End With
+        
+    Next cb
+End Sub
+
+<h2><a name="ris">■リストボックスの選択レコードを削除する</a></h2>
+
+Private Sub btndel_Click()
+    Dim v, i, cnt
+    Dim ary()
+    cnt = 0
+
+    With Me
+
+        ReDim ary(.lst1.ItemsSelected.Count)
+
+        For Each i In .lst1.ItemsSelected
+            v = v & vbNewLine & .lst1.Column(0, i)
+            
+            ary(cnt) = i
+            cnt = cnt + 1
+        Next i
+
+        If MsgBox("以下番号のレコードが削除されます" & _
+             vbNewLine & v, vbExclamation + vbYesNo + vbDefaultButton2, _
+             "レコードが削除されます") = vbNo Then Exit Sub
+
+        For Each i In .lst1.ItemsSelected
+
+         CurrentDb.Execute _
+            "delete moto.番号,moto.名前,moto,金額 from moto " _
+            & "where moto.番号 = '" & .lst1.Column(0, i) & "'"
+
+        Next i
+
+        .lst1.Requery
+
+    End With
+
+    With Me
+
+        .名前.SetFocus
+        .btndel.Visible = False
+
+    End With
+
+    With Me.lst1
+
+        For i = 0 To cnt
+            .Selected(ary(i)) = False
+        Next i
+
+    End With
+
+    Erase ary
+
+End Sub
+
+<h2><a name ="det">■DAOでテーブル・クエリを洗い出す</a></h2>
+
+Sub DAOでテーブルクエリを洗い出す()
+
+    Dim db As DAO.Database
+    Dim tbl As DAO.TableDef
+    Dim qry As DAO.QueryDef
+	
+    Set db = Application.CurrentDb
+	
+	'テーブル
+    For Each tbl In db.TableDefs
+        Debug.Print tbl.Name
+    Next tbl
+
+	'クエリ
+    For Each qry In db.QueryDefs
+        Debug.Print qry.Name
+    Next qry
+
+    Set db = Nothing
+
+End Sub
+
+
+<h2><a name="ado">■ADOでレコード数を取得する関数</a></h2>
+
+'strTbName:テーブル名
+'戻り値：レコード数
+Function GetRsCnt(strTbName As String) As Long
+
+    Dim myCon As New ADODB.Connection
+    Dim myRs As New ADODB.Recordset
+
+    myCon.Open _
+        "Provider=microsoft.Jet.OLEDB.4.0;" & _
+        "Data Source=c:\db1.mdb"
+    With myRs
+
+	    .ActiveConnection = myCon
+	    'カーソルタイプを静的カーソルで
+	    'レコードセットを開くとレコード数を取得できます。(注）
+	    .CursorType = adOpenStatic
+		.Source = strTbName
+	    .Open
+
+	'注）ヘルプより-----------------------------
+	'    レコード数を算定できるかどうかは､
+	'    Recordset オブジェクトのカーソルのタイプが
+	'    関係します｡
+	'    RecordCount プロパティは、
+	'    前方スクロール タイプのカーソルの
+	'    場合は -1 を返し、静的カーソルまたは
+	'    キーセット カーソルの
+	'    場合は実際の数を返し､
+	'    動的カーソルの場合はデータ ソースに
+	'    依存し -1 または実際の数を返します。
+	'-------------------------------------------
+
+    End With
+
+    GetRsCnt = myRs.RecordCount
+
+    myCon.Close
+    Set myCon = Nothing
+
+End Function
+
+<h2><a name="delt">■テーブルを削除する</a></h2>
+'table名が"修復"で始まるテーブルを削除する
+Sub shufuku_del()
+
+    Dim shT As DAO.TableDef
+
+    For Each shT In CurrentDb.TableDefs
+
+        If shT.Name Like "修復*" Then
+            DoCmd.DeleteObject acTable, shT.Name
+        End If
+
+    Next shT
+
+End Sub
+
+<h2><a name="invisi">■見えないテーブルの修復</a></h2>
+
+Sub 見えないテーブルの修復()
+
+    '主キーの有無までは修復しません
+    Dim db As DAO.Database
+    Dim tbl As DAO.TableDef, rprT As DAO.TableDef
+    Dim qry As DAO.QueryDef
+    Dim Rs As DAO.Recordset
+    
+    Set db = Application.CurrentDb
+
+    For ii = 0 To db.TableDefs.Count - 1
+
+        With db
+
+            Set Rs = .OpenRecordset(.TableDefs(ii).Name)
+			
+			'テーブルを作成する
+            Set rprT = .CreateTableDef( _
+                "修復" & _
+                .TableDefs(ii).Name, , .TableDefs(ii).Name)
+
+			'フィールドを作成する
+			For i = 0 To Rs.Fields.Count - 1
+
+				With rprT
+
+					.Fields.Append .CreateField( _
+						Rs.Fields(i).Name, _
+						Rs.Fields(i).Type)
+
+				End With
+
+			Next i
+
+            .TableDefs.Append rprT
+			
+			'データを移行する
+            mySQL = "insert into " & rprT.Name _
+                 & " select " & db.TableDefs(ii).Name & ".*" _
+                 & " from " & db.TableDefs(ii).Name & ";"
+
+            .Execute mySQL
+
+        End With
+
+    Next ii
+    
+    Set db = Nothing
+
+End Sub
+
+<h2><a name="reg">■正規表現を使う</a></h2>
+
+?removenumber("aaa32423ddd32324")
+で、
+aaaddd　が戻る。
+
+'文字列から数値を取り除く
+'Microsoft VBScript Regular Expressions X.X 参照設定要
+Function RemoveNumber(vntSource As Variant) As Variant
+
+    Dim re As RegExp
+
+    If IsNull(vntSource) Then
+
+        RemoveNumber = Null
+
+    Else
+
+        Set re = New RegExp
+
+        With re
+            .Pattern = "[０-９0-9]"
+            .Global = True
+            RemoveNumber = .Replace(vntSource, "")
+        End With
+
+        Set re = Nothing
+
+    End If
+    
+End Function
+
+<h2><a name="opt">■オプションの設定</a></h2>
+
+'ウィンドウをタスクバーに表示　のオプション指定
+Application.SetOption "ShowWindowsInTaskbar", False
+他引数のサンプルは
+http://support.microsoft.com/default.aspx?scid=kb;ja;216888
+
+<h2><a name="round">■Round銀行式まるめから数学式丸めへ</a></h2>
+
+VB のround 関数はちゃんとした四捨五入をする。
+
+?round(1.5,0)
+ 2 
+ 
+?round(2.5,0)
+ 2 
+
+ちゃんとした四捨五入とは、一つ左の桁が
+偶数なら切り捨て、奇数なら切り上げる。
+
+対してエクセルワークシート関数のRoundは
+文字通りの四捨五入しかしない。
+
+=ROUND(1.5,0)
+⇒２が返る
+=ROUND(2.5,0)
+⇒３が返る
+
+以下の myRound 関数はVB上で、エクセルワークシートの
+Round関数と同じ結果を得るためのもの。
+使い道は思いつかないが、参考までに。
+
+round(-2.25,1)　は　－２．２なのだが、
+myRound(-2.25,1) は　－２．３になる。
+
+
+Function myRound(myCurrency As Currency, keta As Integer) As Double
+
+    Dim blPurasu As Boolean
+
+    If myCurrency < 0 Then
+
+        blPurasu = False
+
+    Else
+
+        blPurasu = True
+
+    End If
+
+    myRound = Int((Abs(myCurrency) + 0.5 * 10 ^ -keta) * 10 ^ keta)
+    
+    myRound = myRound * 10 ^ -keta
+    
+    If blPurasu = False Then
+    
+        myRound = -myRound
+        
+    End If
+    
+End Function
+
+<h2><a name="idou">■リストのダブルクリックで選択レコードに移動</a></h2>
+
+Private Sub lstHimeisai_DblClick(Cancel As Integer)
+
+    'ダブルクリックでクリックしたレコードに移動する
+    'オートナンバー（昇順）型のID以下のレコード数をQ_Chouboのレコード数の中から数えて
+    'その順番のレコードに移動
+	'データベースなのに順番に頼るのがちょっと厭なので GetRecX関数として
+	'後日書き直した。
+
+    Dim lngNum As Long
+
+    lngNum = DCount("入出庫ID", "Q_Choubo", "入出庫ID <= " & Me.lstHimeisai.Value)
+    
+    DoCmd.GoToRecord , , acGoTo, lngNum
+
+End Sub
+
+Sub GetRecX()
+
+    On Error GoTo err_GetRecX
+    'リストボックスの値のレコードへ移動
+	'DAOのFindFirst、FindLast、FindNext、FindPreviousは見つけた行をカレントレコードにする。
+
+    Dim myRS As DAO.Recordset
+    Dim vntID As Variant
+
+    Set myRS = Me.Recordset
+    vntID = Me.lstHimeisai.Value
+
+    With myRS
+        .FindFirst "入出庫ID=" & vntID
+    End With
+
+end_GetRecX:
+    Me.txt_ShoriNaiyo.SetFocus
+    Set myRS = Nothing
+    Exit Sub
+err_GetRecX:
+    MsgBox Err.Number & " : " & Error$, vbCritical, CurrentDb.Name
+    Resume end_GetRecX
+
+End Sub
+
+<h2><a name="bkup">■自動バックアップ作成</a></h2>
+モーグのページで紹介されていたコード。
+便利(*'д`*)。
+
+Option Compare Database
+Option Explicit
+
+Public Sub JidouBakUp( _
+    Optional Generation As Integer = 1, _
+    Optional TargetFolder As String = "")
+
+'バックアップを自動で作成します
+'Microsoft Scripting Runtime に参照設定
+'Generation     バックアップファイルの世代数
+'TargetFolder   バックアップするフォルダのパス
+
+'********
+'変数宣言
+'********
+
+    Dim FSO         As New FileSystemObject 'ファイルシステムオブジェクト
+    Dim objFol      As Object '
+    Dim objFile     As File
+    Dim strTgtFile  As String '対象ファイル名
+    Dim BakFileType As String 'バックアップファイル拡張子
+    Dim BakFileName As String 'バックアップファイル名
+    Dim UpdateTime  As Date   'バックアップファイル更新時間
+    Dim iFileNum    As Integer 'バックアップファイル数
+    Dim DelFileName As String '削除ファイルネーム
+
+'*********
+'初期設定
+'*********
+
+'エラートラップ
+On Error GoTo err_FsoCopy
+'バックアップの拡張子
+BakFileType = ".bak"
+
+strTgtFile = CurrentDb.Name
+
+'**********************************
+'ターゲットフォルダの存在をチェック
+'**********************************
+
+'フォルダが存在しない場合
+    If FSO.FolderExists(TargetFolder) = False _
+        And TargetFolder <> "" Then
+        
+        '引数が設定されていない場合
+    ElseIf TargetFolder = "" Then
+        '引数が無い場合はMDBと同じフォルダ
+        TargetFolder = FSO.GetParentFolderName(strTgtFile)
+    End If
+
+    Set objFol = FSO.GetFolder(TargetFolder)
+
+'*****************
+'世代のチェック
+'*****************
+
+    'バックアップファイルの数をチェック
+    For Each objFile In objFol.Files
+
+        If Mid(objFile.Name, 9) = FSO.GetBaseName(strTgtFile) _
+            & BakFileType Then
+            iFileNum = iFileNum + 1 'バックアップファイル数
+        End If
+
+    Next objFile
+
+    'バックアップが既に設定数分ある場合の処理
+    If iFileNum = Generation Then
+
+        UpdateTime = Now()
+
+        For Each objFile In objFol.Files
+
+            'ファイル更新時間のチェック
+'                MsgBox objFile.Name & " " & "ファイル名" & _
+'                        UpdateTime & " " & "updatetime" & _
+'                        objFile.DateLastModified & " " & "最終更新時"
+
+            If UpdateTime > objFile.DateLastModified _
+            And Mid(objFile.Name, 9) = FSO.GetBaseName(strTgtFile) _
+                & BakFileType Then
+                
+                UpdateTime = objFile.DateLastModified
+                DelFileName = objFile.Name
+
+            End If
+
+        Next objFile
+
+        '一番古いファイルを削除
+        FSO.DeleteFile TargetFolder & "\" & DelFileName
+
+    End If
+
+'**************
+'ファイルコピー
+'**************
+
+'ファイル名を設定
+    BakFileName = TargetFolder & "\" _
+        & Format(Now(), "mmddhhnn") _
+        & FSO.GetBaseName(strTgtFile) & BakFileType
+
+'ファイルのコピー（同名ファイルは上書き)
+    FSO.CopyFile strTgtFile, BakFileName, True
+    'beep
+
+'****************
+'終了処理
+'****************
+
+err_Exit:
+    Set objFile = Nothing
+    Set objFol = Nothing
+    Set FSO = Nothing
+    Exit Sub
+
+'***************
+'エラー処理
+'***************
+err_FsoCopy:
+    MsgBox Err.Description
+    Err.Clear
+    Resume err_Exit
+
+End Sub
+
+
+Public Function BackUp()
+    Call JidouBakUp(2)
+End Function
+
+<h2><a name="err">■エラー番号からエラーの内容を調べる</a></h2>
+
+Err.Raise Number:=13
+MsgBox AccessError(errornumber:=13)
+
+<h2><a name="find">■Find系メソッドで検索</a></h2>
+
+Private Sub lst1_DblClick(Cancel As Integer)
+
+    '指定レコードに移動
+    Dim myRS As DAO.Recordset
+    Dim myID As Variant
+
+    Set myRS = CurrentDb.OpenRecordset("T_1")
+
+    myID = Me.lst1.Value
+
+    With myRS
+        .FindFirst "入出庫ID=" & myID
+    End With
+
+End Sub
+
+<h2><a name="seek">■Seekで検索する</a></h2>
+
+Private Sub コマンド4_Click()
+
+    Dim myCon As New ADODB.Connection
+    Dim myRs As New ADODB.Recordset
+
+    myCon.Open CurrentProject.Connection
+
+'            "Provider=Microsoft.Jet.OLEDB.4.0;" _
+'          & "Data Source=" & CurrentDb.Name & ";" _
+'          & "Persist Security Info=False"
+
+    myRs.Open "社員テーブル", myCon, adOpenStatic, adLockReadOnly, adCmdTableDirect
+    myRs.Index = "社員番号"
+    
+    myRs.Seek Me.テキスト2.Value
+
+    If myRs.EOF = True Then
+        MsgBox "検索対象は見つかりませんでした"
+    Else
+        Me.テキスト0.Value = myRs.Fields(3)
+    End If
+
+    myRs.Close
+    Set myRs = Nothing
+    myCon.Close
+    Set myCon = Nothing
+
+End Sub
+
+<h2><a name="seek2">■Seekで検索する(複合キーの場合）</a></h2>
+
+Private Sub コマンド4_Click()
+
+    Dim myCon As New ADODB.Connection
+    Dim myRs As New ADODB.Recordset
+
+    myCon.Open CurrentProject.Connection
+    myRs.Open "社員テーブル", myCon, adOpenStatic, adLockReadOnly, adCmdTableDirect
+    myRs.Index = "PrimaryKey"'自動で作成されるインデックス名
+
+    myRs.Seek Array(Me.txt2.Value, Me.txt1.Value), adSeekFirstEQ
+
+    If myRs.EOF = True Then
+        MsgBox "検索対象は見つかりませんでした"
+    Else
+        Me.txt3.Value = myRs.Fields(3)
+    End If
+
+    myRs.Close
+    myCon.Close
+
+End Sub
+
+<h2><a name="union">■Unionクエリの書き方。データの出所がわかるようにAs句でフィールド作成</a></h2>
+
+select "テーブル1" as 元テーブル,*  from テーブル1 
+	UNION 
+select "テーブル2" as 元テーブル,* from テーブル2;
+
+'---ヘルプより-----
+UNION 操作を使用する場合、特に指定しなければ重複したレコードは返されません。
+ただし、ALL 述語を使用すると重複分を含むすべてのレコードが必ず返され、
+クエリの実行速度も速くなります。
+'------------------
+
+なので、
+
+select "テーブル1" as 元テーブル,*  from テーブル1 
+	UNION <strong>ALL</strong>
+select "テーブル2" as 元テーブル,* from テーブル2;
+
+と書くのが吉。
+
+<h2><a name="table">■テーブルの作成とインデックスの設定</a></h2>
+
+Option Explicit
+'Microsoft DAO X.X Object Libraryに要参照設定
+Sub テーブルの作成とインデックスの設定()
+
+    Dim myDB As DAO.Database
+    Dim myTbl As DAO.TableDef
+    Dim myflid As DAO.Field
+    Dim idxNew As Index
+
+    Set myDB = DAO.OpenDatabase(CreateObject("wscript.shell").specialfolders("desktop") & "\TEST.mdb")
+
+    'テーブル作成
+    With myDB
+
+        Set myTbl = .CreateTableDef("newtable") '----------------------------１）テーブルを作って
+
+        With myTbl
+
+            Set myflid = .CreateField("sampleふぃ～るど", dbText, 255) '---------------２）フィールドを作って
+
+            .Fields.Append myflid '------------------------------------------３）作ったフィールドを追加して
+
+        End With
+        
+        .TableDefs.Append myTbl '--------------------------------------------４）作ったテーブルを追加という手順を踏んでやっとこさ作成されます。
+
+    End With
+
+    With myTbl
+
+        ' 新しく Index オブジェクトを作成して
+        ' mytbl テーブルの Indexes コレクションに追加します。
+
+        Set idxNew = .CreateIndex("NewIndex")
+
+        With idxNew
+
+            .Fields.Append .CreateField("sampleふぃ～るど")
+            .Unique = False 'インデックス重複ありの設定
+
+        End With
+
+        .Indexes.Append idxNew
+        .Indexes.Refresh
+
+    End With
+
+    myDB.Close
+
+End Sub
+
+
+実行結果
+<img src = "./ac_gazo/T_D1.png" widht="396" height="474" alt="テーブルの作成とインデックスの設定結果画像">
+
+<h2><a name="table2">■テーブルの作成と主キーインデックスの設定</a></h2>
+
+Option Explicit
+'Microsoft DAO X.X Object Libraryに要参照設定
+Private m_DB As Database
+Private m_Tbl As TableDef
+
+Private Sub テーブルの作成と主キーインデックスの設定()
+    Dim tname As String
+    Dim fl As String
+    Dim myfield As DAO.Field
+    Dim idx As Index
+    
+    tname = "T_key"
+    
+    Set m_DB = Application.CurrentDb
+    Set m_Tbl = m_DB.CreateTableDef(tname)
+    
+    With m_Tbl
+        Set myfield = .CreateField("fld1", dbLong)
+        .Fields.Append myfield
+        
+        Set myfield = .CreateField("fld2", dbMemo)
+        .Fields.Append myfield
+        
+        '主キー
+        Set idx = .CreateIndex("newIndex")
+        With idx
+            .Fields.Append .CreateField("fld1")
+            .Primary = True
+        End With
+        .Indexes.Append idx
+        
+    End With
+    
+    m_DB.TableDefs.Append m_Tbl
+    m_DB.Close
+End Sub
+
+実行結果
+<img src = "./ac_gazo/T_D2.png" widht="616" height="350" alt="テーブルの作成と主キーインデックスの設定">
+<h2><a name="imp">■テキストファイルのインポート</a></h2>
+
+Sub テキストファイルのインポート()
+
+    DoCmd.TransferText _
+        transferType:=acImportDelim, _
+        SpecificationName:="hoge インポート定義", _
+        TableName:="tb1", _
+        FileName:="C:\hoge.csv"
+
+End Sub
+
+'// 文字コードの指定
+Sub テキストファイルのインポート2()
+
+    Dim filePath As String
+    Dim strTblName As String
+    strTblName = "Ttest"
+    filePath = "D:\yamaDeskTop\aaa" & "\OUTCSV.csv"
+    
+    '// 1200:utf-16
+    DoCmd.TransferText acImportDelim, , strTblName, filePath, , , CodePage:=1200
+
+End Sub
+
+'// インポート定義を使わない方法
+Sub テキストファイルのインポート3()
+    Call importCsvByADO("D:\yamaDeskTop\aaa" & "\OUTCSV.csv")
+    
+    '// [OUTCSV.csv]
+'    "あ","い","う","え","お","a","b","c"
+'    "か","き","く","け","こ","d","e","f"
+End Sub
+
+'ADOでインポート
+Sub importCsvByADO(CsvPath As String)
+    
+    Dim ts As New ADODB.Stream
+    
+    With ts
+        .Charset = "UNICODE" '// utf-16
+        .Open
+        .LoadFromFile (CsvPath)
+        
+    End With
+    
+    Dim strLine As String
+    Dim arr
+    Dim i As Long
+    i = 1
+    
+    Dim txtLoopCnt As Long
+    Dim cn As ADODB.Connection
+    Set cn = CurrentProject.Connection
+    cn.BeginTrans
+    
+    Dim sql As String
+    
+    Do Until ts.EOS
+
+            strLine = ts.ReadText(adReadLine) 'adReadLine:-2,adReadAll:-1
+            arr = Split(strLine, ",")
+            
+            '// ここでジタバタと「文字区切り記号(")を取り除くコードを書いてもうまくいくが
+            '// 書かなくても自動で認識してくれているような挙動だった
+'            For txtLoopCnt = LBound(arr) To UBound(arr)
+'                strNoneKugiriChar = arr(txtLoopCnt)
+'                strNoneKugiriChar = Left$(strNoneKugiriChar, Len(strNoneKugiriChar) - 1)
+'                strNoneKugiriChar = Right$(strNoneKugiriChar, Len(strNoneKugiriChar) - 1)
+'                arr(txtLoopCnt) = strNoneKugiriChar
+'            Next
+            
+            '// OUTCSV テーブルは予め作っておく
+            sql = "insert into OUTCSV Values('" & _
+                arr(0) & "','" & _
+                arr(1) & "','" & _
+                arr(2) & "','" & _
+                arr(3) & "','" & _
+                arr(4) & "','" & _
+                arr(5) & "','" & _
+                arr(6) & "','" & _
+                arr(7) & "')"
+            
+            cn.Execute sql
+   
+    Loop
+    
+    If cn.Errors.Count = 0 Then
+        cn.CommitTrans
+    Else
+        cn.RollbackTrans
+    End If
+    
+    ts.Close
+    
+End Sub
+
+<h2><a name="dao">■DAOでレコードセットを取得する</a></h2>
+
+Public Function maenoKyuryobi() As Date
+
+    Dim mySQL As String
+    Dim myRS As DAO.Recordset
+
+    mySQL = _
+        "select last(帳簿.発生日) as xDay " & _
+        "from 帳簿 inner join 仕分 on 帳簿.仕分ID = 仕分.仕分ID " & _
+        "where 仕分.仕分='給与' order by last(帳簿.発生日) asc;"
+
+    Set myRS = CurrentDb.OpenRecordset(mySQL)
+    maenoKyuryobi = myRS.Fields("xday").Value
+
+    myRS.Close
+    Set myRS = Nothing
+
+End Function
+
+<h2><a name="link">■リンクテーブルのパスの取得</a></h2>
+
+Sub リンクテーブルのパスを取得する()
+
+    Dim db As DAO.Database
+    Dim SysTbl As DAO.TableDef
+    Dim myRS As DAO.Recordset
+    Dim myFild As DAO.Field
+    
+    Set db = CurrentDb
+    Set SysTbl = db.TableDefs("MSysObjects")
+    
+    Set myRS = CurrentDb.OpenRecordset( _
+        "select database,foreignname from msysobjects where foreignname='リンクテーブル名';")
+
+    Debug.Print myRS.Fields(0), myRS.Fields(1)
+
+End Sub
+
+<h2><a name="relink">■リンクテーブルのパスの変更する</a></h2>
+Sub リンクテーブル先の変更()
+     Dim db As DAO.Database, tb As DAO.TableDef
+        
+     Set db = CurrentDb
+     Set tb = db.TableDefs("担当者")
+        
+     tb.Connect = ";DATABASE=C:\Users\yama\Desktop\test.accdb;TABLE=担当者"
+     tb.RefreshLink ' リンク情報の更新
+        
+     MsgBox "done"
+End Sub
+
+<h2><a name="txt">■テキストファイルのフィールド名をチェックする</a></h2>
+
+Function fileCK(fileName As String) As Boolean
+    '-----------------------------------------
+    '引数：チェックしたいCSVファイルのフルパス
+    'フィールドタイトルが "f1,f2,f3,f4,f5"
+    'であればTRUEを返します。
+    '
+    '                 作成：yamaV1.02β;06/4/9
+    '-----------------------------------------
+    Dim myCSV   As String
+    Dim fn      As Integer
+    Dim myBuf   As Variant
+    
+    fn = FreeFile()
+    
+    Open fileName For Input As #fn
+    Line Input #fn, myBuf
+
+    If myBuf = "f1,f2,f3,f4,f5" Then
+        fileCK = True
+    Else
+        fileCK = False
+    End If
+    
+    Close #fn
+
+End Function
+
+<h2><a name="xls">■エクセルファイルを出力</a></h2>
+
+Sub TransferXL()
+
+    Dim t As Single
+    t = Timer()
+
+    DoCmd.TransferSpreadsheet _
+        acExport, _
+        SpreadsheetType:=acSpreadsheetTypeExcel8, _
+        TableName:="tbl2", _
+        FileName:="c:\test.xls", _
+        HasFieldNames:=True '←エクスポート時は
+　　　　　　　　　　　　　　　　　　'無視されます
+    Debug.Print Timer() - t
+
+End Sub
+
+Sub OUT2XL()
+
+    Dim t As Single
+    t = Timer()
+
+    DoCmd.OutputTo _
+        acOutputTable, _
+        "tbl1", _
+        acFormatXLS, _
+        "c:\test.xls", _
+        Autostart:=False
+
+    Debug.Print Timer() - t
+
+End Sub
+
+<strong>TransferSpreadsheetの処理が速い</strong>
+
+<h2><a name="hoka">■SQLで他のデータベースにテーブルを作成</a></h2>
+
+Sub 他のデータベースにテーブル作成クエリ()
+
+	Dim mySQL As String
+	
+	mySQL = "SELECT *"
+	mySQL = mySQL & " INTO tbl1"
+	mySQL = mySQL & " IN ''[Ms Access;PWD=password;database=c:\test.mdb;]"
+	mySQL = mySQL & " FROM data;"
+	        
+	DoCmd.RunSQL mySQL, -1
+
+End Sub
+
+<h2><a name="cmp">■他mdbの最適化</a></h2>
+
+Function 最適化()
+
+	Dim Mypath As String
+
+	Mypath = CurrentProject.Path & "\データ部分.mdb"
+
+	Call Shell("MSACCESS " & Mypath & " /compact", 1)
+
+End Function
+
+<h2><a name="cmp2">■自mdbの最適化</a></h2>
+
+Function saitekika()
+
+    SendKeys "%tdc"
+
+End Function
+
+<h2><a name="vbs">■MDACとVBSを使った最適化</a></h2>
+
+Accessがインストールされていなくても、
+MDACさえインストールされていれば、たとえばVBSででも最適化が可能です。
+http://www.accessclub.jp/bbs6/0002/das86.html
+記事No	： 92
+投稿日	： 2004/06/15(Tue) 18:52
+投稿者	： だい
+
+例<< comp.vbs>>
+Dim strOld, strNew, strConst
+Dim objJRO, Fs
+
+strConst = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" 
+strOld = "D:\temp\aaa.mdb"
+strNew = "D:\temp\aaa1.mdb"
+
+Set objJRO = CreateObject("JRO.JetEngine") 
+Set Fs = WScript.CreateObject("Scripting.FileSystemObject")
+
+If Fs.FileExists(strNew) = True Then
+	Fs.DeleteFile strNew
+End If
+
+objJRO.CompactDatabase strConst & strOld, strConst & strNew
+
+Fs.DeleteFile strOld
+Fs.MoveFile strNew,strOld
+
+Set objJRO = Nothing
+Set Fs = Nothing
+
+<h2><a name="key">■テーブルに主キーを設定します</a></h2>
+
+Sub s_create_Index()
+
+	DoCmd.RunSQL _
+	"create index primarykey on [t_test](F2) with primary;"
+	'複数フィールドにキーを設定する場合
+	'"create index primarykey on [t_test](F1,F2) with primary;"
+
+End Sub
+
+<h2><a name="del_f">■t_testテーブルからf2フィールドを削除します</a></h2>
+
+Sub s_フィールドの削除()
+
+	DoCmd.RunSQL _
+	"ALTER TABLE t_test DROP COLUMN f2"
+
+End Sub
+
+<h2><a name="add_f">■t_testテーブルにf2フィールドを追加します</h2>
+
+Sub s_フィールドの追加()
+	DoCmd.RunSQL _
+	"ALTER TABLE t_test ADD COLUMN f2 Text(255)"
+End Sub
+
+<h2><a name="keydel">■テーブルから主キーを削除します</a></h2>
+Sub s_drop_Index()
+
+	CurrentDb.Execute _
+	"drop index primarykey on [t_test];"
+
+End Sub
+
+<h2><a name="subq">■サブクエリのサンプル</a></h2>
+
+サブクエリとは、SQLステートメント内のWHERE句用いる別のSQLステートメントのこと(らしい）
+
+<b>sample1:</b>
+SELECT T_sample.ID, T_sample.Score
+FROM T_sample
+WHERE (((T_sample.Score)>(
+
+	SELECT Avg(T_sample.Score) AS Scoreの平均 FROM T_sample;
+
+)));
+
+<b>sample2:</b>
+Private Sub 出荷日_AfterUpdate()
+    Dim SQL As String
+    SQL = "Select 消費税率 From 消費税率マスタ Where 処理日付 = ("
+    SQL = SQL & "SELECT Max(処理日付) "
+    SQL = SQL & " FROM 消費税率マスタ"
+    SQL = SQL & " WHERE 消費税率マスタ.処理日付 < CDate('" & Me.出荷日 & "'))"
+～　処理　～
+End Sub
+</pre>
+
+<h2><a name="having">■HAVING句の使い方</a></h2>
+
+'jetSQLのヘルプより----------
+<p>
+HAVING 句は省略可能です。<br>
+
+HAVING 句は WHERE 句と似ていますが、次のような違いがあります。
+</p>
+<p>
+WHERE 句は選択するレコードを決めるために使用しますが、HAVING 句は、GROUP BY 句でグループ化したレコードの中でどのレコードを表示するのかを決めるために使用します。<br>
+例を次に示します。
+</p>
+
+<pre>
+
+SELECT 種類コード,
+
+Sum(在庫)
+
+FROM 製品
+
+GROUP BY 種類コード
+
+HAVING Sum(在庫) > 100 And Like "BOS*";
+
+</pre>
+    
+<p>
+HAVING 句には、And や Or などの論理演算子を組み合わせて最大 40 個までの式を指定できます。
+</p>
+
+<pre>
+'-------------------------
+<h2><a name="ZipCodeUpdate">■郵便番号フィールドの更新</a></h2>
+
+'MS ACCESS用の郵便番号辞書をUPDATEした時の郵便番号更新
+'SendKeysをループする処理なので実行速度は遅い
+'住所の値に半角スペースを追加する更新をする事で郵便番号の更新を促す。
+'コードの後半で追加したスペースをtrim関数で取り除いている。
+'Ac2007で動作確認してます
+</pre>
+<p><a href="http://yamav102.cocolog-nifty.com/blog/2011/11/--e70d.html">
+エクセルユーザー定義関数 - 郵便番号と住所を変換する方法</a>内で
+使用しているAPI関数はACCESSでもそのまま利用できますので、
+そっち使う方がよっぽどスマートで高速です。
+</p>
+<pre>
+Function 郵便番号更新()
+    
+    Dim db As DAO.Database
+    Dim t As DAO.TableDef
+    Dim rs As DAO.Recordset
+    Dim tname As String, fname As String
+    Dim i As Long, j As Long
+    Dim st As String
+    
+    On Error GoTo err_handle
+    i = 0
+    
+    tname = "T_郵便番号チェック"
+    '住所フィールドは１列目に作成する。
+    'Sendkeysは動作の保証がないため、列の移動は
+    '予期せぬフィールドの値を破壊しかねない。
+    fname = "住所"
+    
+    Set db = Application.CurrentDb
+    Set t = db.TableDefs(tname)
+    Set rs = db.OpenRecordset("select count(*) from " & tname)
+    
+    'recordcountプロパティより動作が速い上に
+    'recordcountの返す値を信じて良いものか懐疑的
+    i = rs.Fields(0).Value
+    
+    'テーブルを開き直すことでフォーカスを
+    'テーブルの一行目レコードに
+    '移動できる
+    On Error Resume Next
+        DoCmd.Close acTable, t.Name
+    On Error GoTo err_handle
+    
+    DoCmd.SetWarnings False
+    
+    DoCmd.OpenTable t.Name, acViewNormal, acEdit
+    '描画停止
+    DoCmd.Echo False
+    
+    For j = 1 To i
+        SendKeys "{f2}", True
+        SendKeys " ", True
+        SendKeys "{down}", True
+    Next j
+
+    Set rs = db.OpenRecordset(tname, dbOpenTable)
+    
+    Do  Until rs.EOF
+        st = rs.Fields(0).Value
+        With rs
+            .Edit
+            .Fields(0) = Trim(st)
+            .Update
+            .MoveNext
+        End With
+    Loop
+        
+    MsgBox "done"
+    
+end_handle:
+
+    DoCmd.SetWarnings True
+    DoCmd.Echo True
+    Set db = Nothing
+    Set rs = Nothing
+    Exit Function
+
+err_handle:
+    MsgBox Err.Number & ":" & Err.Description, vbExclamation, db.Name
+    Resume end_handle
+End Function
+
+
+</pre>
+
+<h2><a name="formUpdate">■フォームに表示される値を一定時間ごとに更新する</a></h2>
+<p>
+以下はボタンを点滅させているコード。３０秒ごとにレコードを再クエリする
+コードと、フォームの再クエリなどすれば表示の更新が可能。
+ACCESSのフォームにはTimerイベントなんてものがある。
+</p>
+<p>
+<img src="./ac_gazo/timerEvent.png" height="400" width="362" alt="timerEvent">
+</p>
+<pre>
+Option Compare Database
+Option Explicit
+'---------------------------------
+'フォームの描写を一定時間ごとに
+'更新する
+'---------------------------------
+'フォームのインターバル時間の指定
+Private Sub Form_Load()
+    Me.TimerInterval = 1000 '1000ミリ秒
+End Sub
+
+'Timerイベント
+Private Sub Form_Timer()
+    Static intShow As Integer
+    
+    If intShow Then
+        Me.btn1.Transparent = True
+    Else
+        Me.btn1.Transparent = False
+    End If
+    intShow = Not intShow
+End Sub
+</pre>
+
+<pre>
+<code>
+Option Compare Database
+Option Explicit
+
+'--------------------------
+'フォーム1　モジュール
+'--------------------------
+
+Private Sub Form_Current()
+
+    'フォーム展開時はCurrentイベントの処理を実行しない
+    If Me.Visible = False Then Exit Sub
+
+    'レコード移動時の処理(ここではMsgBoxで代用)
+    MsgBox "Currentイベントの処理を実行します。"
+
+End Sub
+
+
+'指定件数ID昇順で選択状態にする。
+'ただし、選択するのはF1が a のレコードのみ。
+'選択したら a を b に更新する。
+Private Sub ボタン_Click()
+    
+    Dim i As Long
+    Dim v As Variant
+    Dim varReturn As Variant
+    
+    Dim doneCnt As Long
+    Dim Num As Long
+    Dim t1 As Single
+    
+    t1 = Timer()
+    
+    On Error GoTo err_handle
+    
+    Num = Nz(txtNum, 0)
+    If Num = 0 Then Exit Sub
+    
+    lblShinchoku.Visible = True
+    Repaint
+    DoCmd.Hourglass True
+    '効果が僅かで見た目退屈な分デメリット
+    'DoCmd.Echo False
+    
+    With listBx
+    
+        '初期化
+        For Each v In .ItemsSelected
+            .Selected(v) = False
+        Next v
+        
+        For i = 0 To .ListCount - 1
+
+            If .Column(1, i) = "a" Then
+                .Selected(i) = True
+                doneCnt = doneCnt + 1
+                If doneCnt > Num Then
+                    Exit For
+                End If
+                
+               
+            End If
+
+            .Requery
+        Next i
+        
+    End With
+    
+    
+    Debug.Print "Timer() - t1 : " & Timer() - t1
+    Beep
+    MsgBox "done"
+    
+end_handle:
+
+    DoCmd.Echo True
+    DoCmd.Hourglass False
+    lblShinchoku.Visible = False
+    Exit Sub
+    
+err_handle:
+    
+    MsgBox Err.Description, vbExclamation, Access.CurrentObjectName
+    Resume end_handle
+End Sub
+
+Sub aaa()
+    CurrentDb.Execute "update T1 set F1 ='a'"
+End Sub
+
+Private Sub ボタン2_Click()
+    
+    Dim i As Long
+    Dim v As Variant
+    On Error GoTo err_handle
+    
+    DoCmd.Hourglass True
+    
+    With listBx
+    
+        For Each v In .ItemsSelected
+            CurrentDb.Execute _
+                "update T1 set F1='b' " & _
+                "where T1.ID=" & .Column(0, v)
+            .Requery
+        Next v
+        
+    End With
+    
+end_handle:
+    DoCmd.Hourglass False
+    listBx.Requery
+    MsgBox "done"
+    Exit Sub
+err_handle:
+
+    MsgBox Err.Description, vbExclamation, Access.CurrentObjectName
+    Resume end_handle
+    
+End Sub
+</code>
+</pre>
+<h2><a name="allowbypasskey">■ShiftKey起動を無効にするAllowBypassKey</a></h2>
+<pre>
+<code>
+Sub シフトキー起動を無効にする()
+
+    On Error Resume Next
+    CurrentDb.Properties.Delete ("AllowBypassKey")
+    On Error GoTo 0
+    Dim prp As Variant
+    Set prp = CurrentDb.CreateProperty("AllowBypassKey", DB_BOOLEAN, False)
+    CurrentDb.Properties.Append prp
+    
+End Sub
+
+Sub シフトキー起動を有効にする()
+
+    On Error Resume Next
+    CurrentDb.Properties.Delete ("AllowBypassKey")
+    On Error GoTo 0
+    Dim prp As Variant
+    Set prp = CurrentDb.CreateProperty("AllowBypassKey", DB_BOOLEAN, True)
+    CurrentDb.Properties.Append prp
+    
+End Sub
+
+</code>
+</pre>
+<h2><a name="cmp3">■バックエンドの最適化</a></h2>
+<pre>
+<code>
+Option Compare Database
+Option Explicit
+
+'フォームモジュール
+'フォームを閉じるとACCESSも終了し、
+'他の利用者がテーブルにアクセスしていなければ（ロックファイルが存在しなければ）
+'このサンプルはバックエンドが一つだけの場合を想定しています
+
+Private Sub btmAppQuit_Click()
+    '最適化
+    
+    Call CompactDBbe
+    
+    
+    Application.Quit
+    
+End Sub
+
+Private Sub CompactDBbe()
+    
+    Dim bepath As String
+    Dim rs As DAO.Recordset
+    Set rs = CurrentDb.OpenRecordset("select database from MSysObjects where database is not null")
+    dbbe = CStr(rs!Database)
+        
+    Dim lockFilePth As String
+    lockFilePth = Left$(dbbe, InStrRev(dbbe, ".")) & "laccdb"
+    
+    'ロックファイルの有無
+    If VBA.CreateObject("scripting.filesystemobject"). _
+        FileExists(lockFilePth) = False Then
+        
+        Dim vRslt
+        vRslt = _
+            Shell("MSACCESS.exe " & dbbe & " /compact")
+    Else
+        'ロックファイルは異常終了で残ってしまう事もあるので
+        'エラーにならなければ削除を試みる（無意味に思えるが、念の為という気持ちで）
+        On Error Resume Next
+        VBA.CreateObject("scripting.filesystemobject").DeleteFile lockFilePth
+        On Error GoTo 0
+    End If
+        
+
+End Sub
+</code>
+</pre>
+<h2><a name="recSelectorCnt">■フォームの移動ボタンにある位置カウンター自作</a></h2>
+<pre>
+<code>
+Private Sub Form_Current()
+    txtCurrntNo.Value = CurrentRecord & "/" & Recordset.RecordCount
+End Sub
+</code>
+</pre>
+<h2><a name="letFatDb">■最適化のテストの為にDBを肥大化させるコード</a></h2>
+<pre>
+<code>
+Sub バックエンドファイルを太らせる()
+    Dim sql As String
+    sql = "insert into tbl1 (memo) select memo from tbl1"
+    
+    On Error Resume Next
+    Dim i As Long
+
+    For i = 1 To 15
+        CurrentDb.Execute sql
+    Next i
+
+    
+    On Error GoTo 0
+    'idフィールド（オートナンバー）と memoフィールドを持つテーブル。
+    CurrentDb.Execute "delete * from tbl1 where id<>1"
+    
+    Debug.Print "done"
+End Sub
+</code>
+</pre>
+<h2 id="CreateTableADO">■ADOでDreateTable</h2>
+<pre>
+<code>
+    Sub CreateTableX6()
+        On Error Resume Next
+        Application.CurrentDb.Execute "Drop Table [~~Kitsch'n Sync];"
+        On Error GoTo 0
+        
+        'This example uses ADODB instead of the DAO shown in the previous
+        'ones because DAO does not support the DECIMAL and GUID data types
+        Dim con As ADODB.Connection
+        Set con = CurrentProject.Connection
+        
+        '& ",[Required]              INTEGER NOT NULL" _　値要求　はい
+        
+        '& ",[ReplicationID]         UNIQUEIDENTIFIER" _　GUID用フィールド。
+        'レプリケーションID型。ACCESSのデザインビューでの指定は[数値型]を指定し、
+        'フィールドサイズで[レプリケーションID型]を選ぶ。
+        
+        '& ",[Unicode Compression]   MEMO WITH COMP" _
+        'ユニコード圧縮 UTF-16ではなくUTF-8を使うという事？
+        '規定値が「はい」なので意識する局面はないと考えられる
+        
+        con.Execute "" _
+            & "CREATE TABLE [~~Kitsch'n Sync](" _
+                & " [Auto]                  COUNTER" _
+                & ",[Byte]                  BYTE" _
+                & ",[Integer]               SMALLINT" _
+                & ",[Long]                  INTEGER" _
+                & ",[Single]                REAL" _
+                & ",[Double]                FLOAT" _
+                & ",[Decimal]               DECIMAL(18,5)" _
+                & ",[Currency]              MONEY" _
+                & ",[ShortText]             CHAR" _
+                & ",[LongText]              MEMO" _
+                & ",[PlaceHolder1]          MEMO" _
+                & ",[DateTime]              DATETIME" _
+                & ",[YesNo]                 BIT" _
+                & ",[OleObject]             IMAGE" _
+                & ",[ReplicationID]         UNIQUEIDENTIFIER" _
+                & ",[Required]              INTEGER NOT NULL" _
+                & ",[Unicode Compression]   MEMO WITH COMP" _
+                & ",[Indexed]               INTEGER" _
+                & ",CONSTRAINT [PrimaryKey] PRIMARY KEY ([Auto])" _
+                & ",CONSTRAINT [Unique Index] UNIQUE ([Byte],[Integer],[Long])" _
+            & ");"
+        'インデックス　はい（重複あり）
+        con.Execute "CREATE INDEX [Single-Field Index] ON [~~Kitsch'n Sync]([Indexed]);"
+        
+        '値要求　はい
+        con.Execute "CREATE INDEX [Multi-Field Index] ON [~~Kitsch'n Sync]([Auto],[Required]);"
+        
+        '複数フィールドインデックス（重複あり）
+        con.Execute "CREATE INDEX [IgnoreNulls Index] ON [~~Kitsch'n Sync]([Single],[Double]) WITH IGNORE NULL;"
+        
+        '[ShortText],[LongText]の組み合わせが一意である事を強制
+        con.Execute "CREATE UNIQUE INDEX [Combined Index] ON [~~Kitsch'n Sync]([ShortText],[LongText]) WITH IGNORE NULL;"
+        Set con = Nothing
+    
+        'Add a Hyperlink Field
+        'ADOから操作すると、列の挿入位置を指定する事が出来る。
+        Dim AllDefs As DAO.TableDefs, TblDef As DAO.TableDef, Fld As DAO.Field
+        Set AllDefs = Application.CurrentDb.TableDefs
+        Set TblDef = AllDefs("~~Kitsch'n Sync")
+        Set Fld = TblDef.CreateField("Hyperlink", dbMemo)
+        Fld.Attributes = dbHyperlinkField + dbVariableField
+        Fld.OrdinalPosition = 10
+        TblDef.Fields.Append Fld
+        
+        '列の削除
+        DoCmd.RunSQL "ALTER TABLE [~~Kitsch'n Sync] DROP COLUMN [PlaceHolder1];"
+    End Sub
+</code>
+</pre>
+<h2 id="CreateTableDAO">■DAOでDreateTable</h2>
+<pre>
+<code>
+CREATE TABLE [Accessクエリから作成できるテーブル]( 
+	 [オートナンバー型]				COUNTER
+	,[数値型_バイト型]				BYTE
+	,[数値型_整数型]				SMALLINT
+	,[数値型_長整数型]				INTEGER
+	,[数値型_単精度浮動小数点型]	REAL
+	,[数値型_倍精度浮動小数点型]	FLOAT
+	,[通貨型]						MONEY
+	,[短いテキスト_255]				CHAR
+	,[長いテキスト]					MEMO
+	,[日付_時刻型]					DATETIME
+	,[Yes_No型]						BIT
+	,[OLE オブジェクト型]			IMAGE
+	,[数値型_長整数型_値要求]		INTEGER NOT NULL
+	,[Indexed]						INTEGER
+	,CONSTRAINT [hogePrimaryKey] PRIMARY KEY ([オートナンバー型])
+	,CONSTRAINT [hogeUnique] UNIQUE ([数値型_バイト型],[数値型_整数型],[数値型_長整数型])
+);
+
+長いテキスト    
+.accdb ファイルでは、長いテキスト フィールドは古いメモフィールドと同じように機能します。 
+つまり、フォームやレポートのコントロールに表示できる文字は最初の 64,000 文字までですが、
+最大で 1 GB のテキストを格納できます。 [長いテキスト] フィールドを設定して
+リッチ テキストを表示できます。これには、太字や下線のような書式設定が含まれます。
+
+文字列型に CHAR WITH COMP, とUNICODE圧縮（はい）を指定する事は出来ない。
+エラーになる。UNICODE圧縮（いいえ）で作成される。
+
+
+制約：主キーの指定
+CONSTRAINT [hogePrimaryKey] PRIMARY KEY ([Auto])
+制約：一意。複数フィールドの組み合わせで一意を指定している
+CONSTRAINT [hogeUnique] UNIQUE ([数値型_バイト型],[数値型_整数型],[数値型_長整数型])
+</code>
+</pre>

@@ -1,0 +1,376 @@
+﻿<!DOCTYPE html>
+<html lang="ja" xmlns:t="urn:schemas-microsoft-com:time">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<META http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="Content-Script-Type" content="text/javascript; charset=Shift_JIS">
+<META name="GENERATOR" content="IBM WebSphere Studio Homepage Builder Version 6.5.0.0 for Windows">
+<meta content="text/css" name="Content-Style-Type">
+<meta content="mail-address" name="Reply-to">
+<meta name="robots" content="NONE">
+<meta content="yamaV1.02β" name="Author">
+<meta http-equiv="page-exit" content="revealtrans(duration=1,transiton=23)">
+<meta http-equiv="site-enter" content="revealtrans(duration=1,transition=23)">
+<meta http-equiv="site-exit" content="revealtrans(duration=1,transition=23)">
+<meta http-equiv="page-enter" content="revvealtrans(duration=1,transition=23)">
+<script type="text/javascript" src="./carender_func.js"></script>
+
+<script type="text/javascript">
+<!--
+
+if (self == top) {
+	alert('トップページに移動します');
+	location.href = "../index.htm";
+	}
+
+// -->
+</script>
+
+<style type="text/css">
+<!--
+
+@import url(../a06.css);
+.time{
+behavior: url(#default#time2);
+}
+A{
+color : green;
+text-decoration : underline;
+border-style : none none none none;
+}
+A:VISITED{
+color : navy;
+text-decoration : none;
+border-style : none none none none;
+}
+A:HOVER{
+color : fuchsia;
+text-decoration : none;
+font-style : normal;
+font-weight : bold;
+border-style : none none none none;
+background-color : white;
+}
+A:LINK{
+color : teal;
+}
+-->
+</style>
+<?import namespace="t" implementation="#default#time2">
+<!-- この下は、説明のように直してから<HEAD>～</HEAD>の中に書きます。--><script type="text/JavaScript">
+<!--
+///////////////////////////////////////////////////
+// お遊び No.3.1 Produced by「CLUB とむやん君」
+// URL http://www2s.biglobe.ne.jp/~club_tom/
+// 上の2行は著作権表示ですので消さないで下さい
+///////////////////////////////////////////////////
+
+///////////////////////////////////////////////////
+// 画像の開始位置＆移動間隔＆移動スピード＆
+// 移動するまでの停止範囲＆止まった時のマウスからの位置＆
+// クリックすると画像の動きを止めるかどうかを書いて下さい。
+var dxOa31=100,dyOa31=100;   // 開始位置(dxOa31：x座標、dyOa31：y座標)
+var hOa31=10;                // 移動間隔
+var mouseSpeedOa31=20;       // 移動スピード(単位：1/1000秒)
+var h2Oa31=100;              // 停止範囲(hOa31より小さくしないで下さい。)
+var spDxOa31=10,spDyOa31=-5; // 止まった時のマウスからの位置
+                             // (spDxOa31：x座標、spDyOa31：y座標)
+var moveStopOa31=true;       // 画像の停止の有無です。
+                             // (true：有り、false：無し)
+///////////////////////////////////////////////////
+
+var mxOa31=dxOa31,myOa31=dyOa31,moveFlagOa31=true,moveStopFlagOa31=false;
+
+// イベントキャプチャーを設定する部分です。
+if (document.all || document.getElementById || document.layers) {
+	if (document.layers) document.captureEvents(Event.MOUSEMOVE);
+	document.onmousemove=mouseMoveEvOa31;
+	if (moveStopOa31) {
+		if (document.layers) document.captureEvents(Event.MOUSEDOWN);
+		document.onmousedown=mouseMoveStopOa31;
+	}
+}
+
+// イベントキャプチャーのマウス位置関数の部分です。
+function mouseMoveEvOa31(e) {
+	if (window.opera) {
+		mxOa31=e.clientX;
+		myOa31=e.clientY;
+	}
+	else if (document.all) {
+		mxOa31=document.body.scrollLeft+event.clientX;
+		myOa31=document.body.scrollTop+event.clientY;
+	}
+	else if (document.getElementById || document.layers) {
+		mxOa31=e.pageX;
+		myOa31=e.pageY;
+	}
+}
+
+// イベントキャプチャーのStop関数の部分です。
+function mouseMoveStopOa31() {
+	moveStopFlagOa31=!moveStopFlagOa31;
+}
+
+// 指定した場所に画像を移動させる部分です。
+function setPoOa31(name,x,y) {
+	if (document.all) {
+		document.all(name).style.pixelLeft=x+spDxOa31;
+		document.all(name).style.pixelTop=y+spDyOa31;
+	}
+	else if (document.getElementById) {
+		document.getElementById(name).style.left=x+spDxOa31;
+		document.getElementById(name).style.top=y+spDyOa31;
+	}
+	else if (document.layers) document.layers[name].moveTo(x+spDxOa31,y+spDyOa31);
+}
+
+// 移動距離からxy座標を算出する部分です。
+function getXYOa31(x1,y1,x2,y2,l,dl,flag) {
+	var x,y;
+	if (l==0) {
+		if (flag==true) return x1;
+		if (flag==false) return y1;
+	}
+	else {
+		x=dl/l*(x2-x1)+x1;
+		if (flag==true) return x;
+		if (flag==false) {
+			if (x1-x2==0) {
+				if (y1<y2) return y1+dl;
+				else return y1-dl;
+			} else return (y1-y2)/(x1-x2)*x+y1-(y1-y2)/(x1-x2)*x1;
+		}
+	}
+}
+
+// メイン関数の部分です。
+function mouseMoveOa31() {
+	if (document.all || document.getElementById || document.layers) {
+		if (!moveStopFlagOa31) {
+			var xx,l;
+			l=Math.abs(Math.sqrt(Math.pow((mxOa31-dxOa31),2)+Math.pow((myOa31-dyOa31),2)));
+			if (l<hOa31 && moveFlagOa31) {
+				dxOa31=mxOa31,dyOa31=myOa31;
+				setPoOa31("imgOa31",dxOa31,dyOa31);
+				moveFlagOa31=false;
+			}
+			else if (l>h2Oa31 || l<=h2Oa31 && moveFlagOa31) {
+				xx=getXYOa31(dxOa31,dyOa31,mxOa31,myOa31,l,hOa31,true);
+				dyOa31=getXYOa31(dxOa31,dyOa31,mxOa31,myOa31,l,hOa31,false);
+				dxOa31=xx;
+				setPoOa31("imgOa31",dxOa31,dyOa31);
+				moveFlagOa31=true;
+			}
+		}
+		setTimeout("mouseMoveOa31()",mouseSpeedOa31);
+	}
+}
+// End -->
+
+
+function _HpbJumpURLinNewWindow(url) 
+{
+  if (url != '')
+  {
+    window.open(url, '_blank');
+  }
+}
+//-->
+</script>
+<title>http://homepage3.nifty.com/homepage_yamaV102/の参照ページ</title>
+<?import namespace="t" implementation="#default#time2">
+</head>
+<body><span id="imgOa31" style="position:absolute; left:100px; top:100px; width:37px; height:25px; clip:rect(0px 37px 25px 0px); z-index:1"><img src="../gazou/ani-nekome2.gif" width="37" height="25" alt="猫"></span> <!-- この下は、画像の移動をスタートしている部分です。
+	そのまま書いて下さい。--><script type="text/JavaScript">
+<!--
+mouseMoveOa31();
+// End -->
+</script>
+<p><a href="../answer.pdf" target="_blank">SQLserverビギナーズガイドANSWER</a></p>
+<p><a href="chngGaibudb.zip">外部データベース</a></p>
+http://www.moug.net/tech/acvba/0100015.html 非連結フォーム
+<p><a href="GetFreeSpace.zip">ネットワークフォルダの空き容量調査のVBA</a></p>
+<div>http://www.atmarkit.co.jp/ait/articles/0212/11/news001_4.html</div>
+<p><a href="DELETE_On_LIKE.zip">2つのテーブルをLikeで結合して削除</a></p>
+<p><a href="modalForm.zip">modalForm.zip</a></p>
+<p><a href="logGetter.zip">履歴をとる</a></p>
+<p><a href="../GatherShNames.html" target="_blank">シート名を集める</a></p>
+<p><a href="../rbnsample.txt">
+トグル３つリボンのｘｍｌとvbaのサンプルテキスト</a></p>
+<p><a href="filter.zip">オプションフィルタとフォームフィルタの共存</a></p>
+<p><a href="20151115.txt">20151115.txt</a></p>
+<p><a href="AtenaLabel-Ac-Word.zip">ACCESS-WORD差し込み印刷サンプル</a></p>
+<p><a href="../classhtml/class.html">クラスモジュール講座</a></p>
+<p><a href="../tool/clsPhoneticConverter.txt">clsPhoneticConverter</a></p>
+<p><a href="client.zip">biginTransで排他制御</a></p>
+<p><a href="accessWait.txt">accessWait.txt</a></p>
+<p><a href="lbltxtMngr.zip">ボタンのキャプションを動的に切り替えるサンプル</a></p>
+<p><a href="opttgl.zip">リボン3つのトグルをグループ化して TRUE/FALSE に切り替えるサンプル</a></p>
+<p><a href="cmbWchange.zip">リボン２つのコンボボックスをリンクさせてフィルタをかけるサンプル</a></p>
+<p><a href="gallery.zip">リボン、ギャラリーコントロールサンプル</a></p>
+<p><a href="ribbon6.zip">ribbon.zip</a></p>
+<p><a href="vldtnSample.xlsm">vldtnSample.xlsm</a></p>
+<p><a href="80_00_user_manual.zip">manual.zip</a></p>
+<p><a href="linkMngr.zip">リンクテーブルマネージャ</a></p>
+<p><a href="gaibu.zip">外部テーブルマネージャ</a></p>
+<p><a href="sample.txt">-</a></p>
+<p><a href="chudanmode.html">中断モードでは入力できません</a></p>
+<p><a href="modZip.zip">OfficeZipConv</a></p>
+<p><a href="accessLog.txt">Accessフォームでログをとる</a></p>
+<p><a href="shukusai.txt">祝祭日リスト</a></p>
+<p><a href="adoCnInsertInto2.zip">AdoDaoInsertIntoサンプルmdb</a></p>
+<p><a href="putsttmnt.htm" target="_parent" >kanabunさんのPutステートメント解説</a></p>
+<p><a href="interfaceProg_VB.xls">インターフェイスベースプログラミング_VB.xls</a></p>
+<p><a href="misojinoojisanClas.xls">misojinoojisanClas.xls</a></p>
+<p><a href="timer.xls">timer.xls</a></p>
+<p><a href="excelvbaapi.zip">aaaa</a></p>
+<p><a href="../tool/gijikarano.xls">bbb</a></p>
+<p><a href="ellipseRotation.htm" target="_blank">ellipseRotation.htm</a></p>
+<p><a href="vba20190123.txt" target="_blank">vba20190123.txt</a></p>
+
+<h1><span id="daishou" style="font-family :'Lucida Handwriting','ＭＳ ゴシック',fantasy;color : #f39;">link</span></h1>
+<t:animatecolor targetelement="daishou" attributename="color" begin="0" dur="5" from="skyblue" to="fuchsia" autoreberse="true" repeatcount="indefinite" />
+<ul type="disc">
+<li class="kajyou"><a href="http://www.itmedia.co.jp/help/howto/win/win2000/0007special/complus_vb/" target="_blank">Windows 2000ビジネスアプリケーション構築ガイド</a></li>
+
+<li class="kajyou"><a href="http://chokuto.ifdef.jp/urawaza/com/com.html" target="_blank">COMの基礎</a></li>
+
+<li class="kajyou"><a href="http://homepage3.nifty.com/homepage_yamaV102/jsMath-3.6e/test/" target="_blank">ｊｓＭａｔｈテストページ</a></li>
+<li class="kajyou"><a href="http://hack.ninja-web.net/index.htm" target="_blank">■分かりやす～いコンピュータ技術情報</a></li>
+<li class="kajyou"><a href="http://kimball.blog.so-net.ne.jp/2007-12-08-1" target="_blank">ｊｓＭａｔｈでＢＬＯＧに数式を入力できますぞぃ！！＼(^o^)／</a></li>
+<li class="kajyou"><a href="http://fussy.web.fc2.com/algo/index.htm" target="_blank">Algorithm Site</a></li>
+<li class="kajyou"><a href="http://jibun.atmarkit.co.jp/lskill01/index.html" target="_blank">＠IT総合トップ » 自分戦略研究所 » スキル創造研究室</a></li>
+<li class="kajyou"><a href="http://builder.japan.zdnet.com/" target="_blank">コードを書く全ての人に builder Top</a></li>
+<li class="kajyou"><a href="http://atnetwork.info/tcpip/" target="_blank">TCP/IP入門・無料ネットワークツール　＠network Cisco・アライド実機で学ぶ</a></li>
+<li class="kajyou"><a href="http://www.atmarkit.co.jp/fwin2k/win2ktips/756wmicreator/wmicreator.html" target="_blank">WMIを使うスクリプトを簡単に作成する</a></li>
+<li class="kajyou"><a href="http://miniminiadmin.jugem.jp/?eid=382" target="_blank">ミニミニ管理者（システム管理者/社内SE/CIO）の独り言</a></li>
+
+<h2>Windows Script Host</h2>
+<li class="kajyou"><a href="http://www.atmarkit.co.jp/fwin2k/operation/pshvswsh/pshvswsh_01.html" target="_blank">Windowsスクリプティング環境比較：PowerShell vs WSH</a></li>
+<li class="kajyou"><a href="http://www.atmarkit.co.jp/fwin2k/tutor/cformwsh10/cformwsh10_01.html" target="_blank">WScriptオブジェクト</a></li>
+<li class="kajyou"><a href="http://msdn.microsoft.com/ja-jp/library/ms974579.aspx" target="_blank">WMI スクリプト入門</a></li>
+<li class="kajyou"><a href="http://tuka.s12.xrea.com/index.xcg?p=VBS" target="_blank">VBS(Visual Basic Script)メモの目次</a></li>
+<li class="kajyou"><a href="http://www.roy.hi-ho.ne.jp/mutaguchi/wsh/" target="_blank">Windows Script Host Laboratory</a></li>
+
+<li class="kajyou"><a href="http://codezine.jp/article/detail/1378?p=1" target="_blank">ブラウザがサポートしているスクリプトを判断する </a></li>
+<li class="kajyou"><a href="http://www.scollabo.com/banban/java/object.html" target="_blank">オブジェクトリファレンス/JavaScriptリファレンス</a></li>
+</ul>
+<h2>MySQL</h2>
+
+<li class="kajyou"><a href="./mysqlMemo.html" target="_blank">MySQLコマンドメモ </a></li>
+<h2>数学</h2>
+
+<ul>
+<li class="kajyou"><a href="http://www.geisya.or.jp/~mwm48961/koukou/index_m.htm" target="_blank">高校数学の基礎問題</a></li>
+<li class="kajyou"><a href="http://www.kwansei.ac.jp/hs/z90010/sugaku1/sugaku1.htm" target="_blank">数学Ⅰ</a></li>
+<li class="kajyou"><a href="http://www.nhk.or.jp/kokokoza/radio/r2_math2/" target="_blank">NHK高校数学講座数学Ⅱ</a></li>
+<li class="kajyou"><a href="http://manapedia.jp/list/index?subject_id=16" target="_blank">数Ⅲ</a></li>
+</ul>
+
+<h2>C言語</h2>
+
+<ul type="disc">
+<li class="kajyou"><a href="http://wisdom.sakura.ne.jp/programming/c/index.html" target="_blank">Ｃ言語入門</a></li>
+<li class="kajyou"><a href="http://www.geocities.jp/ky_webid/ProgrammingPlacePlus/c/index.html" target="_blank">Programming Place Plus　Ｃ言語編　トップページ</a></li>
+<li class="kajyou"><a href="http://homepage3.nifty.com/mmgames/c_guide/index.html" target="_blank">苦しんで覚えるＣ言語</a></li>
+<li class="kajyou"><a href="http://journal.mycom.co.jp/articles/2009/05/25/windowsapi/index.html" target="_blank">ゼロからはじめるWindows API - WinMain 関数 すべての始まり編</a></li>
+<li class="kajyou"><a href="http://www.geocities.jp/ky_webid/win32c/000.html" target="_blank">Win32API(Ｃ言語)編　第０章　はじめに</a></li>
+<li class="kajyou"><a href="http://effy.ldw.jp/" target=" _blank">Kid's World</a>
+</ul>
+
+<h2>MS-DOS</h2>
+<ul type="disc">
+<li class="kajyou"><a href="http://tmhiko.hp.infoseek.co.jp/nekomimi_com/PC_tips/DOS_tips/main.html" target="_blank">猫耳通信社（MS-DOS講座）</a>
+<li class="kajyou"><a href="http://www.tomgnet.com/dos/kouza/indexkou.htm" target="_blank">MS-DOS開き直り講座</a></li>
+</ul>
+
+<h2>簿記</h2>
+
+<ul type="disc">
+<li class="kajyou"><a href="http://jp-channel.com/account/index.php?%E7%B0%BF%E8%A8%98%E5%88%9D%E5%BF%83%E8%80%85%E5%85%A5%E9%96%80%E8%AC%9B%E5%BA%A7%E3%80%90%E7%8B%AC%E5%AD%A6%E3%81%A7%E7%B0%BF%E8%A8%98%E6%A4%9C%E5%AE%9A%E5%90%88%E6%A0%BC%EF%BC%81%E3%80%91" target="_blank">簿記初心者入門講座【独学で簿記検定合格！】　：とある会社の経理さん </a></li>
+<li class="kajyou"><a href="http://www.get-boki.com/" target=" _blank">わかりやすい簿記</a>
+<li class="kajyou"><a href="http://www.geocities.co.jp/WallStreet/6200/page003.html" target="_blank">ぱんどんのお部屋</a></li>
+<li class="kajyou"><a href="http://boki.popnavi.net/010/post_11.html" target=" _blank">総勘定元帳を作ろう | 複式簿記入門講座</a>
+</ul>
+
+<h2>Java</h2>
+<ul type="disc">
+<li class="kajyou"><a href="http://www5c.biglobe.ne.jp/~ecb/java/java00.html" target="_blank">Java入門</a></li>
+<li class="kajyou"><a href="http://www.atmarkit.co.jp/fjava/index/index_eclipsejava.html" target="_blank">連載記事 「Eclipseではじめるプログラミング」</a></li>
+</ul>
+
+<h2>VB</h2>
+<ul type="disc">
+<li class="kajyou"><a href="http://thom.hateblo.jp/" target=" _blank">t-hom’s diary 主にVBAネタを扱っているブログです。</a></li>
+<li class="kajyou"><a href="http://www.diamondblog.jp/official/omura/" target=" _blank">大村あつし official ブログ by ダイヤモンドブログ</a></li>
+<li class="kajyou"><a href="http://codezine.jp/article/detail/6780" target=" _blank">VBAでの関数ポインタの利用方法 </a></li>
+<li class="kajyou"><a href="http://homepage2.nifty.com/suyamsoft/index.html" target=" _blank">陶山栄一のホームページ</a></li>
+<li class="kajyou"><a href="http://keicode.com/iis/" target=" _blank">Web/DB プログラミング徹底解説</a></li>
+<li class="kajyou"><a href="http://www.atmarkit.co.jp/fdotnet/vb6tonet2/index/index.html" target=" _blank">改訂版 プロフェッショナルVB.NETプログラミング</a></li>
+<li class="kajyou"><a href="http://www.ka-net.org/" target="_blank">Office 2007/2010・リボンのカスタマイズ 初心者備忘録</a></li>
+<li class="kajyou"><a href="http://www.asahi-net.or.jp/~ZN3Y-NGI/YNxv203.html" target="_blank">リボン制御</a></li>
+<li class="kajyou"><a href="http://addinbox.sakura.ne.jp/Breakthrough_P-Ctrl_Arrays.htm" target="_blank">擬似からの脱却</a>
+<li class="kajyou"><a href="http://dirtysexyquery.blogspot.com/" target="_blank">Dirty Sexy Query - Atom</a></li>
+<li class="kajyou"><a href="http://homepage1.nifty.com/rucio/main/main.htm" target=" _blank">Visual Vasic 中学校</a></li>
+<li class="kajyou"><a href="http://www.geocities.jp/cbc_vbnet/index.html" target="_blank">Access_VBA講座</a>
+<li class="kajyou"><a href="http://homepage1.nifty.com/MADIA/vb/VBKANREN.htm" target="_blank">API 技術関連 - VBでのWin32APIのサンプル</a></li>
+<li class="kajyou"><a href="http://www.accessclub.jp/" target="_blank">ACCESS CLUB</a>
+<li class="kajyou"><a href="http://www.ken3.org/vba/" target="_blank">三流君　ＶＢＡで楽しくプログラミング</a>
+<li class="kajyou"><a href="http://www.mahoutsukaino.com/" target="_blank">魔法使いの開発工房</a></li>
+<li class="kajyou"><a href="http://www2.moug.net/cgi-bin/technic.cgi?acvba+IT0601" target="_blank">ACCESS VBA即効テクニック集</a>
+<li class="kajyou"><a href="http://www.moug.net/skillup/index.htm" target="_blank">モーグスキルアップ講座</a>
+<li class="kajyou"><a href="http://www1.plala.or.jp/chikada/" target="_blank">VBAアクションゲーム？Excel（エクセル）で動かそう！</a></li>
+<li class="kajyou"><a href="http://mougle.biz/" target="_blank">moug 過去ログ検索 mougle</a></li>
+<li class="kajyou"><a href="http://homepage1.nifty.com/CavalierLab/lab/vb/clsmdl/" target="_blank">クラスモジュール講座</a>
+<li class="kajyou"><a href="http://www.asahi-net.or.jp/~ef2o-inue/index.html" target="_blank">エクセルでお仕事</a>
+
+</ul>
+
+<h2>Web</h2>
+
+<ul type="disc">
+
+<li class="kajyou"><a href="http://www.atmarkit.co.jp/ait/subtop/features/dotnet/app/aspnetforvb_index.html" target="_blank">VB6開発者のためのASP.NET開発入門</a></li>
+<li class="kajyou"><a href="http://awoni.net/personal-site/iis" target="_blank">IISの設定</a></li>
+<li class="kajyou"><a href="http://charset.7jp.net/jis.html" target="_blank">文字コード表 JISコード(ISO-2022-JP)</a></li>
+<li class="kajyou"><a href="http://charset.7jp.net/sjis.html" target="_blank">文字コード表 シフトJIS(Shift_JIS)</a></li>
+<li class="kajou"><a href="http://masudahp.web.fc2.com/flowchart/" target="_blank">フローチャートの書き方</a></li>
+<li class="kajyou"><a href="http://keicode.com/iis/" target=" _blank">Web/DB プログラミング徹底解説</a></li>
+<li class="kajyou"><a href="http://www.site-cooler.com/kwl/asp/1.htm#1-1" target=" _blank">ASP講座</a></li>
+<li class="kajyou"><a href="http://www.atmarkit.co.jp/fnetwork/index_index.html" target="_blank">Master of IP Networkフォーラム</a></li>
+<li class="kajyou"><a href="http://www.objectclub.jp/technicaldoc/uml/umlintro" target="_blank">UML入門</a></li>
+<li class="kajyou"><a href="http://www.mnet.ne.jp/~nakama/" target="_blank">サルにもわかる正規表現入門</a>
+<li id="bbslink1" class="kajyou"><a href="http://www.tohoho-web.com/" target="_blank" class="kajyou">とほほWWW入門</a>
+
+<li class="kajyou"><a href="http://www.lucky-bag.com/appendix/css-property/css-property-list_ja.html" target="_blank">プロパティ -> CSS 仕様書（邦訳）へのリンク</a></li>
+<li class="kajyou"><a href="http://www.htmq.com/index.htm" target="_blank">htmlクイックレファレンス</a>
+<li class="kajyou"><a href="http://chaichan.web.infoseek.co.jp/src/htmlmain.htm" target="_blank">ストリクトなHTML講座</a>
+<li class="kajyou"><A title="トップへ" href="http://w2.makko.biz/~rara/index.html" target="_blank">Webサイト構築の為の手助け</A>
+<li class="kajyou"><a href="http://www.shoshinsha.com/pukiwiki/pukiwiki.php?FrontPage" target="_blank">PukiWkikiホームページ作りのＦＡＱ</a>
+<li class="kajyou"><a href="http://www6.airnet.ne.jp/manyo/xml/index.html" target="_blank">たのしいXML</a></li>
+<li class="kajyou"><a href="http://www.fureai.or.jp/~tato/DHTML/simple/contents.htm" target="_blank">D-HTML</a>
+<li class="kajyou"><a href="http://www.kent-web.com/www/" target="_blank">kent　自宅　サーバー</a>
+<li class="kajyou"><a href="http://www.rfs.jp/sb/perl/" target="_blank">perl&amp;cgi完全講座</a>
+<li class="kajyou"><a href="http://phpjavascriptroom.com/" target="_blank">PHP &amp; JavaScript Room</a>
+<li class="kajyou"><a href="http://www.usagi-js.com/index.htm" target="_blank">うさのJavaScript講座</a>
+<li class="kajyou"><a href="http://www.tg.rim.or.jp/~hexane/ach/ptxh/" target="_blank" class="kajyou">xhtmlのページ</a>
+<li class="kajyou"><a href="http://www.asahi-net.or.jp/~sd5a-ucd/rec-html401j/cover.html.ja.sjis" target="_blank">W3C　html　要素・属性索引</a>
+<li class="kajyou"><a href="http://www6.plala.or.jp/go_west/nextcss/" target="_blank">CSS Dencitie</a>
+</ul>
+
+
+
+
+<li class="kajyou"><a href="http://kitasite.net/b/" target="_blank">KITAJIMAのお絵かき研究所</a>
+</ul>
+<script type="text/javascript">
+<!--
+var chdt=new Date(document.lastModified);
+var naviN=window.navigator.appName,yn;
+f_brhantei()?yn=chdt.getYear():yn=1900+chdt.getYear();
+document.write("<br>"+yn+"年"+(chdt.getMonth()+1)+"月"+chdt.getDate()+"日 "+chdt.getHours()+"時"+chdt.getMinutes()+"分 更新");
+// -->
+</script><br>
+</body>
+</html>

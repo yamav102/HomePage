@@ -1,0 +1,778 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="ja">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=shift_jis">
+<meta http-equiv="content-style-type" content="text/css">
+<meta http-equiv="content-script-type" content="text/javascript">
+<meta name="keywords" content="EXCELVBA,HTML雛型,">
+<meta name="description" content="仕事で楽できるツール集">
+<link rel="stylesheet" href="./web/stylexlvba.css" type="text/css">
+<link rev="made" href="mailto:xatsushi&#64;tbb.t-com.ne.jp">
+<link rel="next" href="tsugi.htm">
+<title>Excel VBA Sample</title>
+<style type="text/css">
+<!--
+.clyoko{display:inline;
+}body{
+	background-color:#eee;
+}pre{
+	padding:.7em;
+	margin:0% 5% 0% 5%;
+	background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAYAAACEhIafAAAAEElEQVQImWP4////fwYsBAD5HxPtUUiuKwAAAABJRU5ErkJggg==");	
+
+	background-color:white;
+}hr{
+	border-style:solid;
+	border-width:100%;
+	
+}
+-->
+</style>
+
+</head>
+<body>
+<div id="contents">
+<ul>
+<li class="clyoko"><a href="../">&gt;home</li>
+<li class="clyoko"><a href="./excel_vba1.htm">1</a></li>
+<li class="clyoko"><a href="./excel_vba2.htm">2</a></li>
+<li class="clyoko"><a href="./excel_vba3.htm">3</a></li>
+<li class="clyoko"><a href="./excel_vba4.htm">4</a></li>
+<li class="clyoko"><a href="./excel_vba5.htm">5</a></li>
+<li class="clyoko"><a href="./excel_vba6.htm">6</a></li>
+<li class="clyoko"><a href="./excel_vba7.htm">7</a></li>
+<li class="clyoko"><a href="./excel_vba8.htm">8</a></li>
+<li class="clyoko"><a href="./excel_vba9.htm">9</a></li>
+<li class="clyoko"><a href="./excel_vba10.htm">10</a></li>
+</ul>
+
+<h1>Excel VBA Sample 3</h1>
+
+<pre>		
+	ビリー	2005/01/27（木）	パスワード
+		0.003541667	
+こんばんは。ビリーです。			
+WEBページを取り込む			
+テキストデータを取得するのなら、こんなのはどうでしょう？			
+
+' 参照設定：Microsoft Internet Controls			
+' 参照設定：Microsoft HTML Object Library
+' 参照設定：Microsoft Forms 2.0 Object Library
+
+Public Sub Main()
+    Call PasteSheetHP("http://www.moug.net/" _
+                    , ThisWorkbook.Worksheets(1))
+    MsgBox "終了"
+End Sub
+
+Private Function PasteSheetHP(ByVal AURL As String _
+                            , ByRef ASheet As Worksheet) As Boolean
+'参照設定する場合
+'□ Microsoft HTML Object Library
+'と
+'□ Microsoft Internet Controls
+'(※↑がもし見つからない場合は、
+'Microsoft Browser Helpersに
+'チェックを入れてください。)
+    Dim wkIE As New SHDocVw.InternetExplorer
+    Dim wkDO As New MSForms.DataObject
+    Dim wkDoc As MSHTML.HTMLDocument
+    Dim wkText As String
+
+    wkIE.Visible = True
+    wkIE.navigate URL:=AURL
+    
+    ' HPが表示されるまで待つ
+    Do
+        DoEvents
+    Loop Until (Not wkIE.Busy) And _
+               (wkIE.readyState = READYSTATE_COMPLETE)
+    ' ＨＰをテキストで取得する
+    Set wkDoc = wkIE.document
+    'wkText = wkDoc.body.innerText
+    wkText = wkDoc.body.innerHTML
+    ' IEを終了する
+    wkIE.Quit
+
+    wkDO.Clear
+    ' DataObjectを介してクリップボードに送る
+    wkDO.SetText Text:=wkText
+    wkDO.PutInClipboard
+    ' シートに貼り付ける
+    Application.Goto Reference:=ASheet.Range("A1")
+    ASheet.Paste
+
+End Function
+
+Const OLECMDID_COPY = 12&
+Const OLECMDID_SELECTALL = 17&
+Const OLECMDEXECOPT_DODEFAULT = 0&
+Set objIE = CreateObject("InternetExplorer.Application")
+
+    objIE.navigate "http://www.yahoo.co.jp/"
+        objIE.Visible = True
+
+    Do While objIE.Busy
+        DoEvents
+    Loop
+
+    Do While objIE.document.ReadyState <> "complete"
+        DoEvents
+    Loop
+
+objIE.ExecWB OLECMDID_SELECTALL, OLECMDEXECOPT_DODEFAULT
+objIE.ExecWB OLECMDID_COPY, OLECMDEXECOPT_DODEFAULT
+
+
+
+   Worksheets("Sheet1").Range("A1").PasteSpecial
+
+Set objIE = Nothing
+
+End Sub
+
+Sub パスワード突破()
+Dim ie    As Object
+Dim Obj1  As Object
+Set ie = CreateObject("internetexplorer.application")
+ie.Visible = True
+ie.navigate "http://www.mapion.co.jp/"
+While ie.Busy
+DoEvents
+Wend
+Application.Wait Now + TimeValue("00:00:05")
+Set Obj1 = ie.document
+Debug.Print "kokomade1"
+With Obj1.all
+.Find.Value = "東京都武蔵野市御殿山"
+Obj1.forms(0).submit
+Application.Wait Now + TimeValue("00:00:05")
+End With
+'    Set Obj1 = Nothing'    ie.Visible = False'    Set ie = NothingEnd Sub
+While ie.Busy
+    DoEvents
+Wend
+SendKeys "{backspace}"
+Debug.Print "kokomade2"
+Set Obj1 = ie.document
+While ie.Busy
+    DoEvents
+Wend
+
+With Obj1.all
+.Find.Value = "埼玉県狭山市狭山台"
+Obj1.forms(0).submit
+'Application.Wait Now + TimeValue("00:00:05")
+End With
+
+End Sub
+
+組み合わせ・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+Dim ie    As Object
+Dim Obj1  As Object
+Const OLECMDID_COPY = 12&
+Const OLECMDID_SELECTALL = 17&
+Const OLECMDEXECOPT_DODEFAULT = 0&
+
+
+Sub WEBページを取り込む(fl As Boolean)
+
+Dim ws As Worksheet
+ie.ExecWB OLECMDID_SELECTALL, OLECMDEXECOPT_DODEFAULT
+ie.ExecWB OLECMDID_COPY, OLECMDEXECOPT_DODEFAULT
+
+If fl = False Then
+    Set ws = Sheet1
+Else
+    Set ws = Sheet2
+End If
+With ws
+.[a1].PasteSpecial
+End With
+Obj_Del ws
+End Sub
+
+
+Sub パスワード突破()
+With Application
+    .ScreenUpdating = False
+    .StatusBar = "ブラウザを立ち上げています…"
+End With
+Set ie = CreateObject("internetexplorer.application")
+'ie.Visible = True
+ie.navigate "http://www.mapion.co.jp/"
+While ie.Busy
+DoEvents
+Wend
+Application.Wait Now + TimeValue("00:00:05")
+Set Obj1 = ie.document
+With Obj1.all
+.Find.Value = "東京都武蔵野市御殿山２丁目７‐１"
+Obj1.forms(0).submit
+Application.Wait Now + TimeValue("00:00:05")
+End With
+WEBページを取り込む False
+While ie.Busy
+    DoEvents
+Wend
+SendKeys "{backspace}"
+While ie.Busy
+    DoEvents
+Wend
+Application.Wait Now + TimeValue("00:00:05")
+Set Obj1 = ie.document
+Application.StatusBar = "□■■"
+With Obj1.all
+.Find.Value = "埼玉県狭山市狭山台３丁目"
+Obj1.forms(0).submit
+Application.StatusBar = "□□■"
+End With
+Application.Wait Now + TimeValue("00:00:05")
+While ie.Busy
+    DoEvents
+Wend
+Application.StatusBar = "□□□"
+
+WEBページを取り込む True
+    Set Obj1 = Nothing
+    ie.Visible = False
+    Set ie = Nothing
+MsgBox "done"
+With Application
+    .ScreenUpdating = True
+    .StatusBar = False
+End With
+End Sub
+Sub Obj_Del(ws As Worksheet)
+Dim obj As Object
+Dim myLnk As Hyperlink
+With ws
+    For Each obj In ws.Shapes
+        obj.Delete
+    Next
+    For Each myLnk In ws.Hyperlinks
+        myLnk.Delete
+    Next
+    .UsedRange.MergeCells = False
+    
+End With
+End Sub
+ここまで・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+メニューのカスタマイズ
+Sub CustomMenuBar()
+    Dim myCB As CommandBar
+    Dim myCBCtrl As CommandBarControl
+          
+    Set myCB = CommandBars("Worksheet Menu Bar")
+    
+    For Each myCBCtrl In myCB.Controls
+        myCBCtrl.Delete
+    Next
+    
+    Set myCBCtrl = myCB.Controls.Add(Type:=msoControlPopup)
+    myCBCtrl.Caption = "ファイル(&F)"
+        With myCBCtrl
+        Set myCBCtrl = .Controls _
+            .Add(Type:=msoControlPopup)
+            
+        With myCBCtrl
+            .Caption = "第２階層へ"
+            With myCBCtrl
+                Set myCBCtrl = .Controls.Add( _
+                        Type:=msoControlPopup)
+                With myCBCtrl
+                    .Caption = "第３階層へ"
+                    Set myCBCtrl = .Controls.Add( _
+                        Type:=msoControlButton)
+                        With myCBCtrl
+                            .Caption = "hoge"
+                            .OnAction = "hoge"
+                            
+                        End With
+                End With
+            End With
+        End With
+    End With
+End Sub
+Sub auto_open()
+     Dim MMenu As CommandBarControl
+     Dim SMenu As CommandBarControl
+     Dim SSMenu As CommandBarControl
+   '親メニュー
+  Set MMenu = Application.CommandBars("Worksheet Menu Bar").Controls _
+        .Add(Type:=msoControlPopup)
+    MMenu.Caption = "作成(&L)"
+   '子メニュー
+      Set SMenu = MMenu.Controls.Add(Type:=msoControlPopup)
+       With SMenu
+        .Caption = "新規作成 (&A)"
+        .BeginGroup = False
+      End With
+      '--孫メニュー追加
+        Set SSMenu = SMenu.Controls.Add
+         With SSMenu
+           .Caption = "メッセージ (&B)"
+           .OnAction = "メッセージ"
+           .BeginGroup = False
+         End With
+        Set SSMenu = SMenu.Controls.Add
+         With SSMenu
+           .Caption = "メッセージ2 (&C)"
+           .OnAction = "メッセージ2"
+           .BeginGroup = False
+         End With
+End Sub
+
+Sub ショートカットの無効()
+    With CommandBars("cell")
+        ar = Array(3, 4)
+        For i = LBound(ar) To UBound(ar)
+            .Controls(ar(i)).Enabled = False
+        Next
+    End With
+End Sub
+Sub ショートカットのカスタマイズ()
+    Dim myCB As CommandBar
+    Dim myCtr As CommandBarControl
+    Set myCB = CommandBars("cell")
+    For Each myCtr In myCB.Controls
+        myCtr.Delete
+    Next
+    Set myCtr = myCB.Controls.Add(Type:=msoControlPopup)
+        With myCtr
+            .Caption = "第２階層へ"
+            Set myCtr = .Controls.Add(Type:=msoControlPopup)
+            With myCtr
+                .Caption = "第３階層へ"
+                Set myCtr = .Controls.Add(Type:=msoControlButton)
+            End With
+            With myCtr
+                .Caption = "hoge"
+                .OnAction = "myCBreset"
+            End With
+        End With
+End Sub
+Function f_GetFolder(ByVal strPrpt As String, Optional strDrv = "ルートディレクトリの指定例""c:\\""") As String
+'---------------------------------------------------------------
+'参照設定：Microsoft Shell Controls And Automation
+'引数1：プロンプト
+'引数2：ルートディレクトリの指定
+'概要：フォルダ取得ダイアログを表示
+'返り値：フォルダパス
+'---------------------------------------------------------------
+    Dim i As Long, j As Long
+    Dim fPath As String
+    Dim objShell As New Shell
+    Dim objFolder As Folder3
+    
+    Set objFolder = objShell.BrowseForFolder(0, strPrpt, 513, strDrv) '"c:\\")
+    '513は「新しいフォルダ」を表示させない為のオプション
+    If objFolder Is Nothing Then Exit Function
+    fPath = objFolder.Self.Path
+    f_GetFolder = fPath
+    
+    Set objFolder = Nothing
+End Function
+Sub 偶数ページのみ印刷()
+    Dim ページ As Long
+    Dim i      As Long
+    
+    ページ = Application.ExecuteExcel4Macro("Get.Document(50)")
+    For i = 2 To ページ Step 2
+        ActiveSheet.PrintOut From:=i, To:=i, Copies:=1
+    Next
+End Sub
+Sub Sample()'メッセージボックスで会話
+    Dim ls内容 As String
+'サンプルデータ設定
+    Range("A1").Resize(, 3).Value = Array("質問", "はい", "NO")
+        '[{"質問","はい","いいえ"}]
+    Range("A2").Resize(, 3).Value = _
+        [{"今日は晴れてますか?","よかったね",3}]
+    Range("A3").Resize(, 3).Value = _
+        [{"雨だったの?","風邪ひかないようにね",4}]
+    Range("A4").Resize(, 3).Value = _
+        [{"曇りかな?まだ桜咲いてる?",5,6}]
+    Range("A5").Resize(, 3).Value = _
+        [{"花見に行った?","綺麗だったでしょ","早く行くといいよ(^^)"}]
+    Range("A6").Resize(, 3).Value = _
+        [{"花見に行った?","来年もたくさん咲くといいね","来年は行こうね"}]
+'メイン処理
+    ls内容 = 2  'ここを変えればスタートする質問が変わる。
+    Do While IsNumeric(ls内容)
+        If MsgBox(Cells(ls内容, "A").Value, vbQuestion + vbYesNo) = vbYes Then
+            ls内容 = Cells(ls内容, "B").Value
+        Else
+            ls内容 = Cells(ls内容, "C").Value
+        End If
+    Loop
+    MsgBox ls内容
+End Sub
+Sub 一万行のデバッグ()
+    Dim myfno As Integer
+    myfno = FreeFile
+    'テキストファイルは勝手に作られる
+    Open ThisWorkbook.Path & "\text.txt" For Output As #myfno
+    For i = 0 To 10000
+        Write #myfno, i
+    Next
+    Close #myfno
+End Sub
+Private Sub UserForm_Initialize()'リストボックスの値を取得する。listboxX.valueだとうまくいかない事がある。理由は謎。
+    Dim vItem1 As Variant
+    Dim vItem2 As Variant
+    Dim vItem3 As Variant
+    Dim i As Integer
+    Dim lstBx As Control
+    vItem1 = Array("a", "b", "c")
+    vItem2 = Array("d", "e", "f")
+    vItem3 = Array("g", "h", "i")
+    
+    With Me
+        With .ListBox1
+                .List = vItem1
+        End With
+        With .ListBox2
+                .List = vItem2
+        End With
+        With .ListBox3
+                .List = vItem3
+        End With
+        
+        For Each lstBx In .Controls
+            If StrConv(Left$(lstBx.Name, 5), vbLowerCase) = _
+                "listb" Then
+                With lstBx
+                    .ListStyle = fmListStyleOption
+                    .ListIndex = 0
+                End With
+            End If
+        Next lstBx
+        Debug.Print "lst1 : " & .ListBox1.List(ListBox1.ListIndex) & vbNewLine _
+                    & "lst2 : " & .ListBox2.List(ListBox2.ListIndex) & vbNewLine _
+                    & "lst3 : " & .ListBox3.List(ListBox3.ListIndex)
+     End With
+
+End Sub
+
+sendkeys {PRTSC}はサポートされていないのでAPIdeでコントロール-----------------
+Public Declare Sub keybd_event Lib "user32" (ByVal bVk As Byte, _
+    ByVal bScan As Byte, ByVal dwFlags As Long, ByVal dwExtraInfo As Long)
+
+Public Sub gSub_ExSendKeys(uKeyCode_1 As Integer, Optional uKeyCode_2 As Variant)
+    If IsMissing(uKeyCode_2) Then
+        Call keybd_event(CByte(uKeyCode_1), 0, 0, 0)
+        Call keybd_event(CByte(uKeyCode_1), 0, 2, 0)
+    Else
+        Call keybd_event(CByte(uKeyCode_1), 0, 0, 0)
+        Call keybd_event(CByte(uKeyCode_2), 0, 0, 0)
+        Call keybd_event(CByte(uKeyCode_2), 0, 2, 0)
+        Call keybd_event(CByte(uKeyCode_1), 0, 2, 0)
+    End If
+End Sub
+
+Sub priSc()
+    Call gSub_ExSendKeys(vbKeySnapshot)
+    Sheet1.Cells(1).PasteSpecial
+    Sheet1.PrintPreview
+End Sub
+---------------------------------------------------------ここまで
+
+Sub 数字に続く全ての横線を置き換える()
+    Dim c As Range
+    Dim r As Range
+    Dim s As String, s2 As String, s3 As String
+    Set r = Selection
+    For Each c In r
+        s = c.Value
+        For i = 1 To Len(s)
+            s = c.Value
+            s2 = Mid(s, i, 2)
+            s3 = Right$(s2, 1)
+            '数字の後に続く
+            'ハイフン (四分)
+            'ダッシュ (二分)
+            'ダッシュ (全角)
+            '長音記号
+            '横細線素片
+            '横太線素片
+            'ダッシュ (二分)
+            'ハイフンマイナス
+            '機種依存文字の一つを"－（マイナス）"に
+            '置き換えます。
+            'ハイフンに置き換えるべきところですが、
+            'エクセルの使用としてまま日付に変換されてしまうので
+            'ハイフンを全角変換したときに"－（マイナス）"と
+            '同じ文字に置き換えられるので
+            'マイナス記号と置き換える事にしました。
+            If IsNumeric(Left$(s2, 1)) _
+                And (s3 = Chr(-32419) _
+                Or s3 = Chr(-32443) _
+                Or s3 = Chr(-32420) _
+                Or s3 = Chr(-32421) _
+                Or s3 = Chr(-31585) _
+                Or s3 = Chr(-31574) _
+                Or s3 = Chr(-32443) _
+                Or s3 = Chr(45) _
+                Or s3 = Chr(176)) Then
+                c.Value = Left$(s, i) & Chr(-32388) & _
+                Mid$(s, i + 2, Len(s) - i)
+            End If
+        Next i
+    Next c
+    MsgBox "done"
+End Sub
+
+Private Sub Worksheet_Change(ByVal Target As Range)'住所自動入力
+'郵便番号辞書を有効にしておく
+    Dim objApp As Application
+    If Target.Columns.Count > 1 _
+    Or Target.Rows.Count > 1 Then Exit Sub
+    '値が変更されたのがa列の場合
+    If (Target.Column = 1) Then
+        '入力された値の長さが3以上の場合
+        'かつ、B列の同じ行のセルが空白の場合
+        If (Len(Target.Value) >= 3) And _
+        (Cells(Target.Row, 2) = "") Then
+             Set objApp = Application
+             objApp.EnableEvents = False
+
+             Cells(Target.Row, 2).Value = _
+                 StrConv(Target.Value, vbWide)
+             Cells(Target.Row, 2).Select
+             'F2 => Shift+Home => F13
+             SendKeys "{F2}", True
+             SendKeys "+{HOME}", True
+             SendKeys "{F13}", True
+
+             objApp.EnableEvents = True
+        End If
+    End If
+End Sub
+テキストボックスに全角文字以外の入力を許さない
+Private Sub TextBox1_Enter()
+    With Me.TextBox1
+        .IMEMode = xlIMEModeOn
+        .IMEMode = xlIMEModeHiragana
+    End With
+End Sub
+
+Private Sub TextBox1_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+    With Me.TextBox1
+        If .IMEMode = xlIMEModeOff Then
+            MsgBox "ちゃう!"
+            KeyAscii = 0
+            .IMEMode = xlIMEModeOn
+            .IMEMode = fmIMEModeHiragana
+        ElseIf .IMEMode <> xlIMEModeHiragana Then
+            MsgBox "ちゃうちゃう！"
+            KeyAscii = 0
+            .IMEMode = fmIMEModeHiragana
+        End If
+    End With
+End Sub
+Sub 可視セルコピーの別の方法()
+  Dim Sht1 As Worksheet
+  Dim Rng As Range
+  
+  With Sheets(1)
+      .Range("A1").CurrentRegion _
+        .AutoFilter 1, "1"
+      Set Rng = .AutoFilter.Range
+      Intersect(Rng, Rng.Offset(1)).Copy Sheets(2).[A2]
+      .AutoFilterMode = False
+  End With
+End Sub
+
+Sub 意図する範囲を選択してくれるまで再選択を迫るapplication.inputbox()'************
+    Dim rngAns As Range
+    Do
+        Set rngAns = Dummy( _
+            Application.InputBox( _
+            "A1～A3 のどれかを指定してください", _
+            "マウスで選択", Type:=8) _
+        )
+        If rngAns Is Nothing Then
+            MsgBox "きゃんせる"
+            Exit Do
+        Else
+            Select Case rngAns.Address(False, False)
+                Case "A1", "A2", "A3"
+                    Exit Do
+            End Select
+        End If
+    Loop
+End Sub
+
+
+Function Dummy(ByVal Value As Variant) As Range
+    If TypeOf Value Is Range Then
+        Debug.Print TypeName(Value)
+        Set Dummy = Value
+    End If
+End Function
+*****************************ここまで
+
+Option Compare Database'メールを送信後送信済みトレイを表示する
+
+Private Sub コマンド0_Click()
+    sub_DaitaiAn
+End Sub
+
+Sub sub_DaitaiAn()
+'outlookに参照設定
+    Dim myOlapp As New Outlook.Application
+    Dim myMail As Outlook.MailItem
+    Dim myOlFolder As MAPIFolder
+    Set myOlFolder = myOlapp.Session.Folders(1) _
+                       .Folders("送信済みアイテム")
+    Set myMail = myOlapp.CreateItem(olMailItem)
+    With myMail
+        .To = "hoge@xxx.xxx.ne.jp;hogehoge@1234"' .To =  "宛先さま<bbbb_aaaa@cdfhhj.nnshg.co.jp>"
+
+        .Subject = "test"
+        .Send
+    End With
+    MsgBox "送信済みトレイを表示します。" _
+            & "送信された事を自らの責任" _
+            & "において確認しましょう！", vbInformation
+    myOlFolder.Display
+    
+    Set myOlFolder = Nothing
+    Set myMail = Nothing
+    Set myOlapp = Nothing
+End Sub
+
+Sub ユーザーフォームを名前で呼ぶ()
+    UserForms.Add("UserForm1").Show
+    'Userform1.Showに同じ
+End Sub
+
+Public WithEvents wrd As Word.Application'ワードのイベントを拾う
+
+日付の入力規則：ワード編--------------------------------ここから
+Dim flg As Boolean 'Trueの場合のみ入力可
+Const myMsg As String = """2005/5/24"" 或いは" & vbNewLine _
+                & " ""5/24"" のように入力してください"
+Private Sub TextBox1_Change()
+    With TextBox1
+        If flg = False Then
+            MsgBox myMsg, vbInformation _
+                , "半角数字と""/""のみ入力可"
+                flg = True
+                Me.TextBox1.Value = Empty
+                Exit Sub
+        Else
+            '2005/5…の段階で日付と判断させない
+            If InStr(Left$(.Value, 4), "/") = 0 Then
+                Exit Sub
+            
+            ElseIf IsDate(.Value) Then
+               .Value = Format$(.Value, "yyyy/m/d")
+            End If
+        End If
+    End With
+End Sub
+
+Private Sub TextBox1_KeyDown(ByVal KeyCode _
+    As MSForms.ReturnInteger, ByVal Shift As Integer)
+    'ATOKユーザーだと意味無いけど気休めで
+    '日本語入力OFF
+    IMEMode = wdIMEModeOff
+    flg = True
+    'BSとDELとEnterは操作可
+    If KeyCode = 8 Or KeyCode = 46 Or KeyCode = 13 Then Exit Sub
+    If Not (KeyCode >= 48 And KeyCode <= 57 Or KeyCode = 191) Then
+       flg = False
+    End If
+End Sub
+
+Private Sub TextBox1_LostFocus()
+    '2005/5 でも日付として解釈されるので
+    '日にちまで入れない場合はリセット
+    Dim i As Long, ii As Long
+    i = 0
+    With Me.TextBox1
+        For ii = 1 To Len(.Value)
+            If Mid(.Value, ii, 1) = "/" Then
+                i = i + 1
+            End If
+        Next ii
+
+        If i < 2 Then
+            MsgBox myMsg, vbInformation, """日""まで入力しろボケがっ！"
+            .Value = Empty
+        End If
+    End With
+End Sub
+----------------------------ここまで
+---------------------------必要以上に待たないWEBページの貼り付け
+    Public Ie    As Object
+    Public Obj1  As Object
+    Const oleCmdie_Copy = 12&
+    Const oleCmdid_SelectAll = 17&
+    Const oleCmdExeCopt_DoDefault = 0&
+Sub test()
+    Dim objTxT As Object
+    flg = False
+    Set Ie = CreateObject("internetexplorer.application")
+    'ie起動
+    With Ie
+        While .busy = True And Ie.ReadyState <> READYSTATE_COMPLETE
+            DoEvents
+        Wend
+        .navigate "http://www2.moug.net/bbs/exvba/thread000001.htm"
+        .Visible = True
+    End With
+    'ページの定義
+myRetry:
+    On Error GoTo Yarinaoshi
+            Set Obj1 = Ie.Document
+    With Obj1.all
+        Set objTxT = .txtPass
+        .txtPass.Value = "test"
+    End With
+    Set Ie = Nothing
+    Set Obj1 = Nothing
+    Exit Sub
+Yarinaoshi:
+    Resume myRetry
+End Sub
+
+■Yu_tangさんコード　IEを起動するクラス
+Option Explicit
+'クラスモジュールに記述
+'□ Microsoft HTML Object Library
+'□ Microsoft Internet Controls に参照設定要
+
+Private WithEvents ie As SHDocVw.InternetExplorer
+Private mDocumentComplete As Boolean
+
+Private Sub Class_Initialize()
+Set ie = CreateObject("InternetExplorer.Application")
+ie.Visible = True
+Navigate "about:blank"
+End Sub
+
+Public Sub Navigate(ByRef URL As String)
+mDocumentComplete = False
+ie.Navigate2 URL
+Do
+    DoEvents
+Loop Until mDocumentComplete
+End Sub
+
+Public Property Get IeObject() As InternetExplorer
+    Set IeObject = ie
+End Property
+'IEのイベントで読み込み完了を検知する
+Private Sub ie_DocumentComplete(ByVal pDisp As Object, URL As Variant)
+    mDocumentComplete = True
+End Sub
+
+</pre>
+<hr>
+<address>yamaV1.02β</address>
+</div>
+</body>
+</html>

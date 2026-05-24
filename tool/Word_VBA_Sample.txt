@@ -1,0 +1,620 @@
+■図形を文書の左右中央に挿入
+Sub Sample()
+    Dim myShp As Shape
+    Set myShp = ActiveDocument. _
+       Shapes.AddPicture(FileName:= _
+       "c:\sample.jpg", LinkToFile:=False, _
+       SaveWithDocument:=True)
+    myShp.Select
+    With Selection.ShapeRange
+        .Left = PointsToMillimeters _     
+         (ActiveDocument.PageSetup.PageWidth _
+            - myShp.Width) / 2
+    End With
+End Sub
+■--------------------------------------------------------
+Sub CSVを読み込む()
+    Dim textline
+    Dim time1!, time2!
+    time1 = Timer()
+    Application.ScreenUpdating = False
+    Open "c:\test.csv" For Input As #1
+    Do While Not EOF(1)
+        Line Input #1, textline
+        Selection = textline
+        With Selection
+            .Move unit:=wdParagraph
+            .TypeParagraph
+        End With
+    Loop
+
+'データ型を指定して4列に分ける時
+    'Do While Not EOF(1)
+     '   Input #1, a$, b$, c$, d$
+      '  Selection = a & Chr(9) & b & Chr(9) _
+       '             & c & Chr(9) & d
+       ' With Selection
+        '    .Move unit:=wdParagraph
+         '   .TypeParagraph
+        'End With
+    'Loop
+
+    Close #1
+    Application.ScreenUpdating = True
+    time2 = Timer()
+    Debug.Print time2 - time1
+End Sub
+
+■--------------------------------------------------------
+Sub エクセルからワードにデータを渡す()
+    Dim appXL As New Excel.Application
+    Dim timer1!, timer2!
+    With Application
+        .ScreenUpdating = False
+        .DisplayAlerts = wdAlertsNone
+    End With
+    timer1 = Timer()
+    With appXL
+       Set wb = .workbooks.Open(FileName:="c:\test.xls")
+       wb.Sheets(1).UsedRange.Copy
+       Selection.PasteSpecial DataType:=wdPasteText
+       appXL.CutCopyMode = False
+       wb.Close False
+    End With
+        Set wb = Nothing
+        Set xlapp = Nothing
+    timer2 = Timer()
+    Debug.Print timer2 - timer1
+    With Application
+        .ScreenUpdating = True
+        .DisplayAlerts = wdAlertsAll
+    End With
+End Sub
+■--------------------------------------------------------
+Sub タブの削除()
+    Dim mychr As Range
+    For Each mychr In ActiveDocument.Characters
+        'Debug.Print mychr; Asc(mychr)
+        If Asc(mychr) = 9 Then mychr.Delete
+    Next mychr
+End Sub
+■--------------------------------------------------------
+Sub テキストボックスの選択行取得()
+    Dim tBx As TextBox
+    Dim lngLine As Long
+    Set tBx = ThisDocument.TextBox1
+    lngLine = tBx.CurLine
+    MsgBox lngLine
+End Sub
+■--------------------------------------------------------
+'テキストボックスの日付入力規則
+Dim flg As Boolean 'Trueの場合のみ入力可
+Const myMsg As String = """2005/5/24"" 或いは" & vbNewLine _
+                & " ""5/24"" のように入力してください"
+Private Sub TextBox1_Change()
+    With TextBox1
+        If flg = False Then
+            MsgBox myMsg, vbInformation _
+                , "半角数字と""/""のみ入力可"
+                flg = True
+                .Value = Empty
+                Exit Sub
+        Else
+            '2005/5…の段階で日付と判断させない
+            If InStr(Left$(.Value, 4), "/") = 0 Then
+                Exit Sub
+            
+            ElseIf IsDate(.Value) Then
+               .Value = Format$(.Value, "yyyy/m/d")
+            End If
+        End If
+    End With
+End Sub
+
+Private Sub TextBox1_KeyDown(ByVal KeyCode _
+    As MSForms.ReturnInteger, ByVal Shift As Integer)
+    'ATOKユーザーだと意味無いけど気休めで
+    '日本語入力OFF
+    IMEMode = wdIMEModeOff
+    flg = True
+    'BSとDELとEnterは操作可
+    If KeyCode = 8 Or KeyCode = 46 Or KeyCode = 13 Then Exit Sub
+    If Not (KeyCode >= 48 And KeyCode <= 57 Or KeyCode = 191) Then
+       flg = False
+    End If
+End Sub
+
+Private Sub TextBox1_LostFocus()
+    '2005/5 でも日付として解釈されるので
+    '日にちまで入れない場合はリセット
+    Dim i As Long, ii As Long
+    i = 0
+    With Me.TextBox1
+        For ii = 1 To Len(.Value)
+            If Mid(.Value, ii, 1) = "/" Then
+                i = i + 1
+            End If
+        Next ii
+
+        If i < 2 Then
+            MsgBox myMsg, vbInformation, """日""まで入力！"
+            .Value = Empty
+        ElseIf Not IsDate(.Value) Then
+            MsgBox "そのような日にちはありません"
+            flg = True
+            .Value = Empty
+        End If
+    End With
+End Sub
+■--------------------------------------------------------
+Sub 選択行の一段落前のテキストを取得()
+     Dim rng As Word.Range
+     Set rng = Selection.Range
+     If Selection.MoveStart(Unit:=wdParagraph, Count:=-2) = 0 Then
+         MsgBox "前の段落はありません。"
+     Else
+         MsgBox Selection.Paragraphs(1).Range.Text
+     End If
+     rng.Select
+End Sub
+■--------------------------------------------------------
+Sub フォルダを指定して画像を取り込む()
+    Dim FSO As New FileSystemObject
+    Dim objShell As Object, objFolder As Object
+    Dim myfile As File
+    Set objShell = CreateObject("shell.application")
+    Set objFolder = objShell.browseforfolder(0, "フォルダ指定", 0, "c:\\")
+    'フォルダの指定
+    If objFolder Is Nothing Then Exit Sub
+    fpath = objFolder.Items().Item().Path
+    With FSO
+        For Each myfile In .GetFolder(fpath).Files
+            If myfile.Name Like "*.jpg" Then
+            'ここから
+            Selection.InlineShapes.AddPicture FileName:= _
+                myfile.Path, LinkToFile:=False, _
+                SaveWithDocument:=True
+            Selection.MoveEnd
+            'ここまでがワード特有のVBAになる
+            End If
+        Next myfile
+    End With
+End Sub
+■--------------------------------------------------------
+イベントの設定（thisWorkbookモジュールに書けばわざわざクラスモジュール作成の必要は無い）
+Public WithEvents WD As Application
+Private Sub Document_Open()
+    Dim Chbx As InlineShape
+    Dim i As Long
+    For i = 1 To ActiveDocument.InlineShapes.Count
+        Debug.Print InlineShapes(i).Type
+        Debug.Print InlineShapes(i).Field.Index
+        If InlineShapes(i).Field.Index <= 4 Then
+        Set Chbx = ActiveDocument.InlineShapes(i)
+            Chbx.Width = 1
+            Chbx.Height = 1
+        End If
+    Next i
+    Selection.ParagraphFormat.LineSpacing = 0.7
+End Sub
+
+
+
+Public WithEvents wrd As Word.Application'ワードのイベントを拾う
+
+日付の入力規則：ワード編--------------------------------ここから
+Dim flg As Boolean 'Trueの場合のみ入力可
+Const myMsg As String = """2005/5/24"" 或いは" & vbNewLine _
+                & " ""5/24"" のように入力してください"
+Private Sub TextBox1_Change()
+    With TextBox1
+        If flg = False Then
+            MsgBox myMsg, vbInformation _
+                , "半角数字と""/""のみ入力可"
+                flg = True
+                Me.TextBox1.Value = Empty
+                Exit Sub
+        Else
+            '2005/5…の段階で日付と判断させない
+            If InStr(Left$(.Value, 4), "/") = 0 Then
+                Exit Sub
+            
+            ElseIf IsDate(.Value) Then
+               .Value = Format$(.Value, "yyyy/m/d")
+            End If
+        End If
+    End With
+End Sub
+
+Private Sub TextBox1_KeyDown(ByVal KeyCode _
+    As MSForms.ReturnInteger, ByVal Shift As Integer)
+    'ATOKユーザーだと意味無いけど気休めで
+    '日本語入力OFF
+    IMEMode = wdIMEModeOff
+    flg = True
+    'BSとDELとEnterは操作可
+    If KeyCode = 8 Or KeyCode = 46 Or KeyCode = 13 Then Exit Sub
+    If Not (KeyCode >= 48 And KeyCode <= 57 Or KeyCode = 191) Then
+       flg = False
+    End If
+End Sub
+
+Private Sub TextBox1_LostFocus()
+    '2005/5 でも日付として解釈されるので
+    '日にちまで入れない場合はリセット
+    Dim i As Long, ii As Long
+    i = 0
+    With Me.TextBox1
+        For ii = 1 To Len(.Value)
+            If Mid(.Value, ii, 1) = "/" Then
+                i = i + 1
+            End If
+        Next ii
+
+        If i < 2 Then
+            MsgBox myMsg, vbInformation, """日""まで入力しろボケがっ！"
+            .Value = Empty
+        End If
+    End With
+End Sub
+----------------------------ここまで
+■--------------------------------------------------------
+アクティブな文書中の表に同じスタイルを設定する
+Sub アクティブな文書中の表に同じスタイルを設定する()
+    Dim myDoc As Document
+    
+    Set myDoc = ActiveDocument
+    
+    For Each Table In myDoc.Tables
+        With Table
+            .AutoFormat Format:=wdTableFormatClassic4, ApplyBorders _
+            :=True, ApplyShading:=True, ApplyFont:=True, ApplyColor:=True, _
+            ApplyHeadingRows:=True, ApplyLastRow:=False, ApplyFirstColumn:=True, _
+            ApplyLastColumn:=False, AutoFit:=True
+            .Rows.Alignment = wdAlignRowCenter
+        End With
+    Next Table
+End Sub
+■--------------------------------------------------------
+Sub 全てのリンクのパスを変更()
+    Dim myDoc As Document
+    Dim myLink As Hyperlink
+    Dim myFolder As String
+    
+    Set myDoc = ActiveDocument
+    myFolder = InputBox("サブフォルダ名を入力して下さい", "移動先のフォルダ名の指定")
+    
+    For Each myLink In myDoc.Hyperlinks
+        With myLink
+            .Address = myFolder & "\" & .Address
+        End With
+    Next myLink
+End Sub
+
+■--------------------------------------------------------]
+'ページ数取得のエトセトラ
+'ページ挿入
+Sub mkPge()
+    Dim i As Long
+    i = 1000
+    '１０００ページ挿入
+    For i = 1 To 1000
+        Selection.InsertBreak Type:=wdPageBreak
+    Next
+
+End Sub
+
+'ドキュメントを渡してページ数を取得します。
+Function docPageCnt1(dc As Document) As Long
+    Dim objPages As Pages
+    
+    Debug.Print Timer()
+    
+    Set objPages = dc.ActiveWindow.Panes(1).Pages
+    docPageCnt = objPages.Count
+    
+    Debug.Print Timer()
+
+End Function
+
+'ドキュメントを渡してページ数を取得します。
+'docPageCnt1に比べると低速です
+Function docPageCnt2(dc As Document) As Long
+        
+    Debug.Print Timer()
+    '↓自doc以外を指定する場合、これを入れないとページ数の習得ができない
+    dc.Repaginate
+    docPageCnt2 = dc.BuiltInDocumentProperties("Number of Pages")
+    
+    Debug.Print Timer()
+
+End Function
+
+'docPageCnt1の使い方
+Sub test_docPageCnt1()
+    Dim dc As Document
+    Set dc = Documents.Open(ThisDocument.Path & "\test.docm")
+    
+    Debug.Print docPageCnt(dc)
+End Sub
+
+'docPageCnt2の使い方。test_docPageCnt1と比べると低速
+Sub test_docPageCnt2()
+    Dim dc As Document
+    Set dc = Documents.Open(ThisDocument.Path & "\test.docm")
+    'Set dc = ThisDocument
+    Debug.Print docPageCnt2(dc)
+End Sub
+
+■--------------------------------------------------------
+'ドキュメント上のエクセルシートの扱い
+'ThisDocument モジュール
+Private Const sourcePth As String = "C:\Users\yama\test.xlsx"
+
+'エクセルシートをリンク貼り付けする
+Sub InsertXlsInDoc()
+
+    Dim testShape As InlineShape
+    Set testShape = ThisDocument.InlineShapes.AddOLEObject( _
+        ClassType:="Excel.Sheet", _ 　←"Excel.Sheet.8"とすべきなのかも知れない。よくわからない。
+        FileName:=sourcePth, _
+        LinkToFile:=True, _
+        Range:=Selection.Range)
+    
+        testShape.ConvertToShape
+End Sub
+
+'リンク貼り付けのシート内容を更新する
+Sub EditXlsInDoc()
+    
+    Dim xlAPP As Excel.Application
+    Dim WB As Workbook
+    
+    Set xlAPP = New Excel.Application
+    Set WB = xlAPP.Workbooks.Open(sourcePth)
+    
+    WB.Sheets(3).Range("a1").Value = "fushufushu"
+    WB.Save
+    WB.Close
+    
+    ThisDocument.Shapes("Object X").Select
+    Selection.Fields.Update
+    
+    xlAPP.Quit
+    Set xlAPP = Nothing
+    
+End Sub
+
+■--------------------------------------------------------
+'埋め込みシートを作成して編集する。
+Option Explicit
+Sub CreateXlsInDoc()
+    Dim inLnShape As InlineShape
+    Dim shp As Shape
+    Set inLnShape = _
+        Selection.InlineShapes.AddOLEObject( _
+            ClassType:="Excel.Sheet.8")
+    Set shp = inLnShape.ConvertToShape
+    shp.Name = "shInDoc1"
+End Sub
+
+Sub EditShInDoc()
+    Dim sourcePth As String
+    Dim xlAPP As Excel.Application
+    
+    'Doc上のエクセル起動
+    ThisDocument.Shapes("shInDoc1").OLEFormat.DoVerb (wdOLEVerbOpen)
+
+　　'xl2007でのコード↓。xl2003だったらThisDocument.FullName で動作する事を確認している。
+    sourcePth = _
+        Replace(ThisDocument.Name, "\", Chr(32)) & _
+            " の ワークシート"
+            
+    Set xlAPP = VBA.GetObject(, "Excel.Application")
+    With xlAPP
+        .Visible = False
+        .Workbooks(sourcePth).Sheets(1).Cells(1).Value = "ぅんがぁ"
+        .Quit
+    End With
+    
+    Set xlAPP = Nothing
+End Sub
+■--------------------------------------------------------
+
+Option Explicit
+
+'文書内のフィールドをUPDATEさせるマクロ
+Sub AutoOpen()
+    Dim aStory As Range
+    Dim aField As Field
+    
+    For Each aStory In ActiveDocument.StoryRanges
+        
+        For Each aField In aStory.Fields
+            aField.Update
+        Next aField
+        
+    Next aStory
+    
+End Sub
+
+■--------------------------------------------------------
+
+'文書ヘッダーに文書名の一部を
+'挿入するマクロ
+Private Sub DOcument_Open()
+    Application.ScreenUpdating = False
+    Call InsertHeader
+    Application.ScreenRefresh
+    Application.ScreenUpdating = True
+End Sub
+
+'ヘッダーのテキストおｗ削除してから挿入
+Private Sub InsertHeader()
+
+    Const cnsUketuke As String = "受付番号:"
+    
+    With ThisDocument
+        .Windows(1).View.SeekView = _
+            wdSeekCurrentPageHeader
+        
+        'Application.Selection
+        With .Parent.Selection
+            '常に上書き
+            .HomeKey Unit:=wdLine, Extend:=wdMove
+            .EndKey Unit:=wdLine, Extend:=wdExtend
+            .Delete
+            
+            .TypeText Text:=cnsUketuke & file_Num
+            .ParagraphFormat.Alignment = _
+                wdAlignParagraphRight
+        End With
+        .Windows(1).View.SeekView = _
+            wdSeekMainDocument
+    End With
+End Sub
+
+'挿入するテキストの作成
+Private Function file_Num() As String
+    Dim FSO As Object
+    Set FSO = VBA.CreateObject("Scripting.FileSystemObject")
+    
+    Dim ext As String
+    Dim meName As String
+    Dim rslt As String
+    
+    meName = ThisDocument.FullName
+    '拡張子
+    ext = FSO.GetExtensionName(meName)
+    meName = VBA.StrConv(meName, vbNarrow)
+    rslt = Right$(meName, Len(meName) - InStrRev(meName, ")"))
+    rslt = Left(rslt, Len(rslt) - Len(ext) - 1)
+    file_Num = rslt
+    
+End Function
+
+■--------------------------------------------------------
+
+'http://ameblo.jp/gidgeerock/entry-11966566753.html
+Sub 選択範囲の拡大_全角()
+
+　Dim myRange As Range
+　
+　Set myRange = Selection.Range
+　
+　'先頭を拡張
+　Do While Not myRange.Characters.First.Previous Like "[a-zA-Z0-9 ]"
+　　myRange.Start = myRange.Start - 1
+　Loop
+　
+　'末尾を拡張
+　Do While Not myRange.Characters.Last.Next Like "[a-zA-Z0-9 ]"
+　　myRange.End = myRange.End + 1
+　Loop
+　
+　'Rangeオブジェクトを選択
+　myRange.Select
+　
+　'Rangeオブジェクトを解放
+　Set myRange = Nothing
+　
+End Sub
+
+
+Sub 選択範囲の拡大_半角()
+
+　Dim myRange As Range
+　
+　Set myRange = Selection.Range
+　
+　'先頭を拡張
+　Do While myRange.Characters.First.Previous Like "[a-zA-Z0-9 ]"
+　　myRange.Start = myRange.Start - 1
+　Loop
+　
+　'末尾を拡張
+　Do While myRange.Characters.Last.Next Like "[a-zA-Z0-9 ]"
+　　myRange.End = myRange.End + 1
+　Loop
+　
+　'Rangeオブジェクトを選択
+　myRange.Select
+　
+　'Rangeオブジェクトを解放
+　Set myRange = Nothing
+　
+End Sub
+
+■--------------------------------------------------------
+
+'きぬあささんコード。Font.Name 指定しても
+'フォント変更が反映しない。Testメソッド
+Public Sub Test()
+  With Selection
+    .TypeText ChrW(&H25CF) '黒丸(BLACK CIRCLE):U+25CF
+    .MoveLeft Unit:=wdCharacter, Count:=1, Extend:=wdExtend
+    .Font.Name = "Century"
+  End With
+End Sub
+
+Option Explicit
+
+'で、FindControlから操作すると、実現できる、というもの。
+Public Sub Sample()
+  TypeTextFont String(1, ChrW(&H25CF)), "ＭＳ ゴシック"
+End Sub
+
+Public Sub TypeTextFont(ByVal Text As String, ByVal FontName As String)
+  Dim r As Word.Range
+  
+  Set r = Selection.Range
+  r.Text = Text
+  r.Select
+  With Application.CommandBars.FindControl(ID:=1728)
+    If .Enabled = True Then .Text = FontName 'フォント(ComboBox)を操作
+  End With
+  Selection.Collapse wdCollapseEnd
+End Sub
+
+■--------------------------------------------------------
+
+Sub スタイルを全てコピーするマクロ()
+
+　Dim myFilePath As String　' Wordファイルパス
+　Dim myFD As FileDialog
+　
+　Set myFD = Application.FileDialog(msoFileDialogFilePicker)
+
+　'------------------------------------------------
+　'Wordファイルの選択
+　'------------------------------------------------
+　With myFD
+　
+　　.AllowMultiSelect = False
+　　.Title = "Wordファイルを選択してください"
+　
+　　With .Filters
+　　　.Clear
+　　　.Add "すべてのWordファイル", "*.doc; *.docx"
+　　End With
+　
+　　If .Show = -1 Then
+　　　myFilePath = .SelectedItems(1)
+　　　.Filters.Clear
+　　Else
+　　　.Filters.Clear
+　　　Exit Sub
+　　End If
+　
+　End With
+
+　'------------------------------------------------
+　'スタイルをコピーする
+　'------------------------------------------------
+　If Dir(myFilePath, vbNormal) <> "" Then
+　　ActiveDocument.CopyStylesFromTemplate Template:=myFilePath
+　End If
+　
+　Set myFD = Nothing
+　
+End Sub

@@ -1,0 +1,300 @@
+<pre>
+        Set myBtn = .Controls.Add( _
+            Type:=msoControlButton, ID:=1605)
+            With myBtn
+                .Caption = "デザインモード"
+                .style = msoButtonIcon
+            End With
+        Set myBtn = .Controls.Add( _
+            Type:=msoControlButton, ID:=458)
+            With myBtn
+                .Caption = "選択フィルタ(&6)"
+                .style = msoButtonCaption
+            End With
+        Set myBtn = .Controls.Add( _
+            Type:=msoControlButton, ID:=280)
+            With myBtn
+                .Caption = "カメラ(&C)"
+                .style = msoButtonCaption
+            End With
+
+Option Explicit
+    Dim vStyle() As Variant
+    Dim lngWeight() As Long
+Sub myAutoFormat(lnglvl As Long)
+'-----------------------------------------------------
+'リスト形式を表形式に変換
+'引数：階層レベル
+'-----------------------------------------------------
+    Dim R As Range, C As Range
+    Dim ColCnt As Long
+    Dim RowCnt As Long
+    Dim lngXtitle As Long
+    Dim i As Long
+    Dim rKei As Range
+    Dim WS_bk As Worksheet
+    Dim WS As Worksheet
+    Dim str_bk0 As String
+    Dim str_bk As String
+    Dim bk_cnt As Long
+    On Error GoTo myAUtoFormat_ERR
+    
+    Set WS = ActiveSheet
+    
+    lngXtitle = 1 'X軸の階層の深さ
+    Set R = Selection.CurrentRegion
+    ColCnt = R.Columns.Count
+    RowCnt = R.Rows.Count
+    
+    Set WS_bk = Worksheets.Add
+    
+    R.Copy WS_bk.Cells(1) 'バックアップ作成
+    str_bk = WS.Name & "_bk"
+    str_bk0 = str_bk
+    
+    bk_cnt = 1
+    Do
+        On Error Resume Next
+        WS_bk.Name = str_bk
+        str_bk = str_bk0 & "(" & bk_cnt & ")"
+        bk_cnt = bk_cnt + 1
+    Loop Until Err.Number = 0
+    On Error GoTo 0
+    
+    If ColCnt <= lnglvl Then
+        MsgBox "数値には見出し列の階層数を指定します。データ列が1行以上必要です。", vbExclamation, ThisWorkbook.Name
+        Exit Sub
+    End If
+    Set rKei = R.Offset(, lnglvl).Resize(, ColCnt - lnglvl).Find(what:="*計", lookat:=xlWhole)
+    
+    If Not (rKei Is Nothing) Then
+            MsgBox "データ列に[ " & rKei.Value & " ]の見出しがあります。", vbExclamation, ThisWorkbook.Name
+        Exit Sub
+    End If
+    ReDim vStyle(lnglvl)
+    ReDim lngWeight(lnglvl)
+    With Application
+        .ScreenUpdating = False
+        .StatusBar = "実行中…"
+    End With
+    WS.Activate
+    For i = 1 To lnglvl
+        Select Case i
+            Case 0
+                vStyle(i) = xlDouble
+            Case 1
+                vStyle(i) = xlContinuous
+            Case 2
+                vStyle(i) = xlContinuous
+            Case 3
+                vStyle(i) = xlContinuous
+            Case 4
+                vStyle(i) = xlContinuous
+            Case Is > 4
+                vStyle(i) = xlDot
+        End Select
+    Next i
+    For i = 0 To lnglvl
+        Select Case i
+            Case 0
+                lngWeight(i) = xlMedium
+            Case 1
+                lngWeight(i) = xlThin
+            Case 2
+                lngWeight(i) = xlHairline
+            Case 3
+                lngWeight(i) = xlHairline
+            Case 4
+                lngWeight(i) = xlHairline
+            Case Is > 4
+                lngWeight(i) = xlHairline
+        End Select
+    Next i
+    '罫線削除
+    With R
+        .Borders.LineStyle = xlNone
+    End With
+    '抜けデータがあれば埋める
+    For Each C In R.Range(R.Cells(lngXtitle), R.Cells(lnglvl))
+        s_F2ume _
+            Range(Cells(C.Offset(1).Row, C.Column), _
+            Cells(RowCnt + C.Row - 1, C.Column)), ActiveSheet
+    Next C
+    
+    '階層回並び替え（合計行が無い場合）
+    If R.Find(what:="*計", lookat:=xlWhole) Is Nothing Then
+        For i = lnglvl To 1 Step -1
+            R.Sort _
+                Key1:=R.Cells(lngXtitle, i), _
+                Order1:=xlAscending, Header:=xlYes
+        Next i
+    End If
+    '連続した値を空白にして、罫線を引く
+    For Each C In R.Range(R.Cells(1), R.Cells(lnglvl + 1))
+        s_Fhabuku _
+            Range(Cells(C.Offset(1).Row, C.Column), _
+            Cells(RowCnt + C.Row - 1, C.Column)), lnglvl
+    Next C
+    With R
+        With .Borders(xlEdgeTop)
+            .LineStyle = xlContinuous
+            .weight = xlThick
+        End With
+        With .Borders(xlEdgeBottom)
+            .LineStyle = xlContinuous
+            .weight = xlThick
+        End With
+        With .Borders(xlEdgeRight)
+            .LineStyle = xlContinuous
+            .weight = xlThick
+        End With
+        '外枠
+        With .Borders(xlEdgeLeft)
+            .LineStyle = xlContinuous
+            .weight = xlThick
+        End With
+        With .Rows(1)
+            '.Select
+            .Font.Bold = True
+            .HorizontalAlignment = xlCenter
+        End With
+        With .Borders(xlInsideVertical)
+            .LineStyle = xlContinuous
+            .weight = xlThin
+        End With
+        '見出し区別罫線
+        With .Columns(lnglvl).Borders(xlEdgeRight)
+            .LineStyle = xlContinuous
+            .weight = xlMedium
+        End With
+        .Replace "合計 : ", "", xlPart
+        .Columns.AutoFit
+        .Rows.AutoFit
+        '合計行・小計行の縦罫線と余分な値の削除
+        For Each C In R.Range(.Cells(1), .Cells(lnglvl + 1))
+            s_goukeiGyoShimatu _
+                Range(Cells(C.Offset(1).Row, C.Column), _
+                Cells(RowCnt + C.Row - 1, C.Column)), lnglvl
+        Next C
+    End With
+myAutoFormat_End:
+    With Application
+        .ScreenUpdating = True
+        .StatusBar = False
+    End With
+    MsgBox "done", , ThisWorkbook.Name
+    Exit Sub
+myAUtoFormat_ERR:
+    MsgBox Err.Number & ":" & Err.Description, , ThisWorkbook.Name
+    Resume myAutoFormat_End
+End Sub
+Sub s_F2ume(ByRef rngR As Range, WS As Worksheet)
+'---------------------------------------
+'引数：セル範囲,ワークシートオブジェクト
+'一つしたのセルが空白なら同じ値で埋める
+'---------------------------------------
+    Dim i As Long
+    For i = 1 To rngR.Rows.Count - 1
+        With rngR.Cells(i)
+            If Not IsError(.Offset(1).Value) And Not IsError(.Value) Then
+                If Len(.Offset(1).Value) = 0 And Not (.Value Like "*計") Then
+                    .Offset(1).Value = .Value
+                End If
+            End If
+        End With
+    Next i
+End Sub
+
+Sub s_Fhabuku(ByRef rngR As Range, lngY)
+'--------------------------------------------------------
+'引数：セル範囲,Y軸の階層の深さ
+'連続する値を空白にする
+'階層別に罫線を引く
+'--------------------------------------------------------
+    Dim i As Long, ii As Long
+    
+    For i = rngR.Rows.Count To 1 Step -1
+        With rngR.Cells(i)
+            ii = rngR.Column - rngR.CurrentRegion.Cells(1).Column
+            'If Not IsError(.Value) And Not IsError(.Offset(-1).Value) Then
+            On Error Resume Next
+                If .Value Like "*計" Then
+                    With rngR.Cells(i).Resize(, rngR.CurrentRegion.Columns.Count - ii)
+                        .Select
+                        If .Borders.LineStyle = xlNone Then
+                            With .Borders(xlEdgeTop)
+                                .LineStyle = xlDouble
+                                .weight = xlThick
+                            End With
+                        End If
+                    End With
+                ElseIf .Value = .Offset(-1).Value Then
+                    If .Column = 1 Then
+                        If ii < lngY Then '重複した値をクリアするのは見出し列のみ
+                            .ClearContents
+                        End If
+                    Else
+                        If Len(.Offset(, -1).Value) = 0 Then
+                            If ii < lngY Then
+                                .ClearContents 'データ列はクリアしない
+                            End If
+                        End If
+                    End If
+                ElseIf Len(.Value) > 0 And .Value <> .Offset(-1).Value Then
+                    With rngR.Cells(i).Resize(, rngR.CurrentRegion.Columns.Count - ii)
+                    .Select
+                    If .Borders.LineStyle = xlNone Then
+                        With .Borders(xlEdgeTop)
+                            .LineStyle = vStyle(ii)
+                            .weight = lngWeight(ii)
+                        End With
+                    End If
+                    End With
+                End If
+            On Error GoTo 0
+            If ii >= lngY Then
+                With rngR.Cells(i).Resize(, rngR.CurrentRegion.Columns.Count - ii)
+                .Select
+                    If .Borders(xlEdgeTop).LineStyle = xlNone Then
+                        With .Borders(xlEdgeTop)
+                            .LineStyle = vStyle(ii)
+                            .weight = lngWeight(ii)
+                        End With
+                    End If
+                End With
+            End If
+        End With
+    Next i
+End Sub
+Sub s_goukeiGyoShimatu(RR As Range, lngY As Long)
+
+'--------------------------------------------------------
+'引数：セル範囲,Y軸の階層の深さ
+'小計行・合計行の（*計）の行の縦罫線を削除
+'自セルより値列までのセルの値を削除
+'--------------------------------------------------------
+    Dim i As Long
+    For i = RR.Rows.Count To 1 Step -1
+        On Error Resume Next
+        With RR.Cells(i)
+            If .Value Like "*計" Then
+                With .Resize(, lngY + .CurrentRegion.Cells(1).Column - RR.Cells(i).Column)
+                    With .Borders(xlInsideVertical)
+                        .LineStyle = xlNone
+                    End With
+                    With .Borders(xlEdgeRight)
+                        .LineStyle = xlNone
+                    End With
+                    With .Offset(, 1)
+                        On Error Resume Next '見出し列最右列の時はエラーになる事のトラップ
+                        .Resize(, .Cells.Count - 1).ClearContents
+                        On Error GoTo 0
+                    End With
+                End With
+            End If
+        End With
+        On Error GoTo 0
+    Next i
+End Sub
+
+</pre>

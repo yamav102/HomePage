@@ -1,0 +1,717 @@
+<link rel="stylesheet" type="text/css" href="./EXCEL_API/vb.css">
+<style>
+	pre{
+		margin-left:3em;
+	}h1,h2,h3{
+		margin:0.5em 0em 1em 0em;
+	}.rem{
+		background-color:#ff9;
+	}h3{
+		padding:.5em;
+		border:dotted 1px;
+		text-decoration:none;
+	}div.syntax{
+		border:solid steelblue 1px;
+		width:75%;
+		padding:1em;
+		background-color:ghostwhite;
+		margin-left:8em;
+	}
+</style>
+<body>
+<div class="content">
+<pre>
+<h1>PHPメモ</h1>
+xapmppを使用した環境では、
+http://localhost/
+でID,PWでアクセスするとXAMPPの設定画面を開く事ができる。
+保存の際、文字コードはUTF-8N(BOMなし)、改行=LF 推奨。
+
+xampp/hotdocs/ 下のファイルにディフォルトでアクセスできるように
+なっているらしい。
+
+php部分は、&lt;?php … ?&gt;で囲み、命令の最後にはセミコロン(;)を付ける。
+
+<h2>コメント</h2>
+
+&lt;?php … ?&gt; の中に &lt;!-- … --&gt; を使う事はできない。
+&lt;!-- … --&gt; によるコメントはエンドユーザーに見えてしまう点が
+phpの開発者の為のコメントと性質が異なる。
+
+コメントアウトの記号はスタイルシートやC言語と同じく、
+
+//単一行コメント
+/*
+	複数行コメント 
+*/
+
+である。
+単一行コメントに # を使う事も出来るが、//で統一することが
+推奨されている。（らしい）
+
+<h2>データ型</h2>
+
+<table border="1">
+	<caption>PHPで利用可能なデータ型</caption>
+	<tr>
+		<th>データ型</th><th>概要</th>
+	</tr>
+	<tr>
+		<th>真偽型</th><td>TRUE／FALSE</td>
+	</tr>
+	<tr>
+		<th>整数(integer)型</th><td>10進数、16進数(0xで始まる値),8進数(0で始まる値)他</td>
+	</tr>
+	<tr>
+		<th>浮動小数点(double,float,real)</th><td>1.8*10^308 が最大値。1.1,5.5e6,5E-10のような指数表現も可能</td>
+	</tr>
+	<tr>
+		<th>文字列(string)</th><td>文字列</td>
+	</tr>
+	<tr>
+		<th>リソース(resource)</th><td>外部リソースへの参照</td>
+	</tr>
+
+</table>
+
+
+<h2>変数</h2>
+
+変数として扱う文字列には $ を付ける。
+宣言不要。初めて使ったタイミングでメモリ領域が確保される。
+<h3>変数名規則</h3>
+<ol>
+	<li>一文字目が「$」で始まること</li>
+	<li>二文字目が数字かアンダースコアであること</li>
+	<li>三文字目以降は数字、英字、アンダースコアの何れかであること</li>
+	<li>変数名の大文字・小文字は区別される<br>
+（命令文の大文字・小文字は区別されない事と混同しないように）
+ 変数を大文字・小文字で使い分ける事は出来てしまうが、
+ 可読性がおちるだけなので、やらないに越した事ない。
+	</li>
+</ol>
+<h2>定数</h2>
+
+定数の書き方は、
+
+const AUTHOR = 'SUZUKI HIROSHI';
+
+等とする。「$」は付けない。
+慣習として、大文字で記述する。
+
+const はPHP5.3以降で使用できる。
+PHP5.3より古いバージョンでは define で宣言する。
+
+define('AUTHOR','SUZUKI HIROSHI');
+
+<h3>{}と.による変数展開と、"" と '' の動作の違い</h3>
+&lt;?php
+
+	$moji = 'mojimoji';
+	$memo = 'memomemo'.$moji;
+	print($memo.'&lt;br&gt;');
+	//memomemomojimoji
+	$memo2 = 'memomemo{$moji}';
+	print($memo2.'&lt;br&gt;');
+	//memomemo$moji
+	$memo3 = "memomemo{$moji}";
+	print($memo3.'&lt;br&gt;');
+	//memomemomojimoji		
+?&gt;
+
+<h2>スーパーグローバル変数</h2>
+
+	自分で用意する変数ではない。
+	PHPに用意されている特別な変数。
+
+	<h3>$_POST['要素名']</h3>
+		<def>リクエストボディ</def>に乗せられて運ばれてきたポストデータを
+		要素名と値のセットとして $_POST に格納する。		
+		<div class="syntax">
+		構文
+			$_POST['要素名']
+			要素名には、&lt;input&gt;タグや&lt;select&gt;タグなどのnameオプションに設定した
+			名前を指定します。
+		</div>
+
+		'---input.php-----
+		&lt;form method="POST" action="output.php"&gt;
+			お名前：
+			&lt;input type="text" name="<span class='rem'>usrname</span>" size="20" maxlangth="30" /&gt;
+			&lt;input type="submit" value="送信" /&gt;
+		&lt;/form&gt;
+		
+		'---output.php-----
+		こんにちは、
+		&lt;?php print(
+			htmlspecialchars($_POST['<span class="rem">usrname</span>'],
+			ENT_QUOTES, 'UTF-8'));
+		?&gt;さん！
+
+		↑のように、ユーザーから入力された値や、データベース/外部サービスから取得した値を
+		<a href="#htmlspecialchars">HTMLエスケープ</a>と呼ばれる処理をする。
+		
+	<h3>$_GET</h3>
+		クエリ情報を取得する。ポストデータのデータサイズは事実上無制限。
+		クエリ情報はブラウザ/サーバー環境の制約を受ける。
+		IEだとURLに使用できる最大文字数は2,083文字。
+		<div class="syntax">
+		構文
+			$_GET['キー名']
+			下の例であれば、キー名はhoge=<span class="rem">JSP</span>の<span class="rem">JSP</span>にあたる。
+		</div>
+		'---query.php-----
+		&lt;html&gt;
+			&lt;head&gt;
+				&lt;title&gt;クエリ情報を取得する&lt;/title&gt;
+			&lt;/head&gt;
+			&lt;body&gt;
+				&lt;p&gt;このページに例えば、
+					&lt;br&gt;
+				http://localhost/query.php?hoge=JSP
+				でアクセスする
+				&lt;/p&gt;
+				&lt;?php			
+					switch($_GET['hoge']){
+						case 'PHP' :
+							$result = '関数主体の手軽に使えるサーバサイド技術です。';
+							break;
+						case 'JSP' :
+							$result = 'Javaベースの高機能なサーバサイド技術です.';
+							break;
+						case 'ASP' :
+							$result = 'Windowsの代表的なサーバサイド技術です.';
+							break;
+						default :
+							$result = 'クエリ情報categoryを指定してください。';
+					}
+					print($result);
+				?&gt;
+			&lt;/body&gt;
+		&lt;/html&gt;		
+
+	<h3>$_SERVER</h3>
+
+	<h3>$_COOKIE</h3>
+
+	<h3>$_SESSION</h3>
+<h2>命令</h2>
+
+命令文の大文字、小文字は区別されない。
+
+■print
+&lt;?print
+(
+	'文字列'
+); ?&gt;
+
+■break
+
+ループから強制的に脱出します。vbaの exit for だが、
+break 2;
+と書くと、入れ子のループになっている場合は
+２段階飛ばしてfor文を抜ける事ができる。
+ループを抜けないけれど、その周回だけスキップするには
+continue を使う。
+
+&lt;h1&gt;積が４０を超えない範囲の九九表&lt;/h1&gt;
+&lt;table border="1"&gt;
+	&lt;tr&gt;
+		&lt;th&gt;&lt;/th&gt;&lt;th&gt;1&lt;/th&gt;&lt;th&gt;2&lt;/th&gt;&lt;th&gt;3&lt;/th&gt;&lt;th&gt;4&lt;/th&gt;
+		&lt;th&gt;5&lt;/th&gt;&lt;th&gt;6&lt;/th&gt;&lt;th&gt;7&lt;/th&gt;&lt;th&gt;8&lt;/th&gt;&lt;th&gt;9&lt;/th&gt;
+	&lt;/tr&gt;
+
+	&lt;?php
+		for ($i = 1; $i &lt; 10; $i++){
+			print('&lt;tr&gt;');
+			print('&lt;th&gt;'.$i.'&lt;/th&gt;');
+			// 内側ループ
+			for ($j = 1; $j &lt; 10; $j++){
+				if($i * $j &gt; 40){<span class="rem">break;</span>}
+				print('&lt;td align="right" width="20"&gt;'.($i * $j).'&lt;/td&gt;');
+			}
+			//内側ループの終了
+			print('&lt;/tr&gt;');
+		}
+	?&gt;
+
+&lt;/table&gt;
+
+■continue
+
+ループの指定した周回をスキップします。
+continue[スキップする周回数]
+[スキップする周回数]はディフォルトで 1 です。
+周回できる数値を超えてしていると、Fatal error になります。
+
+
+<h2>制御文</h2>
+
+■for文
+&lt;?php
+$title = 'みんなにこんにちは！';
+$names = array('高江','和田','長田','森山','横塚');
+?&gt;
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;&lt;?php print($title); ?&gt;&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+		&lt;h1&gt;&lt;?php print($title); ?&gt;&lt;/h1&gt;
+		&lt;?php
+			for($i = 0; $i &lt; count($names); $i++){
+				print('&lt;p&gt;こんにちは、'.$names[$i].'さん！&lt;/p&gt;');
+			}
+		?>
+		
+	&lt;/body&gt;
+&lt;/html&gt;
+
+■while文
+
+&lt;?php
+	$i = 1;
+	while ($i &lt;= 5){
+		print("{$i}回目のループ&lt;br /&gt;");
+		$i++;
+	}
+?&gt;
+/*
+1回目のループ
+2回目のループ
+3回目のループ
+4回目のループ
+5回目のループ
+*/
+
+■do … while文
+
+&lt;?php
+	$i = 6;
+	do{
+		print('変数$iの値は'.$i.'です。&lt;br /&gt;');
+		$i++;
+	} while ($i &lt;= 5);
+?&gt;
+
+/変数$iの値は6です。
+
+■foreach文
+
+&lt;?php
+	$names = array("a", "b" ,"c", "d");
+	foreach ($names as $name){
+		print($name.'&lt;br /&gt;');
+	}
+?&gt;
+/*
+a
+b
+c
+d
+*/
+値を一時的に保持するための変数 $name の事を「仮変数」と呼ぶ。
+
+foreach(配列 as 仮変数){ 処理のループ }
+
+<h2>演算子</h2>
+
+	<table border="1">
+		<caption>代数演算子</caption>
+		<tr>
+			<th>演算子</th><th>概要</th><th>用例</th>
+		</tr>
+		<tr>
+			<td>+</td><td>和</td><td>5 + 2 → 7</td>
+		</tr>
+		<tr>
+			<td>-</td><td>差</td><td>5 - 2 → 3</td>
+		</tr>		<tr>
+			<td>*</td><td>積</td><td>5 * 2 → 10</td>
+		</tr>		<tr>
+			<td>/</td><td>商</td><td>5 / 3 → 1.6666666666667</td>
+		</tr>		<tr>
+			<td>%</td><td>割り算の余り</td><td>5 % 3 → 2</td>
+		</tr>		<tr>
+			<td>++</td><td>後置加算</td><td>$i = 1;$j = $i++;→$iは2,$jは1</td>
+		</tr>		<tr>
+			<td>++</td><td>前置加算</td><td>$i = 1;$j = $++i;→$iは2,$jは2</td>
+		</tr>		<tr>
+			<td>--</td><td>後置減算</td><td>$i = 1;$j=$i--;→ $iは0,$jは1</td>
+		</tr>		<tr>
+			<td>--</td><td>前置減算</td><td>$i = 1;$j=--$i;→ $iは0,$jは0</td>
+		</tr>
+	</table>
+
+	<table border="1">
+		<caption>代入演算子</caption>
+		<tr>
+			<th>演算子</th><th>概要</th><th>用例</th>
+		</tr>
+		<tr>
+			<td>=</td><td>代入</td><td>$x = 10</td>
+		</tr>
+		<tr>
+			<td>+=</td><td>左辺の値を右辺の値に加えたものを、左辺に代入する</td><td>$x+=10 ⇔ $x=$x+10</td>
+		</tr>		<tr>
+			<td>-=</td><td>左辺の値から右辺の値を引いたものを、左辺に代入する</td><td>$x-=10 ⇔ $x=$x-10</td>
+		</tr>		<tr>
+			<td>*=</td><td>左辺の値に右辺の値を掛けたものを、左辺に代入する</td><td>$x*=10 ⇔ $x=$x*10</td>
+		</tr>		<tr>
+			<td>/=</td><td>左辺の値を右辺の値で割ったものを、左辺に代入する</td><td>$x/=10 ⇔ $x=$x/10</td>
+		</tr>		<tr>
+			<td>%=</td><td>左辺の値を右辺の値で割った余りを、左辺に代入する</td><td>$x%=10 ⇔ $x=$x%10</td>
+		</tr>		<tr>
+			<td>.=</td><td>左辺の値に右辺の値を連結した文字列を、左辺に代入する</td><td>$x.='A' ⇔ $x=$x.'A'</td>
+		</tr>		<tr>
+	</table>
+
+	<table border="1">
+		<caption>主な比較演算子</caption>
+		<tr>
+			<th>演算子</th><th>概要</th><th>用例</th>
+		</tr>
+		<tr>
+			<td>==</td><td>右辺と左辺が等しい場合にTRUE</td><td>$x == 10</td>
+		</tr>
+		<tr>
+			<td>===</td><td>左辺と右辺の値が等しく、かつ同じデータ型の場合にTRUE</td><td>$flag === TRUE</td>
+		</tr>		
+		<tr>
+			<td>!=</td><td>左辺と右辺が等しくない場合にTRUE</td><td>$x != 10</td>
+		</tr>		<tr>
+			<td>!==</td><td>左辺と右辺の値が等しくない、または同じデータ型でない場合にTRUE</td><td>$flg !== TRUE</td>
+		</tr>		
+		<tr>
+			<td>&lt;</td><td>左辺が右辺より小さい場合にTRUE</td><td>$x &lt; 10</td>
+		</tr>		
+		<tr>
+			<td>&gt;</td><td>左辺が右辺より大きい場合にTRUE</td><td>$x &gt; 10</td>
+		</tr>		
+		<tr>
+			<td>&lt;=</td><td>左辺が右辺以下の場合にTRUE</td><td>$x &lt;= 10</td>
+		</tr>		
+		<tr>
+			<td>&gt;=</td><td>左辺が右辺以上の場合にTRUE</td><td>$x &gt;= 10</td>
+		</tr>
+		<tr>
+			<td>?:</td><td>(条件式)?(式1):(式2)</td><td>$x == 1 ? 'OK':'NG'</td>
+		</tr>
+	</table>
+
+	?:演算子の事を三項演算子とも言います。
+	（条件式・式1・式2)の３つのオペランド(被演算子)を持っている。
+	PHP5.3からは、省略して、
+
+		$x ?: $y
+	
+	と書くことができる。
+	$x がTRUEと解釈できる場合には $x を、それ以外の場合は $y の値を返す。
+
+	$xが(ゼロ、殻文字列、空の配列、NULL)であれば FALSE、それ以外は TRUE に
+	解釈される。
+
+	<table border="1">
+		<caption>論理演算子</caption>
+		<tr>
+			<th>演算子</th><th>概要</th><th>用例</th>
+		</tr>
+		<tr>
+			<td>&&</td><td>左式/右式と双方がTRUEの場合にTRUE</td><td>$x = 10 && $z == 100</td>
+		</tr>
+		<tr>
+			<td>||</td><td>左式/右式いずれかがTRUEの場合にTRUE</td><td>$x == 1 || $x == 2</td>
+		</tr>		
+		<tr>
+			<td>xor</td><td>左式/右式いずれかがTRUEで、かつ双方ともTRUEでない場合にTRUE</td><td>$x == 10 xor $z == 100</td>
+		</tr>
+		<tr>
+			<td>!</td><td>式がFALSEである場合にTRUE</td><td>!$flg</td>
+		</tr>		
+		
+	</table>
+
+	<table border="1">
+		<caption>主なビット演算子</caption>
+		<tr>
+			<th>演算子</th><th>概要</th><th>用例</th>
+		</tr>
+		<tr>
+			<td>&</td><td>左式/右式の双方にセットされているビット</td><td>10 & 1 ⇒ 1010 & 0001 ⇒ 0000 ⇒ 0</td>
+		</tr>
+		<tr>
+			<td>|</td><td>左式/右式いずれかにセットされているビット</td><td>10 | 1 ⇒ 1010 | 0001 ⇒ 1011 ⇒ 11</td>
+		</tr>		
+		<tr>
+			<td>^</td><td>左式/右式いずれかにセットされており、かつ、双方にセットされていないビット</td><td>10 ^ 1 ⇒ 1010 ^ 0001 ⇒ 1011 ⇒　11</td>
+		</tr>
+		<tr>
+			<td>~</td><td>ビットを反転</td><td>~10 ⇒ ~1010 ⇒ ~0101 ⇒ 11</td>
+		</tr>		
+		<tr>
+			<td><<</td><td>ビットを左にシフト</td><td>10 << 1 ⇒ 1010 << 1 ⇒ 10100 ⇒ 20</td>
+		</tr>		
+		<tr>
+			<td>>></td><td>ビットを右にシフト</td><td>10 >> 1 ⇒ 1010 >> 1 ⇒ 0101 ⇒ 5</td>
+		</tr>		
+		
+	</table>
+
+	<table border="1">
+		<caption>その他演算子</caption>
+		<tr>
+			<th>演算子</th><th>概要</th><th>用例</th>
+		</tr>
+		<tr>
+			<td>.</td><td>文字列を連結。左式と右式を連結</td><td>$memo.$title</td>
+		</tr>
+		<tr>
+			<td>@</td><td>式の先頭に指定することでエラーメッセージを非表示にする</td><td>@fopen('sample.dat')</td>
+		</tr>		
+		<tr>
+			<td>`</td><td>バッククォートで囲んだブロックをシェルコマンドとして実行</td><td>`pwd`</td>
+		</tr>
+		<tr>
+			<td>instanceof</td><td>指定されたクラスのインスタンスであるか</td><td>$cls instanceof MyClass</td>
+		</tr>		
+		
+	</table>
+
+<h2>関数</h2>
+
+<h3>array</h3>
+$names = array('高江','和田','長田','森山','横塚');
+print $names[1];
+// 高江
+
+&lt;?php
+	//２次元配列（階層を作れば３次元以上の配列も作成できる）
+	$data1 = array(
+		array('A1', 'A2', 'A3'),
+		array('B1', 'B2', 'B3'),
+		array('C1', 'C2', 'C3')
+	);
+	$num = count($data1);
+	print('$data1の要素数は '.$num.'っつ');
+	//3
+
+	print('&lt;table border="1"&gt;');
+	for($i = 0; $i &lt; $num; $i++){
+
+		print('
+			&lt;tr&gt;
+				&lt;td&gt;'.$data1[$i][0].'&lt;/td&gt;
+				&lt;td&gt;'.$data1[$i][1].'&lt;/td&gt;
+				&lt;td&gt;'.$data1[$i][2].'&lt;/td&gt;
+			&lt;/tr&gt;
+		');
+
+	} 
+	print('&lt;/table&gt;');
+?&gt;
+<table border="1">
+	<tr>
+		<td>A1</td>
+		<td>A2</td>
+		<td>A3</td>
+	</tr>
+
+	<tr>
+		<td>B1</td>
+		<td>B2</td>
+		<td>B3</td>
+	</tr>
+
+	<tr>
+		<td>C1</td>
+		<td>C2</td>
+		<td>C3</td>
+	</tr>
+</table>	
+<h3>count</h3>
+$names = array('高江','和田','長田','森山','横塚');
+$num = count($names);
+print $num;
+// 5
+
+<h3><a name="htmlspecialchars">htmlspecialchars</h3>
+
+HTMLエスケープした文字列を返す。
+htmlに含まれる「&lt;」「&gt;」「&」「""」「'」をそれぞれ、
+「&amp;lt;」「&amp;gt;」「&amp;」「&quot;」「&#039;」 に置き換えた文字列を返す。
+クロスサイトサイトスクリプティング(<def>XSS</def>)と呼ばれる脆弱性の原因となることを
+防ぐ事ができる。スクリプトからの出力は htmlspecialchars 関数でエスケープ処理すべき。
+
+htmlspecialchars($_POST['<span class="rem">usrname</span>'],
+ENT_QUOTES, 'UTF-8'));
+			
+構文：htmlspecialchars(文字列 [,エスケープの種類 [,文字コード]])
+
+<table border="1">
+	<caption>エスケープの種類</caption>
+	<tr>
+		<th>設定値</th><th>概要</th>
+	</tr>
+	<tr>
+		<th>ENT_COMPAT</th><td>ダブルクォートは変換するが、シングルクォートは変換しない(ディフォルト)</td>
+	</tr>
+	<tr>
+		<th>ENT_QUOTES</th><td>ダブルクォートもシングルクォートも変換する</td>
+	</tr>
+	<tr>
+		<th>ENT_NOQUOTES</th><td>ダブルクォートもシングルクォートも変換しない</td>
+	</tr>
+</table>
+
+原則としてENT_QUOTES を使うべき。ディフォルトの ENT_COMPAT は下位互換性のための設定値で
+エスケープの方法としては不完全。
+
+&lt;?php 
+	print(
+		htmlspecialchars("&lt;&gt;\"&'", ENT_QUOTES, 'UTF-8')
+	);
+?&gt;
+//&amp;lt;&amp;gt;&amp;quot;&amp;amp;&amp;#039;
+	
+<h2>HTML部品</h2>
+	
+phpの中で複数選択チェックボックスを使用する場合、nameオプションの
+末尾に [] を付けて配列としてphpに渡せるようにする必要がある。
+		<h3>チェックボックス</h3>
+		&lt;form name="mycheckbox"&gt;
+			&lt;input type ="checkbox" name="food[]" value="orange"
+			checked="checked" /&gt;オレンジ
+			&lt;input type="checkbox" name="food[]" value="apple"
+			checked="checked" /&gt;リンゴ
+			&lt;input type="checkbox" name="food[]" value="melon" /&gt;メロン
+		&lt;/form&gt;
+		&lt;?php
+		?&gt;
+
+		<form name="mycheckbox">
+			<input type ="checkbox" name="food[]" value="orange"
+			checked="checked" />オレンジ
+			<input type="checkbox" name="food[]" value="apple"
+			checked="checked" />リンゴ
+			<input type="checkbox" name="food[]" value="melon" />メロン
+		</form>
+		<?php
+		?>
+		<h3>ラジオボタン</h3>
+		&lt;form name="myradio"&gt;
+			&lt;input type="radio" name="food" value="orange" checked="checked" /&gt;オレンジ
+			&lt;input type="radio" name="food" value="apple" /&gt;りんご
+			&lt;input type="radio" name="food" value="melon" /&gt;メロン
+
+		&lt;/form&gt;
+		&lt;?php
+		?&gt;
+
+		<form name="myradio">
+			<input type="radio" name="food" value="orange" checked="checked" />オレンジ
+			<input type="radio" name="food" value="apple" />りんご
+			<input type="radio" name="food" value="melon" />メロン
+
+		</form>
+		<?php
+		?>
+		<h3>ドロップダウン</h3>
+		&lt;form name="mydrop"&gt;
+			&lt;select name="food"&gt;
+				&lt;option value="orange" selected="selected"&gt;
+				オレンジ&lt;/option&gt;
+				&lt;option value="apple"&gt;
+				りんこ&lt;/option&gt;
+				&lt;option value="melon"&gt;
+				メロン
+				&lt;/option&gt;
+			&lt;/select&gt;
+		&lt;/form&gt;
+		&lt;?php
+		?&gt;
+
+		<form name="mydrop">
+			<select name="food">
+				<option value="orange" selected="selected">
+				オレンジ</option>
+				<option value="apple">
+				りんこ</option>
+				<option value="melon">
+				メロン
+				</option>
+			</select>
+		</form>
+		<?php
+		?>
+		<h3>リストボックス</h3>
+		&lt;form name="mylist"&gt;
+			&lt;select name="food" size="3" multiple="multiple"&gt;
+				&lt;option value="orange" selected="selected"&gt;
+				オレンジ&lt;/option&gt;
+				&lt;option value="apple"&gt;
+				りんこ&lt;/option&gt;
+				&lt;option value="melon"&gt;
+				メロン
+				&lt;/option&gt;
+			&lt;/select&gt;
+		&lt;/form&gt;
+		&lt;?php
+		?&gt;
+
+		<form name="mylist">
+			<select name="food" size="3" multiple="multiple">
+				<option value="orange" selected="selected">
+				オレンジ</option>
+				<option value="apple">
+				りんこ</option>
+				<option value="melon">
+				メロン
+				</option>
+			</select>
+		</form>
+		<?php
+		?>
+		<h3>テキストエリア</h3>
+		&lt;form name="mytxtarea"&gt;
+			&lt;textarea name="txt" rows="5" cols="30"&gt;
+この中に記入します。テキストエリアから入力されたデータを処理するには改行文字を考慮しなければならない
+			&lt;/textarea&gt;
+		&lt;/form&gt;
+		&lt;?php
+		?&gt;
+
+		<form name="mytxtarea">
+			<textarea name="txt" rows="5" cols="30">
+この中に記入します。テキストエリアから入力されたデータを処理するには改行文字を考慮しなければならない
+			</textarea>
+		</form>
+		<?php
+		?>	
+		<h3>ファイル入力ボックス</h3>
+		&lt;form name="myfile"&gt;
+			&lt;input type="file" name="upfile" size="30" /&gt;
+		&lt;/form&gt;
+		&lt;?php
+		?&gt;	
+
+		<form name="myfile">
+			<input type="file" name="upfile" size="30" />
+		</form>
+		<?php
+		?>	
+		<h3>隠しフィールド</h3>
+		&lt;form name="myhidden"&gt;
+			&lt;input type="hidden" name="hidden1" value="hoge" /&gt;
+		&lt;/form&gt;
+		&lt;?php
+		?&gt;	
+
+		<form name="myhidden">
+			<input type="hidden" name="hidden1" value="hoge" />
+		</form>
+		<?php
+		?>	 
+
+</pre>
+</div>
+</body>

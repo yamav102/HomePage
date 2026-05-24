@@ -1,0 +1,877 @@
+﻿<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="keywords" content="java script,html">
+<meta name="author" content="yamaV1.02β">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta name="robots" content="noindex">
+<meta name="description" content="//////////">
+<meta name="reply-to" content="">
+<link rel="shortcutIcon" href="favicon.ico">
+<link rel="start" href="index.htm">
+<link rel="stylesheet" type="text/css" href="leftside1.css">
+
+<title>JavaScript 本格入門　メモ8</title>
+
+  <!-- http://www.mwsoft.jp/programming/javascript/highlight_js.html?style=vs#styles -->
+  <!--http://softwaremaniacs.org/soft/highlight/en/download/-->
+  <!-- stylesの中から好みにあったCSSを選んで、 -->
+  <!-- 1, CSS、JavaScriptファイルを呼び出す -->
+  <!--<link rel="stylesheet" href="../highlight.js/styles/vs.css">-->
+  <!--<script type="text/javascript" src="../highlight.js/highlight.pack.js"></script>-->
+  <!-- 2, onLoad時にinitしてくれる機能を呼び出す -->
+  <!--<script type="text/javascript">hljs.initHighlightingOnLoad();</script>-->
+</head>
+<h1>
+JavaScript 本格入門　メモ8
+</h1>
+<h3><a name="SEC1">6-6 ドキュメントを操作する - Document オブジェクト -</a></h3>
+<h4><a name="SEC2">
+出来るだけ標準的な DOM を利用するように</a>
+</h4>
+<p>
+ウィンドウ内に表示されたドキュメントを操作するのは、document オブジェクト
+（Document オブジェクト）の役割です。クロスブラウザの事を考えて、汎用性で優位にある 
+DOM（Document Object Model)で出来る事は DOM を使うべきです。（DOM はブラウザオブジェクト
+ とは別に標準化されている API なのであるらしい。（ベンダが独自に開発するブラウザの
+document オブジェクトではなくて　って事か？解ったような解らないような…）。
+VBA でのファイル操作で VBA のオブジェクトを使うか FileSystemObject を使うか みたいな
+物ととらえておこう。
+</p>
+<p>
+ここでは DOM では対応していない　あるいは対応しにくい機能のみ紹介していきます。
+</p>
+<h4><a name="SEC3">
+クッキーを記録／取得する</a>
+</h4>
+<p>
+ユーザがサイトにアクセスした途端に、パソコン内のファイルを JavaScript が
+書き換えてしまう、というような事は出来ない。唯一の例外として Cookie の書き換えは出来る。
+</p>
+<p>
+JavaScript では、document.cookie プロパティを利用する事で、クッキーを読み書きする事が
+できます。以下、クッキーを利用した訪問回数カウンタ。
+</p>
+<p>
+動作確認の為にサーバーにアップする必要はなく、ただリロードすればカウンタがインクリメントされて行きます。
+</p>
+<pre>
+<code>
+   &lt;!DOCTYPE html&gt;
+
+   &lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+   &lt;head&gt;
+      &lt;meta charset="utf-8" /&gt;
+      &lt;title&gt;p241&lt;/title&gt;
+      &lt;script type="text/javascript"&gt;
+         &lt;!--
+         /* 指定されたクッキーをクライアントに書きこむ為の
+         setCookie 関数を定義。引数には、先頭から
+         クッキー名」「値」「有効期限」「ドメイン」「パス」
+         SSL を必要とするか」を設定する
+         SSL（Secure Sockets Layer）通信を暗号化する技術です。
+         */
+         function setCookie(name, value, expires, domain, path, secure) {
+             // クッキー文字列を格納するための変数 c を宣言
+             var c = '';
+             // 「名前 = 値」を追加（値はあらかじめエンコード処理）
+             c += name + '=' + encodeURIComponent(value);
+             // 引数 expires が殻で無い場合、expires 日後に有効期限を設定
+             if (expires) {
+                 var exp = new Date();
+                 exp.setDate(exp.getDate() + expires);
+                 c += '; expires=' + exp.toGMTString();
+             }
+             /* 引数 domain, path, secure が殻で無い場合、
+             それぞれ該当するパラメータを設定*/
+             if (domain) { c += '; domain=' + domain; }
+             if (path) { c += '; path=' + path; }
+             if (secure) { c += '; secure'; }
+             // できあがったクッキー文字列をクライアントに書き込み
+             document.cookie = c;
+         }
+
+         // 指定された名前のクッキー値を取得する getCookie 関数を定義
+         function getCookie(name) {
+             // 取得したクッキー文字列を「;」で分割
+             var cs = document.cookie.split(';');
+             // 個々のクッキー情報（名前=値）を順番に確認
+             for (var i = 0; i &lt; cs.length; i++) {
+                 /*「=」でクッキー情報を分割し、名前部分が引数 name と
+                 等しい場合 その値を出コードした上で戻り値として返す*/
+                 var kv = cs[i].split('=');
+                 if (kv[0] == name) {return decodeURIComponent(kv[1]); }
+             }
+             // 該当する無眼のクッキーがない場合は null を返す
+             return null;
+         }
+
+         // 'js_cnt'という名前のクッキー値（カウンタ値）を変数 cnt にセット
+         var cnt = getCookie('js_cnt');
+         // 変数 cnt が殻でない場合はインクリメント、空の場合は１をセット
+         cnt = cnt ? ++cnt : 1;
+         // 変数 cnt の値をクッキー 'js_cnt' にセット（有効期限は90日）
+         setCookie('js_cnt', cnt, 90);
+         // カウント値を表示
+         document.write(
+         'あなたはこのサイトに ' + cnt + ' 回、アクセスしました。');
+         //--&gt;
+      &lt;/script&gt;
+   &lt;/head&gt;
+      &lt;body&gt;&lt;h1&gt;クッキーのテスト&lt;/h1&gt;&lt;/body&gt;
+   &lt;/html&gt;
+</code>
+</pre>
+<h4><a name="SEC4">
+（１）クッキー値を設定する - setCookie 関数 -</a>
+</h4>
+<p>
+setCookie 関数は、document.cookie プロパティに設定するクッキー文字列を生成しています。
+cookie プロパティに値を設定するための書式は以下の通りです。
+（太字のみ必須で、あとは任意）
+</p>
+<pre>
+<code>
+   <strong>クッキー名 = 値;</strong> expires = 有効期限; domain = ドメイン名; pth = パス; secure
+</code>
+</pre>
+<p>
+必要な情報は、セミコロン区切りの「マラメータ名=値」で記述します。
+それぞれのパラメータの意味は以下の通りです。
+</p>
+<table border="1">
+<caption>
+クッキー文字列のパラメータ
+</caption>
+<tr>
+<th>パラメータ</th><th>概要</th>
+</tr>
+<tr>
+<td>クッキー名</td>
+<td>
+クッキーを識別する名前とその値（最低限必須）。英数字意外の文字列を含む場合は
+encodeURIComponent 関数で予めエンコードしておく必要があります。
+</td>
+</tr>
+<tr>
+<td>expires</td>
+<td>
+クッキーの有効期限（グリニッジ標準時）。有効期限を過ぎたクッキーは自動的に削除
+。省略時はブラウザを閉じた時に削除。過去の日時が指定された場合は即座に削除。
+</td>
+</tr>
+<tr>
+<td>domain</td>
+<td>
+有効なドメイン。指定ドメインのページでのみクッキーを利用可能
+（省略時は現在のドメイン）
+</td>
+</tr>
+<tr>
+<td>path</td>
+<td>
+有効なパス。指定パス配下のページでのみクッキーを利用可能（省略時は現在
+のドメイン）
+</td>
+</tr>
+<tr>
+<td>secure</td>
+<td>
+SSL(Secure Socke Layer)通信でのみクッキーを送信するか
+</td>
+</tr>
+</table>
+<h4><a name="SEC5">
+（２）クッキー値を取得する - getCookie 関数 -</a>
+</h4>
+<p>
+クッキーを取得するのも、書き込む場合と同様、 document.cookie プロパティ
+を使います。クッキー値は以下のような形式でまとまっているので、
+解析して取得するのが getCookie 関数の役割です。
+</p>
+<pre>
+<code>
+   クッキー名１= 値１; クッキー名２ = 値２;　…
+</code>
+</pre>
+<h4><a name="SEC6">
+スクリプトから文字列を出力する - document.writeln メソッドの注意点 -</a>
+</h4>
+<pre>
+<code>
+   &lt;!DOCTYPE html&gt;
+
+   &lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+       &lt;head&gt;
+       &lt;meta charset="utf-8" /&gt;
+       &lt;title&gt;p243&lt;/title&gt;    
+       &lt;/head&gt;
+   &lt;body&gt;
+       こんちわ、みなさん！&lt;br /&gt;
+       &lt;script type="text/javascript"&gt;
+           &lt;!--
+           document.writeln('こんちわ、JavaScript！');
+           //--&gt;
+       &lt;/script&gt;
+   &lt;/body&gt;
+   &lt;/html&gt;
+</code>
+</pre>
+<pre>
+   こんちわ、みなさん！
+   こんちわ、JavaScript！ 
+</pre>
+<p>
+↑もともとのコンテンツに追記する形で出力される
+</p>
+<pre>
+<code>
+   &lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+       &lt;head&gt;
+       &lt;meta charset="utf-8" /&gt;
+       &lt;title&gt;p243&lt;/title&gt;    
+       &lt;script type="text/javascript"&gt;
+       &lt;!--
+           window.onload = function () {
+               document.writeln('こんちわ、JavaScript！');
+           }
+       //--&gt;
+       &lt;/script&gt;
+       &lt;/head&gt;
+   &lt;body&gt;
+       こんちわ、みなさん！&lt;br /&gt;
+   &lt;/body&gt;
+</code>
+</pre>
+<pre>
+   こんちわ、JavaScript！ 
+</pre>
+<p>
+↑もともとのコンテンツがクリアされてしまう
+</p>
+<p>
+<strong>onload で writeln が実行されると、writeln は新しいドキュメントをオープンする</strong>
+のです。
+</p>
+<p>
+ということで、writeln メソッドはイベントハンドラから利用すべきでは
+ありません。イベントハンドラからコンテンツを書き換えるには
+、後述する innerHTML プロパティなどを使用します。
+</p>
+<p>
+writeln メソッドの利用は、以下２つのケースにほぼ、限られます。
+</p>
+<ul>
+<li>
+デバッグ用途
+</li>
+<li>
+サブウィンドウに対してコンテンツを出力する
+</li>
+</ul>
+<h4><a name="SEC7">
+サブウィンドウに対してコンテンツを出力するサンプル</a>
+</h4>
+<pre>
+<code>
+   &lt;!DOCTYPE html&gt;
+   &lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+   &lt;head&gt;
+       &lt;meta charset="utf-8" /&gt;
+       &lt;title&gt;p245&lt;/title&gt;
+       &lt;script type="text/javascript"&gt;
+           // [開く] ボタンをクリックしたタイミングでサブウィンドウを生成
+           function winOpen() {
+               var subwin = window.open('', 'Child', 'width=200,height=200');
+               subwin.document.open('text/html');
+               subwin.document.writeln('入力値:');            
+               subwin.document.writeln(subwin.opener.document.fm.data.value);
+               subwin.document.writeln('&lt;br /&gt;&lt;input type="button" value="閉じる"');
+               subwin.document.writeln('onclick="self.close();" /&gt;');
+               subwin.document.close();
+           }
+       &lt;/script&gt;
+   &lt;/head&gt;
+   &lt;body&gt;
+       &lt;form name="fm"&gt;
+           &lt;input type="text" name="data" value="出力される文字列" /&gt;
+           &lt;input type ="button" value="開く" onclick="winOpen()" /&gt;
+       &lt;/form&gt;
+   &lt;/body&gt;
+   &lt;/html&gt;
+</code>
+</pre>
+<p>
+window.open メソッドで開いたドキュメントに対して、
+コンテンツを書き込むには、以下のように記述します。
+</p>
+<pre>
+<code>
+   ウィンドウ名.document.open('text/html');
+   ウィンドウ名.document.writeln('…');
+   ウィンドウ名.document.close();
+</code>
+</pre>
+<p>
+コンテンツ出力の開始を表す open メソッドは省略可能ですが、
+close メソッドは省略できません。ブラウザのロード中アニメーションが
+動いたままになってしまいます。（そうなる場合があるらしい・・・）
+</p>
+<p>
+サブウィンドウを閉じるには self.close(); で閉じます。
+self は現在のウィンドウを表す Window オブジェクトです。
+</p>
+<h2><a name="SEC8">
+6-7その他に重要な３つのブラウザオブジェクト
+ - History/Navigator/Screenオブジェクト -</a>
+</h2>
+<p>
+Window / Form / Element / Location オブジェクト
+の他にも、ブラウザはオブジェクトを公開しています。
+その中で特に重要な３つのオブジェクトを紹介します。
+</p>
+<h3><a name="SEC9">
+履歴に沿ってページを前後に移動する - History オブジェクト -</a>
+</h3>
+<pre>
+<code>
+   &lt;a href="JavaScript:history.back()"&gt;戻る&lt;/a&gt;／
+   &lt;a href="JavaScript:history.forward()"&gt;進む&lt;/a&gt;
+   &lt;a href="JavaScript:history.go(-3);"&gt;３ページ前に戻る&lt;/a&gt;
+</code>
+</pre>
+<h4><a name="SEC10">
+JavaScript擬似プロトコル</a>
+</h4>
+<p>
+href属性の中の JavaScript:～ という記法は、JavaScript擬似プロトコル
+と呼ばれるものです。onclickイベントハンドラを使って以下のように
+書き換える事もできます。
+</p>
+<pre>
+<code>
+   &lt;a href="JavaScript:void(0)" onclick="history.go(-3);"&gt;３ページ前に戻る&lt;/a&gt;
+</code>
+</pre>
+<p>
+void 演算子は「なにも返さない」演算子で、一般的にアンカータグの機能を抑止する場合に使用します。
+</p>
+<h4><a name="SEC11">
+ブラウザ情報を取得する - Navigator オブジェクト -</a>
+</h4>
+<p>
+ブラウザの種類やバージョン、そのた機能の対応状況を知りたいときに
+利用するのが navigator オブジェクトです。
+</p>
+<table border="1">
+<caption>
+navigator オブジェクトの主なメンバ
+</caption>
+<tr>
+<th>
+メンバ
+</th>
+<th>
+概要
+</th>
+</tr>
+<tr>
+<td>
+appCodeName
+</td>
+<td>
+ブラウザのコード名
+</td>
+</tr>
+<tr>
+<td>
+appName
+</td>
+<td>
+ブラウザ名
+</td>
+</tr>
+<tr>
+<td>
+appVersion
+</td>
+<td>
+ブラウザのバージョン
+</td>
+</tr>
+<tr>
+<td>
+platform
+</td>
+<td>
+プラットフォーム名
+</td>
+</tr>
+<tr>
+<td>
+userAgent
+</td>
+<td>
+ユーザーエージェント名
+</td>
+</tr>
+<tr>
+<td>
+javaEnabled()
+</td>
+<td>
+Javaが利用可能か
+</td>
+</tr>
+</table>
+<pre>
+<code>
+   document.writeln('\nnavigator.appName :', navigator.appName, '&lt;br /&gt;');
+   document.writeln('navigator.appVersion :', navigator.appVersion, '&lt;br /&gt;');
+   document.writeln('navigator.platform :', navigator.platform, '&lt;br /&gt;');
+   document.writeln('navigator.userAgent :', navigator.userAgent, '&lt;br /&gt;');
+   document.writeln('navigator.javaEnabled() :', navigator.javaEnabled(), '&lt;br /&gt;');
+</code>
+</pre>
+<p>
+userAgent プロパティで識別し、ブラウザのバージョンで分岐処理を行う事もありましたが、
+新たなバージョンが登場した場合にメンテナンスし続けなければならない、
+という問題があります。
+</p>
+<p>
+そこで、現在は以下のように機能テストの手法を用いるのが一般的です。
+機能テストを用いた具体的コードは、改めて 7-6 で紹介します。
+</p>
+<pre>
+<code>
+   if (elem.attachEvent) {
+      // attachEvent メソッドが利用できる場合のコード
+   } else if (elem.addEventListener) {
+      // addEventListener メソッドが利用できる場合のコード
+   } else {
+      // いずれのメソッドも利用できない場合のコード
+   }
+</code>
+</pre>
+<p>
+navigator オブジェクトを利用するのは、特定のブラウザ／バージョンにあるバグに
+対応したコードを記述するなど、限定したケースに留めるべきです。
+</p>
+<h4><a name="SEC12">
+スクリーン情報を取得する - Screen オブジェクト -</a>
+</h4>
+<p>
+screen オブジェクトは、モニタ画面のサイズや色数などの情報にアクセス
+するためのオブジェクトです。screen オブジェクトを利用することで、
+「モニタサイズに応じて、表示するウィンドウやウィンドウ内の画像サイズを動的
+に調整する」といった操作ができます。
+</p>
+<p>
+以下は [調整] ボタンをクリックしたタイミングで、ウィンドウサイズをモニタサイズ
+に合わせて拡大するサンプルです。
+</p>
+<pre>
+<code>
+   &lt;!DOCTYPE html&gt;
+   &lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+   &lt;head&gt;
+      &lt;meta charset="utf-8" /&gt;
+      &lt;title&gt;p249&lt;/title&gt;
+      &lt;script type="text/javascript"&gt;
+        &lt;!--
+        // [調整] ボタンクリック時に実行
+        function adjust() {
+   
+          // ウィンドウ位置を左上隅に合わせる
+          window.moveTo(0, 0);
+          // スクリーンサイズに合わせてウィンドウサイズをリサイズ
+          window.resizeTo(screen.width, screen.height);
+        }
+        //--&gt;
+      &lt;/script&gt;
+   &lt;/head&gt;
+   &lt;body&gt;
+      &lt;input type="button" value="調整" onclick="adjust()" /&gt;
+      &lt;p id="a"&gt;a&lt;/p&gt;
+   &lt;/body&gt;
+   &lt;/html&gt;
+</code>
+</pre>
+<p>
+moveTo resizeTo はサポートしていないブラウザもあります。
+サポート状況を判定する if 文に挑戦したものの、理解が及ばず、断念。13:49 2013/09/23
+</p>
+
+
+<table border="1"><tbody>
+<caption>
+Screen オブジェクトのプロパティ（JavaScript 1.2）
+</caption>
+<tr><th>プロパティ</th><th>意味</th></tr>
+<tr><td><code>width</code></td><td>ディスプレイの幅（ピクセル）</td></tr>
+<tr><td><code>height</code></td><td>ディスプレイの高さ（ピクセル）</td></tr>
+<tr><td><code>availWidth</code></td><td>タスクバーなどの部分を除いたディスプレイの幅（ピクセル）</td></tr>
+<tr><td><code>availHeight</code></td><td>タスクバーなどの部分を除いたディスプレイの高さ（ピクセル）</td></tr>
+<tr><td><code>pixelDepth</code></td><td>ディスプレイ深度（bits/pixel）</td></tr>
+<tr><td><code>colorDepth</code></td><td>ディスプレイ色深度（nビットカラー）</td></tr>
+</table>
+<h2><a name="SEC13">Chapter7　HTML や XML の文書を操作する～ DOM (Document Object Model)</a></h2>
+<h3>
+7-1 DOM(Document Object Model)の基本
+</h3>
+<h4><a name="SEC14">
+クロスブラウザを意識するために</a>
+</h4>
+<p>
+「ブラウザオブジェクトはあくまでここのブラウザが独自に実装したオブジェクトで、
+これといった標準の規格が存在するわけではない。」
+</p>
+<p>
+そこで登場したのが DOM(Document Object Model)です。
+DOM は HTML や XML のようなマークアップ言語で書かれたドキュメントにアクセスするための
+「標準的な」しくみで、クロスブラウザ環境でも互換性の高いコードを記述できます。
+</p>
+<h4><a name="SEC15">
+DOM のしくみ</a>
+</h4>
+<p>
+DOM では、Document Object Model という名前の通り、
+文shに含まれる要素や座億世、テキストをそれぞれオブジェクトと見なし、
+「オブジェクトの集合（階層関係）が文書である」と考える。
+</p>
+<p>
+ちなみに、文書を旺盛する要素や属性、テキストといったオブジェクトのことをノード
+と呼び、オブジェクトの種類に応じて要素ノード、属性ノード、テキストノード などと
+呼びます。DOMは、これらノードを抽出／追加／置換／削除するための汎用的な
+手段を提供する API(Application Programming Interface:関数やオブジェクトの集合)
+と言えます。
+</p>
+<h5><a name="SEC16">
+文書ツリーの解釈はブラウザごとに違う</a>
+</h5>
+<p>
+じつは、文書ツリーの解釈はブラウザ（やバージョン）によって微妙に異なります。
+</p>
+<ul>
+<li>
+ノード間の空白／改行（空白ノード）を無視する
+</li>
+<li>
+&lt;title&gt;要素配下のテキストノードを無視する
+</li>
+</ul>
+<p>
+特に空白ノードの認識の認識の要注意です。今後、ノードを抽出する際に
+「○○番目の子ノード」と指定することがありますが、文書ツリーの会社の違いによって、
+同じコードでは同じノードを抽出できない可能性があるのです。
+</p>
+<p>
+こうした違いを九州する方法については後述しますが、ここではまず、
+「空白ノードには要注意」とだけ憶えておきましょう。
+</p>
+<h4><a name="SEC17">
+DOM の３つのレベル</a>
+</h4>
+<p>
+DOMは、Web技術の標準化団体である W3C(World Wide Web Consortium) で標準化が
+進められ、現在は Level1, 2, 3と３つのレベルがあります。レベルの大きい物がより
+高度な機能を提供すると思っておけば良いでしょう。
+</p>
+<table border="1">
+<tr>
+<th>レベル</th><th>勧告時期</th><th>概要</th>
+</tr>
+<tr>
+<td>Level1</td>
+<td>1998/01</td>
+<td>ノードの参照／追加／置換／削除などの基本機能を定義</td>
+</tr>
+<tr>
+<td>Level2</td>
+<td>2000/11</td>
+<td>Level1に、スタイル操作やイベントモデル、ノードの範囲指定などの機能を追加</td>
+</tr>
+<tr>
+<td>Level3</td>
+<td>2004/04(一部)</td>
+<td>Level2に、XPath、妥当性の検証、読み込み／保存などの機能を追加</td>
+</tr>
+</table>
+<p>
+現時点での最新レベルは Level3 ですが、執筆時点で正式に勧告となっているものは
+一部のモジュールに留まっており、XPathやイベントモデルなどのモジュールは策定段階
+にあります。ブラウザ側の実装も、基本は Level2 がベースになっています。
+</p>
+<p>
+また、時として「DOM Level 0」「DOM 0」という言葉が登場することもありますが、
+これはDOM Level1 が作成される前の -- 標準化されていないブラウザオブジェクトの事です。
+標準仕様としての「DOM Level 0」が存在するわけではありません。
+</p>
+<h3><a name="SEC18">
+7-2 特定のノードを取得する</a>
+</h3>
+<h4><a name="SEC19">
+ノードを取得する２つの方法</a>
+</h4>
+<p>
+DOM のノードにアクセスする方法は大きく２つに分類できます。
+</p>
+<ul>
+<li>
+ID値やタブ名といったキーによって目的の要素を直接取得するダイレクトアクセス
+</li>
+<li>
+ある要素を起点にその子要素、親要素、兄弟要素を、というように
+相対的な位置関係でノードを取得する<dfn> ノードウォーキング </dfn>
+</li>
+</ul>
+<p>
+要素を取得していく方法として、ダイレクトアクセス（１～３）、
+ノードウォーキング（４）の順で紹介していきます。
+</p>
+<ol>
+<li>
+ID値で検索する方法
+</li>
+<li>
+タグ名で検索する方法
+</li>
+<li>
+class属性（スタイルクラス）で検索する方法
+</li>
+<li>
+相対的な位置関係で取得る方法
+</li>
+</ol>
+<p>
+ダイレクトアクセスとノードウォーキングには、それぞれ以下のメリットとデメリット
+があります。
+</p>
+<ul>
+<li>
+ダイレクトアクセス　⇒　ピンポイントで特定の要素を取得するには便利だが
+大きな文書（または部分ツリー）を対象とする場合にはパフォーマンス低下の原因とも
+なりやすい
+</li>
+<li>
+操作の小回りが利くが、ダイレクトアクセスに比べると手続きがやや回りくどい
+</li>
+</ul>
+<p>
+そのため、「ダイレクトアクセスで部分的なツリーを取得した後、
+近接するノードはノードウォーキングで取得する」など、状況に応じて両者を併用する
+のが好ましい。
+</p>
+<h4><a name="SEC20">
+ID値をキーにノードを取得する - getElementByIdメソッド -</a>
+</h4>
+<p>
+取得したい要素が明確な場合、もっともシンプルなのが getElementById メソッド。
+</p>
+<pre>
+<code>
+   document.getElementById('ID値')// 指定されたID値を持つノードを取得する
+</code>
+</pre>
+<p>
+以下はテキストボックスで入力された名前をもとに、&lt;div id="result"&gt;タグに
+「こんにちは○○さん！」とメッセージを反映させるサンプルです。
+</p>
+<pre>
+<code>
+    &lt;!DOCTYPE html&gt;
+    &lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+    &lt;head&gt;
+      &lt;meta charset="utf-8" /&gt;
+      &lt;title&gt;p256&lt;/title&gt;
+      &lt;script type="text/javascript"&gt;
+        &lt;!--
+        // [送信] ボタンクリック時に実行
+        function btn_onclick() {
+          // &lt;div id="result"&gt;タグを取得
+          var result = document.getElementById('result');
+          // 入力内容に基づいて、&lt;div&gt;タグの内容を更新
+          result.innerHTML =
+            'こんにちは、' +
+            document.fm.name.value +
+            'さん！';
+            // 別解：document.getElementById('name').value 
+        }
+        //--&gt;
+      &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+      &lt;form name="fm"&gt;
+        &lt;label&gt;名前：
+        &lt;input type="text" id="name" name="name" size="15" /&gt;&lt;/label&gt;
+        &lt;input type ="button" value="送信" onclick="btn_onclick()" /&gt;
+        &lt;div id="result"&gt;&lt;/div&gt;
+      &lt;/form&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+</code>
+</pre>
+<p>
+innerHTML は、現在の要素の内容を取得・設定するためのプロパティです。
+厳密にはDOM標準で定められたプロパティではありｍせんが、主要なブラウザで対応しており、事実上の
+標準プロパティとなっています。
+</p>
+<h4><a name="SEC21">
+タグ名をキーにノードを取得する - getElementsByTagName メソッド -</a>
+</h4>
+<p>
+次に、getElementsByTagName メソッドを使って、タグ名をキーに、
+要素を取得してみましょう。タグ名では複数の要素が合致する可能性がありますので、
+getElementsByTagName メソッドも要素の集合(NodeList オブジェクト)を返します。
+</p>
+<p>
+以下は、
+あるページに含まれるアンカータグをすべて取得し、そのリンク先を一覧表示する
+サンプルです。
+</p>
+<pre>
+<code>
+   &lt;!DOCTYPE html&gt;
+   &lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+   &lt;head&gt;
+      &lt;meta charset="utf-8" /&gt;
+      &lt;title&gt;p257&lt;/title&gt;
+      &lt;script type="text/javascript"&gt;
+         &lt;!--
+         // ページロード時に実行するイベントハンドラ
+         window.onload = function () {
+            // リンクリストを格納するための配列を用意
+            var result = [];
+            // ページに内のすべてのアンカータグを取得
+            var list = document.getElementsByTagName('a');
+            /* リスト(NodeListオブジェクト)から順にアンカータグを
+            取り出し、その href属性を配列 result に格納 */
+            for (var i = 0; i &lt; list.length; i++) {
+               result.push(list.item(i).href);
+            }
+            // 配列の内容を改行区切りで連結し、ダイアログ表示
+            window.alert(result.join('\n'));
+         }
+         //--&gt;
+      &lt;/script&gt;
+   &lt;/head&gt;
+   &lt;body&gt;
+      &lt;a href="http:www.wings.msn.to/"&gt;サーバーサイド技術の学び舎 - WINGS&lt;/a&gt;
+      &lt;br /&gt;
+      &lt;a href="http:www.web-deli.com/"&gt;WebDeli&lt;/a&gt;
+      &lt;br /&gt;
+      &lt;a href="http://www.atmarkit.co.jp/fdotnet/ajaxjs/index/"&gt;
+         Ajax時代のJavaScriptプログラミング再入門&lt;/a&gt;
+   &lt;/body&gt;
+   &lt;/html&gt;
+</code>
+</pre>
+<p>
+<strong>NodeList オブジェクトは配列のように扱えるように作られていますが、
+Arrayオブジェクトではありません。for 文で要素を取得は出来ますが、
+for in 構文で要素にアクセスすると、ブラウザによって異なりますが、少なくとも
+length 以上の要素を吐きだします。何が出力されるのか判って使わないとバグの元になります。</strong>
+</p>
+<p>　NodeListに3つの要素が格納されているとしましょう。最初の要素を取り出すためには、本来、itemメソッドを使います。</p>
+
+<pre>
+<code>
+   var nodeList = document.getElementsByTagName('div');
+   var elmObject = nodeList.item(0);
+</code>
+</pre>
+<p>itemはメソッドですので、( )を使ってインデックス番号を
+指定します。item[0]ではありませんので注意してください。
+</p>
+<p>インデックス番号は配列と同じく0から数えます。
+この例は、次の記法と同等です</p>
+<pre>
+<code>
+var elmObject = nodeList[0];
+</code>
+</pre>
+<h4><a name="SEC22">
+class 属性をキーにノードを取得する - getElementsByClassName メソッド -</a>
+</h4>
+<p>
+class 属性が my である要素だけを取得し、リンク先を一覧表示するサンプル。
+</p>
+<pre>
+<code>
+   &lt;!DOCTYPE html&gt;
+   &lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+   &lt;head&gt;
+      &lt;meta charset="utf-8" /&gt;
+      &lt;title&gt;p259&lt;/title&gt;
+      &lt;script type="text/javascript"&gt;
+         &lt;!--
+         // ページロード時に実行するイベントハンドラ
+         window.onload = function () {
+            // リンクリストを格納するための配列を用意
+            var result = [];
+            // 「class="my"」である要素 Anchorタグを取得
+            var list = document.getElementsByClassName('my');
+            /* リスト(NodeListオブジェクト)から順にアンカータグ
+            を取り出し、そのhref属性を配列resultに格納 */
+            for (var i = 0; i &lt; list.length; i++) {
+               result.push(list.item(i).href);
+            }
+            // 配列の内容を改行区切りで連結し、ダイアログ表示
+            window.alert(result.join('\n'));
+         }
+         //--&gt;
+      &lt;/script&gt;
+   &lt;/head&gt;
+   &lt;body&gt;
+      &lt;a href="http:www.wings.msn.to/" 
+         class="my"&gt;サーバーサイド技術の学び舎 - WINGS&lt;/a&gt;
+      &lt;br /&gt;
+      &lt;a href="http:www.web-deli.com/" 
+         class="my"&gt;WebDeli&lt;/a&gt;
+      &lt;br /&gt;
+      &lt;a href=
+         "http://www.atmarkit.co.jp/fdotnet/ajaxjs/index/" 
+         class="my"&gt;
+         Ajax時代のJavaScriptプログラミング再入門&lt;/a&gt;
+   &lt;/body&gt;
+   &lt;/html&gt;
+</code>
+</pre>
+<h4><a name="SEC23">
+相対的な位置関係でノードを取得する</a>
+</h4>
+<p>
+getElementById／getElementsByTagName／getElementsByClassName メソッドは
+いずれもピンポイントで特定の要素ノードを取得するためのメソッドですが、
+DOMでは以下のようなプロパティを利用して「あるノードを起点として、相対的な位置関係
+からノードを取得する」こともできます。
+</p>
+<table border="1">
+<caption>
+ownerDocument文書全体
+</caption>
+<tr>
+<td>parentNode</td><td>親ノード</td>
+</tr>
+<tr>
+<td>previousSibling</td><td>兄ノード</td>
+</tr>
+<tr>
+<td>nextSibling</td><td>弟ノード</td>
+</tr>
+<tr>
+<td>firstChild</td><td>最初の子ノード</td>
+</tr>
+<tr>
+<td>childNodes(n-1)</td><td>子ノード</td>
+</tr>
+<tr>
+<td>lastChild</td><td>最後の子ノード</td>
+</tr>
+</table>
+<!-- ☜ -->
+<a href="js7.htm">☜☜前へ</a>　<a href="js9.htm">次へ☞☞ 
+</a></p>
+</body>
+</html>	

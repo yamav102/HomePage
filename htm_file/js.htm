@@ -1,0 +1,1159 @@
+﻿<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="keywords" content="java script,html">
+<meta name="author" content="yamaV1.02β">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta name="robots" content="noindex">
+<meta name="description" content="//////////">
+<meta name="reply-to" content="">
+<link rel="shortcutIcon" href="favicon.ico">
+<link rel="start" href="index.htm">
+<link rel="stylesheet" type="text/css" href="leftside1.css">
+
+<title>JavaScript 本格入門　メモ1</title>
+
+  <!-- http://www.mwsoft.jp/programming/javascript/highlight_js.html?style=vs#styles -->
+  <!--http://softwaremaniacs.org/soft/highlight/en/download/-->
+  <!-- stylesの中から好みにあったCSSを選んで、 -->
+  <!-- 1, CSS、JavaScriptファイルを呼び出す -->
+  <!--<link rel="stylesheet" href="../highlight.js/styles/vs.css">-->
+  <!--<script type="text/javascript" src="../highlight.js/highlight.pack.js"></script>-->
+  <!-- 2, onLoad時にinitしてくれる機能を呼び出す -->
+  <!--<script type="text/javascript">hljs.initHighlightingOnLoad();</script>-->
+</head>
+<h1><a name="SEC1">JavaScriptメモ</a></h1>
+&lt;script language="javascript"&gt;←language属性は非推奨な記述
+&lt;script type="text/javascript"&gt;&lt;!--←type属性で記述するのが4.01風--&gt;
+<!--
+document.write("hello");
+document.write(Date());//Date()は組み込みオブジェクトを関数として使っている。
+//-->
+</script><br>
+ただいまの時刻は
+<script language="javascript">
+<!--
+
+now=new Date();
+document.write(now.getHours(),"時",now.getMinutes(),"分");
+//-->
+</script>
+dateはダメ。Date　gethoursはダメ。getHours。getMinutesであって、getminutesではない。
+&lt;script language="javascript"&gt;←language属性は非推奨な記述&gt;
+
+<P>クロス・プラットフォームとはOSの種類に関係なく<em>動く</em>という事。</p>
+<p>スクリプト言語はインタープリタ言語と同義。コードがそのままインタープリタに読み込まれて実行される</p>
+<p>JavaScriptの場合JavaScriptエンジンがスクリプトを実行する。Perlもスクリプト言語。⇔コンパイラ言語（コンピュータが実行可能なバイナリ・コードに変換して実行可能なファイルを作るソフトを「コンパイラ」と呼ぶ。</p>
+<ul >
+<li >ブラウザの設定の情報を読み込んだり変更したり、印刷したりする事は出来ない</li>
+<li>ユーザーのコンピュータ上のアプリケーションを立ち上げる事は出来ない.</li>
+<li>ファイルを読み込んだり、ファイルに書き込んだりする事は出来ない。</li>
+<li>サーバー上に書き込むことは出来ない。</li>
+<li>ユーザーに知られる事なしに第三者にメールを送信する事は出来ない。</li>
+</ul>
+
+<h2><a name="SEC2">変数宣言　Decleration</a></h2>
+	<p>
+		javascriptでは変数を宣言するべきではあるが、
+		宣言ぜずに変数を使用できる。
+		変数の型はある。値型(number/string/boolean/null/undefined)・参照型(array/object/fuction)
+		型はあっても型を宣言する事はできない。
+		
+	
+	</p>
+
+<p>
+var(variableの事) 付けて変数宣言するわけだが、var 無しで使う変数は広域変数になってしまう。
+広域変数の管理は厄介なので var で宣言するべきである。javascript のスコープは
+広域変数と局所変数の二つしかない。ブロックレベルのスコープという概念はない。
+</p>
+<p>
+広域変数名がバッティングした場合はより後から読みこまれた変数が有効になる。
+そして、後から宣言した変数は先に読みこまれた変数を上書きしてしまう。
+広域変数同士のバッティングは厄介。複数のjsファイルを読み込んだ場合、このトラブルの回避方法はあるのだろうか？
+</p>
+<pre>
+<code>
+   //宣言すると同時に値を初期化する事もできる。
+   var x = '';
+</code>
+</pre>
+<pre>
+<code>
+   /* 広域変数と局所変数の使い分けのSample */
+   var m_xold = null; //ループ処理の一つ前の変数の値を記憶する
+   function fun(x){
+     var xnew = x;
+     
+     //演算処理
+     xnew = xnew * 2;
+
+     //出力
+     document.write(
+      "今回:" + xnew + ", " + 
+      "前回:" + m_xold + "&lt;br&gt;");
+
+     //今回の結果を広域変数に記憶
+     m_xold = xnew;
+   }
+
+   function fun2(){
+     for(var i = 1; i &lt; 5; i++){
+       fun(i);
+     }
+   }
+   
+   fun2();   
+   //結果
+   /*
+   今回:2, 前回:null
+   今回:4, 前回:2
+   今回:6, 前回:4
+   今回:8, 前回:6
+   */
+</code>
+</pre>
+
+<p>行の終わりにセミコロンをつけるのはC++やJavaの規則を引き継いだものだが、無くても問題ない。ヘッダーかボディの何れかに記述。
+jsファイルを呼び出す場合</p>
+<pre><code>
+   &lt;html&gt;
+   &lt;body&gt;
+   &lt;script language="JavaScript" src="@@@.js"&gt;&lt;/script&gt;
+   &lt;/body&gt;
+   &lt;/html&gt;
+</code>
+</pre>
+<p>4.01風の記述</p>
+<pre>
+<code>
+   &lt;script type="text/javascript" src="./carender.js"&gt;&lt;/script&gt;
+</code>
+</pre>
+
+<p>&lt;head&gt;内に書ける物はヘッド内にかいておく。ドキュメントが表示される前に読み込まれるので、スクリプトの読み込みが中断されて実行できなくなる可能性を少なくするため。</p>
+
+<div>alert("Onloadイベント");</div>&lt;script language="javascript"&gt;<br>function 変数(){alert("表示する文章"}<br>&lt;body onload="変数()"&gt;
+
+<a href src="windo.htm">新しいウィンドウを開く</a>
+<h2><a name="SEC3">イベントハンドラ</a></h2>
+
+<cite="http://www.mdn.co.jp/Wdesign/IJ/03/"><TABLE border=1><caption>イベントハンドラ一覧</caption>
+ 
+<tr><th>イベントハンドラ</th><th colspan=2>使用例</th></tr>
+ <TR>
+  <TD rowspan=6>onClick</TD>
+  <TD>button</TD>
+  <TD>&lt;input type="button" name="button1" value="OK" onClick="window.alert('イベント');"&gt;</TD>
+ </TR>
+ <TR>
+  <TD>checkbox</TD>
+  <TD>&lt;input type="checkbox" name="check1" onClick="window.alert('イベント');"&gt;</TD>
+ </TR>
+ <TR>
+  <TD>radio</TD>
+  <TD>&lt;input type="radio" name="radio1" onClick="window.alert('イベント');"&gt;</TD>
+ </TR>
+ <TR>
+  <TD>reset</TD>
+  <TD>&lt;input type="reset" name="reset0" onClick="window.alert('イベント');"&gt;</TD>
+ </TR>
+ <TR>
+  <TD>submit</TD>
+  <TD>&lt;input type="submit" name="submit0" onClick="window.alert('イベント');"&gt;</TD>
+ </TR>
+ <TR>
+  <TD>link</TD>
+  <TD>&lt;a href="xxx.html" onClick="window.alert('イベント');"&gt;</TD>
+ </TR>
+ <TR>
+  <TD rowspan=2>onFocus</TD>
+  <TD>text</TD>
+  <TD>&lt;input type="text" onFocus ="window.alert('イベント');" value = "テキスト"&gt;</TD>
+ </TR>
+ <TR>
+  <TD>select・textarea</TD>
+  <TD>&lt;select multiple onFocus ="window.alert('イベント');"&gt;</TD>
+ </TR>
+ <TR>
+  <TD>onBlur</TD>
+  <TD>text・select・textarea</TD>
+  <TD>&lt;input type="text" onBlur ="window.alert('イベント');" value = "テキスト"&gt;</TD>
+ </TR>
+ <TR>
+  <TD>onChange</TD>
+  <TD>text・textarea・select</TD>
+  <TD>&lt;input type="text" onChange ="window.alert('イベント');" value = "テキスト"&gt;</TD>
+ </TR>
+ <TR>
+  <TD>onSelect</TD>
+  <TD>text・textarea</TD>
+  <TD>&lt;input type="text" onSelect ="window.alert('イベント');" value = "テキスト"&gt;</TD>
+ </TR>
+ <TR>
+  <TD>onMouseOver</TD>
+  <TD>link</TD>
+  <TD>&lt;a href="dummy.txt" onMouseOver ="window.alert('イベント');"&gt;</TD>
+ </TR>
+ <TR>
+  <TD>onMouseOut<SUP>※</SUP></TD>
+  <TD>link</TD>
+  <TD>&lt;a href="dummy.txt" onMouseOut ="window.alert('イベント');"&gt;</TD>
+ </TR>
+ <TR>
+  <TD>onSubmit</TD>
+  <TD>form</TD>
+  <TD>&lt;form method=post onSubmit="window.alert('イベント');"&gt;</TD>
+ </TR>
+ <TR>
+  <TD>onUnload</TD>
+  <TD>window</TD>
+  <TD>&lt;body onLoad ="window.alert('イベント');" onUnload ="window.alert('イベント');"&gt;</TD>
+ </TR>
+ 
+ </TABLE>
+ 
+ <p>※Netscape2.0では未対応.表1　イベントハンドラ一覧。例2で説明させているイベントの使用例</p>
+</cite>
+<h2><a name="SEC4">変数</a></h2>
+<p>変数の名前は、自分で好きなように付ける事が出来ます。以下は例外</p>
+<table border=1 cellpadding=5px width=100%><caption>変数として使用できない単語</caption><tbody><tr><td>abstract</td><td>boolean</td><td>break</td><td>byre</td><td>case</td><td>catch</td></tr>
+<tr><td>char</td><td>class</td><td>const</td><td>continue</td><td>debugger</td><td>default</td></tr>
+<tr><td>delete</td><td>do</td><td>double</td><td>else</td><td>enum</td><td>export</td></tr>
+<tr><td>extends</td><td>false</td><td>final</td><td>finally</td><td>float</td><td>for</td></tr>
+<tr><td>function</td><td>goto</td><td>if</td><td>implements</td><td>import</td><td>in</td></tr>
+<tr><td>instanceof</td><td>int</td><td>interface</td><td>long</td><td>native</td><td>new</td></tr>
+<tr><td>null</td><td>package</td><td>private</td><td>protecteed</td><td>public</td><td>return</td></tr>
+<tr><td>short</td><td>static</td><td>super</td><td>switch</td><td>synchronized</td><td>this</td></tr>
+<tr><td>throw</td><td>throws</td><td>transient</td><td>true</td><td>try</td><td>typeof</td></tr>
+<tr><td>var</td><td>void</td><td>volatile</td><td>while</td><td>with</td><td></td></tr></tbody></table>
+<h3><a name="SEC5">変数の使用例</a></h3>
+
+   <script type="text/javascript">
+   function myprompt() {
+      var myhennsuu =prompt("何か入力してくださ:","規定値");
+      alert(myhennsuu)
+   }
+   </script>
+
+   <p onclick="myprompt()" style="cursor:hand; color:blue;text-decoration:underline">クリック</p>
+<pre>
+<code>
+   &lt;script type="text/javascript"&gt;&lt;br&gt;
+   function <var>myprompt</var>() {
+      var <var>myhennsuu</var> =prompt("何か入力してくださ:","規定値");
+      alert(<var>myhennsuu</var>)
+   }
+   &lt;/script&gt;
+   &lt;p onclick="myprompt()" 
+      style="cursor:hand; color:blue;text-decoration:underline"&gt;クリック&lt;/p&gt;
+</code>
+</pre>
+<table>
+	<caption>記号<caption>
+	<tbody>
+	<tr>
+		<th>\</th><td>重複する”につかう</td><th>\r\n</th><td>改行(CR+LF)</td>
+	</tr>
+	<tr>
+		<th>==</th><td>イコール</td><th>!=</th><td>不等号</td>
+	</tr>
+	<tr>	
+		<th>&&</th><td>and</td><th>||</th><td>or</td>
+	</tr>
+	<tr>
+		<th>!</th><td>not</td><th>\</th><td>not</td>
+	</tr>
+	<tr>
+		<th>\t</th><td>tab</td><th>&nbsp;</th><td>&nbsp;</td>
+	</tr>
+	</tbody>
+</table>
+
+<h2><a name="SEC6">sample code</a></h2>
+<h3><a name="SEC7">フレームを個々に表示させないスクリプト</a></h3>
+<pre>
+<code>
+   &lt;script Lnguage=&quot;Java Script&quot;&gt;
+      if (self == top) {
+         location.href = &quot;フレームページまでのパス&quot;;
+      }
+   &lt;/script&gt;
+</code>
+</pre>
+
+
+<script type="text/javascript">
+function aa(){
+var myaler=f1.input1.value;
+
+alert(myaler);
+return false;
+}
+</script>
+<form onsubmit="return aa()" id="f1">
+   <input type="text" size="25" id="input1"> 入力文字列を
+   <input type="submit" value="アラート表示" onclick="aa()">
+</form>
+<p>
+buttonを使用するとボタンにフォーカスがあたらない。
+submitを使うとボタンにフォーカスはあたるが同じページに移動してしまう。
+onsubmit="retrun aa()"を指定してフォーカスをあてつつページが移動しないようにする。
+</p>
+
+
+
+<h3><a name="SEC8">関数の使用例</a></h3>
+<script type="text/javascript">
+function kakezan(atai){
+
+return atai*3;
+}</script>
+<script type="text/javascript">
+document.write(kakezan(1000))
+</script>
+<script type="text/javascript">
+function kakezan()
+{
+df=document.forms[0];
+a=df.f1.selectedIndex;
+b=df.f2.selectedIndex;
+df.f3.value=kake()
+}
+function kake(){
+return a*b;
+
+
+
+}</script>
+
+<form><select name="f1" onchange="kakezan()"><option>2<option>3<option>4<option>5
+</select>
+<select name="f2" onchange="kakezan()"><option>2<option>3<option>4<option>5
+</select>
+<input name="f3"></form>
+
+<h3><a name="SEC9">自ファイルのパス取得</a></h3>
+<pre>
+<code>
+   &lt;script type=&quot;text/javascript&quot; language=&quot;javascript&quot;&gt;
+     &lt;!--
+      document.write (location.pathname);
+     // --&gt;
+   &lt;/script&gt;
+</code>
+</pre>
+<script language="JavaScript">
+<!--
+document.write("<h3>IEではユニコードにエンコード・デコード　Netscapeでは、escape関数を用いると文字列をISO-Latin-1コード（ASCIIコード）に変換</h3>");
+document.write(unescape("%3Cp%3E%3Cb%3E%u3042%u3044%u3046%u3048%u304A%3C/b%3E%3C/p%3E "));
+document.write(escape("<p><b>あいうえお</b></p>"));//-->
+</script>
+<br>
+<pre>
+<code>
+   &lt;script language=&quot;JavaScript&quot;&gt;
+   &lt;!--
+      document.write
+         (unescape
+            (&quot;%3Cp%3E%3Cb%3E%u3042%u3044%u3046%u3048%u304A%3C/b%3E%3C/p%3E &quot;));
+      document.write
+         (escape(&quot;&lt;p&gt;&lt;b&gt;あいうえお&lt;/b&gt;&lt;/p&gt;&quot;));
+   //--&gt;
+   &lt;/script&gt; 
+</code>
+</pre>
+<h3><a name="SEC10">ページからファイルを参照してファイルを削除するスクリプト</a></h3>
+<p><a href="delfilescript.htm">sample</a></p>
+<PRE>
+<code>
+   &lt;script type=&quot;text/javascript&quot;&gt;
+   function delfile(myfile){
+      var flg=confirm(myfile+&quot;\nを削除します?&quot;);
+      if(flg==false){
+         alert(&quot;キャンセルされました&quot;);
+      return;}
+
+      var objFileSys = 
+         new ActiveXObject(&quot;Scripting.FileSystemObject&quot;);
+      if(!objFileSys.FileExists(myfile)){
+         alert(myfile+&quot;はありません&quot;);
+         return;
+      }
+      var myfile= objFileSys.GetFile(myfile);
+      var strmyfile=myfile.name
+      with(objFileSys){
+	 deletefile(myfile);	
+      }
+      alert(strmyfile+&quot;\nを削除しました&quot;);
+      objFileSys=null;
+   }
+   &lt;/script&gt;
+   &lt;h1&gt;ファイル削除&lt;/h1&gt;
+   &lt;form name=&quot;frmSlct&quot; method=&quot;get&quot;&gt;
+   &lt;input type=&quot;file&quot; name=&quot;file1&quot; size=&quot;70&quot;&gt;
+   &lt;/form&gt;
+   &lt;div&gt;&lt;button onclick=&quot;
+      delfile(document.frmSlct.file1.value);&quot;&gt;
+      ファイルを削除します&lt;/button&gt;
+   &lt;/div&gt;
+</code>
+</PRE>
+
+<h3><a name="SEC11">コピーを取る</a></h3>
+<script type="text/javascript">
+   <!--
+	function doCopyById(strId){
+	   //このメソッドはIEでないと動作しない
+	　if(window.navigator.appName!='Microsoft Internet Explorer'){
+		alert('コピー機能はＩＥでのみ動作します。\n\n     &lt;(＿ ＿)&gt;Ｓｏｒｒｙ');
+		return;
+	  }
+
+	   var element = document.getElementById(strId)
+	   clipboardData.setData("Text", element.innerText);
+	/*
+	  構文
+	  clipboardData.setData("Text", "文字列");
+	  &lt;strong&gt;"&lt;/strong&gt;Text&lt;strong&gt;"&lt;/strong&gt;, &lt;strong&gt;"文字列&lt;strong&gt;"&lt;/strong&gt;
+	  二重引用符を使う。シングルクォーテーションだとエラーになる。
+	*/
+	}
+   //-->
+</script>
+
+<style type = "text/css">
+	button.copy{
+	   border:1px solid blue;
+	   color:green;
+	   background-color:lavender;
+	}#code1{
+	  border:1px solid blue;
+	  background-color:ivory;
+	}
+</style>
+
+<div><button class="copy" onclick="javascript:doCopyById('code1')">コピー</button></div>
+<div id = "code1">
+<pre>
+<code>
+   &lt;script type="text/javascript"&gt;
+      &lt;!--
+	function doCopyById(strId){
+
+	   //このメソッドはIEでないと動作しない
+	　if(window.navigator.appName!='Microsoft Internet Explorer'){
+		alert('コピー機能はＩＥでのみ動作します。\n\n     &lt;(＿ ＿)&gt;Ｓｏｒｒｙ');
+		return;
+	  }
+
+	   var element = document.getElementById(strId);
+	   clipboardData.setData("Text", element.innerText);
+	/*
+	  構文
+	  clipboardData.setData("Text", "文字列");
+	*/
+	}
+   //--&gt;
+   &lt;/script&gt;
+   &lt;style type = "text/css"&gt;
+	button.copy{
+	   border:1px solid blue;
+	   color:green;
+	   background-color:lavender;
+	}#code1{
+	  border:1px solid blue;
+	  background-color:ivory;
+	}
+   &lt;/style&gt;
+   &lt;div&gt;&lt;button class="copy" 
+       onclick="javascript:doCopyById('code1')"&gt;コピー&lt;/button&gt;
+   &lt;/div&gt;
+
+   &lt;div id = "code1"&gt;
+	&lt;!-- ここがコピーされる部分 --&gt;
+	TEST SAMPLE
+   &lt;/div&gt;
+</code>
+</pre>
+</div>
+
+<h3><a name="SEC11_1">曜日を返す getDay() 関数</a></h3>
+<pre>
+<code>
+   /* ■曜日を返す getDay() 関数 */
+   &lt;script&gt;
+   var y = 2012;
+   var m = 1;
+   var d = 23;
+   function getYou(y, m, d){
+	//月の0～11を補正
+	var m2 = m - 1;
+	if(m2 < 0){
+		m2 = 12 + m2;
+	}
+	var youAry = new Array("日","月","火","水","木","金","土")
+	var dt1 = new Date(y, m2 , d);
+
+	return youAry[dt1.getDay()];//日曜が0
+   }
+
+   document.write(y+"/"+m+"/"+d+" は"+getYou(y,m,d)+"曜日です");
+   &lt;/script&gt;
+</code>
+</pre>
+
+<h3><a name="SEC11_2">IE11以降のブラウザ判定</a></h3>
+
+<pre>
+<code>
+   /* ■IE11以降のブラウザ判定 */
+   &lt;script&gt;
+   function isIE(){
+      var ua = window.navigator.userAgent.toLowerCase();
+      var bl = ua.indexOf('msie') >= 0 || ua.indexOf('trident') >= 0
+      return bl;
+   }
+   if(isIE()){alert('IE!!!');}
+   &lt;/script&gt;
+</code>
+</pre>
+
+<hr>
+<h1>
+<a name="SEC12">JavaScript 本格入門　メモ</a>
+</h1>
+<h2><a name="SEC13">JavaScriptのデータ型</a></h2>
+<table border="1">
+<tr>
+	<th>分類</th>
+	<th>データ型</th>
+	<th>概要</th>
+</tr>
+<tr>
+	<td rowspan="4"><a name="datatype">基本型</a></td>
+	<td>数値型(number)</td>
+	<td>±4.94065645841246544*10^-324～±1.79769313486231570*10^308</td>
+</tr>
+<tr>
+	<td>文字列型(string)</td>
+	<td>シングル／ダブルクォートで囲まれた０個以上の文字の集合</td>
+</tr>
+<tr>
+	<td>真偽型(boolean)</td>
+	<td>true／false</td>
+</tr>
+<tr>
+	<td>特殊型(null／undefined)</td>
+	<td>値が未定義であることを表す</td>
+</tr>
+<tr>
+	<td rowspan="3">参照型</td>
+	<td>配列(array)</td>
+	<td>データの集合（各要素にはインデックス番号でアクセス可能）</td>	
+</tr>
+<tr>
+	<td>オブジェクト(object)</td>
+	<td>データの集合（各要素には名前でアクセス可能）</td>
+</tr>
+<tr>
+	<td>関数(function)</td>
+	<td>一連の処理の集合</td>
+</tr>
+</table>
+<p>
+リテラルとは、データ型に格納できる値そのもの、また、値の表現方法の事です。
+<dfn>数値リテラル</dfn>、<dfn>文字リテラル</dfn>、<dfn>配列リテラル</dfn>、
+<dfn>オブジェクトリテラル</dfn>、<dfn>関数リテラル</dfn>。
+</p>
+<h3><a name="SEC14">配列リテラル</a></h3>
+<pre>
+<code>
+   &lt;!DOCTYPE html&gt;
+   &lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+   &lt;head&gt;
+       &lt;meta charset="utf-8" /&gt;
+       &lt;title&gt;p43&lt;/title&gt;
+       &lt;script type="text/javascript"&gt;
+           var ary = ['JavaScript','Ajax','ASP.NET'];
+
+           // JavaScript(1番目の要素を取得)
+           document.writeln('&lt;p&gt;'+ary[0]+'&lt;/p&gt;');  
+           var ary = ['JavaScript', ['jQuery', 'prototype.js'], 'ASP.NET'];
+
+           // jQuery(2番目の要素の中の1番目を取得)
+           document.writeln('&lt;p&gt;'+ary[1][0] + '&lt;/p&gt;');    
+       &lt;/script&gt;
+   &lt;/head&gt;
+   &lt;/html&gt;
+</code>
+</pre>
+<h3>
+<a name="SEC15">document.write + '&lt;br /&gt;' と document.writeln の違い</a>
+</h3>
+<blockquote site="http://detail.chiebukuro.yahoo.co.jp/qa/question_detail/q1368467398">
+<p>
+じゃあ、ブラウザ上では document.writeln() は役立たずなのでは？ 
+</p>
+<p>
+まあ、改行を反映させる pre 要素と併用すれば、
+いちいち &lt;br&gt; を書かずに済む、というメリットはあります。
+</p>
+<pre>
+   document.writeln('あい、');
+   document.writeln('うえお。');
+   /*
+   あい、
+   うえお。
+   */
+</pre>
+<p>
+余談ですが、XHTML では document.write() が使えませんので、
+&lt;br /&gt; のように書かないで下さい。&lt;br /&gt;
+ と書いているのに document.write() が動いているのなら、
+それは XHTML ではなく HTML5 です。
+</p>
+<p>
+ファイルの拡張子を .xhtml にするか、MIME タイプを application/xhtml+xml 
+にして（IE 以外で）読み込んでみて下さい。
+すでにモダンブラウザでは、XHTML モードで document.write() が動作しないようになっているはずです。
+</p>
+</blockquote>
+<h3><a name="SEC16">オブジェクトリテラル</a></h3>
+<p>
+オブジェクトとは、名前をキーにアクセスできる配列です。
+<dfn>ハッシュ</dfn>、<dfn>連想配列</dfn>等と呼ばれます。
+</p>
+<p>
+通常の配列がインデックス番号しかキーに出来ないのに対し、
+オブジェクトでは文字列をキーにアクセスできるため、データの視認性が
+高くなります。
+</p>
+<p>
+JavaScriptにおいては、連想配列とオブジェクトは同一のものです。
+「連想配列」と「オブジェクト」という言葉は、単にその時々の使い方
+や文脈によって使い分けられているに過ぎません。
+</p>
+<pre>
+<code>
+   var obj = { x: 1, y: 2, z: 3 };
+   document.writeln(obj.x); //1
+   document.writeln(obj['x']); //1
+
+   /*
+   ×   obj.123
+   ○   obj['123']
+   */
+</code>
+</pre>
+<h3><a name="SEC17">未定義値　undefined</a></h3>
+<pre>
+<code>
+   var x;
+   var obj = { a: 12345 };
+   document.writeln(x);        //  undefined (値が設定されていない)
+   document.writeln(obj.b);    //  undefined (プロパティが存在しない)
+
+   /*
+   undefined はリテラルのように見えますが、Globalオブジェクトのプロパティに
+   すぎず、値を設定する事が出来てしまう。
+   */
+   undefined = 10;
+   alert('undefined は、' + undefined);//undefined
+   alert(undefined==10); // false
+
+   /*
+   undefined を利用している全ての箇所に影響するので、
+   絶対やってはいけない。という説明がJavaScript本格入門には書いてあるが、
+   エラーにはならないけれど、セットされないじゃん。
+   */
+   alert('aa');　// aa
+</code>
+</pre>
+<h2><a name="SEC18">演算子</a></h2>
+<table border="1">
+<caption>
+算術演算子
+</caption>
+<tr>
+<th>演算子</th><th>概要</th><th>例</th>
+</tr>
+<tr>
+<td>+</td><td>加算</td><td>3 + 5 // 8</td>
+</tr>
+<tr>
+<td>-</td><td>減算</td><td>10 - 7 // 3</td>
+</tr><tr>
+<td>*</td><td>乗算</td><td>3 * 5 // 15</td>
+</tr><tr>
+<td>/</td><td>除算</td><td>10 / 5 // 2</td>
+</tr><tr>
+<td>%</td><td>剰余</td><td>10 % 4 // 2</td>
+</tr><tr>
+<td>++</td><td>前置加算</td><td>x = 3; a = ++x; // aは3　xは4</td>
+</tr><tr>
+<td>++</td><td>後置加算</td><td>x = 3; a = ++x; // aは4　xは4</td>
+</tr><tr>
+<td>--</td><td>前置減算</td><td>x = 3;a = x--; // aは3　xは2</td>
+</tr><tr>
+<td>--</td><td>後置減算</td><td>x = 3; a = --x // aは2　xは2</td>
+</tr>
+</table>
+<h3><a name="SEC19">小数点の計算では誤差がでる</a></h3>
+<p>
+0.2 を二進数で表すと0.001100110011…の無限小数になる。
+そして、コンピューターの桁数は有限である為誤差が出る。
+「最近接偶数への丸め」「最近偶数丸め」「銀行家の丸め」とか呼ばれる
+丸めをして10進に戻すと僅かに大きくなったり小さくなったり、と言う事が起きる。
+<pre>
+<code>
+        document.writeln(0.2 * 3); //0.6000000000000001 
+        document.writeln(0.2 * 3 == 0.6) //false
+
+        //一度整数にしてから演算んを行う
+        document.writeln((0.2 * 10) * 3 / 10) //0.6
+        document.writeln((0.2 * 10) * 3 / 10 == 0.6) //true
+</code>
+</pre>
+<p>
+<table border="1">
+<caption>
+代入演算子
+</caption>
+<tr>
+<th>演算子</th><th>概要</th><th>例</th>
+</tr>
+<tr>
+<td>=</td><td>代入</td><td>x = 1</td>
+</tr>
+<tr>
+<td>+=</td><td>右辺の加算して左辺に代入</td><td>x=3; x += 2 // 5</td>
+</tr><tr>
+<td>-=</td><td>右辺の値で減算して左辺に代入</td><td>x=3; x -= 2 // 1</td>
+</tr><tr>
+<td>*=</td><td>右辺を乗算して左辺に代入</td><td>x=3; x *= 2 // 6</td>
+</tr><tr>
+<td>/=</td><td>右辺で除算して左辺に代入</td><td>x=3; x /= 2 // 1.5</td>
+</tr><tr>
+<td>%=</td><td>右辺で除算した余りを左辺に代入</td><td>x=3; x %= 2; // 1</td>
+</tr><tr>
+<td>&=</td><td>右辺で論理積演算した結果を左辺に代入</td><td>x=10;x&=5 // 0:{1,0,1,0}*{0,1,0,1}=0</td>
+</tr><tr>
+<td>|=</td><td>右辺で論理和演算した結果を左辺に代入</td><td>x=10;x|=5 //15:{1,0,1,0}+{0,1,0,1}=15</td>
+</tr><tr>
+<td>^=</td><td>右辺で排他的論理和演算した結果を左辺に代入</td><td>x=10;x^=5 //15 true&trueが0</td>
+</tr>
+</tr><tr>
+<td>&lt;&lt;=</td><td>右辺分左シフトした結果を左辺に代入</td><td>x=10;x&lt;&lt;=1 //20 1010(2)[8+2]⇒10100(2)[16+4]</td>
+</tr>
+</tr><tr>
+<td>&gt;&gt;=</td><td>右辺分右シフトした結果を左辺に代入</td><td>x=-10;x&gt;&gt;=1 //5 -1010(2)⇒-101(2) /3(反転させて1を足す)</td>
+</tr>
+</tr><tr>
+<td>&gt;&gt;&gt;=</td><td>右辺分右シフトした結果を左辺に代入</td><td>x=-10;x&gt;&gt;&gt;=2 // 1073741821 シフトして左を0で埋める。符号を考えない</td>
+</tr>
+</table>
+</p>
+<p>
+<table border="1">
+<caption>
+比較演算子
+</caption>
+<tr>
+<th>演算子</th><th>概要</th><th>例</th>
+</tr>
+<tr>
+<td>==</td><td>左辺と右辺が等しければ true</td><td>5==5 // true</td>
+</tr>
+<tr>
+<td>!=</td><td>左辺と右辺の値が等しくなければ true</td><td>5!=5 // false</td>
+</tr><tr>
+<td>&lt;</td><td>左辺がより小さい</td><td>5&lt;5 // false</td>
+</tr><tr>
+<td>&lt;=</td><td>左辺が右辺以下</td><td>5&lt;=5// true</td>
+</tr><tr>
+<td>&gt;</td><td>左辺がより大きい</td><td>5&gt;3 // true</td>
+</tr><tr>
+<td>&gt;=</td><td>左辺が右辺以上</td><td>5&gt;3;// true</td>
+</tr><tr>
+<td>===</td><td>左辺と右辺が値もデータ型も同じ</td><td>5===5 // true</td>
+</tr><tr>
+<td>!==</td><td>値が等しくない、または、データ型が等しくない</td><td>5!=='5' // true</td>
+</tr><tr>
+<td>?:</td><td>条件?真:偽</td><td>0?true:false // false</td>
+</tr>
+</table>
+</p>
+<p>
+参照型を等価演算子で比較すると、参照しているアドレスが
+同じかどうかを評価するので、以下の評価は false を返す。
+</p>
+<pre>
+<code>
+   var ary1 = ['a', 'b', 'c'];
+   var ary2 = ['a', 'b', 'c'];
+   document.writeln(ary1 == ary2); // false
+</code>
+</pre>
+<p>
+null, undefined は比較する事が出来る。エラーにならない。
+以下は全てtrue を返す。
+</p>
+<pre>
+<code>
+   document.writeln(null == null); // true        
+   document.writeln(null == undefined); // true
+   document.writeln(undefined == undefined); // true
+</code>
+</pre>
+<h3><a name="SEC20">等価演算子と同値演算子</a></h3>
+<pre>
+<code>
+   document.writeln('3.14E2' == 314); // true
+   document.writeln('0x10' == 16); // true
+   document.writeln('1' == 1); // true
+
+   document.writeln('3.14E2' === 314); //false
+   document.writeln('0x10' === 16); //false
+   document.writeln('1' === 1); //false
+</code>
+</pre>
+<p>
+<table border="1">
+<caption>
+論理演算子
+</caption>
+<tr>
+<th>演算子</th><th>概要</th><th>例</th>
+</tr>
+<tr>
+<td>&&</td><td>左右の式がtrue なら true</td><td>5==5 && 1==1 // true</td>
+</tr>
+<tr>
+<td>||</td><td>左右の式のどちらかがtrue なら true</td><td>5==5 || 5==1 // true</td>
+</tr><tr>
+<td>!</td><td>式がfalse ならば true</td><td>!(5&lt;1) // true</td>
+</tr>
+</table>
+</p>
+<p>
+<table border="1">
+<caption>
+ビット演算子
+</caption>
+<tr>
+<th>演算子</th><th>概要</th><th>例</th>
+</tr>
+<tr>
+<td>&(AND)</td><td>左右両方にセットされているビット</td><td>10 & 5 ⇒1010 & 0101 // 0</td>
+</tr>
+<tr>
+<td>|(OR)</td><td>左右どちらかにセットされているビット</td><td>10 | 5 ⇒1010 | 0101 // 15</td>
+</tr><tr>
+<td>^(XOR)</td><td>排他的論理和<td>10^3 ⇒ 1010^0011 ⇒ 1001 // 9</td>
+</tr><tr>
+<td>~(NOT)</td><td>ビットを反転</td><td>~10 ⇒ -11(正負も反転するので、+1して符号を変える(2の補数)</td>
+</tr><tr>
+<td>&lt;&lt;</td><td>ビットを左にシフト</td><td>10&lt;&lt;1 1010 ⇒ 10100 // 20</td>
+</tr><tr>
+<td>&gt;&gt;</td><td>ビットを⇒にシフト</td><td>10&gt;&gt;1 1010 ⇒ 101 //5</td>
+</tr><tr>
+<td>&gt;&gt;&gt;</td><td>ビットを右にシフトして左端を0で埋める</td><td>-10&gt;&gt;&gt;1 //(2進)11111111111111111111111111110110 ⇒ (2進)01111111111111111111111111111011
+ 2147483643</td>
+</tr>
+</table>
+</p>
+
+<p>
+<table border="1">
+<caption>
+その他演算子
+</caption>
+<tr>
+<th>演算子</th><th>概要</th><th>例</th>
+</tr>
+<tr>
+<td>,(カンマ)</td><td>左右の式を続けて実行</td><td><code>        for (var i = 0, j = 0; i < 5; i++, j++) {
+            document.writeln('i * j は ' + i * j + '<br>')
+        }</code></td>
+</tr>
+<tr>
+<td>|(OR)</td><td>左右どちらかにセットされているビット</td><td>10 | 5 ⇒1010 | 0101 // 15</td>
+</tr><tr>
+<td>delete</td><td>オブジェクトのプロパティや配列の要素を削除</td><td><code>delete ary[0]</code></td>
+</tr><tr>
+<td>instanceof</td><td>オブジェクトが指定されたインスタンスかを判定</td><td rowspan="3"><code>        var ary = new Array('a', 'b', 'c');
+        document.writeln(ary instanceof Array);//true document.writeln(typeof(ary));//Object</code></td>
+</tr><tr>
+<td>new</td><td>新しいインスタンスを生成</td>
+</tr><tr>
+<td>typeof</td><td>オペランドのデータ型を取得</td>
+</tr>
+<tr>
+<td>void</td><td>未定義値を返す</td><td>&nbsp;</td>
+</tr>
+<tr>
+<td>in</td><td>オブジェクトが指定したプロパティがあれば true</td><td>if("prp" in obj){prp プロパティがあれば実行される}</td>
+</tr>
+</table>
+</p>
+<h3><a name="SEC21">delete演算子</a></h3>
+<p>
+delete演算子は、オペランドに指定した変数や配列要素、オブジェクトのプロパティを破棄します。
+削除に成功すると true 、失敗すると false を返します。
+</p>
+<pre>
+<code>
+   var ary = ['JavaScript', 'Ajax', 'ASP.NET'];
+   document.writeln(delete ary[0]); // true
+   document.writeln(ary); // ,Ajax,ASP.NET   ----------- ①
+   var obj = { x: 1, y: 2 };
+   document.writeln(delete obj.x); // true
+   document.writeln(obj.x); // undefined
+   var obj2 = { x: obj, y: 2 };
+   document.writeln(delete obj2.x); // true
+   document.writeln(obj); // [Object Object] ----------- ②
+   var data1 = 1;
+   document.writeln(delete data1); // false
+   document.writeln(data1); // 1 ----------------------- ③
+   data2 = 10;
+   document.writeln(delete data2); // true
+   document.writeln(data2); // エラー　（data2 は存在しない）
+</code>
+</pre>
+<ul style="list-style-type: none">
+<li>①　配列要素の削除では、該当する要素が削除されるだけで、後ろの要素が繰り上がる訳ではない。
+（インデックス番号は変わらない）</li>
+<li>②　プロパティを削除した場合、プロパティそのものが削除されるだけで、プロパティが参照するオブジェクトが削除されるわけではない。</li>
+<li>③　明示的に宣言された変数を削除することは出来ない</li>
+</ul>
+<h3><a name="SEC22">typeof演算子</a></h3>
+<p>
+typeof演算子は、オペランドに指定した変数／リテラルのデータ型を表す文字列を返します。
+</p>
+<pre>
+<code>
+   var num = 1;
+   document.writeln(typeof num + '&lt;br /&gt;'); // number
+   var str = 'こんにちは';
+   document.writeln(typeof str + '&lt;br /&gt;'); // string
+   var flag = true;
+   document.writeln(typeof flag + '&lt;br /&gt;'); //boolean
+   var ary = ['JavaScript', 'Ajax', 'ASP.NET'];
+   document.writeln(typeof ary + '&lt;br /&gt;') //object
+   var obj = { x: 1, y: 2 };
+   document.writeln(typeof obj + '&lt;br /&gt;'); //object
+</code>
+</pre>
+<p>
+基本データ型の識別はできるが、配列、オブジェクト、ラッパーオブジェクトは
+object と看做される。どのような種類のオブジェクトなのか知りたい場合には 
+instanceof 演算子
+や constructorプロパティを使用する。
+</p>
+<h2><a name="SEC23">2-5 制御命令</a></h2>
+<h3><a name="SEC24">if 命令</a></h3>
+<pre>
+<code>
+   var x = 15;
+   if (x >= 10) {
+       document.writeln('変数xは10以上です。');   
+   }else{
+       document.writeln('変数xは10未満です。');
+   }
+   //変数xは10以上です。
+</code>
+</pre>
+<h3><a name="SEC25">else if 命令</a></h3>
+<pre>
+<code>
+   var x = 30;
+   if (x >= 20) {
+       document.writeln('変数xは20以上です。');   
+   } else if (x >= 10) {
+       document.writeln('変数xは10以上です。');
+   } else {
+       document.writeln('変数xは10未満です。');
+          
+   }//変数xは20以上です。
+</code>
+</pre>
+<p>
+複数の条件に合致しても、実行されるブロックはひとつだけ。
+</p>
+<pre>
+<code>
+   var x = 30;
+   if (x >= 20) 
+       document.writeln('変数xは20以上です。');   
+    else if (x >= 10) 
+       document.writeln('変数xは10以上です。');
+    else 
+       document.writeln('変数xは10未満です。');
+          
+   //変数xは20以上です。
+</code>
+</pre>
+<p>
+中カッコは省略可能↑。判りにくく、バグの元。	
+</p>
+<h3><a name="SEC26">switch 命令 </a></h3>
+<pre>
+<code>
+   var rank = 'B';
+   switch (rank) {
+       case 'A':
+      document.writeln('Aランクです');
+      break;
+       case 'B':
+      document.writeln('Bランクです');
+      break;
+       case 'C':
+      document.writeln('Cランクです');
+      break;
+       default:
+      document.writeln('ランク外です');
+   }//Bランクです。
+</code>
+</pre>
+<p>
+各ブロック末尾に break; を付ける。自動的に switchブロックから脱出するしくみは無い。
+</p>
+<p>
+次の例は、A、B、Cに「合格！」、Dの場合「不合格…」と表示させる場合、
+空のcaseブロックを列記する、という書き方。
+</p>
+<pre>
+<code>
+   var rank = 'A';
+   switch (rank) {
+       case 'A':         
+       case 'B':
+       case 'C':
+      document.writeln('合格！');
+      break;
+       case 'D':
+      document.writeln('不合格…');
+      break;
+   }
+</code>
+</pre>
+<h3><a name="SEC27">while /do …while 命令 </a></h3>
+<pre>
+<code>
+   var x = 8;
+   while (x &lt; 10) {
+       document.writeln('xの値は ' + x);
+       document.writeln('&lt;br&gt;');
+       x++;
+   }
+   //xの値は 8
+   //xの値は 9
+</code>
+</pre>
+
+<pre>
+<code> 
+   var x = 8;
+   do {
+       document.writeln('xの値は ' + x);
+       document.writeln('&lt;br&gt;');
+       x++;
+   } while (x &lt; 10)
+   //xの値は 8
+   //xの値は 9
+</code>
+</pre>
+
+<h3><a name="SEC28">for 命令 </a></h3>
+<pre>
+<code>
+   for(var x=8;x&lt;10;x++){
+       document.writeln('xの値は ' + x);
+       document.writeln('&lt;br&gt;');    
+   }
+   //xの値は 8
+   //xの値は 9
+</code>
+</pre>
+</div> 
+<p>
+左右の式を続けて実行する、カンマ演算子を使う。
+</p>
+<pre>
+<code>
+   for (var i = 1, j = 1; i &lt; 5; i++, j++){
+       document.writeln('i + jは ' + i * j);
+       document.writeln('&lt;br&gt;');
+   }
+   //i + jは 1
+   //i + jは 4
+   //i + jは 9
+   //i + jは 16       
+</code>
+</pre>
+<h3><a name="SEC29">配列内の要素を順に処理する for…in 命令</a></h3>
+<pre>
+<code>
+   //通常配列を走査してもコードがシンプルにならない、
+   //原則として forループで廻すべき。
+   var member = ['山田', '鈴木', '佐藤'];
+   for (var i in member) {
+       document.writeln('名前は、' + member[i]);
+       document.writeln('&lt;br&gt;');
+       document.writeln('iは、' + i);
+       document.writeln('&lt;br&gt;');
+   }
+   //名前は、山田
+   //iは、0
+   //名前は、鈴木
+   //iは、1
+   //名前は、佐藤
+   //iは、2
+</code>
+</pre>
+<pre>
+<code>
+   //連想配列（ハッシュ）
+   var triangle = { width: 30, height: 50 };
+   for (var j in triangle) {
+       document.writeln(j + ' = ' + triangle[j]);
+       document.writeln('&lt;br&gt;');
+       document.writeln('j は、' + j);
+       document.writeln('&lt;br&gt;');
+   }
+   //width = 30
+   //j は、width
+   //height = 50
+   //j は、height
+</code>
+</pre>
+
+<pre>
+<code>
+   //オブジェクトのキーを操作する
+   var book = new Object();
+   book.title = 'JavaScript 本格入門';
+   book.publish = '技術評論社';
+   book.price = '3000'
+   for (var k in book) {
+       document.writeln(k + ' は、' +book[k]);
+       document.writeln('&lt;br&gt;');
+       document.writeln('k は、' + k);
+       document.writeln('&lt;br&gt;');
+   }
+   //title は、JavaScript 本格入門
+   //k は、title
+   //publish は、技術評論社
+   //k は、publish
+   //price は、3000
+   //k は、price
+</code>
+</pre>
+
+<!-- ☜ -->
+<p><a href="js2.htm">次へ☞☞ 
+</a></p>
+</body>
+</html>

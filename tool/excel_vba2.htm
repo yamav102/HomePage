@@ -1,0 +1,799 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="ja">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=shift_jis">
+<meta http-equiv="content-style-type" content="text/css">
+<meta http-equiv="content-script-type" content="text/javascript">
+<meta name="keywords" content="EXCELVBA,HTML雛型,">
+<meta name="description" content="仕事で楽できるツール集">
+<link rel="stylesheet" href="./web/stylexlvba.css" type="text/css">
+<link rev="made" href="mailto:xatsushi&#64;tbb.t-com.ne.jp">
+<link rel="next" href="tsugi.htm">
+<title>Excel VBA Sample</title>
+<style type="text/css">
+<!--
+.clyoko{display:inline;
+}body{
+	background-color:#eee;
+}pre{
+	padding:.7em;
+	margin:0% 5% 0% 5%;
+	background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAYAAACEhIafAAAAEElEQVQImWP4////fwYsBAD5HxPtUUiuKwAAAABJRU5ErkJggg==");	
+
+	background-color:white;
+}hr{
+	border-style:solid;
+	border-width:100%;
+	
+}
+-->
+</style>
+
+</head>
+
+
+<body>
+<div id="contents">
+<ul>
+<li class="clyoko"><a href="../">&gt;home</li>
+<li class="clyoko"><a href="./excel_vba1.htm">1</a></li>
+<li class="clyoko"><a href="./excel_vba2.htm">2</a></li>
+<li class="clyoko"><a href="./excel_vba3.htm">3</a></li>
+<li class="clyoko"><a href="./excel_vba4.htm">4</a></li>
+<li class="clyoko"><a href="./excel_vba5.htm">5</a></li>
+<li class="clyoko"><a href="./excel_vba6.htm">6</a></li>
+<li class="clyoko"><a href="./excel_vba7.htm">7</a></li>
+<li class="clyoko"><a href="./excel_vba8.htm">8</a></li>
+<li class="clyoko"><a href="./excel_vba9.htm">9</a></li>
+<li class="clyoko"><a href="./excel_vba10.htm">10</a></li>
+</ul>
+<h1>Excel VBA Sample 2</h1>
+<pre>					
+Sub fairusakusei()			フォルダを指定してエクセルファイルをたくさん作る		
+Dim counter As Integer, mynum As Integer					
+Dim myname As Integer
+'counterの数字をIDに割り振る
+counter = 3000
+
+Do
+counter = counter + 1
+myname = CStr(counter)
+
+ChDir "C:\WINDOWS\ﾃﾞｽｸﾄｯﾌﾟ\ankeito"
+'同じファイル名のファイルがあっても無視。上書きしてしまえ
+Application.DisplayAlerts = False
+ActiveWorkbook.SaveAs myname
+
+
+Loop Until counter = 3200
+End Sub
+			
+Private Sub Worksheet_SelectionChange(ByVal Target As Range)			
+Dim i As Integer			選択セルのある行見出しの文字の強調
+Range("a:a").Font.Size = 10			
+i = Selection.Row			
+Range("a" & i).Font.Size = 30			
+End Sub			
+			
+Private Sub Workbook_Open()			アシスタントの表示
+
+    Sheets(1).Select			
+    Assistant.Visible = True			
+    Assistant.Move 350, 400			
+    			
+    With Assistant.NewBalloon			
+        .Icon = msoIconTip			
+        .Heading = "集計の操作手順と注意"
+        .Labels(1).Text = "１．広告郵便データを読み込みます。"
+        .Labels(2).Text = "２．実行ボタン押下で集計を開始します。"
+        .Labels(3).Text = "（注意）メニューのシートは削除しないでください。"
+        .Button = msoButtonSetOK
+        .Show
+    End With
+    
+    Assistant.Visible = False
+End Sub
+
+Sub アプリケーションの起動()
+
+Dim oWord As Object
+Set oWord = GetObject("C:\My Documents\ワード文書\年賀状.doc")
+oWord.Application.Visible = True
+oWord.UserControl = True
+
+
+End Sub
+
+
+Sub 一つ前のシートを選択させる()
+On Error GoTo z
+ActiveSheet.Previous.Select
+Exit Sub
+z: ActiveSheet.Next.Select
+End Sub
+
+Sub 別シートのセルの値を参照する()
+    Range("h2").Formula = "=g2-" & "'" & ActiveSheet.Previous.Name & "'" & "!g2"
+    Range("h2").AutoFill Destination:=Range("h2:" & "h" & i)
+end sub				
+				
+Sub 25名の席替え()				地道すぎるか・・・
+Application.ScreenUpdating = False				
+Range("a1:a5").Copy Destination:=Range("g1:g5")				
+Range("b1:b5").Copy Destination:=Range("g6:g10")				
+Range("c1:c5").Copy Destination:=Range("g11:g15")				
+Range("d1:d5").Copy Destination:=Range("g16:g20")				
+Range("e1:e5").Copy Destination:=Range("g21:g25")				
+
+VBA.Randomize				
+    With Range("h1")				
+        .Formula = "=RAND()"				
+        .AutoFill Destination:=Range("H1:H25"), Type:=xlFillDefault				
+    End With				
+    				
+    Range("g1:H25").Select
+    Selection.Sort Key1:=Range("H1"), Order1:=xlAscending
+    
+Range("g1:g5").Copy Destination:=Range("a10:a14")
+Range("g6:g10").Copy Destination:=Range("b10:b14")
+Range("g11:g15").Copy Destination:=Range("c10:c14")
+Range("g16:g20").Copy Destination:=Range("d10:d14")
+Range("g21:g25").Copy Destination:=Range("e10:e14")
+
+ActiveSheet.UsedRange.Copy
+ Range("a1").PasteSpecial Paste:=xlPasteValues
+ Application.CutCopyMode = False
+ Range("g1:h25").Clear
+ Range("a1").Select
+End Sub
+
+Dim myie As Object		←ブックを開くと同時にIEたちあげ、閉じる時はもろともに。プロシージャの外で変数を宣言するのが味噌。
+		
+Private Sub Workbook_Open()		
+   Dim url As String		
+   url = "http://www2.moug.net/app/bbs/thread.php?cat=exvba"		
+   On Error GoTo ERR1:		
+   Set myie = CreateObject("InternetExplorer.Application")		
+   myie.navigate url		
+   myie.Visible = True		
+   		
+   '5秒待機・・・・		
+   Application.Wait (Now + TimeValue("00:00:05"))		
+
+ERR1:		
+   Debug.Print Err.Number		
+   Debug.Print Err.Description		
+End Sub				
+
+				
+Private Sub Workbook_BeforeClose(Cancel As Boolean)				
+    On Error Resume Next				
+   myie.Quit				
+   Set myie = Nothing				
+End Sub				
+				
+Sub フィルター()				expression.AdvancedFilter(Action, CriteriaRange, CopyToRange, Unique)
+Dim database as range,Criteria as range				フィルターを解除するには何も条件を指定しないで再度フィルタを実行する
+Range("Database").AdvancedFilter _				
+    Action:=xlFilterInPlace, _				
+    CriteriaRange:=Range("Criteria")				
+    				
+End Sub				
+
+Sub フィルター２()
+Dim database as range,Criteria as range
+Range("Database").AdvancedFilter _
+    Action:=xlFilterCopy, _
+    CriteriaRange:=Range("Criteria")
+CopyToRange:=sheet2.range("a1")
+End Sub
+
+Sub ダイアログでファイルを開く()
+    Dim vFileName As Variant
+    Dim vObjFs As Variant
+    Dim vGetFile As Variant
+    Dim wMybook As Workbook
+
+    vFileName = Application.GetOpenFilename( _
+                FileFilter:="Excelファイル(*.csv),*.csv", _					
+                Title:="ファイルの読み込み", MultiSelect:=False)					
+    If vFileName = False Then Exit Sub					
+    'ファイル情報取得					
+    Set vObjFs = CreateObject("Scripting.FileSystemObject")					
+    Set vGetFile = vObjFs.GetFile(vFileName)					
+        With wMybook					
+        Workbooks.Open vFileName					
+        End With					
+
+End Sub					
+					
+Private Sub Worksheet_Change(ByVal Target As Range)					更新後処理で時刻を表示させる
+
+    Dim rngU As Range					
+    Dim i As Range					
+
+    Set rngU = Application _			
+              .Intersect(Target, Me.Range("A2:A10"))			
+    If rngU Is Nothing Then			
+        Exit Sub			
+    End If			
+'******データ更新で時刻を変えたくない時は下の1行を入れる			
+    'Application.EnableEvents = False			
+    For Each i In rngU			
+        i.Offset(0, 1).Value = Now			
+    Next i			
+    Application.EnableEvents = True			
+
+End Sub			
+			
+Private Sub Workbook_Open()			アプリケーションの非表示
+Application.Visible = False				
+UserForm1.Show				
+End Sub				
+				
+Sub ExcelからWordを起動して文書を開く()				エクセルからワードファイルを開く
+Dim o_Myword As Object				
+Dim o_myDocument As Object				
+Dim s_Mypass As String				
+'				
+    s_Mypass = "C:\a\b\xxx.doc"              'フルパスを作成				
+    Set o_Myword = CreateObject("Word.Application") 'Wordを起動する				
+  o_Myword.Visible = True                       'Wordを表示する				
+    Set o_Mydocument = o_Myword.documents.Open(s_Mypass) 'Word文書を開く				
+End Sub				
+				
+Private Sub Document_Open()			開くワードファイルのオープンイベント	
+    ActiveDocument.PrintPreview					
+
+
+End Sub					
+					エクセルファイルでMP3を鳴らす
+	にゃご	2003/11/02（日）	パスワード		
+		14:28:20			
+こんにちは					
+
+こんな方法でどうでしょう？					
+（MP3ファイルの再生が、Windows Media Playerに関連付けら					
+れているということで）					
+
+1）Windows Media Playerに参照設定します。					
+
+2）ワークシートへ					
+  「表示」-「ツールバー」-「コントロールツールボックス」
+   の「コントロールの選択」から Windows Media Playerを
+   選択して、適当な大きさで貼り付けます。
+
+3）貼り付けた図を、ダブルクリックするとVBEが開き、プロパ
+   ティから、「URL」に再生したいMP3ファイルのフルパスを
+   記入します。Windows Media Playerを非表示にしたければ
+   「Visible」を「False」に設定します。
+
+4）ワークシートへ戻って、デザインモードを終了させて、保
+   存して終了します。
+
+5）ブックを開けば、再生できると思います。
+
+（注）連続再生する場合は、一工夫必要にゃ♪
+
+役に立たなければごめんにゃ (^^♪   			
+			
+			
+			
+			
+			
+Sub test2()		シートの上書きの判断	
+    Dim S As String			
+    Dim S2 As String			
+    Dim Theworkbook As String 'Thebook(フルパス）			
+    Dim WBname As String			
+    Dim Thesheet As Worksheet			
+    Dim Thesheet2 As Worksheet			
+    Dim Sht As Worksheet			
+    Application.DisplayAlerts = False			
+    Theworkbook = "C:\WINDOWS\ﾃﾞｽｸﾄｯﾌﾟ\Thebook.xls"			
+    WBname = "Thebook.xls"	
+    Set Thesheet = ThisWorkbook.Sheets(1)	
+    Set Thesheet2 = ThisWorkbook.Sheets(2)	
+
+    S = "hogehoge"	
+    Workbooks.Open Filename:=Theworkbook	
+        Thesheet.Copy before:=Workbooks(WBname).Sheets(1)	
+        For Each Sht In Workbooks(WBname).Sheets	
+            If Sht.Name = S Then	
+                If MsgBox("上書きしますか?", vbYesNo) = vbYes Then	
+                    Workbooks(WBname).Sheets(S).Delete	
+                    Exit For	
+                Else	
+                    Workbooks(WBname).Close savechanges:=False	     goto a
+                  End	
+
+                End If
+            End If
+        Next Sht
+        Workbooks(WBname).Sheets(1).Name = S
+
+a:
+    S2 = "fushufushu"
+        Thesheet2.Copy before:=Workbooks(WBname).Sheets(1)
+        For Each Sht In Workbooks(WBname).Sheets
+            If Sht.Name = S2 Then
+                If MsgBox("上書きしますか?", vbYesNo) = vbYes Then
+                    Workbooks(WBname).Sheets(S2).Delete
+                Exit For
+                Else
+                    Workbooks(WBname).Close savechanges:=False
+                    End
+                End If
+            End If
+        Next Sht
+            Workbooks(WBname).Sheets(1).Name = S2
+    With Workbooks(WBname)
+        With .Sheets(S).UsedRange
+            .Copy
+            .PasteSpecial Paste:=xlPasteValues
+        End With
+        With .Sheets(S2).UsedRange
+            .Copy
+            .PasteSpecial Paste:=xlPasteValues
+        End With
+    End With
+    Application.CutCopyMode = False
+    With Workbooks(WBname)
+    .Save				
+    .Close				
+    End With				
+    Exit Sub				
+End Sub				
+
+
+
+■シートとか行とか列の削除を禁止する
+--------------------------------------------------------------------------------------
+'ThisWorkBookモジュール
+'このサンプルは Sheet1 の行の削除のみ許可し
+'sheet1,2,3のシートの削除行列とセルの削除を禁止します。
+'他のブックとシートに影響を与えません
+Option Explicit
+Private WithEvents BtnCellPuUpDelete As Office.CommandBarButton
+Private WithEvents BtnDelete As Office.CommandBarButton
+Private WithEvents BtnRwDelete As Office.CommandBarButton
+Private WithEvents BtnClmDelete As Office.CommandBarButton
+Private WithEvents BtnWSDelete As Office.CommandBarButton
+
+Sub ignition()
+    Set BtnDelete = Application.CommandBars.FindControl(, 478)
+    Set BtnCellPuUpDelete = Application.CommandBars.FindControl(, 292)
+    Set BtnRwDelete = Application.CommandBars.FindControl(, 293)
+    Set BtnClmDelete = Application.CommandBars.FindControl(, 294)
+    Set BtnWSDelete = Application.CommandBars.FindControl(, 847)
+End Sub
+
+Private Sub BtnDelete_Click(ByVal Ctrl As Office.CommandBarButton, CancelDefault As Boolean)
+    If ActiveWorkbook Is ThisWorkbook Then
+        If _
+            ActiveSheet Is Sheet1 Or _
+            ActiveSheet Is Sheet2 Or _
+            ActiveSheet Is Sheet3 Then
+
+        Call StopDelete(CancelDefault)
+        End If
+    End If
+End Sub
+
+Private Sub BtnRwDelete_Click(ByVal Ctrl As Office.CommandBarButton, CancelDefault As Boolean)
+    Dim r As Range
+    Dim dflg As Boolean: dflg = False
+    If ActiveWorkbook Is ThisWorkbook Then
+        If ActiveSheet Is Sheet1 Then
+            For Each r In Selection.Rows
+                If r.Row < 4 Then
+                    dflg = True
+                End If
+            Next
+        End If
+        If dflg Then
+            Call StopDelete(CancelDefault)
+        End If
+    End If
+End Sub
+
+Private Sub StopDelete(CancelDefault As Boolean)
+    MsgBox "削除できません"
+    CancelDefault = True
+End Sub
+
+Private Sub SetBtnUnEnabled(mode As Boolean)
+    
+    BtnCellPuUpDelete.Enabled = mode
+    BtnRwDelete.Enabled = mode
+    BtnClmDelete.Enabled = mode
+    If ActiveSheet.Name = Sheet1.Name Then
+        BtnRwDelete.Enabled = True
+    End If
+End Sub
+
+Private Sub BtnWSDelete_Click(ByVal Ctrl As Office.CommandBarButton, CancelDefault As Boolean)
+    If ActiveWorkbook Is ThisWorkbook Then
+        If _
+            ActiveSheet Is Sheet1 Or _
+            ActiveSheet Is Sheet2 Or _
+            ActiveSheet Is Sheet3 Then
+        
+            Call StopDelete(CancelDefault)
+        End If
+    End If
+End Sub
+
+Private Sub Workbook_Activate()
+    Call SetBtnUnEnabled(False)
+End Sub
+
+Private Sub Workbook_Deactivate()
+    Call SetBtnUnEnabled(True)
+End Sub
+
+Private Sub Workbook_Open()
+    Call ignition
+    
+End Sub
+
+Private Sub Workbook_SheetActivate(ByVal Sh As Object)
+    If _
+        Sh Is Sheet1 Or _
+        Sh Is Sheet2 Or _
+        Sh Is Sheet3 Then
+        
+        Call SetBtnUnEnabled(False)
+    Else
+        Call SetBtnUnEnabled(True)
+    End If
+    If Sh Is Sheet1 Then
+        BtnRwDelete.Enabled = True
+    End If
+End Sub
+
+--------------------------------------------------------------------------------------		
+		
+Sub File_Name()		ファイル名の取得
+    Dim strWB As String, Mypos As Variant		
+    strWB = "C:\windows\ﾃﾞｽｸﾄｯﾌﾟ\エクセル.xls"		
+    		
+    Mypos = InStrRev(strWB, "\", Len(strWB), vbTextCompare)		
+    'len(strWB)は-1としても文字列の長さを取得できる。		
+    'そして、省略すると-1になるので、		
+    'InStrRev(strWB,"\")と書いてもOK		
+    Debug.Print "\の位置", Mypos; Len(strWB)						
+    Debug.Print Right(strWB, Len(strWB) - Mypos)						
+End Sub						
+						
+Private Sub UserForm_Initialize()			RowSourceの範囲にシート名まで指定する			
+   With Me						
+    .nen.RowSource = Sheets(2).Range("h1:h12").Address(external:=True)						
+    .tuki.RowSource = Sheets(2).Range("i1:i12").Address(external:=True)						
+    .hi.RowSource = Sheets(2).Range("j1:j31").Address(external:=True)						
+   End With						
+End Sub						
+
+						
+Private Sub Worksheet_SelectionChange(ByVal Target As Range)						
+    If Application.CutCopyMode Then Exit Sub						コマンドボタンを常に一定のポジションの表示させる
+    With Application.ActiveWindow.VisibleRange.Cells(1)						
+        Me.CommandButton1.Left = .Left
+        Me.CommandButton1.Top = .Top
+    End With
+End Sub
+Sub メール()
+Dim mySendTo As String
+Dim mySubject As String
+Dim myBody As String
+Dim myCC As String
+Dim myBCC As String
+mySendTo = "xxx@xxxx.xx"
+myCC = "abcd@xyz.co.jp"
+'myBCC = "hoge@hogehoge.jp"
+mySubject = "これが件名です。"
+myBody = "これが本文です。" & vbCrLf & "2行目です。"
+'myBody = Replace(Replace(myBody, vbCr, "%0D"), vbLf, "%0A")
+ThisWorkbook.FollowHyperlink _
+        "mailto:" & mySendTo _
+        & "?CC=" & myCC _
+        & "&BCC=" & myBCC _
+        & "&Subject=" & mySubject _
+        & "&Body=" & myBody
+
+End Sub
+Sub 列名の取得()
+With Selection
+        MsgBox Replace(.Address(False, False), .Row, "")
+End With
+
+End Sub
+sub ｼｰﾄを追加してついでに名前をつける
+    Worksheets.Add(after:=Worksheets.Count).Name = "hoge"
+End Sub			
+Sub Temp()			配列の足し算
+     With Range("D1:D8000")			
+         .Value = "=SUM(A1:C1)"			
+         .Value = .Value			
+     End With			
+End Sub			
+ワークシート１枚だけの新しいブックを作り、その中のシートの名前を「ふに			
+ふに」にします。			
+			
+Sub addの定数()			
+    Workbooks.Add(Template:=xlWBATWorksheet).Worksheets(1).Name = "ふ			
+にふに"			
+テンプレートを呼び出す書き方			
+    Workbooks.Add Template:= _			
+        "C:\WINDOWS\Application Data\Microsoft\Templates\test1.xlt"			
+End sub	ひこ	2004/05/27（木）	削除できません
+		0.034456019	
+yamaV1.02βさん，こんにちは．			
+>autofillってのがなぁ			
+			
+Sub 検索値が配列なら返り値も配列1()			
+    With Sheets("Sheet1").Range("B2:B1000")			
+        .Value = WorksheetFunction.VLookup( _			
+            .Offset(, -1), _			
+            Sheets("Sheet2").Range("a:g"), 7, True _			
+        )			
+    End With			
+End Sub			
+
+>なんだか野暮ったい気がしてきていて			
+ん～，でもカンタンで好きだなあ．			
+
+Sub 検索値が配列なら返り値も配列2()
+    Dim avntMatch As Variant, avntAns As Variant, avnt値を返す列の値 A
+s Variant, Index As Long
+    With Sheets("Sheet1").Range("B2:B1000")
+        avntMatch = Application.Match( _
+            .Offset(, -1), _
+            Sheets("Sheet2").Range("A:A"), _
+            1 _
+        )
+        ReDim avntAns(LBound(avntMatch) To UBound(avntMatch), 1 To 1)
+        avnt値を返す列の値 = Sheets("Sheet2").Range("G:G").Value
+        For Index = LBound(avntMatch) To UBound(avntMatch)
+            '完全一致判定は眠いのでパス
+            avntAns(Index, 1) = avnt値を返す列の値(avntMatch(Index, 1)
+, 1)
+        Next			
+        .Value = avntAns			
+    End With			
+End Sub			
+
+
+
+
+
+	上妻	2004/05/27（木）	削除できません
+		0.332777778	
+>・・・・照合の型って0じゃなくて・・・？			
+大量データの検索をやる場合は、特に検査範囲が広い			
+場合、Matchの照合の型0を使うのは馬鹿げたことです。			
+毎回最初から一つ一つなめて検索していきますから、			
+時間がかかってしょうがないです。			
+
+Matchを使う場合は、検査範囲をソートして照合の型を
+1(あるいは省略)にしたほうが良いですよ。
+照合の型が0は逐次探索(馬鹿サーチ)なのにたいして、
+照合の型が1や-1は二分探索(バイナリサーチ)なので、
+速度が全然違います。
+
+注意点は検査範囲はきちんとデータ範囲にすることです。
+見出しを含めるのはもちろんご法度ですが、余分に
+後ろの空白を含めるのもご法度です。
+あべこべに照合の型0より遅くなってしまいます。
+
+なお関数でのロジックは、ここにもどこかに書いた
+はずですが、一般掲示板の
+http://www2.moug.net/app/bbs/message.php?cat=exopr&id=20040518-000027
+ここの2004/05/19（水）10:27:58にも書いてます。
+これをコードにするだけです。
+っていっても簡単ではないか。^^;
+昔からあきるほど書いてるけど、残念ながら一部の
+理解力のある人にしか浸透してないみたいですから。
+Sub 四桁の2進数書き出し()
+    Dim x(4) As String '()内が桁数
+    Dim atai(4) As String
+    Dim i As Long
+    x(1) = 0
+    x(2) = 0
+    x(3) = 0
+    x(4) = 0
+        For i = 0 To 15
+            x(4) = i Mod 2
+            atai(1) = Int(i / 2)
+            If atai(1) >= 2 Then
+                x(3) = atai(1) Mod 2
+                atai(2) = Int(atai(1) / 2)
+                If atai(2) >= 2 Then
+                    x(2) = atai(2) Mod 2
+                    atai(3) = Int(atai(2) / 2)
+                    atai(3) = Int(atai(2) / 2)
+                            x(1) = atai(3) Mod 2
+                Else: x(2) = atai(2)
+                End If
+            Else: x(3) = atai(1)
+            End If
+            Debug.Print x(1) & x(2) & x(3) & x(4)
+        Next
+End Sub
+Private Sub SoushinOK_Click()
+'シートのコピーを返信する
+    Dim sendWB As Workbook
+    Dim Kenmei As Variant
+    Dim myTemp As String
+    With Application
+        .DisplayAlerts = False
+        .ScreenUpdating = False
+    End With
+    myTemp = Left(CurDir, InStr(1, CurDir, "\", vbBinaryCompare))
+    Kenmei = Sheet1.Range("b18").Value & "取り戻し請求調査調書"
+    'ﾌｧｲﾙ1時保存場所に同名のﾌｧｲﾙを作らない処理
+    i = 0
+    'Debug.Print Dir(myTemp & Kenmei & ".xls")
+    Do Until Dir(myTemp & Kenmei & ".xls") = ""
+        i = i + 1
+        Kenmei = Left(Kenmei, Len(Kenmei)) & "(" & i & ")"
+    Loop
+    For Each Workbook In Workbooks
+    Debug.Print Workbook.Name
+        If Workbook.Name = Kenmei & ".xls" Then
+            i = i + 1
+            Kenmei = Left(Kenmei, Len(Kenmei)) & "(" & i & ")"
+        End If
+        
+    Next Workbook
+    Kenmei = Kenmei & ".xls"
+    If MsgBox("返信してよろしいですか？", vbDefaultButton2 + vbInformation + vbYesNo, _
+        "確認をお願いいたします") = vbYes Then
+        If MsgBox("[プログラムがメールを送信しようとしています]、或いは、[ﾌﾟﾛﾌｧｲﾙの選択]という何らかのダイアログが表示されます。" & vbCrLf & _
+        "[OK]を選択するとメールで送信されます。", vbInformation + vbOKOnly, "お願い") = vbOK Then
+            With Sheet1
+                If .Range("b18").Value = "" Then
+                    MsgBox "為替番号が未入力です。" & vbCrLf & _
+                    "入力を確認してからやり直してください。"
+                    GoTo x
+                ElseIf .Range("k8").Value = "" Then
+                    MsgBox "担当者名が未入力です。" & vbCrLf & _
+                    "入力を確認してからやり直してください。"
+                    GoTo x
+                ElseIf .Range("k9").Value = "" Then
+                    MsgBox "電話番号が未入力です。" & vbCrLf & _
+                    "入力を確認してからやり直してください。"
+                    GoTo x
+                End If
+            End With
+            Sheet1.Copy
+            Set sendWB = ActiveWorkbook
+            sendWB.SaveAs Filename:=myTemp & Kenmei
+            With sendWB
+                .SendMail Recipients:="xatsushi@tbb.t-com.ne.jp", Subject:=Kenmei, ReturnReceipt:=True
+            End With
+            If MsgBox("送信したシートを印刷しますか", vbDefaultButton1 + vbInformation + vbYesNo, "「はい」を選択すると画面を印刷します") = vbYes Then
+                Sheet1.PrintOut
+            End If
+        End If
+    End If
+    sendWB.Close
+    Kill myTemp & Kenmei
+    Exit Sub
+x:
+    With Application
+        .ScreenUpdating = True
+        .DisplayAlerts = True
+    End With
+    
+End Sub
+Sub dd()
+'ｼｰﾄ名の重複回避
+Dim ii As Integer, i As Integer,intWS as integer
+ii = 0
+i = 0
+On Error GoTo ERR_dd
+Do Until i > 10
+i = i + 1
+Set WS = Worksheets.Add(after:=Worksheets(Sheets.Count))
+shName = "aaa"
+intWS=len(shName)
+reName:
+WS.Name = shName
+
+Loop
+Exit Sub
+ERR_dd:
+If Err.Number = 1004 Then
+ii = ii + 1
+    shName = Left(shName,intWS) & "(" & ii & ")"
+    Resume reName
+End If
+MsgBox Err.Number & " :  " & Err.Description
+End Sub
+Sub 100のｼｰﾄを新規ブックへ移動()
+For i = 2 To 101
+selectのfalseはｼｰﾄオブジェクトのみの引数。それまで選ばれていたシートも選択したままさらにシートを選択する。
+ActiveWorkbook.Sheets(2).Select Replace:=False
+Next i
+Windows(1)はactivewindowの事
+Set WB2 = Windows(1).SelectedSheets.Move
+End Sub
+Sub ブック名の上書き回避()
+
+Dim strWBname As String
+Dim intI As Integer
+Dim intWBname As Integer
+On Error GoTo ERR_ブック名の上書き回避
+Application.DisplayAlerts = False
+intI = 0
+
+strWBname = "sample"
+intWBname = Len(strWBname)
+myUndo:
+If Dir(ThisWorkbook.Path & strWBname & ".xls") <> "" Then GoTo REname
+
+ThisWorkbook.SaveAs Filename:=ThisWorkbook.Path & strWBname & ".xls"
+Exit Sub
+REname:
+intI = intI + 1
+strWBname = Left(strWBname, intWBname) & "(" & intI & ")"
+GoTo myUndo
+Exit Sub
+ERR_ブック名の上書き回避:
+MsgBox Err.Number & " : " & Err.Description
+
+End Sub
+
+Sub コンピューター名の取得()
+Dim cmName As String
+cmName = CreateObject("WScript.Network").ComputerName
+Debug.Print cmName;
+End Sub
+Sub webのパスワードを突破パターン1()
+    Dim ie    As Object
+    Dim Obj1  As Object
+    Set ie = CreateObject("internetexplorer.application")
+    ie.Visible = True
+    ie.navigate "http://www.google.co.jp/"
+    While ie.busy
+        DoEvents
+    Wend
+    Application.Wait Now + TimeValue("00:00:02")
+    Set Obj1 = ie.document
+    With Obj1.all
+        .q.Value = "エクセル vba"
+        .btnG.Click
+    End With
+End Sub
+Sub webのパスワードを突破パターン2()
+    Dim ie    As Object
+    Dim Obj1  As Object
+    
+    Set ie = CreateObject("internetexplorer.application")
+    ie.Visible = True
+    ie.navigate "http://www.mapion.co.jp/"
+    
+    While ie.busy
+        DoEvents
+    Wend
+    'Application.Wait Now + TimeValue("00:00:05")
+    
+    Set Obj1 = ie.document
+    With Obj1.all
+        .Find.Value = "埼玉県狭山市" 'Findはオブジェクトのname
+        'Obj1.forms(0).submit			
+        .form_1.submit			
+        'Application.Wait Now + TimeValue("00:00:05")			
+    End With			
+
+'    Set Obj1 = Nothing			
+'    ie.Visible = False			
+'    Set ie = Nothing			
+End Sub			
+</pre>
+<hr>
+<address>yamaV1.02β</address>
+</div>
+</body>
+</html>

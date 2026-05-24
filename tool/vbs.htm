@@ -1,0 +1,228 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="ja">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=shift_jis">
+<meta http-equiv="content-style-type" content="text/css">
+<meta http-equiv="content-script-type" content="text/javascript">
+<meta name="keywords" content="VBScript, WSH, WScript, CScript">
+<meta name="description" content="仕事で楽できるツール集">
+<link rel="stylesheet" href="./web/stylexlvba.css" type="text/css">
+<link rev="made" href="mailto:xatsushi&#64;tbb.t-com.ne.jp">
+<link rel="next" href="tsugi.htm">
+<title>VBScript Sample</title>
+<style type="text/css">
+<!--
+.clyoko{display:inline;
+}body{
+	background-color:#eee;
+}pre{
+	padding:.7em;
+	margin:0% 5% 0% 5%;
+	background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAYAAACEhIafAAAAEElEQVQImWP4////fwYsBAD5HxPtUUiuKwAAAABJRU5ErkJggg==");	
+
+	background-color:white;
+}hr{
+	border-style:solid;
+	border-width:100%;
+	
+}
+-->
+</style></head>
+<body>
+<div id="contents">
+<ul>
+<li class="clyoko"><a href="#"></a></li>
+</ul>
+<h1>VBScript Sample 1</h1>
+<pre>
+Option Explicit
+'■テキストファイルの文字を全て大文字に変換して出力する
+Option Explicit
+Dim FSO, Fl, Ts, str
+Set FSO = Wscript.CreateObject("Scripting.FileSystemObject")
+Set Fl = FSO.GetFile("msdos.csv")
+Set Ts = Fl.OpenAsTextStream(1, -2)
+str = Ts.ReadAll
+
+
+WScript.Echo UCase(str)
+
+
+
+'■ディレクトリ内のファイルをファイル名の昇順で連番でりネームする	
+'FileNameSetter.vbs
+Option Explicit
+	Dim strtNum
+	Dim FSO
+	Dim file
+	Dim myTitle
+	
+	'◇動作ディレクトリ◇
+	Const exeDir = "C:\Users\yama\Desktop\NameSetter\"
+	
+	'◇ファイル名　名付け対象外のファイル◇
+	Private pExcptName(4)
+	pExcptName(0)="a.txt"
+	pExcptName(1)="b.txt"
+	pExcptName(2)="c.txt"
+	pExcptName(3)="d.txt"
+	pExcptName(4)="e.txt"
+	'...
+	'------------------------------------------------
+	
+	Dim objFn
+	Set objFn = New Fn
+	
+	If objFn.MePath &lt;&gt; exeDir Then
+		MsgBox _
+			exedir & "aaaa " & objfn.MePath & " 内で動作します。" & _
+			"実行ディレクトリを変更する場合は、９行目の指定を変更して下さい", _
+			vbInformation,"指定ディレクトリのみで動作します"
+		WScript.Quit	
+	End If
+	
+	myTitle=WScript.ScriptName
+	strtNum = _
+		InputBox( _
+			"スタートの起案番号を入力します。" & vbNewLine & _
+			"スクリプト内で指定されたファイル以外を、" & vbNewLine & _
+			"ファイル名順に連番付きにリネイムします")
+	
+	If IsNumeric(strtNum) = False Then
+		MsgBox "数値を指定して下さい", vbInformation,myTitle
+		WScript.Quit
+	End If
+	
+	If strtNum = vbNullString Then
+		MsgBox "数値を指定して下さい", vbInformation,myTitle
+		WScript.Quit	
+	End If
+	
+	Set FSO = WScript.CreateObject("Scripting.FileSystemObject")
+	
+	objFn.mStartNumber = strtNum	
+	
+	'動的配列に対象ファイル名を格納していく
+	Dim fileNames, n
+	fileNames=Array
+	
+	For Each file In FSO.GetFolder(objFn.MePath).Files
+		If objFn.IsTargetFile(file.Name) Then
+			n = UBound(fileNames) + 1
+			ReDim Preserve fileNames(n)
+			fileNames(n) = file.Name
+		End If
+	Next	
+	
+	If UBound(fileNames) = -1 Then
+		MsgBox "対象のファイルがありません", vbInformation, myTitle
+		WScript.Quit
+	End If
+	
+	'配列をファイル名で昇順並び替え
+	objFn.qSort fileNames
+	
+	'配列並び順にファイル名をつけ直す
+	Call objFn.setName(fileNames)
+	
+	Set objFn=Nothing
+	Set FSO=Nothing
+		
+	Class Fn
+		Public mStartNumber
+		'自スクリプトの親フォルダのフルパスを返す
+		Function MePath
+			Dim pth
+			pth=WScript.ScriptFullName
+			pth=Left(pth,Len(pth)-Len(WScript.ScriptName))
+			MePath=pth			
+		End Function
+		
+		'対象ファイルか否かを返す
+		Function IsTargetFile(fileName)
+			Dim i
+			Dim judge
+			
+			For i=0 To UBound(pExcptName)
+				If pExcptName(i)=fileName Then
+					IsTargetFile=False
+					Exit Function
+				End If
+			Next
+			
+			'If UCase(Right(filename,4))=".PDF" Then
+			If UCase(Right(filename,4))=".TXT" Then
+				judge=True
+			Else
+				judge=False	
+			End If
+			IsTargetFile=judge
+		End Function
+		
+		Sub qSort(ary)
+			quicksort ary,0,UBound(ary)
+		End Sub
+		
+		'昇順並び替え
+		Private Sub quicksort(Array,first,last)
+			Dim pivot,A,Z,tmp
+			pivot=Array(first)'あてずっぽうの中央値
+			A = first:Z = last
+			Do
+				While Array(A) &lt; pivot:A = A + 1:Wend
+				While Array(Z) &gt; pivot:Z = Z - 1:Wend
+				If A&gt;=Z Then Exit Do
+				tmp = Array(A):Array(A)=aray(Z):Array(Z)=tmp
+				A = A + 1:Z = Z - 1				
+			Loop
+			If first&lt;A-1 Then quicksort Array,first,A-1
+			If Z+1 &lt; last Then quicksort Array,Z+1,last
+		End Sub
+		
+		'名前をつける
+		Sub setName(arry)
+			On Error Resume Next
+			Dim i,f,pth,num
+			Const str1= "開示請求書等13-"
+			Const str2 = ".pdf"
+			Const str3= "（不開示）"
+			pth = MePath
+			
+			num = mStartNumber
+			For i=0 To UBound(arry)
+			MsgBox pth & arry(i)
+				Set f=FSO.GetFile(pth & arry(i))
+				If f.Size &gt; 130000 Then
+					f.Name=str1 & myNumFrmt(num) & str2
+				Else
+					f.Name=str1 & myNumFrmt(num) & str3 & str2
+				End If
+				num=num+1
+			Next
+			
+			If Err.Number&lt;&gt; 0 Then
+				MsgBox _
+					Err.Number& ":" & _
+					Err.DescriptionvbCritical,WScript.ScriptFullName
+				WScript.Quit
+			End If
+		End Sub
+		
+		'数字のフォーマット
+		Private Function myNumFrmt(number)
+			Dim L
+			L = Len(CStr(number))
+			If L &lt; 3 Then
+				myNumFrmt = String(3-L,"0") & CStr(number)				
+			Else
+				myNumFrmt = CStr(number)
+			End If
+		End Function
+	End Class
+	
+</pre>
+<hr>
+<address>yamaV1.02β</address>
+</div>
+</body>
+</html>

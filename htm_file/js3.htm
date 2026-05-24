@@ -1,0 +1,1130 @@
+﻿<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="keywords" content="java script,html">
+<meta name="author" content="yamaV1.02β">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta name="robots" content="noindex">
+<meta name="description" content="//////////">
+<meta name="reply-to" content="">
+<link rel="shortcutIcon" href="favicon.ico">
+<link rel="start" href="index.htm">
+<link rel="stylesheet" type="text/css" href="leftside1.css">
+
+<title>JavaScript 本格入門　メモ3</title>
+
+  <!-- http://www.mwsoft.jp/programming/javascript/highlight_js.html?style=vs#styles -->
+  <!--http://softwaremaniacs.org/soft/highlight/en/download/-->
+  <!-- stylesの中から好みにあったCSSを選んで、 -->
+  <!-- 1, CSS、JavaScriptファイルを呼び出す -->
+  <!--<link rel="stylesheet" href="../highlight.js/styles/vs.css">-->
+  <!--<script type="text/javascript" src="../highlight.js/highlight.pack.js"></script>-->
+  <!-- 2, onLoad時にinitしてくれる機能を呼び出す -->
+  <!--<script type="text/javascript">hljs.initHighlightingOnLoad();</script>-->
+</head>
+<h1>
+JavaScript 本格入門　メモ3
+</h1>
+<h4><a name="SEC47">日付／時刻データを加算／減算する</a></h4>
+<ol>
+<li>getXXxxxx メソッドで現在の日付／時刻要素を取得</li>
+<li>取得した値に加算／減算を行う</li>
+<li>さらに setXxxxx メソッドで設定しなおす</li>
+</ol>
+<pre>
+<code>
+   var dat = new Date(2013, 7, 14, 23, 11);
+
+   // 2013年8月14日 23:11:00
+   document.writeln(dat.toLocaleString() + '&lt;br /&gt;');
+
+   // 3カ月加算
+   dat.setMonth(dat.getMonth() + 3);
+
+   // 2013年11月14日 23:11:00
+   document.writeln(dat.toLocaleString() + '&lt;br /&gt;');
+
+   // 20日減算
+   dat.setDate(dat.getDate() - 20); 
+
+   // 2013年10月25日 23:11:00 
+   document.writeln(dat.toLocaleString());
+</code>
+</pre>
+<h5><a name="SEC48">月の最終日を求める</a></h5>
+<pre>
+<code>
+   var dat = new Date(2010, 4, 15, 11, 40);
+
+   // 2010年5月15日 11:40:00
+   document.writeln(dat.toLocaleString() + '&lt;br /&gt;');
+
+   // 来月
+   dat.setMonth(dat.getMonth() + 1);
+
+   // 0日目をセット
+   dat.setDate(0);
+
+   // 2010年5月31日 11:40:00 
+   document.writeln(dat.toLocaleString());
+</code>
+</pre>
+<h5><a name="SEC49">日付／時刻の差分を求める</a></h5>
+<pre>
+<code>
+   // 2010/5/15
+   var dat1 = new Date(2010, 4, 15);
+
+   // 2010/6/20
+   var dat2 = new Date(2010, 5, 20);
+
+   // 経過ミリ秒の差を一日のミリ秒で割る
+   var diff = 
+      (dat2.getTime() - dat1.getTime()) / (1000 * 60 * 60 * 24);
+
+   document.writeln(diff + '日の差があります');
+   // 36日の差があります
+</code>
+</pre>
+<h2><a name="SEC50">3-4 正規表現で文字を自在に指定する-RegExpオブジェクト</a></h2>
+<table border="1">
+<caption>
+JavaScriptで利用可能な正規表現
+</caption>
+<tr>
+	<th>分類</th>
+	<th>パターン</th>
+	<th>マッチングする文字列</th>
+</tr>
+<tr>
+	<td rowspan="5">基本</td>
+	<td>ABC</td>
+	<td>「ABC」という文字列</td>
+</tr>
+<tr>
+	<td>[ABC]</td>
+	<td>A、B、C のいずれかの一文字</td>
+</tr>
+<tr>
+	<td>[^ABC]</td>
+	<td>A、B、C 以外のいずれかの一文字</td>
+</tr>
+<tr>
+	<td>[A-Z]</td>
+	<td>A～Z の間の一文字</td>
+</tr>
+<tr>
+	<td>A|B|C</td>
+	<td>A、B、Cのいずれか</td>
+</tr>
+<tr>
+	<td rowspan="6">量指定</td>
+	<td>X*</td>
+	<td>0文字以上のX（"fe*"は""f"、"fe"、"fee"などにマッチ）</td>
+</tr>
+<tr>
+	<td>X?</td>
+	<td>0、または1文字のX（"fe?"は"f"、"fe"にマッチ、"fee"にはアンマッチ）</td>
+</tr>
+<tr>
+	<td>X+</td>
+	<td>1文字以上のX（"fe+"は"fe"、"fee"などにマッチ、"f"にはアンマッチ）</td>
+</tr>
+<tr>
+	<td>X[n]</td>
+	<td>Xとn界の一致（"[0-9][3]"は3桁の数字）</td>
+</tr>
+<tr>
+	<td>X[n,]</td>
+	<td>Xとn回以上一致（"[0-9][3,]"は3桁以上の数字）</td>
+</tr>
+<tr>
+	<td>X[m,n]</td>
+	<td>Xとm～n回一致（"[0-9][3,5]"は3～5桁の数字）</td>
+</tr>
+<tr>
+	<td rowspan="2">位置指定</td>
+	<td>^</td>
+	<td>行の先頭に一致</td>
+</tr>
+<tr>
+	<td>$</td>
+	<td>行の末尾に一致</td>
+</tr>
+<tr>
+	<td rowspan="13">文字セット</td>
+	<td>.</td>
+	<td>任意の一文字に一致</td>
+</tr>
+<tr>
+	<td>\w</td>
+	<td>大文字／小文字の英字、数字、アンダースコアに一致（"[A-Za-z0-9]"と同義）</td>
+</tr>
+<tr>
+	<td>\W</td>
+	<td>文字以外に一致（"[^\w]"と同義）</td>
+</tr>
+<tr>
+	<td>\d</td>
+	<td>数字に一致（"[0-9]"と同義）</td>
+</tr>
+<tr>
+	<td>\D</td>
+	<td>数字以外に一致（"[^0-9]"と同義）</td>
+</tr>
+<tr>
+	<td>\n</td>
+	<td>改行（ラインフィード）に一致</td>
+</tr>
+<tr>
+	<td>\r</td>
+	<td>復帰（キャリッジリターン）に一致</td>
+</tr>
+<tr>
+	<td>\t</td>
+	<td>タブ文字に一致</td>
+</tr>
+<tr>
+	<td>\v</td>
+	<td>垂直タブに一致</td>
+</tr>
+<tr>
+	<td>\f</td>
+	<td>改ページに一致</td>
+</tr>
+<tr>
+	<td>\s</td>
+	<td>空白文字に一致（"[\n\r\t\v\f]"と同義）</td>
+</tr>
+<tr>
+	<td>\S</td>
+	<td>空白以外の文字に一致（"[^\s]"と同義）</td>
+</tr>
+<tr>
+	<td>\～</td>
+	<td>「～」で表される文字</td>
+</tr>
+</table>
+<pre>
+<code>
+   //URLを表す正規表現パターン
+   http(s)?://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?
+</code>
+</pre>
+<dl>
+<dt>http(s)?<td>
+	<dd>「s」が 0 または１回登場する。「http」または「https」に一致</dd>
+<dt>([\w-]+\.)+[\w-]+</dt>
+	<dd>英数字とアンダースコア、ハイフン。且つ、途中にピリオドが含まれる </dd>
+<dt>(/[\w- ./?%&=]*)?</dt>
+	<dd>英数字とアンダースコア、ハイフン、スラッシュ、ピリオド、他（? % & =)を含む文字</dd>
+</dl>
+<p>使いこなすには訓練を要する。</p>
+<h4>
+<a name="SEC51">RegExpオブジェクトを生成する方法</a>
+</h4>
+<p>
+大きくわけて、（１）コンストラクタ経由で生成、（２）正規表現リテラルで生成、の２通りあり、
+正規表現の挙動を左右するパラメータを指定する。
+</p>
+<pre>
+<code>
+   // コンストラクタ
+   var 変数名 = new RegExp('正規表現','オプション')
+
+   // リテラル表現
+   var 変数名 = /正規表現/ オプション;
+</code>
+</pre>
+<p>
+正規表現リテラルでは、せいきっ用言全体をスラッシュ(/) で括らなければいけない。
+</p>
+<table border="1">
+<caption>
+正規表現の主なオプション
+</caption>
+<tr>
+	<th>オプション</th>
+	<th>概要</th>
+</tr>
+<tr>
+	<td>g</td>
+	<td>文字列全体に対してマッチングするか（無視低の場合、１度マッチングした時点で処理を終了）</td>
+</tr>
+<tr>
+	<td>i</td>
+	<td>大文字／小文字を区別するか</td>
+</tr>
+<tr>
+	<td>m</td>
+	<td>複数行に対応するか（改行コードを行頭／行末と認識）</td>
+</tr>
+</table>
+<pre>
+<code>
+   var p = 
+      new RegExp(
+        'http(s)?://([\\w-]+\\.)+[\\w-]+(/[\\w- ./?%&=]*)?', 'gi'
+      );
+   var p = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/gi;
+</code>
+</pre>
+<p>
+両者は、正規表現の記法そのものについいても違いがある
+</p>
+<dl>
+	<dt>コンストラクタ構文では「\｣をエスケープすること</dt>
+	<dd>「\」は意味を持った予約文字（エスケープシーケンス）なので、
+	本来の正規表現パターンである「\w」として認識させるためには、「\」を「\\」としてエスケープする必要がある。</dd>
+
+	<dt>正規表現リテラルは「/」でエスケープすること</dt>
+	<dd>「」は正規表現パターンの開始と終了を表す予約文字です。正規表現リテラルで、正規表現パターン
+	そのものに「/」を含む場合には、これを「\/」のようにエスケープ処理しておく必要があります。</dd>
+</dl>
+<table border="1">
+<caption>
+RegExpオブジェクトのプロパティ／メソッド
+</caption>
+<tr>
+	<th>メンバ</th>
+	<th>概要</th>
+</tr>
+<tr>
+	<td>source 読み取り専用</td>
+	<td>正規表現パターンの取得</td>
+</tr>
+<tr>
+	<td>global 読み取り専用</td>
+	<td>グローバル検索（"g"オプション）の有効／無効</td>
+</tr>
+<tr>
+	<td>ignoreCase 読み取り専用</td>
+	<td>大文字／子もいjを区別するか（"i"オプション）</td>
+</tr>
+<tr>
+	<td>multiline 静的プロパティ</td>
+	<td>マルチラインモード（"m"オプション）の有効／無効</td>
+</tr>
+<tr>
+	<td>input 静的プロパティ</td>
+	<td>検索対象の文字列</td>
+</tr>
+<tr>
+	<td>compile(pattern)</td>
+	<td>正規表現パターンの設定</td>
+</tr>
+</table>
+<h4><a name="SEC52">正規表現による検索の基本</a></h4>
+<p>文字列からURL文字列を抽出するためのサンプル</p>
+<pre>
+<code>
+   //文字列全体にマッチング、大文字小文字を区別を無視するオプション
+   var p = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/gi;
+   var str = 'サポートサイトはhttp://www.wings.msn.to/です。';
+   str += 
+     "サンプル紹介サイトHTTP://www.web-deli.com/も(' - '*)ヨロシク♪";
+   document.writeln(str + '&lt;br /&gt;');
+   var result = str.match(p);
+   for (var i = 0; i < result.length; i++) {
+       document.writeln(result[i]+'&lt;br /&gt;');
+   }
+   /*
+   サポートサイトはhttp://www.wings.msn.to/です。
+	サンプル紹介サイトHTTP://www.web-deli.com/も(' - '*)ヨロシク♪
+   http://www.wings.msn.to/
+   HTTP://www.web-deli.com/
+   */
+</code>
+</pre>
+<h4>
+<a name="SEC53">正規表現のオプションでマッチング時の挙動を制御する</a>
+</h4>
+<p>前出のサンプルの g オプションを外すと、</p>
+<pre>
+<code>
+   サポートサイトはhttp://www.wings.msn.to/です。
+   サンプル紹介サイトHTTP://www.web-deli.com/も(' - '*)ヨロシク♪
+   http://www.wings.msn.to/
+   undefined
+   msn.
+   /
+</code>
+</pre>
+<p>という結果になる。
+グローバル検索の無効で、最初に一致した文字列がみつかったところで検索は終了している。
+この場合、「最初に一致した文字列全体とサブマッチ文字列」を配列として返します。
+サブマッチ文字列とは、丸括弧で示された部分（サブマッチパターン）と合致した部分文字列のことです。
+</p>
+<pre>
+<code>
+   全パターン一致	http://www.wings.msn.to/	result[0]
+   (s)			undefined			result[1]
+   ([\w-]+\.)		msn.				result[2]
+   (\/[\w- .\/?%&=]*)	/				result[3]
+</code>
+</pre>
+<h4><a name="SEC54">m （multiline）パラメータ</a></h4>
+<pre>
+<code>
+   var p = /^[0-9]{1,}/g; //文字列先頭にある1文字以上の数値を検索
+   var str = '101匹ワンちゃん。\n7人の小人';
+   var result = str.match(p);
+   for (var i = 0; i &lt; result.length; i++) {
+       document.writeln(result[i] + '&lt;br /&gt;');
+   }
+   //101 マルチライン無効
+</code>
+</pre>
+<pre>
+<code>
+   // 文字列先頭にある1文字以上の数値を検索
+   var p = /^[0-9]{1,}/gm; 
+   var str = '101匹ワンちゃん。\n7人の小人';
+   var result = str.match(p);
+   for (var i = 0; i &lt; result.length; i++) {
+       document.writeln(result[i] + '&lt;br /&gt;');
+   }
+   /*マルチライン有効
+   101
+   7
+   */
+</code>
+</pre>
+<p>
+正規表現リテラルの別の記法。
+</p>
+<pre>
+<code>
+   var result = str.match(/^[0-9]{1,}/gm);
+</code>
+</pre>
+<p>
+リテラル値の前後を文字列引用符で囲んではならない点に注目。
+</p>
+<h4>
+<a name="SEC55">matchメソッドと exec メソッドの挙動の違い</a>
+</h4>
+<p>
+正規表現の検索には、String.matchメソッドのほかに、RegExp.execメソッドがある。
+条件によって検索結果が両者で異なる場合がある。
+</p>
+<pre>
+<code>
+   /* 
+   exec メソッドは g オプションを指定しても、
+   １度の実行でひとつの実行しか返せない。
+   */
+   var p = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/gi;
+   var str = '　サポートサイトはhttp://www.wings.msn.to/です。';
+   str += 
+     " サンプル紹介サイトHTTP://www.web-deli.com/も('-'*)ヨロシク♪";
+   var result = p.exec(str);
+   for(i = 0; i &lt; result.length; i++){
+       document.writeln(result[i]+'&lt;br /&gt;');
+   }
+   /*
+   http://www.wings.msn.to/
+   undefined
+   msn.
+   /
+   */
+</code>
+</pre>
+<p>
+execメソッドでマッチした文字を全て返すには、execした結果が nullになるまで、何度も実行する。
+最後にマッチした場所をRegExpオブジェクトは記憶しているので、以下のような書き方が出来る。
+</p>
+<pre>
+<code>
+   var p = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/gi;
+   var str = '　サポートサイトはhttp://www.wings.msn.to/です。';
+   str += " サンプル紹介サイトHTTP://www.web-deli.com/も('-'*)ヨロシク♪";
+   
+   while((result=p.exec(str)) != null){
+       document.writeln(result[0]+'&lt;br /&gt;');
+   }
+   /*
+   http://www.wings.msn.to/
+   HTTP://www.web-deli.com/
+   */
+</code>
+</pre>
+<h4>
+<a name="SEC56">マッチング情報を取得する</a>
+</h4>
+<p>
+RegExpオブジェクトは、execメソッドで最後にマッチした文字位置や、直近のマッチ情報
+を参照するために、いくつかのプロパティを公開している。
+</p>
+<pre>
+<code>
+   var p = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/gi;
+   var str = 'サポートサイトはhttp://www.wings.msn.to/です。';
+   str += 
+     "サンプル紹介サイトHTTP://www.web-deli.com/も('-'*)ヨロシク♪";
+   
+   while((result=p.exec(str)) != null){
+       document.writeln(
+          p.lastIndex + ': ' + result[0] + '&lt;br /&gt;');
+       document.writeln(
+	  'leftContext: ' + RegExp.leftContext + '&lt;br /&gt;');
+       document.writeln(
+	  'rightContext: ' + RegExp.rightContext + '&lt;br /&gt;');
+       document.writeln(
+   	  'lastMatch: ' + RegExp.lastMatch + '&lt;br /&gt;');
+       document.writeln(
+	  'lastParen: ' + RegExp.lastParen + '&lt;br /&gt;');
+       document.writeln(
+	  '$1: ' + RegExp.$1 + '&lt;br /&gt;');
+       document.writeln(
+	  '$2: ' + RegExp.$2 + '&lt;br /&gt;');
+       document.writeln(
+	  '$3: ' + RegExp.$3 + '&lt;br /&gt;');
+
+       document.writeln(
+          '----------------------------------------------------'
+          +'----------------------------------------------------
+	  &lt;br /&gt;');
+   }
+</code>
+</pre>
+<pre>
+<code>
+   32: http://www.wings.msn.to/
+   leftContext: サポートサイトは
+   rightContext: です。
+	サンプル紹介サイトHTTP://www.web-deli.com/も('-'*)ヨロシク♪
+   lastMatch: http://www.wings.msn.to/
+   lastParen: /
+   $1:
+   $2: msn.
+   $3: /
+   ----------------------------------------------------------------------------
+   68: HTTP://www.web-deli.com/
+   leftContext: 
+	サポートサイトはhttp://www.wings.msn.to/です。サンプル紹介サイト
+   rightContext: も('-'*)ヨロシク♪
+   lastMatch: HTTP://www.web-deli.com/
+   lastParen: /
+   $1:
+   $2: web-deli.
+   $3: /
+   ----------------------------------------------------------------------------
+</code>
+</pre>
+<table border="1">
+<tr>
+	<th>プロパティ</th>
+	<th>エイリアス</th>
+	<th>概要</th>
+</tr>
+<tr>
+	<td>lastIndex</td>
+	<td>-</td>
+	<td>検索を開始する位置</td>
+</tr>
+<tr>
+	<td class="static">leftContext</td>
+	<td>$`</td>
+	<td>最後のマッチ文字列の前の文字列</td>
+</tr>
+<tr>
+	<td class="static">rightContext</td>
+	<td>$'</td>
+	<td>最後のマッチ文字列の後に続く文字列</td>
+</tr>
+<tr>
+	<td class="static">lastMatch</td>
+	<td>$&</td>
+	<td>最後に真cchいした文字列（Opera未対応）</td>
+</tr>
+<tr>
+	<td class="static">lastParen</td>
+	<td>$+</td>
+	<td>最後にマッチした()で囲まれたグループの文字列（Operaは未対応）</td>
+</tr>
+<tr>
+	<td class="static">$1～9</td>
+	<td>-</td>
+	<td>パターンマッチした文字列を順に格納（最大９個）</td>
+</tr>
+</table>
+<p>
+lastIndexプロパティを除き、全て静的プロパティ（RegExp.プロパティ名でアクセスする）。
+静的プロパティの内容は、全てのRegExpオブジェクトで共有されるので、他のオブジェクトによって
+上書きされる可能性があります。
+</p>
+<p>
+エイリアスはそれぞれのプロパティを参照するための別名キーです。</p>
+<pre>
+<code>
+   RegExp.lastMatch  は　RegExp['$&']  と書くことも出来る。
+</code>
+</pre>
+
+<h4><a name="SEC57">マッチングの成否を検証する</a></h4>
+<h4><a name="SEC58">単にマッチしている文字があるか、ないかを判定する test メソッド。</a></h4>
+<p>
+true/false を返します。
+</p>
+<pre>
+<code>
+   var p = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/gi;
+   var str1 = 'サポートサイトはhttp://www.wings.msn.to/です。';
+   var str2 = 'サポートサイト「サーバーサイド技術の学び舎」をよろしく！';
+   
+   document.writeln(p.test(str1)+'&lt;br /&gt;');
+   // true
+
+   document.writeln(p.test(str2));
+   // false
+</code>
+</pre>
+<h4><a name="SEC59">マッチした文字位置を返す String.search メソッド。</a></h4>
+<p>
+マッチ文字列が存在しないと -1 を返します。
+</p>
+<pre>
+<code>
+   var p = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/gi;
+   var str1 = 'サポートサイトはhttp://www.wings.msn.to/です。';
+   var str2 = 'サポートサイト「サーバーサイド技術の学び舎」をよろしく！';
+   
+   document.writeln(str1.search(p)+'&lt;br /&gt;');
+   // 8
+
+   document.writeln(str2.search(p));
+   // -1
+</code>
+</pre>
+<h4><a name="SEC60">正規表現で文字列を置き換える</a></h4>
+<h4><a name="SEC61">正規表現でマッチした文字列を置き換える String.replace メソッド</a></h4>
+<p>
+URL文字列を見つけてアンカータグで置き換えるサンプル
+</p>
+<pre>
+<code>
+   var p = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/gi;
+   var str = 'サポートサイトはhttp://www.wings.msn.to/です。';   
+
+   // lastMatchを使える環境ならば、
+   document.writeln
+        (str.replace(p, '&lt;a href="$&"&gt;$&&lt;/a&gt;')+'&lt;br /&gt;');
+
+   /* 
+   lastMatchを使えない環境では、
+   正規表現全体を()で囲みサブマッチ文字列と見做す事で
+   $変数に値を格納させる。
+   */
+   p = 
+     /<strong>(</strong>http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?<strong>)</strong>/gi;
+   document.writeln(str.replace(p, '&lt;a href="$1"&gt;$1&lt;/a&gt;'));
+</code>
+</pre>
+<h4><a name="SEC62">正規表現で文字列を分割する String.split メソッド</a></h4>
+<pre>
+<code>
+   var p = /[\/\.\-]/gi;   
+   
+   document.writeln('2010/12/04'.split(p) + '&lt;br /&gt;');
+   // 2010,12,04
+
+   document.writeln('2010.12.04'.split(p) + '&lt;br /&gt;');
+   // 2010,12,04
+
+   document.writeln('2010-12-04'.split(p) + '&lt;br /&gt;');
+   // 2010,12,04
+   
+   /*replace splitメソッドの引数にはRegExpオブジェクトではなく、
+   ただの文字列リテラルを指定する事も出来る。
+   */
+
+   var str = '2010-12-04';
+   document.writeln(str.replace('-', "/") + '&lt;br /&gt;');
+   // 2010/12-04
+
+   document.writeln(str.split('-'));
+   // 2010,12,04
+</code>
+</pre>
+<h2>
+<a name="SEC63">3-5 すべてのオブジェクトのひな形 -Objectオブジェクト-</a>
+</h2>
+<p>
+Objectオブジェクトはすべてのオブジェクトの基本オブジェクト。
+</p>
+<table border="1">
+<caption>Objectオブジェクトで利用可能な主なメンバ</caption>
+<tr>
+	<th>メンバ</th>
+	<th>概要</th>
+</tr>
+<tr>
+	<td>constructor</td>
+	<td>インスタンス化で使用されたコンストラクタ（読み取り専用）</td>
+</tr>
+<tr>
+	<td>toString()</td>
+	<td>オブジェクトの文字列表現を取得</td>
+</tr>
+<tr>
+	<td>valueOf()</td>
+	<td>オブジェクトの基本型表現（多くは数値）を取得</td>
+</tr>
+<tr>
+	<td>hasOwnProperty(prop)</td>
+	<td>指定したプロパティを持つか</td>
+</tr>
+<tr>
+	<td>propertyIsEnumerable(prop)</td>
+	<td>for...in命令によってプロパティ／メソッドを列挙できるか</td>
+</tr>
+<tr>
+	<td>isPrototypeOf(obj)</td>
+	<td>呼び出し元のオブジェクトが指定したオブジェクトのプロトタイプであるか</td>
+</tr>
+</table>
+<h4><a name="SEC64">オブジェクトを基本型に変換する - toString／valueOfメソッド -</a></h4>
+<dl>
+<dt>toStringメソッド</dt>
+	<dd>文字列を返す</dd>
+<dt>valueOfメソッド</dt>
+	<dd>文字列以外の値が返されることを「期待して」使われる</dd>
+</dl>
+<pre>
+<code>
+   var obj = new Object();
+   /*
+   ディフォルトのObjectオブジェクトは意味のある情報を返さない。
+   自前のオブジェクトを作る場合にはオーバーライドする必要がある。
+   */
+   document.writeln(obj.toString() + '&lt;br /&gt;');
+   // [object Object] 
+
+   document.writeln(obj.valueOf() + '&lt;br /&gt;');
+   // [object Object]
+
+   var dat = new Date(2010, 8, 4, 22, 47, 10, 900);
+   document.writeln(dat.toString() + '&lt;br /&gt;');
+   // Sat Sep 4 22:47:10 UTC+0900 2010  ←IE
+   // Sat Sep 04 2010 22:47:10 GMT+0900 ←firefox
+                      
+   document.writeln(dat.valueOf() + '&lt;br /&gt;');
+   // 1283608030900　タイムスタンプ値
+
+   var ary = ['prototype.js','jQuery','Yahoo! UI'];
+   document.writeln(ary.toString() + '&lt;br /&gt;');
+   // prototype.js,jQuery,Yahoo! UI
+
+   document.writeln(ary.valueOf() + '&lt;br /&gt;');
+   // prototype.js,jQuery,Yahoo! UI
+
+   var num = 10;
+   document.writeln(num.toString() + '&lt;br /&gt;');
+   // 10
+
+   document.writeln(num.valueOf() + '&lt;br /&gt;');
+   // 10
+
+   var reg = /[0-9]{3}-[0-9]{4}/g;
+   document.writeln(reg.toString() + '&lt;br /&gt;');
+   // /[0-9]{3}-[0-9]{4}/g
+
+   document.writeln(reg.valueOf() + '&lt;br /&gt;');
+   // /[0-9]{3}-[0-9]{4}/g
+</code>
+</pre>
+<h4><a name="SEC65">インスタンスのオブジェクト型を判定する　- constructor プロパティ-</a></h4>
+<p>
+typeof 演算子は基本型を識別する事しか出来ません。参照型は object型としか返さない。
+参照型（オブジェクト型）の変数を識別するには、constructorプロパティを使用する。
+</p>
+<pre>
+<code>
+   var data = [];
+   if (typeof data == 'object' && data.constructor == Array) {
+       document.writeln(
+           '変数dataはArrayオブジェクトのインスタンスです。');
+   }
+   //変数dataはArrayオブジェクトのインスタンスです。
+</code>
+</pre>
+<p>
+Objectオブジェクトの constructor プロパティが返すのはオブジェクトのコンストラクタである
+Functionオブジェクト。なので、<code>data.constructor == 'Array'</code> などと文字列と
+して比較してはいけない。
+</p>
+<h4><a name="SEC66">instanceof 演算子を使ってオブジェクトの型を判定する</a></h4>
+<pre>
+<code>
+   var data = [];
+   if (typeof data == 'object' && data instanceof Array) {
+       document.writeln(
+	   '変数dataはArrayオブジェクトのインスタンスです。');
+   }
+   //変数dataはArrayオブジェクトのインスタンスです。
+</code>
+</pre>
+<h4><a name="SEC67">匿名オブジェクトを作成する</a></h4>
+<p>
+Objectオブジェクトの役割は、その他のオブジェクトに対して共通の機能を提供する
+事ではなく、Objectオブジェクトを直接インスタンス化する事で、ユーザーが自前の
+オブジェクトを定義するのに利用できる。
+</p>
+<p>
+このようなオブジェクトの事を「独自のオブジェクト名を持たない」という意味で、
+<dfn>匿名オブジェクト</dfn> もしくは <dfn>無名オブジェクト</dfn> と呼びます。
+作成した直後は、オブジェクト共通のプロパティ／メソッドの他はなんらデータを持たない。
+以下のように、プロパティを追加していく。
+</p>
+<pre>
+<code>
+   // 匿名オブジェクトを生成
+   var obj = new Object();
+
+   // プロパティの追加
+   obj.name = 'トクジロウ';
+   obj.birth = new Date(2013, 7, 17);
+   obj.old = 5
+
+   // プロパティにはドット演算子でアクセスできる
+   document.writeln(obj.name);
+   // トクジロウ
+</code>
+</pre>
+<p>
+<strong>匿名</strong>オブジェクトとは言うけれど、obj という名前はつけているじゃん、
+という話ではなくて、名前の付けようの無い Object オブジェクトを
+インスタンス化させたオブジェクトだから「匿名オブジェクト」と呼ぶのだと思う（多分）。
+構造体のように使う。いちいちクラスを定義する必要がない分コードがシンプルになる。
+</p>
+<p>
+匿名オブジェクトを生成するために、Objectオブジェクトではなく、
+Array や Date のような既存の組み込みオブジェクトを利用する事も出来てしまう。
+</p>
+<pre>
+<code>
+   var obj = new Array();
+   obj.name = "とくじろう";
+   document.writeln(obj.name);
+   // とくじろう
+</code>
+</pre>
+<p>
+しかし、匿名オブジェクトを生成するために、これら特定の目的をもった
+オブジェクトをベースにする理由はなく、かえって間違いやバグの元となる
+可能性がある。通常はオブジェクトとして中性的な機能のみを持つ Object オブジェクトを
+使うべきです。
+</p>
+<h4><a name="SEC68">オブジェクトリテラル</a></h4>
+<pre>
+<code>
+   // オブジェクトをリテラル表現で定義する。
+   var hoge = { 
+      name: 'ほげジロウ', birth: 
+      new Date(2013, 7, 17), old: 3 
+   };
+   document.writeln(hoge.name);
+   // ほげジロウ
+</code>
+</pre>
+<p>
+「オブジェクトリテラルでオブジェクトを生成する」とは
+「匿名オブジェクトを定義する」ことと同じ意味。
+</p>
+
+<h2>
+<a name="SEC69">3-6 基本機能を提供する　- Globalオブジェクト -</a>
+</h2>
+<p>
+Global オブジェクトとは、（言うなれば）グローバル変数やグローバル関数を
+管理する為に JavaScript が自動的に生成する「便宜的な」オブジェクト。
+</p>
+<p>
+<code>var g = new Global();</code> とインスタンス化することは出来ない。また、
+<code>Global.メソッド名</code> のように配下のメソッドを呼び出せるわけでもない。
+ただ単に、
+</p>
+<pre>
+<code>
+   変数名
+   関数名(引数,…)
+</code>
+</pre>
+<p>のように参照する。</p>
+<table border="1">
+<caption>
+JavaScript で利用可能なグローバル変数／関数
+</caption>
+<tr>
+	<th>分類</th>
+	<th>メンバ</th>
+	<th>概要</th>
+</tr>
+<tr>
+	<td rowspan="3">特殊値</th>
+	<td>NaN</td>
+	<td>数値でない（Not a Number）</td>
+</tr>
+<tr>
+	<td>Infinity</td>
+	<td>無限大（∞）</td>
+</tr>
+<tr>
+	<td>undefined</td>
+	<td>未定義値</td>
+</tr>
+<tr>
+	<td rowspan="2">チェック</th>
+	<td>isFinite(num)</td>
+	<td>有限値かどうか（NaN、正負の無限大でない）</td>
+</tr>
+<tr>
+	<td>isNaN(num)</td>
+	<td>数値でない（Not a Number）かどうか</td>
+</tr>
+<tr>
+	<td rowspan="5">変換</th>
+	<td>Boolean(val)</td>
+	<td>真偽型に変換</td>
+</tr>
+<tr>
+	<td>Number(val)</td>
+	<td>数値型に変換</td>
+</tr>
+<tr>
+	<td>String(val)</td>
+	<td>文字列型に変換</td>
+</tr>
+<tr>
+	<td>parseFloat(str)</td>
+	<td>文字列を浮動小数点数に変換</td>
+</tr>
+<tr>
+	<td>parseInt(str)</td>
+	<td>文字列を整数値に変換</td>
+</tr>
+<tr>
+	<td rowspan="6">エンコード</th>
+	<td>escape(str)</td>
+	<td>文字列をエスケープ処理</td>
+</tr>
+<tr>
+	<td>unescape(str)</td>
+	<td>エスケープ文字を元に戻す</td>
+</tr>
+<tr>
+	<td>encodeURI(str)</td>
+	<td>文字列をURIエンコード</td>
+</tr>
+<tr>
+	<td>decodeURI(str)</td>
+	<td>文字列をURIデコード</td>
+</tr>
+<tr>
+	<td>encodeURIComponent(str)</td>
+	<td>文字列をURIエンコード</td>
+</tr>
+<tr>
+	<td>decodeURIComponent(str)</td>
+	<td>文字列をURIデコード</td>
+</tr>
+</table>
+<h4>
+<a name="SEC70">データ型を明示的に変換する - parseFloat／parseInt／Number 関数 -</a>
+</h4>
+<pre>
+<code>
+   /*
+   「123xxx」のような文字列混在の数値は
+   parseXxxxx関数は 123 と解析できる部分を数値と
+   して返す。
+   Number関数は文字列混在の数値を数値と看做さない
+   */
+   var n = '123xxx';
+   document.writeln(Number(n) + '&lt;br /&gt;'); 
+   // NaN
+
+   document.writeln(parseFloat(n) + '&lt;br /&gt;'); 
+   // 123
+
+   document.writeln(parseInt(n) + '&lt;br /&gt;'); 
+   // 123
+   /*
+   Dateオブジェクトが渡された場合、parseXxxxx関数は解析出来ず
+   に NaN を返す。Number関数は「経過したミリ秒」に換算した値を
+   返す。
+   */
+   var d = new Date();
+   document.writeln(Number(d) + '&lt;br /&gt;'); 
+   // 1374326910891
+
+   document.writeln(parseFloat(d) + '&lt;br /&gt;'); 
+   // NaN
+
+   document.writeln(parseInt(d) + '&lt;br /&gt;'); 
+   // NaN
+
+   /*
+   8進数の整数リテラルの場合、parseInt だけが８進数を返し(?)、
+   他の関数は 777 を返します…と説明されているが
+   実際にはどれも 777 を返す。2012.8 に仕様が変更された
+   */
+   var h = '0777';
+   document.writeln(Number(h) + '&lt;br /&gt;');
+   // 777
+
+   document.writeln(parseFloat(h) + '&lt;br /&gt;'); 
+   // 777
+
+   document.writeln(parseInt(h) + '&lt;br /&gt;'); 
+   // 777
+
+   alert(parseInt(h,8));
+   // 511
+
+   alert(parseInt(h, 16)); 
+   // 1911
+
+   /*
+   浮動小数点を渡すと、parseIntはe+2を無視して
+   整数部分のみを切り捨てて返す
+   */
+   var e = '1.01e+2';
+   document.writeln(Number(e) + '&lt;br /&gt;'); 
+   // 101
+
+   document.writeln(parseFloat(e) + '&lt;br /&gt;'); 
+   // 101
+
+   document.writeln(parseInt(e) + '&lt;br /&gt;'); 
+   // 1
+
+   document.writeln(parseInt('1.9') + '&lt;br /&gt;'); 
+   // 1
+
+   /*
+   グローバルオブジェクトが提供するグローバル関数 Number は
+   実は組み込みオブジェクトのNumberでもあるので、   
+   */
+   document.writeln(new Number(e)); 
+   // 101
+   /*
+   とも書ける。
+   */
+</code>
+</pre>
+<p>
+データ型を明示的に文字列型、論理型に変換したい場合も同様で、
+それぞれ String/Boolean関数を仕様します。Number関数と同様、
+String/Boolean関数の実体はString/Booleanオブジェクトであり、
+以下いずれの書き方をしても意味は同じになる。
+</p>
+<pre>
+<code>
+   var str = new String('123');
+   var str = String('123');
+
+   /*
+      文字列⇔数値の変換では
+      算術演算子「+」「-」を利用する事もできます
+   */
+   document.writeln(typeof (123 + '' + '&lt;br /&gt;')); 
+   // string
+
+   document.writeln(typeof ('123' - 0 + '&lt;br /&gt;')); 
+   // string
+</code>
+</pre>
+<p>
++演算子は加算と文字列連結の２つの機能を持っているが、オペランドの
+片方が文字列だった場合、文字列連結演算子として解釈される。
+</p>
+<h4>
+<a name="SEC71">クエリ情報をエスケープ処理する - encodeURI／encodeURIComponent関数 -</a>
+</h4>
+<p>
+URLの末尾～? 以降に「キー名=値＆…」の形式で記述されているのが、
+サーバ乗で動くアプリケーションへの問い合わせに使われる「クエリ情報」。
+クエリ情報には区切り文字である ? = % 空白 マルチバイト文字は
+使用できない。ので、これらの文字は %xx の形式に変換しておく必要がある。
+このような変換処理の事を <dfn>URIエンコード</dfn> と言う。
+そして、そのような <dfn>エスケープ処理</dfn> を行うのが
+ encodeURI／encodeURIComponent 関数。両者は殆ど同じ機能を提供するが
+エンコード対象となる文字に若干の違いがある。
+</p>
+<pre>
+<code>
+   // encodeURI
+   var str = '!"#$%&()+-/@_|;:,.';
+   document.writeln(encodeURI(str) + '&lt;br /&gt;'); 
+   // !%22#$%25&()+-/@_%7C;:,.
+
+   // decodeURI
+   var str2 = '!%22#$%25&()+-/@_%7C;:,.';
+   document.writeln(decodeURI(str2) + '&lt;br /&gt;'); 
+   // !"#$%&()+-/@_|;:,.
+
+   // encodeURIComponent
+   document.writeln(encodeURIComponent(str) + '&lt;br /&gt;'); 
+   // !%22%23%24%25%26()%2B-%2F%40_%7C%3B%3A%2C. 
+
+   // decodeURIComponent
+   var str3='!%22%23%24%25%26()%2B-%2F%40_%7C%3B%3A%2C.';
+   document.writeln(decodeURIComponent(str3) + '&lt;br /&gt;');
+   // !"#$%&()+-/@_|;:,.
+
+   /* 
+    escape 関数によるエスケープ処理
+   プラットフォーム・ブラウザ（種類／バージョン）、
+   文字コード等によって結果が異なる。
+  「下位互換性を胃jいしたい」など特別な理由が無い限り
+   使うべきではない。
+   */
+   document.writeln(escape(str) + '&lt;br /&gt;');
+   // %21%22%23%24%25%26%28%29+-/@_%7C%3B%3A%2C.
+
+   var str4 = '%21%22%23%24%25%26%28%29+-/@_%7C%3B%3A%2C.';
+   document.writeln(unescape(str4) + '&lt;br /&gt;');
+   // !"#$%&()+-/@_|;:,.
+</code>
+</pre>
+<p>
+encodeURIComponent関数では # $ + / @ ; : , 等も変換されているのに、
+encodeURI関数では変換されない。! ( ) - * ~ _ 等はどっちの関数でも
+変換されない。（どうやって使い分けるのだろう(๑´ω`๑) ？）
+</p>
+<h4><a name="SEC72">動的に生成したスクリプトを実行する　- eval関数 -</a></h4>
+<p>
+eval関数は、文字列をJavaScriptのコードとして評価／実行します。
+</p>
+<pre>
+<code>
+   var str = 'window.alert("eval 関数")';
+   eval(str);// [eval 関数] とアラートされる
+</code>
+</pre>
+<p>
+eval関数を使う事で自在で柔軟なコーディングができるように見えるが、
+以下の理由で濫用は避けるべきとされる。
+</p>
+<ul>
+<li>
+第三者による任意のスクリプトが自由に実行できてしまう可能性がある。セキュリティリスク。
+</li>
+<li>
+通常のコードを実行するよりも処理速度が遅い。パフォーマンスの劣化。
+</li>
+</ul>
+<p>
+eval 関数の利用は <dfn>JSON</dfn> データの解析する場合に留めておくべき。
+その他の状況でeval関数を利用しているとしたら、他の方法で記述できないかを
+検討するべき。eval is evil（eval関数は邪悪）とまで言われる。
+</p>
+<!-- ☜ -->
+<p><a href="js2.htm">☜☜前へ
+</a>　<a href="js4.htm">次へ☞☞ 
+</a></p>
+</body>
+</html>

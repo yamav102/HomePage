@@ -1,0 +1,1085 @@
+﻿<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="keywords" content="java script,html">
+<meta name="author" content="yamaV1.02β">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta name="robots" content="noindex">
+<meta name="description" content="//////////">
+<meta name="reply-to" content="">
+<link rel="shortcutIcon" href="favicon.ico">
+<link rel="start" href="index.htm">
+<link rel="stylesheet" type="text/css" href="leftside1.css">
+
+<title>JavaScript 本格入門　メモ7</title>
+
+  <!-- http://www.mwsoft.jp/programming/javascript/highlight_js.html?style=vs#styles -->
+  <!--http://softwaremaniacs.org/soft/highlight/en/download/-->
+  <!-- stylesの中から好みにあったCSSを選んで、 -->
+  <!-- 1, CSS、JavaScriptファイルを呼び出す -->
+  <!--<link rel="stylesheet" href="../highlight.js/styles/vs.css">-->
+  <script type="text/javascript" src="../highlight.js/highlight.pack.js"></script>
+  <!-- 2, onLoad時にinitしてくれる機能を呼び出す -->
+  <!--<script type="text/javascript">hljs.initHighlightingOnLoad();</script>-->
+</head>
+<h1>
+JavaScript 本格入門　メモ7
+</h1>
+<h3>
+<a name="SEC2">ステータスバーの表示操作</a>
+</h3>
+<p>
+リンクにマウスポインタを当てたタイミングで、ステータスバーに「サポートサイトはこちらです。」
+と表示させるコードが以下になります。
+</p>
+<pre>
+<code>
+   &lt;p&gt;&lt;a href="http://www.wings.msn.to/" 
+       onmouseover="window.status='サポートサイトはこちらです。';return true;"&gt;
+       サーバーサイド技術の学び舎 - WINGS
+      &lt;/a&gt;
+   &lt;/p&gt;
+</code>
+</pre>
+<p>
+ステータスバーに異なるURLを表示させる事が出来てしまい、フィッシング詐欺などで
+リンク先を偽装する為に多く使われたため、多くのブラウザが status プロパティの動作をデフォルトで無効
+にしています。不特定多数のユーザーが利用するアプリケーションで記述するべきではありません。
+</p>
+<h2><a name="SEC3">6-4 フォーム要素にアクセスする - Form オブジェクト -</a></h2>
+<h3><a name="SEC4">フォーム要素へのアクセスの基本</a></h3>
+<pre>
+<code>
+    &lt;!DOCTYPE html&gt;
+
+    &lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+    &lt;head&gt;
+        &lt;meta charset="utf-8" /&gt;
+        &lt;title&gt;p219&lt;/title&gt;
+        &lt;script type="text/javascript"&gt;
+            &lt;!--
+            // [送信] ボタンをクリックしたタイミングで実行
+            function process() {
+                // テキストボックスの入力値をもとにメッセージをダイアログ表示
+                var name = document.fm.name.value;
+                window.alert('こんにちは、' + name + 'さん！');
+                return false;
+            }
+            //--&gt;
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;form name="fm" onsubmit="return process()"&gt;
+            名前:
+            &lt;input type ="text" name ="name" size="10" /&gt;
+            &lt;input type="submit" value="送信" /&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+</code>
+</pre>
+<p>
+イベントをキャンセルするには、イベントハンドラが戻り値として false を返す
+必要があります。ただし、その際、イベントハンドラ呼びだし元のコードに、「return」を
+付与するのを忘れないようにしてください。<code>onsubmit="process()"</code> では戻り値が
+イベントに返されませんので、イベントもキャンセルされません。
+</p>
+<p>
+フォーム要素にアクセスするには、form と アクセスしたい要素に name属性を指定します。
+</p>
+<pre>
+<code>
+   document.フォーム名.要素名
+</code>
+</pre>
+<p>
+他の方法として、forms／elements 配列を経由する方法もあります。
+forms配列はページ内に含まれる全てのフォームを格納する配列、elements配列はフォーム内に
+含まれる要素を格納する配列です。上の例での <code>var name = document.fm.name.value;</code>
+は、次のように書き換えられます。
+</p>
+<pre>
+<code>
+   var name = document.forms[0].elements[0].value;
+</code>
+</pre>
+<pre>
+<code>
+   var name = document.forms['fm'].elements['name'].value;
+</code>
+</pre>
+<code>
+   var name = document.forms['fm']['name'].value;
+</code>
+</pre>
+<code>
+   var name = document.forms[0]['name'].value;
+</code>
+</pre>
+<p>
+<code>forms[0][0] </code>など、他の組み合わせの記法もできます。数値によるアクセスは、
+要素の並び順に影響を受けることと、どの要素を指しているのか判りにくいので、
+以下のようなフォーム内の要素に順番にアクセスするようなケースに留めるべきです。
+</p>
+<pre>
+<code>
+    &lt;!DOCTYPE html&gt;
+
+    &lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+    &lt;head&gt;
+        &lt;meta charset="utf-8" /&gt;
+        &lt;title&gt;p221&lt;/title&gt;
+        &lt;script type="text/javascript"&gt;
+            &lt;!--
+            // [送信] ボタンをクリックしたタイミングで実行
+            var result = '';
+            function process() {
+                // フォーム内の要素を順番に処理
+                for (var i = 0; i &lt; document.fm.elements.length; i++) {
+                    result += document.fm.elements[i].name + '\n'
+                }
+            
+                window.alert(result);
+                return false;
+            }
+            //--&gt;
+        &lt;/script&gt;
+
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;form name="fm" onsubmit="return process()"&gt;
+            &lt;label&gt;
+		name1:
+		&lt;input type ="text" name ="name1" size="10" /&gt;
+	    &lt;/label&gt;&lt;br /&gt;
+            &lt;label&gt;
+		name2:
+		&lt;input type ="text" name ="name2" size="10" /&gt;
+	    &lt;/label&gt;&lt;br /&gt;
+            &lt;label&gt;
+		name3:
+	    	&lt;input type ="text" name ="name3" size="10" /&gt;
+            &lt;/label&gt;&lt;br /&gt;
+            &lt;input type="submit" value="送信" /&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+</code>
+</pre>
+<h3>
+<a name="SEC5">別ウィンドウの要素にアクセスするには</a>
+</h3>
+<p>
+Window間で情報を受け渡しする場合、このような記法を使用します。
+</p>
+<pre>
+<code>
+	//subwin は open メソッドが返した Windowオブジェクト
+	subwin.opener.document.fm.～ //　親ウィンドウを参照
+	subwin.document.fm.～ //　サブウィンドウを参照
+</code>
+</pre>
+<pre>
+<code>
+    &lt;!-- prnt.htm --&gt;
+    &lt;!DOCTYPE html&gt;
+
+    &lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+    &lt;head&gt;
+        &lt;meta charset="utf-8" /&gt;
+        &lt;title&gt;親ウィンドウ&lt;/title&gt;
+        &lt;script type="text/javascript"&gt;
+            &lt;!--
+	    // 子ウィンドウのフォーム要素の個数を数え上げるボタン変数
+   	    var cntBtn;
+
+            // サブウィンドウを表す Window オブジェクトを格納する変数
+            var subwin;
+
+	    // [サブウィンドウを開く]ボタン　クリック時に実行
+            function win_open() {
+	   	showCntBtn();
+		subwin = window.open('sub.htm', 'Sample',
+		  'width=600, height=300, scrollbars=yes, location=yes');
+
+            }
+	    // [サブウィンドウを閉じる] ボタンをクリック時に実行
+	　　function win_close(){
+		/* 変数subwinが空でなく、
+                サブウィンドウが閉じられていない時にのみクローズ
+                */
+		subwin.close();
+		cntBtn.style.visibility='hidden';
+	    }
+	    function showCntBtn(){
+		cntBtn.style.visibility='visible';
+	    }
+	    window.onload = function(){
+		cntBtn = document.getElementById('cntBtn');	
+	    }
+	    function showSwFmElmntCnt(){
+		alert(subwin.document.fm.elements.length);//4
+	    }
+            //--&gt;
+        &lt;/script&gt;
+
+    &lt;/head&gt;
+    &lt;body&gt;
+	&lt;form name="fm"&gt;
+	   &lt;input type="button" value="サブウィンドウを開く" 
+		onclick="win_open();" /&gt;&lt;br /&gt;
+	   &lt;input type="button" value="サブウィンドウを閉じる" 
+		onclick="win_close()" /&gt;&lt;br /&gt;
+
+	   &lt;input type="button" id="cntBtn" name="hoge" style="visibility:hidden;"
+		value="サブウィンドウforms.elementsの個数" 		
+		onclick="showSwFmElmntCnt()" /&gt;&lt;br /&gt;
+	&lt;/form&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+</code>
+</pre>
+<pre>
+<code>
+    &lt;!-- sub.htm --&gt;
+
+    &lt;!DOCTYPE html&gt;
+
+    &lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+    &lt;head&gt;
+        &lt;meta charset="utf-8" /&gt;
+        &lt;title&gt;サブウィンドウ&lt;/title&gt;
+	&lt;script type="text/javascript"&gt;
+	   &lt;!--
+	   function showPrntFmElmntCnt(){
+		alert(window.opener.document.fm.elements.length);// 3
+	   }
+	   //--&gt;
+	&lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;form name="fm" onsubmit="showPrntFmElmntCnt();return false;"&gt;
+            &lt;label&gt;
+               name1:&lt;input type ="text" name ="name1" size="10" /&gt;
+            &lt;/label&gt;&lt;br /&gt;
+            &lt;label&gt;
+               name2:&lt;input type ="text" name ="name2" size="10" /&gt;
+            &lt;/label&gt;&lt;br /&gt;
+            &lt;label&gt;
+               name3:&lt;input type ="text" name ="name3" size="10" /&gt;
+            &lt;/label&gt;&lt;br /&gt;
+            &lt;input type="submit" value="親ウィンドウのfm要素数" /&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+</code>
+</pre>
+<h3>
+<a name="SEC6">フォーム要素共通プロパティ／メソッド</a>
+</h3>
+<p>
+フォーム要素は、大きく以下のように分類できます。
+</p>
+<table border="1">
+<tr>
+<th>分類</th>
+<th>要素名</th>
+<th>概要</th>
+</tr>
+<tr>
+<td rowspan="3">テキスト</td>
+<td>Text(&lt;input type="text"&gt;)</td>
+<td>テキストボックス</td>
+</tr>
+<tr>
+<td>Password(&lt;input type="password"&gt;)</td>
+<td>パスワード入力ボックス</td>
+</tr>
+<tr>
+<td>Textarea(&lt;input type="textarea"&gt;)</td>
+<td>複数行テキスト入力ボックス</td>
+</tr>
+<tr>
+<td rowspan="2">ラジオ／チェック</td>
+<td>Radio(&lt;input type="radio"&gt;)</td>
+<td>ラジオボタン（単一選択）</td>
+</tr>
+<tr>
+<td>Checkbox(&lt;input type="checkbox"&gt;)</td>
+<td>チェックボックス（複数選択）</td>
+</tr>
+<tr>
+<td rowspan="2">選択</td>
+<td>Select(&lt;select&gt;)</td>
+<td>選択ボックス（単一選択）</td>
+</tr>
+<tr>
+<td>Select(&lt;select multiple&gt;)</td>
+<td>リストボックス（複数選択も可）</td>
+</tr>
+<tr>
+<td rowspan="3">ボタン</td>
+<td>Submit(&lt;input type="submit"&gt;)</td>
+<td>確定（送信ボタン）</td>
+</tr>
+<tr>
+<td>Reset(&lt;input type="reset"&gt;)</td>
+<td>リセット（キャンセルボタン）</td>
+</tr>
+<tr>
+<td>Button(&lt;input type="button"&gt;)</td>
+<td>一般的なボタン</td>
+</tr>
+<tr>
+<td rowspan="2">その他</td>
+<td>File(&lt;input type="file"&gt;)</td>
+<td>ファイル選択ボックス</td>
+</tr>
+<tr>
+<td>Hidden(&lt;input type="hidden"&gt;)</td>
+<td>隠しフィールド</td>
+</tr>
+</table>
+<p>
+それぞれの要素に用事て、りようできるプロパティやメソッドも異なりますが、
+以下のプロパティ／メソッドは共通して利用できます。
+</p>
+<table border="1">
+<tr>
+<tr>
+<th>メンバ</th><th>概要</th>
+</tr>
+<tr>
+<td>form</td><td>要素が属するフォーム要素（Formオブジェクト）を取得</td>
+</tr>
+<tr>
+<td>disabled</td><td>要素の入力／選択を禁止するか</td>
+</tr>
+<tr>
+<td>name</td><td>要素名（読みとり専用）</td>
+</tr>
+<tr>
+<td>type</td><td>要素の種類（text, button, radioなど）（読みとり専用）</td>
+</tr>
+<tr>
+<td>value</td><td>要素の値（ただし、&lt;タグでは利用不可&gt;）</td>
+</tr>
+<tr>
+<td>focus()</td><td>要素にフォーカスをセットする</td>
+</tr>
+<tr>
+<td>blur()</td><td>要素からフォーカスを外す</td>
+</tr>
+</table>
+<h5><a name="SEC7">現在のフォームを参照する -formプロパティ-</a></h5>
+<p>
+formプロパティは、現在の要素が属する Formオブジェクトを返します。
+</p>
+<pre>
+<code>
+    &lt;!DOCTYPE html&gt;
+
+    &lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+    &lt;head&gt;
+        &lt;meta charset="utf-8" /&gt;
+        &lt;title&gt;p223&lt;/title&gt;
+        &lt;script type="text/javascript"&gt;
+            &lt;!--
+            function process(f) {
+                window.alert('こんにちは、' + f.hoge.value + 'さん！');
+            }
+            //--&gt;
+        &lt;/script&gt;
+
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;form&gt;
+            &lt;input type="text" name="hoge" size="10" /&gt;
+            &lt;input type="button" value="送信" onclick="process(this.form)" /&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+</code>
+</pre>
+<p>
+this はイベントの発生元を参照します。可能な箇所はできるだけ「this」「this.form」といった
+記法を利用します。シンプル、かつ、名前に依存しないコードになります。
+</p>
+<h5>
+<a name="SEC8">フォーム要素を無効化する - disabled プロパティ-</a>
+</h5>
+<p>
+特定の条件下でのみ、ある要素を入力可能（あるいは不可）にしたい、という場合に利用するのが
+disabled プロパティです。
+</p>
+<pre>
+<code>
+    &lt;!DOCTYPE html&gt;
+
+    &lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+    &lt;head&gt;
+        &lt;meta charset="utf-8" /&gt;
+        &lt;title&gt;p224&lt;/title&gt;
+        &lt;script type="text/javascript"&gt;
+            &lt;!--
+            //チェックボックスをクリックしたタイミングで実行
+            function process() {
+                var fmt = document.fm.fmt;
+                //ラジオボタン"fmt"を順に走査し、有効／無効を切り替え
+                for (var i = 0; i &lt; fmt.length; i++) {
+                    //チェックボックスが非チェック状態（checkedプロパティがfalse)
+                    //の場合にラジオボタンを無効化
+                    fmt[i].disabled = !document.fm.need.checked;
+                }
+            }
+            //--&gt;
+        &lt;/script&gt;
+
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;form name="fm"&gt;
+            &lt;label&gt;
+                メールニュースの送信を希望：
+                &lt;input type="checkbox" name="need" value="1"
+                    checked="checked" onclick="process()" /&gt;
+            &lt;/label&gt;
+            &lt;br /&gt;
+            &lt;label&gt;
+               &lt;input type="radio" name="fmt" value="plain" /&gt;
+               プレーン形式
+            &lt;/label&gt;
+            &lt;label&gt;&lt;input type="radio" name="fmt" value="html" /&gt;
+               HTML形式
+            &lt;/label&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+</code>
+</pre>
+<p>
+disableプロパティは、この他にもサブミット時にサブミットボタンを無効化するなどして
+、フォームの二重送信を防ぐようなケースにも利用できます。が、JavaScriptを無効化されてしまえば、
+そもそも無効化が無効にされてしまうので、必ずサーバー側でも二度押しを考慮したコードを用意する
+必要があります。
+</p>
+<h3>
+<a name="SEC9">テキスト系の要素を操作する</a>
+</h3>
+<p>
+テキストボックス、パスワード入力ボックス、テキストエリアの３種類のテキスト系の要素では、
+以下のようなプロパティ／メソッドを利用できます。
+</p>
+<table border="1">
+<tr>
+<th>
+メンバ
+</th>
+<th>
+概要
+</th>
+</tr>
+<tr>
+<td>defaultValue</td><td>デフォルト値</td>
+</tr>
+<tr>
+<td>select()</td><td>テキストを選択状態にする</td>
+</tr>
+</table>
+<p>
+たとえば、以下のサンプルは、サブミット時に [年齢] 欄の内容が数値かどうかを確認し、
+数値でない場合には以下のようにする例です。
+</p>
+<ul>
+<li>入力値をディフォルトに戻す</li>
+<li>すぐに修正できるっよう、テキストを選択状態、かつ、フォーカスする</li>
+</ul>
+<pre>
+<code>
+    &lt;!DOCTYPE html&gt;
+
+    &lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+    &lt;head&gt;
+        &lt;meta charset="utf-8" /&gt;
+        &lt;title&gt;p226&lt;/title&gt;
+        &lt;script type="text/javascript"&gt;
+            &lt;!--
+            //[送信] ボタンをクリックしたタイミングで実行されるchk関数
+            function chk() {
+                var q = document.fm.old;
+                //[年齢] 欄が空でない場合のみ数値であるかどうかをチェック
+                if (q.value != null && q.value != '') {
+                    if (isNaN(q.value)) {
+                        //入力値が数値でない場合の処理
+                        window.alert('年齢は数値で入力してください。');
+                        q.value = q.defaultValue;
+                        q.focus();
+                        q.select();
+                        return false;//onsubmitイベントをキャンセル
+                    } else {
+                        alert('t');
+                        return true;
+                    };
+                }
+            }
+            //--&gt;
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;form name="fm" method="POST" action="" onsubmit="return chk()"&gt;
+            &lt;label&gt;
+                年齢：
+                &lt;input type="text" name="old" value="20" size="3"/&gt;歳
+            &lt;/label&gt;
+            &lt;input type="submit" value="送信" /&gt;                        
+        &lt;/form&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+</code>
+</pre>
+<h3>
+<a name="SEC10">ラジオボタン／チェックボックスを操作する</a>
+</h3>
+<pre>
+<code>
+    &lt;!DOCTYPE html&gt;
+
+    &lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+    &lt;head&gt;
+        &lt;meta charset="utf-8" /&gt;
+        &lt;title&gt;p228&lt;/title&gt;
+        &lt;script type="text/javascript"&gt;
+            &lt;!--
+            function show() {
+                var result = [];
+                var f = document.fm.food;
+                for (var i = 0; i &lt; f.length; i++) {
+                    if (f[i].checked) {
+                        result.push(f[i].value);
+                    }
+                }
+                window.alert(result.toString());
+                return false;
+            }
+            //--&gt;
+        &lt;/script&gt;
+
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;form name="fm" method="POST" action="" onsubmit="return show()"&gt;
+            &lt;label&gt;          
+                &lt;input type="checkbox" name="food" value="ラーメン" /&gt;ラーメン
+            &lt;/label&gt;
+            &lt;label&gt;          
+                &lt;input type="checkbox" name="food" value="餃子" /&gt;餃子
+            &lt;/label&gt;
+            &lt;label&gt;          
+                &lt;input type="checkbox" name="food" value="焼き肉" /&gt;焼き肉
+            &lt;/label&gt;
+            &lt;input type="submit" value="送信" /&gt;                        
+        &lt;/form&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+</code>
+</pre>
+<p>
+テキスト系要素が value プロパティで簡単にアクセスできたのに対して、
+チェックボックス／ラジオボタンへのアクセスはやや複雑です。注目すべきポイントは
+２点です。
+</p>
+<h5>
+<a name="SEC11">同名の要素は配列となる</a>
+</h5>
+<p>
+フォーム内で一意の名前がつけられるテキスト系の要素に対して、
+ラジオボタン／チェックボックスでは同一グループに属するラジオボタン／チェックボックスには
+同一の名前を付けます。
+つまり、同一名の要素が複数存在する事になります。
+</p>
+<p>
+このようなケースにおいて、「document.fm.food」は（Elementオブジェクト
+ではなく）Elementオブジェクトの配列となる点に要注意です。個々の要素にアクセスするには
+以下のように記述する必要があります。
+</p>
+<pre>
+<code>
+   document.フォーム名.要素名[インデックス番号]
+</code>
+</pre>
+<p>
+要素の個数は、以下の記述で取得できます。
+</p>
+<pre>
+<code>
+   document.フォーム名.要素名.length
+</code>
+</pre>
+<p>
+チェックボックスが一つしかない場合は、配列ではない形式で記述します。
+</p>
+<pre>
+<code>
+   document.フォーム.要素名
+</code>
+</pre>
+<h5>
+<a name="SEC12">チェック状態を示すのは checked プロパティ</a>
+</h5>
+<p>
+テキスト系要素で値を取得するのは value プロパティです。ラジオボタン／チェックボックス
+でも value プロパティは利用できます。しかし、ラジオボタン／チェックボックスにおいて、
+value プロパティは <strong>選択の有無に関わらず、value 属性で指定された値を返します</strong> 
+</p>
+<p>
+つまり、value プロパティを参照しても
+ラジオボタン／チェックボックスの選択状態を確認する事はできません。
+</p>
+<p>
+ラジオボタン／チェックボックスの選択状態を取得するには checked プロパティを使用します。
+</p>
+<pre>
+<code>
+    &lt;!DOCTYPE html&gt;
+
+    &lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+    &lt;head&gt;
+        &lt;meta charset="utf-8" /&gt;
+        &lt;title&gt;p229&lt;/title&gt;
+        &lt;script type="text/javascript"&gt;
+            &lt;!--
+            // 与えられたElement配列（ラジオボタン）から選択値を抽出
+            function getRadio(elem) {
+                var result = '';
+                // 配列を順番に走査し、チェック状態を確認
+                for (var i = 0; i &lt; elem.length; i++) {
+                    /* 
+                     チェック状態にあるものがみつかったら、
+                     変数resultにその値をセット
+                    */
+                    if (elem[i].checked) {
+                        result = elem[i].value;
+                        /*ラジオボタンは一つしか選択出来ないので、
+			値が確定した時点で break で抜ける*/
+			break;
+                    }
+                }
+                return result;
+            }
+
+            function show() {
+                window.alert(getRadio(document.fm.food));
+                return false;
+            }
+            //--&gt;
+        &lt;/script&gt;
+
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;form name="fm" method="POST" action="" onsubmit="return show()"&gt;
+            一番好きな食べ物は？：
+            &lt;label&gt;          
+                &lt;input type="radio" name="food" value="ラーメン" /&gt;ラーメン
+            &lt;/label&gt;
+            &lt;label&gt;          
+                &lt;input type="radio" name="food" value="餃子" /&gt;餃子
+            &lt;/label&gt;
+            &lt;label&gt;          
+                &lt;input type="radio" name="food" value="焼き肉" /&gt;焼き肉
+            &lt;/label&gt;
+            &lt;input type="submit" value="送信" /&gt;                        
+        &lt;/form&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+</code>
+</pre>
+<h3>
+<a name="SEC13">select:選択ボックス ／リストボックスを操作する</a>
+</h3>
+<p>
+select は multiple 属性で複数選択ができます。
+</p>
+<pre>
+<code>
+   &lt;select ... multiple="multiple"&gt;
+</code>
+</pre>
+<h5>
+<a name="SEC14">選択ボックス</a>
+</h5>
+<pre>
+<code>
+    &lt;!DOCTYPE html&gt;
+
+    &lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+    &lt;head&gt;
+        &lt;meta charset="utf-8" /&gt;
+        &lt;title&gt;p232&lt;/title&gt;
+        &lt;script type="text/javascript"&gt;
+            &lt;!--
+            function show() {
+                window.alert(document.fm.food.value);
+                return false;
+            }
+            //--&gt;
+        &lt;/script&gt;
+
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;form name="fm" onsubmit="return show()"&gt;
+            一番好きな食べ物は？：
+            &lt;select name="food"&gt;
+                &lt;option  value="ラーメン"&gt;ラーメン&lt;/option&gt;
+                &lt;option  value="餃子"&gt;餃子&lt;/option&gt;
+                &lt;option  value="焼き肉"&gt;焼き肉&lt;/option&gt;
+            &lt;/select&gt;
+            &lt;input type="submit" value="送信" /&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+</code>
+</pre>
+<p>
+value プロパティへのアクセスは、次のようにも書けます。
+</p>
+<pre>
+<code>
+   function show() {
+      var f = document.fm.food;
+      window.alert(f.options[f.selectedIndex].value);
+      return false;
+   }
+</code>
+</pre>
+<ul>
+<li>
+options プロパティ ⇒　&lt;select&gt;タグ配下の&lt;option&gt;タグ配列
+</li>
+<li>
+selectedIndex プロパティ ⇒　選択されたオプションのインデックス番号
+</li>
+</ul>
+<pre>
+<code>
+   document.フォーム名.要素名.options[document.フォーム名.要素名.selectedIndex]
+</code>
+</pre>
+<p>
+でアクセスも出来ると言う事です。value プロパティを利用した方が便利ですが、
+この記法ならば、text プロパティで、オプションの表示テキストを取得する事ができます。
+</p>
+<pre>
+<code>
+   var f = document.fm.food;
+   window.alert(f.options[f.selectedIndex].text);
+</code>
+</pre>
+<p>
+また、リストボックスの選択値を取得したい場合にも、options プロぱ低lを用いた記法は有効です。
+value プロパティでもリストボックスの選択値を取得できますが、リストボックスは「先頭の」
+選択値のみを返すので、全ての選択値を取得したい場合には以下のように記述する必要があります。
+</p>
+<pre>
+<code>
+    &lt;!DOCTYPE html&gt;
+
+    &lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+    &lt;head&gt;
+        &lt;meta charset="utf-8" /&gt;
+        &lt;title&gt;p233&lt;/title&gt;
+        &lt;script type="text/javascript"&gt;
+            &lt;!--
+            function getList(elem) {
+                var result = '';
+                // 配列を順番に走査し、選択状態を確認
+                for (var i = 0; i &lt; elem.options.length; i++) {
+                    /* 選択状態にあるものが見つかったら、
+                    result にその値を追加
+                    */
+                    if (elem.options[i].selected) {
+                        result += elem.options[i].value + ',';
+                    }
+                }
+                return result;
+            }
+
+            function show() {
+                window.alert(getList(document.fm.food));
+                return false;
+            }
+            //--&gt;
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;form name="fm" onsubmit="return show()"&gt;
+            一番好きな食べ物は？：
+            &lt;select name ="food" multiple="multiple" size="4"&gt;
+                &lt;option value="ラーメン"&gt;ラーメン&lt;/option&gt;
+                &lt;option value="餃子"&gt;餃子&lt;/option&gt;
+                &lt;option value="焼き肉"&gt;焼き肉&lt;/option&gt;
+                &lt;option value="蕎麦"&gt;蕎麦&lt;/option&gt;
+                &lt;option value="ピザ"&gt;ピザ&lt;/option&gt;
+                &lt;option value="うどん"&gt;うどん&lt;/option&gt;
+            &lt;/select&gt;
+            &lt;input type="submit" value="送信" /&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+</code>
+</pre>
+<h3>
+<a name="SEC15">フォーム全体を操作するには</a>
+</h3>
+<p>
+Form オブジェクトには、その他にもフォームそのものを操作する為に以下のプロパティ／メソッドが
+用意されています。
+</p>
+<table border="1">
+<caption>
+Form オブジェクトの主なメンバ（＊は読みとり専用)
+</caption>
+<tr>
+<th>メンバ</th>
+<th>概要</th>
+</tr>
+<tr>
+<td>＊name</td>
+<td>フォームの名前</td>
+</tr>
+<tr>
+<td>method</td>
+<td>送信方法（GET／POST）</td>
+</tr>
+<tr>
+<td>cnctype</td>
+<td>エンコーディング方法</td>
+</tr>
+<tr>
+<td>scrollIntoView(flag)</td>
+<td>
+フォームが表示されるよう、コンテンツをスクロール
+（引数 flag が true の場合はフォーム上端をウィンドウ上端に、
+false の場合はフォーム下端をウィンドウ下端に合わせる）
+</td>
+<tr>
+<td>submit()</td>
+<td>フォームの内容をサブミット</td>
+</tr>
+<tr>
+<td>reset()</td>
+<td>フォームの内容を初期化</td>
+</tr>
+<tr>
+<td>メンバ</td>
+<td>概要</td>
+</tr>
+</table>
+<h2><a name="SEC16">6-5 
+表示ページのアドレス情報を取得／操作する - Location オブジェクト -</a>
+</h2>
+<p>
+たとえば、ボタンをクリックして、別ページに移動したり、現在のページをリロードしたいという
+状況でよく利用される location オブジェクト。
+</p>
+<table border="1">
+<caption>
+location オブジェクトの主なプロパティ／メソッド（＊は読み取り専用）
+戻り値の例は、現在の URL が http://www.wings.msn.to:8080/js/sample.html#gihyo?id=12345 の場合
+</caption>
+<tr>
+<th>メンバ</th><th>概要</th><th>戻り値の例</th>
+</tr>
+<tr>
+<td>hash</td>
+<td>アンカー名（# ～）</td>
+<td>#gihyo?id=12345</td>
+</tr>
+<tr>
+<td>host</td>
+<td>ホスト（ホスト名＋ポート番号。80 の場合はポート番号は省略）</td>
+<td>www.wings.msn.to:8080</td>
+</tr>
+<tr>
+<td>hostName</td>
+<td>ホスト名</td>
+<td>www.wings.msn.to</td>
+</tr>
+<tr>
+<td>href</td>
+<td>リンク先</td>
+<td>http://www.wings.msn.to:8080/js/sample.html#gihyo?id=12345</td>
+</tr>
+<tr>
+<td>＊pathname</td>
+<td>パス名（# ～）</td>
+<td>js/sample.html</td>
+</tr>
+<tr>
+<td>＊port</td>
+<td>ポート番号</td>
+<td>8080</td>
+</tr>
+<tr>
+<td>＊protocol</td>
+<td>プロトコル名</td>
+<td>http:</td>
+</tr>
+<tr>
+<td>search</td>
+<td>クエリ情報</td>
+<td>?id=12345</td>
+</tr>
+<tr>
+<td>reload()</td>
+<td>現在のページを再読み込み</td>
+<td>-</td>
+</tr>
+<tr>
+<td>replace(url)</td>
+<td>指定ページに移動</td>
+<td>-</td>
+</tr>
+</table>
+<h3>
+<a name="SEC17">現在のページを移動する - href プロパティ -</a>
+</h3>
+<p>
+location オブジェクト利用の典型的な用途は、JavaScript からページ移動を制御すること。
+ページを移動するには、href プロパティに移動先の URL をセットするだけです。
+</p>
+<pre>
+<code>
+    &lt;!DOCTYPE html&gt;
+
+    &lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+    &lt;head&gt;
+        &lt;meta charset="utf-8" /&gt;
+        &lt;title&gt;p236&lt;/title&gt;
+        &lt;script type="text/javascript"&gt;
+            &lt;!--
+            // 選択ボックスが変更されたタイミングで実行
+            function jump(elem) {
+                var isbn = elem.value;
+                // 取得した値をもとにリンク先 URL を生成
+                window.location.href = 
+                   'http://www.wings.msn.to/index.php/-/A-03/' + isbn;
+                
+            }
+            //--&gt;
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;form name="fm"&gt;
+            &lt;select name ="book" onchange="jump(this)"&gt;
+                &lt;option value=""&gt;
+                   ---書籍名を選択して下さい---
+                &lt;/option&gt;
+                &lt;option value="978-4-7741-4223-4"&gt;
+                   Apacheポケットリファレンス
+                &lt;/option&gt;
+                &lt;option value="978-4-7741-4076-6"&gt;
+                   3ステップでしっかり学ぶMySQL入門
+                &lt;/option&gt;
+                &lt;option value="978-4-8222-9423-6"&gt;
+		   プログラムを作ろう！Microsoft Visual C++ 2010 入門
+		&lt;/option&gt;
+                &lt;option value="978-4-8443-2865-0"&gt;
+                   PerlフレームワークCatalyst完全入門
+                &lt;/option&gt;
+                &lt;option value="978-4-7981-2151-2"&gt;
+                   独習PHP 第2版
+                &lt;/option&gt;                
+            &lt;/select&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+</code>
+</pre>
+<h3>
+<a name="SEC18">ページ移動の履歴を残さないようにする replace メソッド</a>
+</h3>
+<p>
+ブラウザの戻るボタンで前のページに戻れる履歴を残したくない場合、 replace メソッドを使います。
+</p>
+<pre>
+<code>
+   window.location.replace('http://www.wings.msn.to/index.php/-/A-03/' + isbn);
+</code>
+</pre>
+<h3>
+<a name="SEC19">クエリ情報を取得する</a>
+</h3>
+<p>
+form method="POST" で送信するポストデータが、まとまった情報を送信するのに適しているのに
+対して、ちょっとしたキー情報を受け渡しするのに向いているのがクエリ情報です。
+URL の末尾「?～」以降に付加された簡易なデータのことです。「キー名=値」で記述します。
+</p>
+<p>
+JavaScript では Search プロパティを利用することで、クエリ情報を取得することができます。
+ただし、search プロパティの戻り値は以下のような単なる文字列です。
+</p>
+<pre>
+<code>
+   ?id=12345&category=script…
+</code>
+</pre>
+<p>
+キー／値の形式に分解するには、自分でちょっとしたコードを書き加える必要があります。
+</p>
+<pre>
+<code>
+    &lt;!DOCTYPE html&gt;
+
+    &lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+    &lt;head&gt;
+        &lt;meta charset="utf-8" /&gt;
+        &lt;title&gt;p238&lt;/title&gt;
+        &lt;script type="text/javascript"&gt;
+            &lt;!--
+            //選択ボックスが変更されたタイミングで実行
+	    /*
+	    '$'で始まるこの妙な関数名はたぶん実際のライブラリの関数名なの
+            だと思われる。 function qqq() であっても動作する
+            */
+            function $q() {
+                // 解決済みのクエリ情報を格納するための連想配列を用意
+                var result = {};
+
+                // クエリ情報の２文字目以降（つまり、「?」を除く部分）を抽出
+                var str = location.search.substring(1);
+
+                // 「&」で分割し、「キー名=値」という文字列を順に取得
+                var params = str.split('&');
+
+                for (var i = 0; i &lt; params.length; i++) {
+                    // 「キー名=値」を「=」で分割し、キーと値を取得
+                    var kv = params[i].split('=');
+
+                    // 値はエンコードされている可能性があるので、あらかじめデコード
+                    result[kv[0]] = decodeURIComponent(kv[1]);// ビルトイン関数
+                }
+                // できあがった連想配列を戻り値として返す
+                return result;
+            }
+            var q = $q();
+            for (var el in q) {
+                document.write(el + ':' + q[el] + '&lt;br /&gt;');
+            }
+
+            // p238.html 先ずページにアクセスしてから
+            // p238.html?id=12345&hoge=pugya にアクセスすると⇒
+            /*
+            id:12345
+            hoge:pugya
+            */
+        
+            //--&gt;
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;/html&gt;
+</code>
+</pre>
+<!-- ☜ -->
+<a href="js6.htm">☜☜前へ</a>　<a href="js8.htm">次へ☞☞ 
+</a></p>
+</body>
+</html>	

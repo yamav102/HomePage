@@ -1,0 +1,729 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="ja">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=shift_jis">
+<meta http-equiv="content-style-type" content="text/css">
+<meta http-equiv="content-script-type" content="text/javascript">
+<meta name="keywords" content="EXCELVBA,HTML雛型,">
+<meta name="description" content="仕事で楽できるツール集">
+<link rel="stylesheet" href="./web/stylexlvba.css" type="text/css">
+<link rev="made" href="mailto:xatsushi&#64;tbb.t-com.ne.jp">
+<link rel="next" href="tsugi.htm">
+<title>Excel VBA Sample</title>
+<style type="text/css">
+<!--
+.clyoko{display:inline;
+}body{
+	background-color:#eee;
+}pre{
+	padding:.7em;
+	margin:0% 5% 0% 5%;
+	background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAYAAACEhIafAAAAEElEQVQImWP4////fwYsBAD5HxPtUUiuKwAAAABJRU5ErkJggg==");	
+
+	background-color:white;
+}hr{
+	border-style:solid;
+	border-width:100%;
+	
+}
+-->
+</style>
+</head>
+<body>
+<div id="contents">
+<ul>
+<li class="clyoko"><a href="../">&gt;home</li>
+<li class="clyoko"><a href="./excel_vba1.htm">1</a></li>
+<li class="clyoko"><a href="./excel_vba2.htm">2</a></li>
+<li class="clyoko"><a href="./excel_vba3.htm">3</a></li>
+<li class="clyoko"><a href="./excel_vba4.htm">4</a></li>
+<li class="clyoko"><a href="./excel_vba5.htm">5</a></li>
+<li class="clyoko"><a href="./excel_vba6.htm">6</a></li>
+<li class="clyoko"><a href="./excel_vba7.htm">7</a></li>
+<li class="clyoko"><a href="./excel_vba8.htm">8</a></li>
+<li class="clyoko"><a href="./excel_vba9.htm">9</a></li>
+<li class="clyoko"><a href="./excel_vba10.htm">10</a></li>
+</ul>
+<h1>Excel VBA Sample 4</h1>
+<pre>
+Sub Get_Permutation()順列の組み合わせを求める
+Dim R As Range
+Dim myS() As Variant
+Dim myAry
+Dim lngRw As Long
+Set R = Sheet3.Columns(1)
+lngRw = 1
+myAry = Array("a", "b", "c", "d", "e", "f", "g", "h")
+ReDim myS(UBound(myAry))
+For i = LBound(myAry) To UBound(myAry)
+    myS(0) = myAry(i)
+    For ii = LBound(myAry) To UBound(myAry)
+        If InStr(myS(0), myAry(ii)) = 0 Then
+            myS(1) = myS(0) & myAry(ii)
+            For iii = LBound(myAry) To UBound(myAry)
+                If InStr(myS(1), myAry(iii)) = 0 Then
+                    myS(2) = myS(1) & myAry(iii)
+                    For iiii = LBound(myAry) To UBound(myAry)
+                        If InStr(myS(2), myAry(iiii)) = 0 Then
+                            myS(3) = myS(2) & myAry(iiii)
+                            For iiiii = LBound(myAry) To UBound(myAry)
+                                If InStr(myS(3), myAry(iiiii)) = 0 Then
+                                    myS(4) = myS(3) & myAry(iiiii)
+                                    For iiiiii = LBound(myAry) To UBound(myAry)
+                                        If InStr(myS(4), myAry(iiiiii)) = 0 Then
+                                            myS(5) = myS(4) & myAry(iiiiii)
+                                            For iiiiiii = LBound(myAry) To UBound(myAry)
+                                                If InStr(myS(5), myAry(iiiiiii)) = 0 Then
+                                                    myS(6) = myS(5) & myAry(iiiiiii)
+                                                    For iiiiiiii = LBound(myAry) To UBound(myAry)
+                                                        If InStr(myS(6), myAry(iiiiiiii)) = 0 Then
+                                                            myS(7) = myS(6) & myAry(iiiiiiii)
+                                                            R.Cells(lngRw).Value = myS(UBound(myAry))
+                                                            lngRw = lngRw + 1
+                                                        End If
+                                                    Next iiiiiiii
+                                                End If
+                                            Next iiiiiii
+                                        End If
+                                    Next iiiiii
+                                End If
+                            Next iiiii
+                        End If
+                    Next iiii
+                End If
+            Next iii
+        End If
+    Next ii
+Next i
+End Sub
+-----------------ここまで
+Sub html自動生成()
+    With Sheet1
+        Set R = .Range("a1:a" & .Range("a1").End(xlDown).Row)
+        For Each rw In R
+            myvalue = rw.Value
+            make_HTM myvalue, rw.Row
+        Next rw
+    End With
+End Sub
+Sub make_HTM(ByVal S As String, Num As Long)
+    ss = "<html><p>" & S & "</p></html>"
+    Sheet2.Cells(1).Value = ss
+    Sheet2.Copy
+    Application.DisplayAlerts = False
+    Set myhtm = ActiveWorkbook
+    If Dir("c:\test", vbDirectory) = "" Then
+        MkDir ("c:\test")
+    End If
+    sfname = "c:\test\" & Num & ".txt"
+    myhtm.SaveAs Filename:=sfname, FileFormat _
+        :=xlUnicodeText, CreateBackup:=False
+    myhtm.Close
+    Name sfname As "c:\test\" & Num & ".html"
+    Application.DisplayAlerts = True
+End Sub'－－－－－－－－－－－－－－－－ここまで
+^^^^^^^^^^^^^^^^^^^^^^^^^waitしないWEBの貼り付け
+Dim ie As Object
+Const hoge  As Long = 12
+Const hebo As Long = 17
+Const boke As Long = 0
+'Const OLECMDID_COPY = 12&
+'Const OLECMDID_SELECTALL = 17&
+'Const OLECMDEXECOPT_DODEFAULT = 0&
+Sub test()
+    Set ie = CreateObject("internetexplorer.application")
+    'ie起動	
+    With ie	
+        .navigate "http://www2.moug.net/bbs/exvba/thread000001.htm"	
+        '.Visible = True	
+        While .busy = True And _	
+         ie.ReadyState <> READYSTATE_COMPLETE	
+            DoEvents	
+        Wend	
+        	
+    End With	
+    ie.ExecWB hebo, boke	
+    ie.ExecWB hoge, boke	
+    Worksheets(1).[a1].PasteSpecial	
+    ie.Quit	
+    Set ie = Nothing	
+    Set Obj1 = Nothing	
+    MsgBox "done"	
+    Exit Sub	
+End Sub	
+2進数から16進・8進数変換	
+Function BinToHex(ByVal StrBin As String) As String	
+'	
+'********* 引数　StrBin ２進数文字列	
+'********* 返値 １６進数文字列	
+	
+	
+num = 0: f = ""	
+Length = Len(StrBin)	
+	
+For n = 0 To Length - 1	
+f = Mid$(StrBin, Length - n, 1)	
+If f = "1" Then num = num + 2 ^ n '　<==ここがミソ	
+Next n
+
+BinToHex = Hex$(num)
+'bintooct = Oct$(num)'8進数
+'Debug.Print num'十進数
+End Function
+
+Sub Temp()'コマンドバーの名前・日本語名・コントロール名・ＩＤ一覧の作成
+     Dim cbr As Office.CommandBar
+     Dim ctl As Office.CommandBarControl
+     Dim CNT As Long
+     Let CNT = 2
+     Let Application.ScreenUpdating = False
+     For Each cbr In Application.CommandBars
+         For Each ctl In cbr.Controls
+             With Worksheets("Sheet2")
+                 .Cells(CNT, 1).Value = cbr.Name
+                 .Cells(CNT, 2).Value = cbr.NameLocal
+                 .Cells(CNT, 3).Value = ctl.Caption
+                 .Cells(CNT, 4).Value = ctl.ID
+             End With
+             Let CNT = CNT + 1
+         Next
+     Next
+     Let Application.ScreenUpdating = True
+End Sub
+
+Sub エクセルからアクセスにCSVファイルを指定して読み込ませる()
+    Dim appAC As Object
+    Dim myDir As String
+    Dim myDBpth As String
+    Dim i As Long
+    Dim strCSV As String
+    myDir = ThisWorkbook.Path
+    i = 0
+    strCSV = Application. _
+        GetOpenFilename( _
+        filefilter:="CSVファイル(*.csv),*.csv", _
+        Title:="CSVファイルの選択")
+    If StrConv(strCSV, vbUpperCase) = "FALSE" Then
+        Exit Sub
+    End If
+    Do Until _
+        Len(Dir(myDir _
+        & "\Temp(" & i & ")", _
+        vbDirectory)) = 0
+        i = i + 1
+    Loop
+    myDir = myDir & "\Temp(" & i & ")"
+    MkDir myDir
+    Set appAC = CreateObject("access.application.9")
+    appAC.NewCurrentDatabase filepath:=myDir & "\test.mdb"
+    appAC.DoCmd.TransferText acImportDelim, "", _
+    "test", strCSV
+    Set appAC = Nothing
+End Sub
+
+Sub フォルダーを指定してエクセルファイルに読み取りパスワードを掛ける()
+    Dim i As Long, j As Long
+    Dim fPath As String
+    Dim vPW As Variant
+    Dim vPW2 As Variant
+    Dim mBk As Workbook, mSh As Worksheet
+    Dim objShell As Object, objFolder As Object
+    Dim FS As FileSearch
+    j = 0
+    Set objShell = CreateObject("Shell.Application")
+    Set objFolder = objShell.BrowseForFolder(0, "フォルダを選ぶ", 0, "c:\\")
+    If objFolder Is Nothing Then Exit Sub
+    fPath = objFolder.Items().Item().Path
+    Set FS = Application.FileSearch
+    With FS
+        .LookIn = fPath
+        .Filename = "*.xls"
+        .Execute
+        If .FoundFiles.Count = 0 Then
+            MsgBox "対象ファイルはありません"
+            Exit Sub
+        End If
+    vPW = InputBox("設定するパスワードを入力してください")
+    vPW2 = InputBox("確認の為もう一度入力してください")
+    If vPW <> vPW2 Then
+        MsgBox "パスワードが一致しません"
+        Exit Sub
+    Else
+        For i = 1 To Len(vPW)
+            If Asc(Mid(vPW, i, 1)) < 48 Or Asc(Mid(vPW, i, 1)) > 122 Then
+                MsgBox _
+                "パスワードの中に日本語Windows版以外のExcelでは使用できない文字が含まれています。パスワードをこのまま使用します。パスワードには、" _
+                & "英数字(a-z、0-9)と(!、@、#、$、%、^、&、*、(、)、+、=、)を使用してください。", vbOKCancel + vbExclamation
+            End If
+        Next i
+    
+    End If
+        With Application
+            .ScreenUpdating = False
+            .ShowWindowsInTaskbar = False
+            .DisplayAlerts = False
+        End With
+        For i = 1 To .FoundFiles.Count
+add_PW:
+        
+            On Error GoTo ERR_cnt
+            Set mBk = Workbooks.Open _
+                (Filename:=.FoundFiles(i), _
+                IgnoreReadOnlyrecommended:=True, Notify:=False)
+            With mBk
+                .SaveAs FS.FoundFiles(i), , vPW
+                .Close
+            End With
+        Next i
+        With Application
+            .ScreenUpdating = True
+            .ShowWindowsInTaskbar = True
+            .DisplayAlerts = True
+        End With
+    End With
+    If j > 0 Then
+        MsgBox j & "　個のファイルにパスワードを設定できませんでした"
+    End If
+    MsgBox FS.FoundFiles.Count - j _
+        & "個のファイルにパスワード [" & vPW & "] を設定しました"
+    Exit Sub
+ERR_cnt:
+    i = i + 1
+    j = j + 1
+    On Error GoTo 0
+    Resume add_PW
+End Sub
+Sub 表示形式設定()'日付を漢数字で表示
+' マクロ記録日 : 2005/7/8  ユーザー名 : 彦
+    Selection.NumberFormatLocal = "[DBNum1]ggge""年""m""月""d""日"""
+    Selection.FormulaR1C1 = "7/8/2005"
+End Sub
+
+Sub ドライブとファイルの存在の有無()
+'ScriptingRuntimeに参照設定
+    Dim FSO As New FileSystemObject
+    Dim FilePaht As String
+    filepath = ThisWorkbook.FullName 'フルパス
+    MsgBox FSO.FileExists(filepath)
+    MsgBox FSO.DriveExists("s:")
+    MsgBox FSO.DriveExists("\\J:")
+End Sub
+
+Sub ブックを開かずにデータを回収する()'開くよりも15倍程度の速度アップ
+    Dim myFso As FileSearch
+    Dim strPth As String
+    Dim i As Long
+    Dim lngCol As Long
+    Dim time1 As Single, time2 As Single
+    Dim cnt As Long
+    Set myfs = Application.FileSearch
+    Application.ScreenUpdating = False
+    time1 = Timer()
+    With myfs
+        .LookIn = "c:\"
+        .Filename = "*.xls"
+        .Execute
+        For i = 1 To .FoundFiles.Count
+            strPth = CStr(.FoundFiles(i))
+            For lngCol = 1 To 10
+                Sheet1.Cells(i, lngCol).Formula = _
+                 "='" & Left(strPth, InStrRev(strPth, "\")) _
+                 & "[" & Right( _
+                 strPth, Len(strPth) - InStrRev( _
+                 strPth, "\")) _
+                 & "]Sheet1'!" & Chr(96 + lngCol) & "2"
+            Next lngCol
+            With Sheet1
+                With .Range(.Cells(i, 1), .Cells(i, 10))
+                    .Value = .Value
+                End With
+            End With
+            cnt = cnt + 1
+        Next i
+    End With
+    Set myfs = Nothing
+    Application.ScreenUpdating = True
+    time2 = Timer()
+    Debug.Print time2 - time1; cnt & " ファイル"
+End Sub
+Sub DAOでファイルを開いてシート名を取得()
+    '参照設定 Microsoft DAO 3.6 Object Library
+    Dim DB As DAO.Database
+    Dim Tbl As DAO.TableDef
+    Dim myFile As String
+    myFile = ThisWorkbook.Path & "\book1.xls"
+    Set DB = OpenDatabase(myFile, True, True, "Excel 8.0;")
+    For Each Tbl In DB.TableDefs
+        Debug.Print Tbl.Name
+    Next
+    DB.Close
+    Set DB = Nothing
+End Sub
+FileSearchを使用しないファイルの検索とデータの回収
+速度はFIleSearchと互角
+'【要参照】「Microsoft Scripting Runtime」
+
+'呼び出し用
+Sub CallFilePathList1()
+    Dim objFSO          As FileSystemObject
+    Dim strTargetPath   As String           '対象フォルダパス
+  
+    Set objFSO = New FileSystemObject
+    strTargetPath = "C:\"
+    Call EnumFilePathList1(objFSO.GetFolder(strTargetPath))
+End Sub
+
+'本体
+Sub EnumFilePathList1(objFolder As Folder)
+    Dim objTargetFile   As File
+    Dim objSubFolder    As Folder
+    Dim Cnt             As Long
+    Dim time1 As Single, time2 As Single
+    Dim i               As Long
+    Dim lngCol          As Long
+    Dim strPth          As String
+    Application.ScreenUpdating = False
+    i = 1
+    time1 = Timer()
+    '='c:\[book1.xls]sheet1'!a1
+    For Each objTargetFile In objFolder.Files
+        If StrConv( _
+            Right(objTargetFile.Name, 3 _
+            ), vbLowerCase) = "xls" Then
+            strPth = objTargetFile.Path
+            With Sheet1
+                For lngCol = 1 To 10
+                    .Cells(i, lngCol).Formula = _
+                    "='" & Left$(strPth, InStr(1, strPth, "\")) _
+                    & "[" & Right$(strPth, _
+                        Len(strPth) - InStrRev(strPth, "\")) _
+                    & "]sheet1'!" & Chr$(64 + lngCol) & "2"
+                Next lngCol
+                With .Range(.Cells(i, 1), .Cells(i, 10))
+                    .Value = .Value
+                End With
+            End With
+            i = i + 1
+            Cnt = Cnt + 1
+        End If
+    Next objTargetFile
+    time2 = Timer() - time1
+    Debug.Print Cnt & " files"; time2
+    Application.ScreenUpdating = True
+End Sub
+Sub CallGetFolderName()'特定のフォルダの検索１
+    Dim objFSO              As New FileSystemObject
+    Dim strTargetFldrPath   As String
+    time1 = Timer()
+    strTargetFldrPath = "c:\"
+    Call GetFavoritPth(objFSO.GetFolder(strTargetFldrPath))
+End Sub
+'本体
+Sub GetFavoritPth(myDir As Folder)
+    Dim objFldr As Folder
+    Dim objSubFolder As Folder
+    For Each objFldr In myDir.SubFolders
+        If objFldr.Name = "Favorites" Then
+            Debug.Print objFldr.Path
+            Debug.Print Timer() - time1
+            End
+        End If
+    Next objFldr
+    
+    'サブフォルダを検索
+    For Each objSubFolder In myDir.SubFolders
+        Call GetFavoritPth(objSubFolder)
+    Next objSubFolder
+    
+End Sub
+
+Sub 特定のフォルダの検索２()
+Dim time1 As Single
+Debug.Print _
+    CreateObject("wscript.shell").specialfolders("Favorites")
+End Sub
+Sub CallGetFilename()'FileSearchを使わないファイルの検索
+    Dim objFSO  As New FileSystemObject
+    Dim strTargetFilePath As String
+    Application.ScreenUpdating = False
+    strTargetFilePath = "c:\"
+    With Sheet2
+        .Cells(1).CurrentRegion.Clear
+        .Cells(1).Value = "File List"
+    End With
+    Call GetFileName(objFSO.GetFolder(strTargetFilePath))
+    Application.ScreenUpdating = True
+    MsgBox "done"
+End Sub
+Sub GetFileName(ByVal myDir As Folder)
+    Dim objFile As File
+    Dim objSubFldr As Folder
+    Dim i As Long
+    For Each objFile In myDir.Files
+        If StrConv(Right(objFile.Name, 4), vbUpperCase) _
+            = ".XLS" Then
+            With Sheet2
+                .Range( _
+                "a" & .Rows.Count _
+                ).End(xlUp).Offset(1).Value _
+                = objFile.Path
+            End With
+        End If
+    Next objFile
+    'サブフォルダを検索
+    For Each objSubFldr In myDir.SubFolders
+        Call GetFileName(objSubFldr)
+    Next objSubFldr
+End Sub
+ 【要参照】「Windows Scripting Host Object Model」'Command Promptを利用するファイル検索
+Sub EnumFilePath(ByRef strTargetPath As String)
+    Dim objWSHShell     As IWshRuntimeLibrary.WshShell
+    Dim colProcessEnv   As IWshRuntimeLibrary.WshEnvironment
+    Dim objFSO          As IWshRuntimeLibrary.FileSystemObject
+    Dim objRedirectFile As IWshRuntimeLibrary.File
+    Dim objRedirectTXT  As IWshRuntimeLibrary.TextStream
+    Dim strRedirectPath As String
+    Dim strComPrmptPath As String
+    Dim strCommand      As String
+    Dim lngReturn       As Long
+    Dim varFileList     As Variant
+    Dim varFilePath     As Variant
+  
+    Set objWSHShell = New IWshRuntimeLibrary.WshShell
+    Set objFSO = New IWshRuntimeLibrary.FileSystemObject
+    
+    ' 一時的に作成する Redirect File Path 生成
+    With objFSO
+        strRedirectPath = _
+            .GetSpecialFolder(TemporaryFolder) & "\" & .GetTempName
+    End With
+    
+    ' Command Prompt の Path 取得
+    Set colProcessEnv = objWSHShell.Environment("Process")
+    strComPrmptPath = colProcessEnv.Item("COMSPEC")
+    Set colProcessEnv = Nothing
+    
+    ' Command を生成
+    
+    strCommand = strComPrmptPath & " /C DIR """ & strTargetPath _
+        & """ /A-D /B /S > """ & strRedirectPath & """"
+     
+    ' Command の実行
+    lngReturn = objWSHShell.Run(strCommand, 7, True)
+    Set objWSHShell = Nothing
+    
+    ' 出力した Text 内容取り出し
+    If lngReturn = 0 Then
+        Set objRedirectFile = objFSO.GetFile(strRedirectPath)
+        Set objRedirectTXT = _
+            objRedirectFile.OpenAsTextStream(ForReading)
+    
+        varFileList = Split(objRedirectTXT.ReadAll, vbCrLf)
+    
+        For Each varFilePath In varFileList
+            'Debug.Print varFilePath
+            With Sheet3
+            .Range("a" & .Rows.Count) _
+             .End(xlUp).Offset(1).Value = varFilePath
+            End With
+        Next varFilePath
+    
+        objRedirectTXT.Close
+        objRedirectFile.Delete
+    
+        Set objRedirectTXT = Nothing
+        Set objRedirectFile = Nothing
+    End If
+    Set objFSO = Nothing
+End Sub
+Sub test()'ブラウザを起動させｈｔｍｌデータのみ（画像なしで）取り込む
+
+'※↓参照設定してください
+
+'参照設定　Microsoft HTML Object Library
+'参照設定　Microsoft Forms 2.0 Object Library
+
+    Dim ObjIE As Object
+    Dim myHTML As String
+    Dim myDoc As MSHTML.HTMLDocument
+    Dim myDO As New MSForms.DataObject
+    Dim wb As Workbook
+    
+    Set wb = Application.Workbooks.Add
+    Set ObjIE = CreateObject("InternetExplorer.Application")
+
+    With ObjIE
+        .Visible = True
+        .navigate "http://google.co.jp/"
+        While .Busy Or .ReadyState <> 4
+        Wend
+        Set myDoc = .document
+        myHTML = myDoc.body.innerhtml
+    End With
+    With myDO
+        .SetText myHTML
+        .PutInClipboard
+    End With
+    
+    ActiveSheet.Paste
+    'wb.SaveAs Filename:="D:\test.xls"
+
+    ObjIE.Quit
+    Set ObjIE = Nothing
+    Set myDoc = Nothing
+End Sub
+Sub レジストリを読む()
+'IEバージョンの取得
+MsgBox CreateObject("WScript.Shell"). _
+      RegRead("HKLM\SOFTWARE\Microsoft\Internet Explorer\Version")
+
+End Sub
+Sub ReadCSV()'最速CSV読み込み
+    Dim myPath As String
+    Dim N As Integer
+    Dim D As String
+    Dim myVals As Variant
+    Dim rngDest As Range
+    Dim i As Integer
+    Dim timeS As Date
+    Dim cnt As Long
+    myPath = Application.GetOpenFilename( _
+        "CSVファイル*.csv,*.csv")
+    If VarType(myPath) = vbBoolean Then Exit Sub
+    timeS = Now()
+    N = FreeFile
+    
+    Open myPath For Input As #N
+    Line Input #N, D
+    Close #N
+    
+    myVals = Split(D, ",")
+    
+    Application.ScreenUpdating = False
+    
+    Set rngDest = Sheet1.Range("a1")
+    Open myPath For Input As #N
+    
+    Do Until EOF(N)
+        Line Input #N, D
+        myVals = Split(D, ",")
+        rngDest.Resize(, UBound(myVals) + 1).Value = myVals
+        Set rngDest = rngDest.Offset(1)
+        cnt = cnt + 1
+        Application.StatusBar = cnt & " レコード読み込み中"
+    Loop
+    
+    With Application
+        .ScreenUpdating = True
+        .StatusBar = False
+    End With
+    Debug.Print Format$(Now() - timeS, "hh:mm:ss")
+    Close #N
+    MsgBox "done"
+End Sub
+Private Type BITMAPINFOHEADER'ビットマップの幅高さ深さを取得
+    biSize          As Long
+    biWidth         As Long
+    biHeight        As Long
+    biPlanes        As Integer
+    biBitCount      As Integer
+    biCompression   As Long
+    biSizeImage     As Long
+    biXPelsPerMeter As Long
+    biYPelsPerMeter As Long
+    biClrUsed       As Long
+    biClrImportant  As Long
+End Type
+
+Sub Example1()
+On Error GoTo Err_Handler
+
+    Const SIZEOF_BMFHEADER = 14
+    Const BF_SIG = &H4D42   'BM
+    Dim bmih As BITMAPINFOHEADER
+    Dim strFilePath As String
+    Dim lngFileNum  As Long
+    Dim fOpen       As Boolean
+    Dim fSuccess    As Boolean
+    Dim bfType      As Integer
+
+    strFilePath = "C:\パス\ファイル名.bmp"
+
+    lngFileNum = FreeFile
+    GetAttr strFilePath
+    Open strFilePath For Binary Access Read As #lngFileNum
+    fOpen = True
+    Get #lngFileNum, , bfType
+    If bfType = BF_SIG Then
+        Get #lngFileNum, 1 + SIZEOF_BMFHEADER, bmih
+        If bmih.biSize >= Len(bmih) _
+        And Not EOF(lngFileNum) Then
+            fSuccess = True
+        End If
+    End If
+    Close #lngFileNum
+    fOpen = False
+
+    If fSuccess Then
+      With bmih
+        Debug.Print .biWidth & "x" & Abs(.biHeight) & _
+                    " (" & .biBitCount & "bit)"
+      End With
+    Else
+        Debug.Print "ファイル形式が不明"
+    End If
+
+Exit_Proc:
+    Exit Sub
+Err_Handler:
+    Debug.Print "エラー： " & Err.Description
+    If fOpen Then Close #lngFileNum
+    Resume Exit_Proc
+
+End Sub
+Sub ListModules()'モジュールをリストアップ
+    Dim objComp As VBComponent
+    Dim objCodeMod As CodeModule
+    Dim StartLine As Long
+    Dim ProcName As String
+    Dim lngRow As Long
+    
+    lngRow = 1
+    With ThisWorkbook.VBProject
+        For Each objComp In .VBComponents
+            Cells(lngRow, 1).Value = objComp.Name & _
+                "(" & CompTypeToName(objComp) & ")"
+            Set objCodeMod = .VBComponents(objComp.Name).CodeModule
+            
+            StartLine = objCodeMod.CountOfDeclarationLines + 1
+            Do Until StartLine >= objCodeMod.CountOfLines
+                ProcName = objCodeMod.ProcOfLine(StartLine, _
+                vbext_pk_Proc)
+                StartLine = StartLine + _
+                    objCodeMod.ProcCountLines(ProcName, vbext_pk_Proc)
+                Cells(lngRow, 2).Value = ProcName
+                lngRow = lngRow + 1
+            Loop
+        Next objComp
+    End With
+End Sub
+
+Function CompTypeToName(objComp As VBComponent) As String
+    Select Case objComp.Type
+    Case vbext_ct_ClassModule
+        CompTypeToName = "Class Module"
+    Case vbext_ct_Document
+        CompTypeToName = "Document"
+    Case vbext_ct_MSForm
+        CompTypeToName = "MS Form"
+    Case vbext_ct_StdModule
+        CompTypeToName = "Standard Module"
+    Case Else
+    End Select
+End Function
+</pre>
+<hr>
+<address>yamaV1.02β</address>
+</div>
+</body>
+</html>

@@ -1,0 +1,1374 @@
+﻿<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="keywords" content="java script,html">
+<meta name="author" content="yamaV1.02β">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta name="robots" content="noindex">
+<meta name="description" content="//////////">
+<meta name="reply-to" content="">
+<link rel="shortcutIcon" href="favicon.ico">
+<link rel="start" href="index.htm">
+<link rel="stylesheet" type="text/css" href="leftside1.css">
+
+<title>JavaScript 本格入門　メモ2</title>
+
+  <!-- http://www.mwsoft.jp/programming/javascript/highlight_js.html?style=vs#styles -->
+  <!--http://softwaremaniacs.org/soft/highlight/en/download/-->
+  <!-- stylesの中から好みにあったCSSを選んで、 -->
+  <!-- 1, CSS、JavaScriptファイルを呼び出す -->
+  <!--<link rel="stylesheet" href="../highlight.js/styles/vs.css">-->
+  <!--<script type="text/javascript" src="../highlight.js/highlight.pack.js"></script>-->
+  <!-- 2, onLoad時にinitしてくれる機能を呼び出す -->
+  <!--<script type="text/javascript">hljs.initHighlightingOnLoad();</script>-->
+</head>
+<h1>
+JavaScript 本格入門　メモ2
+</h1>
+<h3><a name="SEC30">ループを途中でスキップ／中断する break／continue 命令</a></h3>
+<pre>
+<code>
+   &lt;!DOCTYPE html&gt;
+
+   &lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+   &lt;head&gt;
+       &lt;meta charset="utf-8" /&gt;
+       &lt;title&gt;p77&lt;/title&gt;
+       &lt;script type="text/javascript"&gt;
+           var result = 0;
+           for (var i = 0; i &lt;= 100; i++) {
+               result += i;
+               if (result &gt; 1000) { break; }
+           }
+           document.writeln('累計値が1000を超えるのは ' + i); //45
+       &lt;/script&gt;
+   &lt;/head&gt;
+   &lt;body&gt;
+
+   &lt;/body&gt;
+   &lt;/html&gt;
+</code>
+</pre>
+<pre>
+<code>
+   var result = 0;
+   for (var i = 0; i &lt; 100; i++) {
+     //2で割り切れる数だけの合計
+     if (i % 2 == 0) { continue; }
+        result += i;
+     }
+   document.writeln('合計 ' + result); // 合計 2500
+</code>
+</pre>
+<h3><a name="SEC31">ネストされたループを一気に脱出する　ラベル構文</a></h3>
+<pre>
+<code>
+   for (var i = 1; i &lt; 10; i++) {
+    for (var j = 1; j &lt; 10; j++) {
+      var k = i * j
+      if (k &gt; 30) { break; }
+        //内側のループのみを脱出
+        document.write(k + '&nbsp;');
+      }
+      document.write('&lt;br /&gt;');
+   }
+
+   /*
+   1 2 3 4 5 6 7 8 9 
+   2 4 6 8 10 12 14 16 18 
+   3 6 9 12 15 18 21 24 27 
+   4 8 12 16 20 24 28 
+   5 10 15 20 25 30 
+   6 12 18 24 30 
+   7 14 21 28 
+   8 16 24 
+   9 18 27 
+   */
+</code>
+</pre>
+<pre>
+<code>
+   <b>kuku:</b>
+   for (var i = 1; i &lt; 10; i++) {
+      for (var j = 1; j &lt; 10; j++) {
+        var k = i * j
+        //入れ子になったループを一気に脱出
+        if (k &gt; 30) { break <b>kuku</b>; }
+          document.write(k + '&nbsp;');
+        }
+       document.write('&lt;br /&gt;');
+   }
+   /*
+   1 2 3 4 5 6 7 8 9 
+   2 4 6 8 10 12 14 16 18 
+   3 6 9 12 15 18 21 24 27 
+   4 8 12 16 20 24 28  
+   */
+</code>
+</pre>
+<p>
+switch の中でループを抜けようとして
+                    break を使っても switch を抜けるという
+                    意味にしかならない ので、ラベル構文を利用しなければ
+ならない。
+</p>
+<pre>
+<code>
+   var i = 1;
+   while(i &lt; 10){
+       document.write(i + '&lt;br /&gt;');
+       switch (i) {
+         case 1:
+         case 2:
+         case 3:
+         case 4:
+             document.write('i は 4以下です&lt;br /&gt;');
+             break;
+         default:
+             document.write('i は 5以上です&lt;br /&gt;');
+             break;
+             /*switch の中でループを抜けようとして
+             break を使っても switch を抜けるという
+             意味にしかならない*/
+             <b>if (i &gt; 4) { break; };</b>
+       }
+       i++;
+   }
+   document.write('i は ' + i);
+   /*
+   1
+   i は 4以下です
+   2
+   i は 4以下です
+   3
+   i は 4以下です
+   4
+   i は 4以下です
+   5
+   i は 5以上です
+   6
+   i は 5以上です
+   7
+   i は 5以上です
+   8
+   i は 5以上です
+   9
+   i は 5以上です
+   i は 10 
+   */
+</code>
+</pre>
+<h2><a name="SEC32">例外処理</a></h2>
+<h3><a name="SEC33">try　…　catch　…　finally構文</a></h3>
+<pre>
+<code>
+   //構文
+   try{
+       例外が発生するかもしれない命令
+   } catch (例外情報を受け取る変数) {
+       例外が発生した時の命令
+   }[finally {
+       例外の有無に関わらず、最終的に実行される命令
+   }]
+</code>
+</pre>
+<p>
+例外情報を受け取る変数はなんでも良いわけではなく、 <dfn>e</dfn> を使う。
+Errorオブジェクトを暗黙に参照している（？）。宣言しないでも使う事ができるし、
+<code>var e;</code> としてもエラーにはならない。
+</p>
+<p>
+try　…　catch　…　finally構文を使わない場合、エラーが発生した時点で
+スクリプトはそこで停止してしまうが、構文を使う事で処理を完了させる事が出来る。
+</p>
+<p>
+try　…　catch　…　finally構文はオーバーヘッドの高い処理であるらしい。
+よって、ループの中で使う事は、出来れば、避ける事が望ましい。
+</p>
+<pre>
+<code>
+   var i = 1;
+   try{
+       i = i * j; // 例外発生
+   } catch (e) {
+       document.writeln(e.message);
+   } finally {
+       document.writeln('&lt;br /&gt;処理は完了しました。');
+   }
+   /*
+   j is not defined　FireFox での表示
+   処理は完了しました。 
+   */
+</code>
+</pre>
+<h3><a name="SEC34">throw 命令</a></h3>
+<p>
+予測できるエラーはこれで対処する。
+</p>
+<pre>
+<code>
+   var x = 'a';   
+   try {       
+       // NaN. 読み：エンエイエン読み：ナン外語：NaN: Not a Number
+       if (isNaN(x)) {
+         throw new Error('数字ではない値を計算しようとしていますお');
+       } 
+       var y = 1 / x;
+   } catch (e) {
+       document.writeln(e.message);
+   }
+   // 数字ではない値を計算しようとしていますお
+</code>
+</pre>
+<p>
+throw させるのは <strong>E</strong>rror であって、<strong>e</strong>rror ではない。
+<strong>e</strong>rror と書いてしまうと、書いてしまった事自体がエラーになるので、
+<strong>e</strong>rror とerror is not defined（FireFox)と表示される。
+しばらく何が起きているのかワケが判らなくなった。
+</p>
+<p>
+javascript では０で除算してもエラーにならない。	
+０除算がエラーにならない言語もあるのだそうで、次のコードは全くエラーにならない。
+</p>
+<pre>
+<code>
+   var x = 0;
+   try {
+       var y = 1 / x;
+   } catch (e) {
+       document.writeln(e.message);
+   } finally {
+       document.writeln('y は、' + y);
+   }
+   // y は、Infinity (∞無限）
+</code>
+</pre>
+<p>
+０除算でエラーを発生させる為には、以下のように自ら
+ Error を throw しておく必要がある。
+</p>
+<pre>
+<code>
+   var x = 0;
+   try {
+       var y = 1 / x;
+       <b>throw new Error('0で除算しようとしました。&lt;br /&gt;');</b>
+   } catch (e) {
+       document.writeln(e.message);
+   } finally {
+       document.writeln('y は、' + y);
+   }
+   /*
+   0で除算しようとしました。
+   y は、Infinity 
+   */
+</code>
+</pre>
+<h2><a name="SEC35">Chapter3　基本データを操作する～組み込みオブジェクト</a></h2>
+<h3><a name="SEC36">Chapter3-1 オブジェクトとは</a></h3>
+<h4><a name="SEC37">静的プロパティ／静的メソッド</a></h4>
+<p>
+オリジナルには手を加えずに、コピー（インスタンス）をとって使い回すのが <dfn>オブジェクト指向</dfn> 
+と呼ぶと、その定義からはみ出すのが、例外的にインスタンスを生成せずに使うのが、
+静的プロパティ／静的メソッド（クラスプロパティ／メソッドとも）。
+インスタンスから呼び出す事は出来ない。
+</p>
+<p>
+JavaScriptで扱うオブジェクトで、Array, Date, String, RegExp, Number, Error 等が、コアな
+組み込みオブジェクト（Built-in Object）である。特別な宣言や定義をしなくても、利用できる。
+<p>
+<p>
+オブジェクトとはすなわちデータ型だが、<a href="js.htm#datatype">基本型</a>では原則 new しないで
+静的プロパティや静的メソッドを利用する。new しても使えるが（有害になる事が多いらしい）原則避ける。
+</p>
+</p>
+<table border="1">
+<caption>
+組み込みオブジェクト
+</caption>
+<tr>
+	<th>オブジェクト</th>
+	<th>概要</th>
+</tr>
+<tr>
+	<td>(Global)</td>
+	<td>JavaScript の基本機能にアクセスするための手段を提供</td>
+</tr>
+<tr>
+	<td>Object</td>
+	<td>すべてのオブジェクトのひな形となる機能を提供</td>
+</tr>
+<tr>
+	<td>Array</td>
+	<td>配列を操作する為の機能を提供</td>
+</tr>
+<tr>
+	<td>String</td>
+	<td>文字列を操作する為の手段を提供</td>
+</tr>
+<tr>
+	<td>Boolean</td>
+	<td>真偽値を操作する為の手段を提供</td>
+</tr>
+<tr>
+	<td>Number(object)</td>
+	<td>数値を操作する為の手段を提供</td>
+</tr>
+<tr>
+	<td>Math</td>
+	<td>数値演算を実行するための手段を提供</td>
+</tr>
+<tr>
+	<td>Date</td>
+	<td>日付けを操作する為の手段を提供</td>
+</tr>
+<tr>
+	<td>RegExp</td>
+	<td>正規表現に関わる機能を提供</td>
+</tr>
+<tr>
+	<td>Error</td>
+	<td>エラー情報を管理</td>
+</tr>
+</table>
+<p>
+組み込みオブジェクトの中でも特に基本型である String, Number, Boolean 
+を <dfn>ラッパーオブジェクト</dfn> と呼ぶ。単なる値にすぎない基本型の
+データを包んで（ラップして）、オブジェクトとしての
+機能を機能を追加するためのオブジェクト。
+</p>
+<pre>
+<code>
+   var str = 'こんにちは！';     
+   /*
+   ラッパーオブジェクトは
+   メソッドを持った型
+   */
+   document.writeln(str.length); // 6
+</code>
+</pre>
+<p>
+<code>var str = new String('こんにちは!');</code> とも書いても動作はするが、
+組み込みオブジェクトに対しては、原則として避けるべきとされる。
+</p>
+<h3><a name="SEC38">Chapter3-2 基本データを扱う為のオブジェクト</a></h3>
+<h4><a name="SEC39">String オブジェクト</a></h4>
+<table border="1">
+<caption>
+String オブジェクトの主なメンバ
+</caption>
+<tr>
+	<th>分類</th>
+	<th>メンバ</th>
+	<th>概要</th>
+</tr>
+<tr>
+	<td rowspan="2">検索</td>
+	<td>indexOf(substr [,start])</td>
+	<td>文字列前方(start+1文字目)から部分文字列substrを検索</td>
+</tr>
+<tr>
+	<td>lastIndexOf(substr [,start])</td>
+	<td>文字列後方（start+1文字目）から部分文字列substrを検索</td>
+</tr>
+<tr>
+	<td rowspan="5">部分文字列</td>
+	<td>charAt(n)</td>
+	<td>n+1番目の文字を抽出</td>
+</tr>
+<tr>
+	<td>slice(start [,end])</td>
+	<td>文字列からstart+1～end文字目を抽出</td>
+</tr>
+<tr>
+	<td>substring(start [,end])</td>
+	<td>文字列からstart+1～end文字目を抽出</td>
+</tr>
+<tr>
+	<td>substr(start [,cnt])</td>
+	<td>文字列からstart+1文字目からcnt文字を抽出</td>
+</tr>
+<tr>
+	<td>split(str [,limit])</td>
+	<td>文字列を分割文字列strで分割し、その結果を配列として取得
+	    （引数limitは最大分割数)
+	</td>
+</tr>
+<tr>
+	<td rowspan="3">正規表現</td>
+	<td>match(reg)</td>
+	<td>正規表現regで文字列を検索、合致した部分文字列を取得</td>
+</tr>
+<tr>
+	<td>replace(reg,rep)</td>
+	<td>正規表現regで文字列を検索、合致した部分を部分文字列repで置換</td>
+</tr>
+<tr>
+	<td>search(reg)</td>
+	<td>正規表現regで文字列を検索、一致する最初の文字位置を取得</td>
+</tr>
+<tr>
+	<td rowspan="2">大文字⇔小文字</td>
+	<td>toLowerCase()</td>
+	<td>小文字に変換</td>
+</tr>
+<tr>
+	<td>toUpperCase()</td>
+	<td>大文字に変換</td>
+</tr>
+<tr>
+	<td rowspan="2">コード変換</td>
+	<td>charCodeAt(n)</td>
+	<td>n-1番目の文字をLatin-1コードに変換</td>
+</tr>
+<tr>
+	<td class="static">fromCharCode(c1,c2,...)</td>
+	<td>静的メソッド。Latin-1コードc1,c2…を文字に変換</td>
+</tr>
+<tr>
+	<td rowspan="4">文字装飾</td>
+	<td>anchor(name)</td>
+	<td>文字列をアンカー化(&lt;a name="name"&gt;を適用)</td>
+</tr>
+<tr>
+	<td>link(url)</td>
+	<td>文字列をリンク化(&lt;a href="url"&gt;を適用)</td>
+</tr>
+<tr>
+	<td>sub()</td>
+	<td>下付きも字にする(&lt;sub&gt;を適用)</td>
+</tr>
+<tr>
+	<td>sup()</td>
+	<td>上付きも字にする(&lt;sup&gt;を適用)</td>
+</tr>
+<tr>
+	<td rowspan="2">その他</td>
+	<td>concat(str)</td>
+	<td>文字列の後方に文字列strを連結</td>
+</tr>
+<tr>
+	<td>length</td>
+	<td>文字列の長さを取得</td>
+</tr>
+</table>
+<pre>
+<code>
+   var str1 = 'にわにはにわにわとりがいる';
+   
+   document.writeln(str1.indexOf('にわ')) 
+   // 0 先頭から検索
+
+   document.writeln('&lt;br /&gt;'+str1.lastIndexOf('にわ')) 
+   // 6 末尾から検索
+
+   document.writeln('&lt;br /&gt;' + str1.indexOf('にわ',2)); 
+   // 4　4文字めから右方向検索
+
+   document.writeln('&lt;br /&gt;' + str1.lastIndexOf('わ', 5));
+   // 5 6文字目から左方向検索
+
+   document.writeln('&lt;br /&gt;' + str1.indexOf('ガーデン'));
+   // -1 不一致
+
+   var str2 = 'Wingsプロジェクト';
+
+   document.writeln('&lt;br /&gt;' + str2.charAt(4));
+   // s 5文字目を抽出
+
+   document.writeln('&lt;br /&gt;' + str2.slice(5, 8));
+   // プロジ 6～8文字目を抽出
+
+   document.writeln('&lt;br /&gt;' + str2.substr(5, 3));
+   // プロジ 6文字目から3文字を抽出
+
+   document.writeln('&lt;br /&gt;' + str2.split('s'));
+   // Wing,プロジェクト
+
+   document.writeln('&lt;br /&gt;' + str1.split('わ', 3));
+   // に,にはに,に (3つに分割)
+
+   document.writeln('&lt;br /&gt;' + str2.link('http://www.wings.msn.to/'));
+   //&lt;a name="top"&gt;トップ&lt;/a&gt;
+   //&lt;a href="http://www.wings.msn.to/"&gt;WIngsプロジェクト&lt;/a&gt;
+
+   document.writeln('&lt;br /&gt;123' + '10'.sub()); 
+   //&lt;sub&gt;10&lt;/sub&gt; 下付き文字
+
+   document.writeln('&lt;br /&gt;2' + '10'.sup());
+   //&lt;sup&gt;10&lt;/sup&gt; 上付き文字
+
+   document.writeln('&lt;br /&gt;' + str2.concat('有限会社'));
+   //Wingsプロジェクト有限会社
+
+   document.writeln('&lt;br /&gt;' + str2.length);
+   //11 日本語も1文字に数える
+</code>
+</pre>
+<h4><a name="SEC40">Number オブジェクト</a></h4>
+<p>
+Numberオブジェクトは、数値型の値を扱う為のラッパーオブジェクト。
+</p>
+<table border="1">
+<caption>
+Number オブジェクトの利用可能なメンバ
+</caption>
+<tr>
+	<th>分類</th>
+	<th>メンバ</th>
+	<th>概要</th>
+</tr>
+<tr>
+	<td rowspan="5">プロパティ</td>
+	<td class="static">MAX_VALUE</td>
+	<td>利用できる最大値</td>
+</tr>
+<tr>
+	<td class="static">MIN_VALUE</td>
+	<td>利用可能な最小値（0 に最も近い値）</td>
+</tr>
+<tr>
+	<td class="static">NaN</td>
+	<td>数値で無い。Not a Number</td>
+</tr>
+<tr>
+	<td class="static">NEGATIVE_INFINITY</td>
+	<td>負の無限大</td>
+</tr>
+<tr>
+	<td class="static">POSITIVE_INFINITY</td>
+	<td>正の無限大</td>
+</tr>
+<tr>
+	<td rowspan="4">メソッド</td>
+	<td>toString(rad)</td>
+	<td>rad 進数の値に変換(rad は２～３６）</td>
+</tr>
+<tr>
+	<td>toExponential(dec)</td>
+	<td>指数形式に変換（dec は小数点以下の桁数）</td>
+</tr>
+<tr>
+	<td>toFixed(dec)</td>
+	<td>小数点第 dec 位で四捨五入</td>
+</tr>
+<tr>
+	<td>toPrecision(dec)</td>
+	<td>指定桁数に変換（桁数が不足する場合は 0 で補う</td>
+</tr>
+</table>
+<pre>
+<code>
+   var num1 = 255;
+   document.writeln(num1.toString(16)); 
+   // ff
+
+   document.writeln(num1.toString(8)); 
+   // 377
+
+   var num2 = 123.45678;
+   document.writeln(num2.toExponential(2)); 
+   // 1.23e+2
+
+   document.writeln(num2.toFixed(3)); 
+   // 123.457
+
+   document.writeln(num2.toPrecision(10)); 
+   // 123.4567800
+
+   document.writeln(num2.toPrecision(6)); 
+   // 123.457全体の桁数であるところがtoFixedと違う
+
+   alert(isNaN(num1));
+   // num1は数字なので false が返る。
+   // NaNプロパティの使いどころが謎
+</code>
+</pre>
+<h4><a name="SEC41">Math オブジェクト</a></h4>
+
+<table border="1">
+<caption>
+Math オブジェクトの主なメンバ（色つきは読みとり専用）
+</caption>
+<tr>
+	<th>分類</th>
+	<th>メンバ</th>
+	<th>概要</th>
+</tr>
+<tr>
+	<td rowspan="5">基本</td>
+	<td>abs(num)</td>
+	<td>絶対値</td>
+</tr>
+<tr>	
+	<td>max(num1, num2)</td>
+	<td>num1、num2 のうち大きい方の値</td>
+</tr>
+<tr>
+	<td>min(num1,num2)</td>
+	<td>小さい方の値</td>
+</tr>
+<tr>
+	<td>pow(base,p)</td>
+	<td>べき乗（値baseのp乗）</td>
+</tr>
+<tr>
+	<td>random()</td>
+	<td>0～1未満の乱数</td>
+</tr>
+<tr>
+	<td rowspan="3">切り上げ／切り捨て</td>
+	<td>ceil(num)</td>
+	<td>小数点以下の切り上げ（num以上の最小の整数）</td>
+</tr>
+<tr>
+	<td>floor(num)</td>
+	<td>小数点以下の切り捨て（num以下の最大の整数）</td>
+</tr>
+<tr>
+	<td>round(num)</td>
+	<td>四捨五入</td>
+</tr>
+
+<tr>
+	<td rowspan="3">平方根</td>
+	<td class="static">SQRT1_2</td>
+	<td>1/2の平方根</td>
+</tr>
+<tr>	
+	<td class="static">SQRT2</td>
+	<td>2 の平方根</td>
+</tr>
+<tr>
+	<td>sqrt(num)</td>
+	<td>平方根</td>
+</tr>
+<tr>
+	<td rowspan="8">三角関数</td>
+	<td class="static">PI</td>
+	<td>円周率</td>
+</tr>
+<tr>
+	<td>cos(num)</td>
+	<td>コサイン</td>
+</tr>
+<tr>
+	<td>sin(num)</td>
+	<td>サイン</td>
+</tr>
+<tr>
+	<td>tan(num)</td>
+	<td>タンジェント</td>
+</tr>
+<tr>
+	<td>acos(num)</td>
+	<td>アークコサイン</td>
+</tr>
+<tr>
+	<td>asin(num)</td>
+	<td>アークサイン</td>
+</tr>
+<tr>
+	<td>atan(num)</td>
+	<td>アークタンジェント</td>
+</tr>
+<tr>
+	<td>atan2(y,x)</td>
+	<td>2変数のアークタンジェント</td>
+</tr>
+<tr>
+	<td rowspan="7">対数／指数関数</td>
+	<td class="static">E</td>
+	<td>自然対数の底</td>
+</tr>
+<tr>
+	<td class="static">LN2</td>
+	<td>2の自然対数</td>
+</tr>
+<tr>
+	<td class="static">LN10</td>
+	<td>10の自然対数</td>
+</tr>
+<tr>
+	<td class="static">LOG2E</td>
+	<td>2を底としたeの対数</td>
+</tr>
+<tr>
+	<td class="static">LOG10E</td>
+	<td>10を底としたeの対数</td>
+</tr>
+<tr>
+	<td>log(num)</td>
+	<td>自然対数</td>
+</tr>
+<tr>
+	<td>exp(num)</td>
+	<td>指数関数(eの累乗)</td>
+</tr>
+</table>
+<pre>
+<code>
+   document.writeln(Math.abs(-15));
+   // 15
+
+   document.writeln(Math.max(10, 15));
+   // 15
+
+   document.writeln(Math.min(-10, 0));
+   // -10
+
+   document.writeln(Math.pow(2, 3));
+   // 8
+
+   document.writeln(Math.random());
+   // 0.09977121768469621 乱数
+
+   document.writeln(Math.ceil(1.58));
+   // 2
+
+   document.writeln(Math.floor(1.58));
+   // 1
+
+   document.writeln(Math.round(1.58));
+   // 2
+
+   document.writeln(Math.SQRT1_2);
+   // 0.7071067811865476
+
+   document.writeln(Math.SQRT2);
+   // 1.414212135623730951
+
+   document.writeln(Math.sqrt(3));
+   // 1.7320508075688772
+
+   document.writeln(Math.PI);
+   // 3.141592653589793
+
+   document.writeln(Math.cos(1));
+   // 0.5403023058681398
+
+   document.writeln(Math.sin(1));
+   // 0.8414709848078965 
+
+   document.writeln(Math.tan(1));
+   // 1.5574077246549023
+
+   document.writeln(Math.acos(1));
+   // 0
+   document.writeln(Math.asin(1));
+   // 1.5707963267948966
+
+   document.writeln(Math.atan(1));
+   // 0.7853981633974483
+
+   document.writeln(Math.atan(1, 1));
+   // 0.7853981633974483
+
+   document.writeln(Math.E);
+   // 2.718281828459045
+
+   document.writeln(Math.LN2);
+   // 0.6931471805599453
+
+   document.writeln(Math.LN10);
+   // 2.302585092994046 
+
+   document.writeln(Math.LOG2E);
+   // 1.4426950408889634
+
+   document.writeln(Math.LOG10E);
+   // 0.4342944819032518
+
+   document.writeln(Math.log(Math.E));
+   // 1
+
+   document.writeln(Math.exp(1));
+   // 2.718281828459045
+</code>
+</pre>
+<p>
+Math オブジェクトが提供するメンバは、全て静的プロパティ／メソッド。
+new 演算子でインスタンス化する事は出来ず、実行時エラーになる。
+</p>
+<h4><a name="SEC42">with 命令</a></h4>
+<pre>
+<code>
+   /*
+   withの使用は修飾されるメソッドが曖昧になりやすい、という理由で
+   嫌う人が多い（らしい）。それとはべつに、ブロック内の処理速度が
+   低下するので使うべきでは無いらしい
+   */
+   with (document) {
+       writeln(Math.abs(-15));
+       writeln(Math.max(10, 15));
+       writeln(Math.min(-10, 0));
+       
+   }
+</code>
+</pre>
+<h4><a name="SEC43">Arrayオブジェクト</a></h4>
+<pre>
+<code>
+   //↓リテラル表現
+   var ary = ['佐藤', '高江', '長田'];
+
+   //↓コンストラクタ経由
+   var ary = new array('佐藤', '高江', '長田');
+   //指定要素で配列を生成
+
+   var ary = new array();
+   //空の配列を生成
+
+   var ary = new array(10);
+   //指定サイズ 0～9のインデックス で空の配列を生成
+</code>
+</pre>
+<p>
+コンストラクタ経由の場合、意味が曖昧になりやすい。
+</p>
+<pre>
+<code>
+   //長さ１０の配列（10という要素を持つ配列ではない）
+   var ary = new Array(10);
+
+   //-10の要素を持つ配列を意図したコードだが、
+   //-10のサイズの配列を生成しようとしてエラーになる。
+   var ary = new Array(-10);
+</code>
+</pre>
+<p>
+配列を生成するには最大限、配列リテラルを利用する。空の配列は、
+以下のように記述する。
+</p>
+<pre>
+<code>
+        var ary = [];
+</code>
+</pre>
+<table border="1">
+<caption>
+Array オブジェクトの利用可能なメンバ
+</caption>
+<tr>
+	<th>分類</th>
+	<th>メンバ</th>
+	<th>概要</th>
+</tr>
+<tr>
+	<td rowspan="4">加工</td>
+	<td>concat(ary)</td>
+	<td>指定配列を現在の配列に連結</td>
+</tr>
+<tr>	
+	<td>join(del)</td>
+	<td>配列内の要素を区切り文字 del で連結</td>
+</tr>
+<tr>
+	<td>slice(start[,end])</td>
+	<td>start～end-1番目の要素の抜き出し</td>
+</tr>
+<tr>
+	<td>splice(start,cnt[,rep[…]])</td>
+	<td>配列内のstart+1～start+cnt+1番目の要素をrep,…で置換え</td>
+</tr>
+<tr>
+	<td rowspan="4">追加／削除</td>
+	<td>pop()</td>
+	<td>配列末尾の要素を取得し、削除</td>
+</tr>
+<tr>
+	<td>push(data)</td>
+	<td>配列末尾に要素を追加</td>
+</tr>
+<tr>
+	<td>shift()</td>
+	<td>配列先頭の要素を取得し、削除</td>
+</tr>
+
+<tr>
+	<td>unshift(data1 [,data2,…])</td>
+	<td>配列先頭に指定要素を追加</td>
+</tr>
+<tr>
+	<td rowspan="2">並べ替え</td>
+	<td>reverse()</td>
+	<td>逆順に並び替え</td>
+</tr>
+<tr>
+	<td>sort([fnc])</td>
+	<td>要素の昇順に並び替え</td>
+</tr>
+<tr>
+	<td rowspan="2">その他</td>
+	<td>length</td>
+	<td>配列のサイズ。挙動として 最大index + 1を返すのであって必ずしも要素数を返すわけではない。 </td>
+</tr>
+<tr>
+	<td>toString()</td>
+	<td>「要素、要素…]の形式で文字列に変換</td>
+</tr>
+</table>
+<pre>
+<code>
+   var ary1 = ['Sato', 'Takae', 'Osada','Hio', 'Saitoh'];
+   var ary2 = ['Yabuki', 'Aoki', 'Moriyama', 'Yamada'];
+   
+   document.writeln(ary1.concat(ary2)+'&lt;br /&gt;');
+   // Sato,Takae,Osada,Hio,Saitoh,Yabuki,Aoki,Moriyama,Yamada
+
+   document.writeln(ary1.join('／') + '&lt;br /&gt;');
+   // Sato／Takae／Osada／Hio／Saitoh
+
+   document.writeln(ary1.slice(1) + '&lt;br /&gt;');
+   // Takae,Osada,Hio,Saitoh
+
+   document.writeln(ary1.slice(1, 2) + '&lt;br /&gt;');
+   // Takae
+
+   document.writeln(ary1.splice(1, 2, 'Kakeya', 'Yamaguchi') + '&lt;br /&gt;');
+   // Takae,Osada←置換え対象の要素を取得
+
+   document.writeln(ary1+'&lt;br /&gt;');
+   // Sato,Kakeya,Yamaguchi,Hio,Saitoh :置き換え後の配列
+
+
+   document.writeln(ary1.pop()+'&lt;br /&gt;');
+   // Saitoh 削除した要素
+
+   document.writeln(ary1 + '&lt;br /&gt;');
+   // Sato,Kakeya,Yamaguchi,Hio 削除後の配列
+
+   document.writeln(ary1.push('Kondo') + '&lt;br /&gt;');
+   // 5 追加後の要素数
+
+   document.writeln(ary1 + '&lt;br /&gt;');
+   // Sato,Kakeya,Yamaguchi,Hio,Kondo:追加後の配列
+
+   document.writeln(ary1.shift() + '&lt;br /&gt;');
+   // Sato 削除した要素
+
+   document.writeln(ary1 + '&lt;br /&gt;');
+   // Kakeya,Yamaguchi,Hio,Kondo 削除後の配列
+
+   document.writeln(ary1.unshift('Ozawa', 'Kuge') + '&lt;br /&gt;');
+   // 6 追加後の要素数　IEではundefined
+
+   document.writeln(ary1 + '&lt;br /&gt;');
+   // Ozawa,Kuge,Kakeya,Yamaguchi,Hio,Kondo 追加後の配列
+
+   document.writeln(ary1.reverse() + '&lt;br /&gt;');
+   // Kondo,Hio,Yamaguchi,Kakeya,Kuge,Ozawa 反転後の配列
+
+   document.writeln(ary1 + '&lt;br /&gt;');
+   // Kondo,Hio,Yamaguchi,Kakeya,Kuge,Ozawa 反転後の配列
+
+   document.writeln(ary1.sort() + '&lt;br /&gt;');
+   // Hio,Kakeya,Kondo,Kuge,Ozawa,Yamaguchi Sort後の配列
+
+   document.writeln(ary1 + '&lt;br /&gt;');
+   // Hio,Kakeya,Kondo,Kuge,Ozawa,Yamaguchi Sort後の配列
+
+
+   document.writeln(ary1.length + '&lt;br /&gt;');
+   // 6
+
+   document.writeln(ary1.toString() + '&lt;br /&gt;');
+   // Hio,Kakeya,Kondo,Kuge,Ozawa,Yamaguchi
+</code>
+</pre>
+<p>Arrayオブジェクトのメソッドを扱う際の留意点</p>
+<ul>
+<li>concat 、join、toString以外はオリジナルを直接変更する。</li>
+<li>配列の中身は toStringメソッドが便利。document.writelnメソッドなど
+表示系のメソッドでは、配列オブジェクトを直接に渡す事で、内部的に toStringメソッドが
+呼び出されるので、toStringメソッドで明示的に呼び出す必要が無い。</li>
+<li>
+sortメソッドでは、引数としてユーザー定義関数を指定できる。（・引数は２つ：
+比較する配列要素、・第一引数が第二引数より小さい場合は負数、大きい場合は整数を返す）
+条件を満たす必要がある。）
+</li>
+</ul>
+<pre>
+<code>
+   var ary = [5, 25, 10];
+   document.writeln(ary.sort()+'&lt;br /&gt;');
+   // 10, 25, 5 文字列としてソート
+
+   document.writeln(ary.sort(
+       function (x, y) { return x - y; }));
+   // 5, 10, 25 数値としてソート
+</code>
+</pre>
+<h4>
+<a name="SEC44">とても奇妙なJavaScriptの配列</a>
+</h4>
+<p>
+JavaScriptの配列はハッシュテーブルである。
+コンストラクタで生成した場合の添え字としての引数は要素数。
+だが、宣言した要素数を越えてもエラーも出さずに設定できるし、
+値の無い要素は for in で廻した際に無視され undefined（未定義）を alert するか、
+document.writelin なら null すら返さない。
+また、配列のキーは数字である必要もなく、数字と解釈できる文字列は
+数字として解釈され、文字列としてのキーは、lengthプロパティ が返す
+数値にはカウントされない。lengthプロパティは、数値で指定されている
+添え字の最大数に１を足した数を返すだけであって、要素数を返しているワケではない。
+</p>
+<p>
+Arrayオブジェクトは、コストラクタで要素数を指定して
+作成する意義を見出す事は難しい。反対に、Arrayオブジェクトの
+length プロパティは値の設定が可能であり、読みとり専用のプロパティではない。
+要素数３の Arrayオブジェクトで <code>ary.length = 1;</code> を設定すれば、
+キーが全て数字だった場合は、配列の要素数が 1 に切り詰められる。
+この場合、キーに文字列が含まれた場合の配列要素は無視される。
+</p>
+<pre>
+<code>
+   var a=new Array();
+   a[0]='A';a['あ']='B';a['い']='C';
+   alert(a.length);//1（最大indxは0）
+</code>
+</pre>
+<pre>
+<code>
+   var a = new Array(3);   
+   a[0]='A';a[1]='B';a[2]='C';
+   for(var i in a){
+      document.writeln(a[i]+'&lt;br /&gt;');
+   }
+   /*
+   A
+   B
+   C
+   */
+   a.length=1;
+   alert(a[0]);//A
+   alert(a[1]);//undefined
+   alert(a[2]);//undefined
+</code>
+</pre>
+<h3><a name="SEC45">Chapter3-3日付／時刻データを操作する -Dateオブジェクト-</a>
+</h3>
+<h4><a name="SEC46">Dateオブジェクトを生成する</a></h4>
+<p>
+標準のデータ型としてdate型は存在しない。date型は組み込みオブジェクトである。
+文字列は配列のようなリテラル表現は無い。ので、必ずコンストラクタ経由で生成する。
+</p>
+<pre>
+<code>
+   // デフォルトのDateオブジェクトを生成。
+   // システムの日付けがセットされています。
+   var d = new Date();
+   document.writeln(d + '&lt;br /&gt;');
+   // Sun Jul 07 2013 12:01:55 GMT+0900
+   
+   // 日付け文字列をもとにDateオブジェクトを生成。
+   var d = new Date('2013/7/7');
+
+   // 年月日／時分秒／ミリ秒形式で生成
+   var d = new Date(2013, 6, 7, 12, 5, 30, 999);
+
+   // 月の指定は、1～12ではなく0～11である事に注意。
+   document.writeln(d + '&lt;br /&gt;');
+   // Sun Jul 07 2013 12:05:30 GMT+0900
+
+   // 1970/01/01 00:00:00からの経過ミリ秒（タイムスタンプ値）で指定する方法
+   var d = new Date(1217862000000);
+</code>
+</pre>
+<table border="1">
+<caption>
+Date オブジェクトのメンバ
+</caption>
+<tr>
+	<th>分類</th>
+	<th>メンバ</th>
+	<th>概要</th>
+</tr>
+<tr>
+	<td rowspan="10">ローカル（取得）</td>
+	<td>getFullYear()</td>
+	<td>年（４桁）</td>
+</tr>
+<tr>	
+	<td>getMonth()</td>
+	<td>月（0～11）</td>
+</tr>
+<tr>
+	<td>getDate()</td>
+	<td>日（1～31）</td>
+</tr>
+<tr>
+	<td>getDay()</td>
+	<td>曜日（0:日曜～6:土曜）</td>
+</tr>
+<tr>
+	<td>getHours()</td>
+	<td>時（0～23）</td>
+</tr>
+<tr>
+	<td>getMinutes()</td>
+	<td>分（0～59）</td>
+</tr>
+<tr>
+	<td>getSeconds()</td>
+	<td>秒（0～59）</td>
+</tr>
+
+<tr>
+	<td>getMilliseconds()</td>
+	<td>ミリ秒（0～999）</td>
+</tr>
+<tr>
+	<td>getTime()</td>
+	<td>1970/01/01 00:00:00からの経過ミリ秒</td>
+</tr>
+<tr>
+	<td>getTimezoneOffset()</td>
+	<td>協定世界時との時差</td>
+</tr>
+<tr>
+	<td rowspan="8">ローカル（設定）</td>
+	<td>setFullYear(y)</td>
+	<td>年（４桁）</td>
+</tr>
+<tr>
+	<td>setMonth(m)</td>
+	<td>月（0～11）</td>
+</tr>
+<tr>
+	<td>setDate(d)</td>
+	<td>日（1～31）</td>
+</tr>
+<tr>
+	<td>setHours(h)</td>
+	<td>時（0～23）</td>
+</tr>
+<tr>
+	<td>setMinutes(m)</td>
+	<td>月（0～59）</td>
+</tr>
+<tr>
+	<td>setSeconds(s)</td>
+	<td>月（0～59）</td>
+</tr>
+<tr>
+	<td>setMillseconds(ms)</td>
+	<td>月（0～999）</td>
+</tr>
+<tr>
+	<td>setTime(ts)</td>
+	<td>1970/01/01 00:00:00からの経過ミリ秒</td>
+</tr>
+<tr>
+	<td rowspan="8">協定時（取得）</td>
+	<td>getUTCFullYear()</td>
+	<td>年（４桁）</td>
+</tr>
+<tr>
+	<td>getUTCMonth()</td>
+	<td>月（0～11）</td>
+</tr>
+<tr>
+	<td>getUTCDate()</td>
+	<td>日（1～31）</td>
+</tr>
+<tr>
+	<td>getUTCDay()</td>
+	<td>曜日（0:日曜～6:土曜）</td>
+</tr>
+<tr>
+	<td>getUTCHours()</td>
+	<td>時（0～23）</td>
+</tr>
+<tr>
+	<td>getUTCMinutes()</td>
+	<td>分（0～59）</td>
+</tr>
+<tr>
+	<td>getUTCSeconds()</td>
+	<td>秒（0～59）</td>
+</tr>
+<tr>
+	<td>getUTCMillseconds()</td>
+	<td>ミリ秒（0～999）</td>
+</tr>
+<tr>
+	<td rowspan="7">協定時（設定）</td>
+	<td>setUTCFullYear(y)</td>
+	<td>年（４桁）</td>
+</tr>
+<tr>
+	<td>setUTCMonth(m)</td>
+	<td>月（0～11）</td>
+</tr>
+<tr>
+	<td>setUTCDate(d)</td>
+	<td>日（1～31）</td>
+</tr>
+<tr>
+	<td>setUTCHours(h)</td>
+	<td>時（0～23）</td>
+</tr>
+<tr>
+	<td>setUTCMinutes(m)</td>
+	<td>分（0～59）</td>
+</tr>
+<tr>
+	<td>setUTCSeconds(s)</td>
+	<td>秒（0～59）</td>
+</tr>
+<tr>
+	<td>setUTCMillseconds(ms)</td>
+	<td>ミリ秒（0～999）</td>
+</tr>
+<tr>
+	<td rowspan="2">解析</td>
+	<td class="static">parse(dat)</td>
+	<td>日付け文字列を解析し、1970/01/01 00:00:00からの経過ミリ秒を取得</td>
+</tr>
+<tr>
+	<td class="static">UTC(y, m, d [,h [,mm[,s[,ms]]]])</td>
+	<td>日付け情報をもとに 1970/01/01 00:00:00からの経過ミリ秒を取得（協定時）</td>
+</tr>
+<tr>
+	<td rowspan="8">文字列変換</td>
+	<td>toGMTString()</td>
+	<td>グリニッジ標準時を文字列として取得</td>
+</tr>
+<tr>
+	<td>toUTCString()</td>
+	<td>世界協定時を文字列として取得</td>
+</tr>
+<tr>
+	<td>toLocaleString()</td>
+	<td>ローカル時を文字列として取得</td>
+</tr>
+<tr>
+	<td>toDateString()</td>
+	<td>日付部分を文字列として取得</td>
+</tr>
+<tr>
+	<td>toTimeString()</td>
+	<td>時刻部分を文字列として取得</td>
+</tr>
+<tr>
+	<td>toLocaleDateString()</td>
+	<td>地域情報に従って、日付部分を文字列として取得</td>
+</tr>
+<tr>
+	<td>toLocaleTimeString()</td>
+	<td>地域情報に従って、時刻部分を文字列として取得</td>
+</tr>
+<tr>
+	<td>toString()</td>
+	<td>日時を文字列として取得</td>
+</tr>
+</table>
+<p>
+協定世界時(Coodinated Universal Time)とは、グリニッジ標準時(Greenwich Mean Time)とほぼ同義。
+協定世界時はうるう秒を加味しているだけグリニッジ標準時とは異なる。
+</p>
+<pre>
+<code>
+   var dat = new Date(2013, 6, 14, 11, 37, 15, 999);
+   document.writeln(dat + '&lt;br /&gt;');
+   // Sun Jul 14 2013 11:37:15 GMT+0900
+
+   document.writeln(dat.getFullYear() + '&lt;br /&gt;');
+   // 2013
+
+   document.writeln(dat.getMonth() + '&lt;br /&gt;');
+   // 6'7月の事だ
+
+   document.writeln(dat.getDate() + '&lt;br /&gt;');
+   // 14
+
+   document.writeln(dat.getDay() + '&lt;br /&gt;');
+   // 0
+
+   document.writeln(dat.getHours() + '&lt;br /&gt;');
+   // 11
+
+   document.writeln(dat.getMinutes() + '&lt;br /&gt;');
+   // 37
+
+   document.writeln(dat.getSeconds() + '&lt;br /&gt;');
+   // 15
+   document.writeln(dat.getMilliseconds() + '&lt;br /&gt;');
+   // 999
+
+   document.writeln(dat.getTime() + '&lt;br /&gt;');
+   // 1373769435999
+
+   document.writeln(dat.getTimezoneOffset() + '&lt;br /&gt;');
+   // -540
+
+   document.writeln(dat.getUTCFullYear() + '&lt;br /&gt;');
+   // 2013
+
+   document.writeln(dat.getUTCMonth() + '&lt;br /&gt;');
+   // 6
+
+   document.writeln(dat.getUTCDate() + '&lt;br /&gt;');
+   // 14
+
+   document.writeln(dat.getUTCDay() + '&lt;br /&gt;');
+   // 0
+
+   document.writeln(dat.getUTCHours() + '&lt;br /&gt;');
+   // 2
+
+   document.writeln(dat.getMinutes() + '&lt;br /&gt;');
+   // 37
+
+   document.writeln(dat.getUTCSeconds() + '&lt;br /&gt;');
+   // 15
+
+   document.writeln(dat.getMilliseconds() + '&lt;br /&gt;');
+   // 999
+   
+
+   var dat2 = new Date();
+   dat2.setFullYear(2013);
+   dat2.setMonth(6);
+   dat2.setDate(14);
+   dat2.setHours(11);
+   dat2.setMinutes(37);
+   dat2.setSeconds(15);
+   dat2.setMilliseconds(513);
+   
+   document.writeln(dat2.toLocaleString() + '&lt;br /&gt;');
+   // 2013年7月14日 11:37:15
+
+   document.writeln(dat2.toGMTString() + '&lt;br /&gt;');
+   // Sun, 14 Jul 2013 02:37:15 GMT
+
+   document.writeln(dat2.toUTCString() + '&lt;br /&gt;');
+   // Sun, 14 Jul 2013 02:37:15 GMT
+
+   document.writeln(dat2.toDateString() + '&lt;br /&gt;');
+   // Sun Jul 14 2013
+
+   document.writeln(dat2.toTimeString() + '&lt;br /&gt;');
+   // 11:37:15 GMT+0900
+
+   document.writeln(dat2.toLocaleDateString() + '&lt;br /&gt;');
+   // 2013年7月14日
+
+   document.writeln(dat2.toLocaleTimeString() + '&lt;br /&gt;');
+   // 11:37:15
+
+   document.writeln(Date.parse('2013/07/14') + '&lt;br /&gt;');
+   // 1373727600000'素直に7月
+
+   document.writeln(Date.UTC(2013, 7, 14) + '&lt;br /&gt;');   
+   // 1376438400000
+</code>
+</pre>
+<!-- ☜ -->
+<p><a href="js.htm">☜☜前へ
+</a>　<a href="js3.htm">次へ☞☞ 
+</a></p>
+</body>
+</html>

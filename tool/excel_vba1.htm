@@ -1,0 +1,779 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="ja">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=shift_jis">
+<meta http-equiv="content-style-type" content="text/css">
+<meta http-equiv="content-script-type" content="text/javascript">
+<meta name="keywords" content="EXCELVBA,HTML雛型,">
+<meta name="description" content="仕事で楽できるツール集">
+<link rel="stylesheet" href="./web/stylexlvba.css" type="text/css">
+<link rev="made" href="mailto:xatsushi&#64;tbb.t-com.ne.jp">
+<link rel="next" href="tsugi.htm">
+<title>Excel VBA Sample</title>
+<style type="text/css">
+<!--
+.clyoko{display:inline;
+}body{
+	background-color:#eee;
+}pre{
+	padding:.7em;
+	margin:0% 5% 0% 5%;
+	background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAYAAACEhIafAAAAEElEQVQImWP4////fwYsBAD5HxPtUUiuKwAAAABJRU5ErkJggg==");	
+
+	background-color:white;
+}hr{
+	border-style:solid;
+	border-width:100%;
+	
+}
+-->
+</style>
+
+</head>
+<body>
+<div id="contents">
+<a href="GetStatment.txt">Get Statment考</a>
+<a href="loadCSV.txt">CSVファイルを読み込む</a>
+<a href="oleObject.zip">WS_OLEObjectのイベントクラス</a>
+<ul>
+<li class="clyoko"><a href="../">&gt;home</li>
+<li class="clyoko"><a href="./excel_vba1.htm">1</a></li>
+<li class="clyoko"><a href="./excel_vba2.htm">2</a></li>
+<li class="clyoko"><a href="./excel_vba3.htm">3</a></li>
+<li class="clyoko"><a href="./excel_vba4.htm">4</a></li>
+<li class="clyoko"><a href="./excel_vba5.htm">5</a></li>
+<li class="clyoko"><a href="./excel_vba6.htm">6</a></li>
+<li class="clyoko"><a href="./excel_vba7.htm">7</a></li>
+<li class="clyoko"><a href="./excel_vba8.htm">8</a></li>
+<li class="clyoko"><a href="./excel_vba9.htm">9</a></li>
+<li class="clyoko"><a href="./excel_vba10.htm">10</a></li>
+</ul>
+<h1>Excel VBA Sample 1</h1>
+<p><a href="./Cls_Mailer.cls">Cls_Mailer.cls</a></p>
+<p><a href="./PW.lzh">pw_tool</a></p>
+<p><a href="./mark2.lzh">mark_tool2</a></p>
+<pre>
+Option Explicit
+Sub tashizan()
+Dim mystarttime As Single
+Dim mykasan As Variant, i As Variant, x As Variant
+Dim mymsg As String, mytitle As String
+mymsg = "いくつまで足すか整数を指定してください"
+mytitle = "１から指定した数まで加算する"
+mykasan = Application.InputBox(prompt:=mymsg, Title:=mytitle, Default:=10000000, Type:=1)
+'mytime = (Timer - mystarttime)
+If mykasan = False Then
+End
+ElseIf InStr(2, mykasan, ".") = 0 Then
+mystarttime = Timer
+
+
+i = 1
+x = 0
+Do
+x = x + i
+i = i + 1
+
+Loop While i <= mykasan
+If mykasan = 10000000 Then
+Range("b6").Value = Timer - mystarttime
+Else
+Range("b9").Value = Timer - mystarttime
+Range("b8").Value = "1から" & mykasan & "までの加算処理に"
+Range("b10").Value = "秒かかりました"
+End If
+
+MsgBox x & "です", vbOKOnly, "１から" & mykasan & "まで加算した結果は"
+
+
+Else
+MsgBox "整数を指定してください"
+
+
+End
+End If
+End Sub
+<hr>
+Sub tashizanyukapi()
+Dim sTime As Single
+Dim mykasan As Currency, i As Currency, x As Currency
+Dim mymsg As String, mytitle As String
+mymsg = "いくつまで足すか整数を指定してください"
+mytitle = "１から指定した数まで加算する"
+mykasan = Application.InputBox(prompt:=mymsg, Title:=mytitle, Default:=10000000, Type:=1)
+
+If InStr(2, mykasan, ".") = 0 Then
+sTime = Timer
+'----------------------ここから----
+For i = 1 To mykasan
+x = x + i
+Next
+'----------------------ここまで----
+'MsgBox DateDiff("s", sTime, eTime)
+MsgBox Timer - sTime
+
+MsgBox x & "です", vbOKOnly, "１から" & mykasan & "まで加算した結果は"
+
+Else
+MsgBox "整数を指定してください"
+
+End
+End If
+End Sub
+Sub tashizansagawa()
+Dim sTime As Single
+Dim mykasan As Variant, i As Variant, x As Variant
+Dim mymsg As String, mytitle As String
+mymsg = "いくつまで足すか整数を指定してください"
+mytitle = "１から指定した数まで加算する"
+mykasan = Application.InputBox(prompt:=mymsg, Title:=mytitle, Default:=10000000, Type:=1)
+
+If InStr(1, mykasan, ".") = 0 Then 'instrを使うと15桁まで。１６桁は"."を含まない数値でも0を返さない。
+'If (mykasan Mod 1) = 0 Then 'modを使うと１０桁まで。11桁はオーバーフローする。
+MsgBox (mykasan Mod 3)
+sTime = Timer
+'timer関数は午前0時から経過した秒数を表す単精度浮動小数点数型の値を返します。					
+'----------------------ここから----					sample
+x = (mykasan + 1) * (mykasan / 2)					
+'For i = 1 To mykasan					
+'x = x + i					
+'Next					
+
+
+'----------------------ここまで----					
+Range("d7").Value = Timer - sTime					
+
+MsgBox x & "です", vbOKOnly, "１から" & mykasan & "まで加算した結果は"					
+Else					
+MsgBox "整数を指定してください"					
+MsgBox InStr(1, mykasan, ".")					
+
+
+'
+End If
+End Sub
+Sub ブックの作成()
+    Workbooks.Add
+End Sub
+Sub ブックを開く()
+    Workbooks.Open Filename:="c:\my documents\スケジュール.xls"
+End Sub
+Sub ブックを開く2()
+    Workbooks.Open Filename:="XXX.xls"
+End Sub
+Sub ブックを閉じる()
+Workbooks.Close
+
+End Sub
+Sub ブックを閉じる2()
+    ActiveWorkbook.Close
+    
+End Sub
+
+Sub ブック名を指定して閉じる()
+    Workbooks("excel.xls").Close
+    
+End Sub
+Sub 番目に開いたブックを閉じる()
+    Workbooks(2).Close
+End Sub
+Sub 確認メッセージを表示させないでブックを閉じる()
+    Workbooks("excel.xls").Close savechanges:=True
+End Sub
+Sub ブックを保存しないで閉じる()
+    Workbooks("excel.xls").Close False
+    'SaveChanges:=を省略している
+End Sub
+
+Sub プロパティの値を調べる()
+Dim myname As String
+myname = Worksheets(1).Name
+MsgBox myname
+
+
+End Sub
+Sub プロパティの値を変更する()
+Dim myname As String
+myname = "myname"
+Worksheets(1).Name = myname
+MsgBox "元に戻します"
+Worksheets(1).Name = "sample"
+
+
+End Sub
+Sub シートの挿入()
+Worksheets.Add after:=Worksheets(1), Count:=2
+
+End Sub
+Sub 複数のシートを選択する()
+Worksheets(Array(2, 4)).Select
+'ActiveWindow.SelectedSheets.Delete
+End Sub
+Sub シート数を数えて最後のシートを削除する()
+Dim i As Integer
+i = Worksheets.Count
+Worksheets(i).Delete
+End Sub
+Sub 配列から値を取得する()
+Dim myweek As Variant '配列はvariantに格納される。他の型だと配列として認識しない。
+myweek = Array("日", "月", "火", "水", "木", "金", "土")
+MsgBox myweek(1)
+End Sub
+Sub testresult() 'ユーザー定義関数１
+Range("e37").Select
+MsgBox testmsg
+
+End Sub
+
+Function testmsg() As String 'タイトル行でデータ型を定義
+Select Case ActiveCell.Value
+Case Is > 80
+testmsg = "優"
+Case Is > 60
+testmsg = "良"
+Case Is > 40
+testmsg = "可"
+Case Else
+testmsg = "不可"
+End Select
+Case節の書き方
+値が１，２，３のいずれかである場合　　　　　　　　　　　　　→Case １，２，３ 
+値が１から5までの範囲のどれかである場合　　　　　　　　→Case 1 To 5 
+値が１，２か５から１０までの範囲のどれかである場合　　→Case １，２，５ To 10 
+値が１０以上の場合　　　　　　　　　　　　　　　　　　　　　　　→Case Is>=10 
+End Function
+Function で割る(割られるもの As Single, 割る物 As Single)
+
+で割る = 割られるもの / 割る物
+End Function
+
+Function myhex(十進数 As Double)
+myhex = Hex(十進数)
+End Function
+Function Uni(Moji As String) As String
+    Application.Volatile
+    If Moji = "" Then
+        Uni = ""
+    Else
+        Uni = Right("0000" & Hex(AscW(Moji)), 4)
+    End If
+End Function
+
+Sub 色つきのセルをカウントする()
+Dim myhani As Range, myrng As Range, mycount As Integer, i As Integer
+
+    Set myhani = Range("g57:g66")
+    
+    For Each myrng In myhani
+    
+        If myrng.Interior.ColorIndex <> xlNone Then
+            
+            mycount = mycount + 1
+        
+        End If
+        
+        'i = i + 1
+        
+    Next
+
+    Range("g72") = mycount
+
+End Sub
+
+Sub シートの移動()
+Worksheets("sample").Move after:=Worksheets("関数")
+End Sub
+Sub シートの移動を戻す()
+Worksheets("sample").Move before:=Worksheets("関数")
+End Sub
+Sub 四角()
+Dim i As Integer
+For i = 0 To 100
+Worksheets(1).Shapes.AddShape(msoShapeRectangle, 122 + i, 1222 + i, 8 + i, 6 + i).Select
+Next
+End Sub
+Sub 四角を削除()
+Dim Sh As Object, mydocument As Object
+Set mydocument = Worksheets("sample")
+For Each Sh In mydocument.Shapes
+    If Sh.Type = msoShapeRectangle Then
+        Sh.Delete
+    End If
+Next
+End Sub
+Sub test()
+
+
+Dim MyStr, MyInt
+' Let ステートメントを使って変数を代入します。
+Let MyStr = "Hello World"
+Let MyInt = 5
+
+MsgBox MyStr & MyInt
+
+End Sub
+
+Sub zu()       '追加用
+   Dim i As Integer
+   
+   For i = 0 To 200
+      With Worksheets(1).Shapes.AddShape(msoShapeRectangle, _
+                  122 + i, 1222 + i, 8 + i, 6 + i)
+         .Name = "XX" & .Name
+      End With
+   Next
+End Sub
+
+Sub zu2()      '削除用
+   Dim Sh As Shape
+   For Each Sh In Worksheets(1).Shapes
+      If Sh.Type = msoAutoShape Then
+         If Sh.AutoShapeType = msoShapeRectangle _
+            And Sh.Name Like "XX*" Then
+            
+            Sh.Delete
+         
+         End If
+      End If
+   Next
+End Sub
+
+
+Sub グラフシートの削除()
+Dim mychart As Chart '単にcharts.deleteとするとグラフシートが無い時にエラーがでる。
+ For Each mychart In Charts
+ mychart.Delete
+ Next
+ 
+End Sub
+Sub シートを非表示にする1()
+Worksheets(3).Visible = False 'ツール→シート→表示しない、と同じ操作
+
+End Sub
+Sub シートを非表示にする2()
+Worksheets(3).Visible = xlVeryHidden 'vbaからでないと再表示できないバージョン
+End Sub
+Sub 再表示()
+Worksheets(3).Visible = True
+
+
+End Sub
+Function シートの名前関数(suuji As Integer)
+Application.Volatile
+シートの名前関数 = Worksheets(suuji).Name
+
+
+End Function
+Sub シートを移動()
+Worksheets(1).Move after:=Worksheets(3)
+
+End Sub
+Sub 他のブックへシートを移動()
+Worksheets(3).Move before:=Workbooks("dummy.xls").Worksheets(1)
+
+End Sub
+Sub 新規ブックにワークシートを移動する()
+Worksheets(1).Move 'moveメソッドの引数を省略すると新規ブック内にシートが移動する。
+End Sub
+Sub シートをコピーする1()
+Worksheets(1).Copy after:=Worksheets(3)
+
+
+End Sub
+Sub シートのコピー2()
+Worksheets(1).Copy before:=Workbooks("XXX.xls").Sheets(2) '別のブック内にコピーする
+End Sub
+
+Sub 共有ブックに変更を受け入れさせる()
+ActiveWorkbook.AcceptAllChanges
+
+
+End Sub
+Sub 関数の見出しのセルを塗りつぶす()
+'
+Dim myrange As Range
+
+
+
+For Each myrange In Range("a:a")
+If (Left(myrange.Value, 3) = "Sub" Or Left(myrange.Value, 3) = "Fun") Then
+With myrange.Borders(xlEdgeLeft)
+        .LineStyle = xlContinuous
+        .Weight = xlMedium
+        .ColorIndex = xlAutomatic
+    End With
+    With myrange.Borders(xlEdgeTop)
+        .LineStyle = xlContinuous
+        .Weight = xlMedium
+        .ColorIndex = xlAutomatic
+    End With
+    With myrange.Borders(xlEdgeBottom)
+        .LineStyle = xlContinuous
+        .Weight = xlMedium
+        .ColorIndex = xlAutomatic
+    End With
+    With myrange.Borders(xlEdgeRight)
+        .LineStyle = xlContinuous
+        .Weight = xlMedium
+        .ColorIndex = xlAutomatic
+    End With
+    With myrange.Interior
+        .ColorIndex = 6
+        .Pattern = xlSolid
+    End With
+    With myrange.Font
+        .Name = "ＭＳ Ｐゴシック"
+        .Size = 20
+        .Strikethrough = False
+        .Superscript = False
+        .Subscript = False
+        .OutlineFont = False
+        .Shadow = False
+        .Underline = xlUnderlineStyleNone
+        .ColorIndex = xlAutomatic
+    End With
+
+End If
+Next
+End Sub
+Sub マーカーのクリア()
+Range("a:a").ClearFormats
+End Sub
+
+Sub データの最下行の行ナンバーを取得する()
+
+Dim n& 'rowプロパティはlongで宣言する。longの宣言型はアンパサンド
+
+Range("a200").End(xlUp).Select
+n = Selection.Row
+MsgBox n
+
+End Sub
+
+Sub a列データの最下行から上3セルを選ぶ()
+Dim n& 'rowプロパティはlongで宣言する。longの宣言型はアンパサンド
+Range("a200").End(xlUp).Select
+n = Selection.Row
+If n < 3 Then
+Range("a1:a3").Select
+Else
+Range(Cells(n, 1), Cells(n - 2, 1)).Select
+End If
+
+
+End Sub
+
+Sub 今日の日付のセルを選ぶ()
+Dim myrange As Range, mycell As Range
+Set myrange = Worksheets(1).Range("1:1")
+
+For Each mycell In myrange
+If mycell.Value = Day(Date) Then
+mycell.Select
+End If
+
+Next mycell
+
+
+
+End Sub
+
+
+Sub ふりがな情報をもたない漢字に振り仮名を振る()
+  Application.ScreenUpdating = False
+    With Selection
+      .SetPhonetic
+      .Phonetic.Visible = True
+    End With
+  Application.ScreenUpdating = True
+End Sub
+
+Sub inputboxメソッド() '数値を入力させるす
+    Dim mycopy As Integer
+    Dim mymsg As String, mytitle As String
+    
+    mymsg = "印刷部数を指定してください"
+    mytitle = "このシートを印刷する"
+    mycopy = Application.InputBox(prompt:=mymsg, Title:=mytitle, Default:=1, Type:=1)
+    
+    If mycopy <> 0 Then
+        Worksheets("code").PrintOut copies:=mycopy
+        
+    Else
+        MsgBox "印刷指定はキャンセルされました"
+    End If
+    
+End Sub
+Sub 印刷範囲の選択を促す()
+
+    Dim mycell As Range
+    Dim mymsg As String, mytitle As String
+     
+    Worksheets("code").Activate
+    mymsg = "印刷範囲をマウスでドラッグしてください"
+    mytitle = "印刷範囲の指定"
+    
+    On Error Resume Next
+    Set mycell = Application.InputBox(prompt:=mymsg, Title:=mytitle, Type:=8) '8はセル参照。typeを省略するとテキストを返す
+    If mycell Is Nothing Then Exit Sub
+    With ActiveSheet
+        .PageSetup.PrintArea = mycell.Address
+        .PrintOut
+    End With
+Sub inputbox関数() 'アプリケーションモーダル（フォーム出現中はシートの操作が出来ない）
+    Dim myno As Integer
+    Dim mymsg As String, mytitle As String
+    
+    mymsg = "削除する伝票No.を指定してください"
+    mytitle = "売上データ削除"
+    myno = Val(InputBox(prompt:=mymsg, Title:=mytitle))
+    If myno <> 0 Then
+    MsgBox myno & "を削除No.に指定しました"
+    Else
+        MsgBox "処理を中段しました"
+    End If
+    
+    
+    
+End Sub
+Sub 選択範囲の行と列の取得()
+
+ Dim R As Range
+    Set R = Selection
+
+    MsgBox R.Row & vbCrLf _
+         & R.Column & vbCrLf _
+         & R.Row + R.Rows.Count - 1 & vbCrLf _
+         & R.Column + R.Columns.Count - 1
+
+
+End Sub
+Sub ユーザー側のみシートを保護する()
+ ActiveSheet.Protect userinterfaceonly:=True
+    Dim i As Integer
+    
+     For i = 1 To 22
+        With Worksheets(2)
+            .Select
+            .Unprotect password:="mypassword"
+            .Range(Cells(9 + (i - 1) * 43, 4), Cells(10 + (i - 1) * 43, 34)).Locked = True
+            .Range(Cells(16 + (i - 1) * 43, 4), Cells(16 + (i - 1) * 43, 34)).Locked = True
+
+            .Protect password:="mypassword"
+         End With
+         
+    
+
+     Next i
+end sub
+Sub 全てのコマンドバー・スクロールバーを非表示タイトルバーのカスタマイズ()
+Application.ScreenUpdating = False
+Dim mycb As CommandBar '全てのコマンドバーを非表示にする
+On Error Resume Next
+For Each mycb In Application.CommandBars
+mycb.Visible = False
+Next mycb
+On Error GoTo 0
+Application.CommandBars("Worksheet Menu Bar").Enabled = False
+Application.DisplayFormulaBar = False
+
+Application.Caption = "分給用"
+'タイトルバー名の定義
+
+If Worksheets(3).Shapes("復帰ボタン").Visible = False And Worksheets(2).Range("c41").Value = 2 Then			
+myname1 = Worksheets(3).Range("a1").Value & "給与月" & Worksheets(3).Range("b1").Value & "月度バックアップ"			
+With ActiveWindow			
+.DisplayHeadings = False			
+.DisplayWorkbookTabs = False			
+.Caption = "㈱●●" & myname1			
+.DisplayHorizontalScrollBar = False			
+.DisplayVerticalScrollBar = False			
+End With			
+
+end sub			
+Sub ie_make_table_test()			site="http://www.ken3.org/vba/"
+
+    Dim objIE    As Object  'ＩＥオブジェクト参照用			
+    Dim objTAG   As Object  'TAGのオブジェクトを代入			
+    Dim y As Integer			
+    Dim x As Integer
+    Dim objTableItem As Object 'TABLE内のITEM検索用
+
+    'インターネットエクスプローラーのオブジェクトを作る
+    Set objIE = CreateObject("InternetExplorer.application")
+    
+    objIE.Visible = True '見えるようにする(お約束)
+
+    '文字列で指定したＵＲＬに飛ぶ
+    'objIE.Navigate "http://www.ken3.org/cgi-bin/cnt/test.asp"
+    objIE.Navigate "C:\WINDOWS\ﾃﾞｽｸﾄｯﾌﾟ\郵便事業経営情報システム7.htm"
+
+    '表示終了まで待つ
+     Do While objIE.Busy = True
+         '何もしないループ（笑）
+         DoEvents
+     Loop
+     
+     '.body のデータをループする
+     For Each objTAG In objIE.document.body.all
+        'テーブルのタグを探す
+        If objTAG.tagName = "TABLE" Then
+            '新規ブックを追加する
+            Workbooks.Add
+            'カウンタの初期化
+            y = 0 '行カウンタ
+            'テーブル内のITEMでループする
+            For Each objTableItem In objTAG.all
+                If objTableItem.tagName = "TR" Then
+                    y = y + 1   '行カウンタを+1
+                    x = 1 '列カウンタを１(左端にする)
+                End If
+                If objTableItem.tagName = "TD" Then
+                    'テキストデータをセットする
+                    Cells(y, x) = objTableItem.innerText
+                    x = x + 1 '列カウンタを+１(次にする)
+                End If
+            Next
+        End If
+     Next
+
+End Sub
+
+Private Sub Worksheet_Change(ByVal Target As Range)
+ワークシートのイベント。4桁数値を時間表示にする
+   Dim Temp As String
+   With Target
+      Temp = Format(.Text, "00:00")
+      If IsDate(Temp) Then
+         Application.EnableEvents = False
+         .Value = Temp
+         Application.EnableEvents = True
+      End If
+   End With
+End Sub
+
+Sub TestMain()'シート上のhtmlリンクのページ画面をエクセルに貼り付ける
+' 参照設定：Microsoft Forms 2.0 Object Library
+' 参照設定：Microsoft HTML Object Library
+' 参照設定：Microsoft Internet Controls
+
+    Dim i As Range
+    Dim j As Shape
+    Dim wkURL As String
+    Dim shtA As Worksheet
+
+    Set shtA = ActiveSheet
+
+    For Each i In shtA.UsedRange
+        On Error Resume Next
+        wkURL = ""
+        wkURL = i.Hyperlinks(1).Address
+        On Error GoTo 0
+        If Not wkURL = "" Then
+            Call prcPaste(wkURL)
+        End If
+    Next i
+
+    For Each j In shtA.Shapes
+        On Error Resume Next
+        wkURL = ""
+        wkURL = j.Hyperlink.Address
+        On Error GoTo 0
+        If Not wkURL = "" Then
+            Call prcPaste(wkURL)
+        End If
+    Next j
+
+End Sub
+
+Private Sub prcPaste(ByVal AURL As String)
+
+    Dim wkIE As New SHDocVw.InternetExplorer
+    Dim wkDoc As MSHTML.HTMLDocument
+    Dim wkHTML As String
+    Dim wkDO As New MSForms.DataObject
+
+    wkIE.Visible = True
+    wkIE.Navigate AURL
+    Do
+        DoEvents
+    Loop Until (Not wkIE.Busy) And _
+               (wkIE.readyState = READYSTATE_COMPLETE)
+    Set wkDoc = wkIE.document
+    wkHTML = wkDoc.body.innerHTML
+    wkIE.Quit
+    wkDO.Clear
+    wkDO.SetText wkHTML
+    wkDO.PutInClipboard
+    Worksheets.Add After:=Worksheets(Worksheets.Count)
+    ActiveSheet.Range("A1").PasteSpecial
+    wkDO.SetText ""
+    wkDO.PutInClipboard
+
+End Sub
+Sub ie_の起動()
+ Dim objIE As Object
+ Set objIE = CreateObject("InternetExplorer.application")
+ objIE.Visible = True
+    
+    '文字列で指定したＵＲＬに飛ぶ
+    objIE.Navigate "http://www2.tba.t-com.ne.jp/yamazaki/"
+    'objIE.Navigate "C:\WINDOWS\ﾃﾞｽｸﾄｯﾌﾟ\tefutefu.htm"
+    
+    Do While objIE.Busy = True
+         '何もしないループ（笑）
+         DoEvents
+     Loop
+
+
+ End Sub						
+						
+Private Sub CommandButton2_Click()						refediｔの使い方
+Application.ScreenUpdating = False						
+Range(RefEdit1.Value).Copy						
+With Worksheets("局名データベース")						
+.Range("i2").PasteSpecial Paste:=xlValues						
+.Range("i:i").Replace what:="　", replacement:="", lookat:=xlPart, _						
+     searchorder:=xlByRows, MatchCase:=False						
+ .Range("i:i").Replace what:=" ", replacement:="", lookat:=xlPart, _						
+ searchorder:=xlByRows, MatchCase:=False						
+End With						
+
+
+End Sub
+
+Sub 矢印を描く()
+
+Dim mydocument As Worksheet
+
+Set mydocument = Worksheets(1)
+With mydocument.Shapes.AddLine(10, 10, 20, 30).Line
+'（始点の左端からのpx値,始点の上端からのpx値
+',終点の左端からのpx値,終点の上端からのpx値）
+    .BeginArrowheadLength = msoArrowheadShort
+    .BeginArrowheadStyle = msoArrowheadOval
+    .BeginArrowheadWidth = msoArrowheadNarrow
+    .EndArrowheadLength = msoArrowheadLong
+    .EndArrowheadStyle = msoArrowheadTriangle
+    .EndArrowheadWidth = msoArrowheadWide
+End With					
+					
+Private Sub Workbook_Open()					ブックを開く時別のブックを開き、非表示にする。さらに閉じる時に表示させる
+
+Workbooks.Open Filename:= _					
+C:\WINDOWS\ﾃﾞｽｸﾄｯﾌﾟ\visible.xls					
+ ActiveWindow.Visible = False					
+					
+Private Sub Workbook_BeforeClose(Cancel As Boolean)					
+Workbooks("visible.xls").Activate					
+ActiveWindow.Visible = True					
+End Sub					
+
+					
+</pre>
+<hr>
+<address>yamaV1.02β</address>
+</div>
+</body>
+</html>
