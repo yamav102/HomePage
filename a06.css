@@ -1,0 +1,105 @@
+
+H1{
+  color : black;
+  background-color : white;
+  background-image : url(gazou/check1.gif);
+  text-align: center;
+  padding-top: 10px;
+  padding-right: 0px;
+  padding-bottom: 10px;
+  padding-left: 0px;
+}
+H2{
+  color : black;
+  background-color : white;
+  background-image : url(gazou/check1.gif);
+  text-align: center;
+  padding-top: 7px;
+  padding-right: 0px;
+  padding-bottom: 7px;
+  padding-left: 0px;
+}
+H3{
+  color : black;
+  background-color : white;
+  background-image : url(gazou/check1.gif);
+  text-align: center;
+  padding-top: 4px;
+  padding-right: 0px;
+  padding-bottom: 4px;
+  padding-left: 0px;
+}
+HR{
+  color : red;
+  height: 3px;
+}
+UL{
+  color : black;
+  list-style-position:outside; 
+  text-align : left;
+  line-height : 2em;
+  list-style-image : url(gazou/list.gif);
+  margin : 20px,10px,20px,20px;
+}
+
+
+
+
+TABLE{
+text-align : center;
+}
+A{
+text-decoration : none;
+/*border-width : 1mm;border-style : ridge;/*border-top-color : #f3f3f3;border-right-color : #f3f3f3;border-bottom-color : #f3f3f3;border-left-color : #f3f3f3;
+color : black;*/
+}
+A:HOVER{
+color : blue;
+background-color : silver;
+text-decoration : none;
+cursor:url(../neko.ani);
+}
+A:LINK{
+text-decoration : none;
+}
+A:VISITED{
+text-decoration : none;
+}
+A:ACTIVE{
+text-decoration : none;
+position : relative;
+top : 2px;
+
+
+}
+img.linnk{
+text-decoration : none;
+border-width : 1mm;border-style : ridge;border-color : lime;
+
+color : green;
+float:right;
+
+}
+A:HOVER.image{
+border:none
+background-color : gray;
+text-decoration : none;
+cursor:url(../neko.ani);
+}
+A:LINK{
+text-decoration : none;
+}
+A:VISITED{
+text-decoration : none;
+}
+A:ACTIVE{
+text-decoration : none;
+position : relative;
+top : 2px;
+
+}
+BODY{
+color : black;
+background-color : white;
+cursor:url(../neko.cur);
+}
