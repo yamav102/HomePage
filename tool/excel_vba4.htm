@@ -4,8 +4,8 @@
 <meta http-equiv="content-type" content="text/html; charset=shift_jis">
 <meta http-equiv="content-style-type" content="text/css">
 <meta http-equiv="content-script-type" content="text/javascript">
-<meta name="keywords" content="EXCELVBA,HTML—Œ^,">
-<meta name="description" content="d–‚ÅŠy‚Å‚«‚éƒc[ƒ‹W">
+<meta name="keywords" content="EXCELVBA,HTMLé››å‹,">
+<meta name="description" content="ä»•äº‹ã§æ¥½ã§ãã‚‹ãƒ„ãƒ¼ãƒ«é›†">
 <link rel="stylesheet" href="./web/stylexlvba.css" type="text/css">
 <link rev="made" href="mailto:xatsushi&#64;tbb.t-com.ne.jp">
 <link rel="next" href="tsugi.htm">
@@ -46,7 +46,7 @@
 </ul>
 <h1>Excel VBA Sample 4</h1>
 <pre>
-Sub Get_Permutation()‡—ñ‚Ì‘g‚İ‡‚í‚¹‚ğ‹‚ß‚é
+Sub Get_Permutation()é †åˆ—ã®çµ„ã¿åˆã‚ã›ã‚’æ±‚ã‚ã‚‹
 Dim R As Range
 Dim myS() As Variant
 Dim myAry
@@ -96,8 +96,8 @@ For i = LBound(myAry) To UBound(myAry)
     Next ii
 Next i
 End Sub
------------------‚±‚±‚Ü‚Å
-Sub html©“®¶¬()
+-----------------ã“ã“ã¾ã§
+Sub htmlè‡ªå‹•ç”Ÿæˆ()
     With Sheet1
         Set R = .Range("a1:a" & .Range("a1").End(xlDown).Row)
         For Each rw In R
@@ -121,8 +121,8 @@ Sub make_HTM(ByVal S As String, Num As Long)
     myhtm.Close
     Name sfname As "c:\test\" & Num & ".html"
     Application.DisplayAlerts = True
-End Sub'||||||||||||||||‚±‚±‚Ü‚Å
-^^^^^^^^^^^^^^^^^^^^^^^^^wait‚µ‚È‚¢WEB‚Ì“\‚è•t‚¯
+End Sub'ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ã“ã“ã¾ã§
+^^^^^^^^^^^^^^^^^^^^^^^^^waitã—ãªã„WEBã®è²¼ã‚Šä»˜ã‘
 Dim ie As Object
 Const hoge  As Long = 12
 Const hebo As Long = 17
@@ -132,7 +132,7 @@ Const boke As Long = 0
 'Const OLECMDEXECOPT_DODEFAULT = 0&
 Sub test()
     Set ie = CreateObject("internetexplorer.application")
-    'ie‹N“®	
+    'ieèµ·å‹•	
     With ie	
         .navigate "http://www2.moug.net/bbs/exvba/thread000001.htm"	
         '.Visible = True	
@@ -151,11 +151,11 @@ Sub test()
     MsgBox "done"	
     Exit Sub	
 End Sub	
-2i”‚©‚ç16iE8i”•ÏŠ·	
+2é€²æ•°ã‹ã‚‰16é€²ãƒ»8é€²æ•°å¤‰æ›	
 Function BinToHex(ByVal StrBin As String) As String	
 '	
-'********* ˆø”@StrBin ‚Qi”•¶š—ñ	
-'********* •Ô’l ‚P‚Ui”•¶š—ñ	
+'********* å¼•æ•°ã€€StrBin ï¼’é€²æ•°æ–‡å­—åˆ—	
+'********* è¿”å€¤ ï¼‘ï¼–é€²æ•°æ–‡å­—åˆ—	
 	
 	
 num = 0: f = ""	
@@ -163,15 +163,15 @@ Length = Len(StrBin)
 	
 For n = 0 To Length - 1	
 f = Mid$(StrBin, Length - n, 1)	
-If f = "1" Then num = num + 2 ^ n '@<==‚±‚±‚ªƒ~ƒ\	
+If f = "1" Then num = num + 2 ^ n 'ã€€<==ã“ã“ãŒãƒŸã‚½	
 Next n
 
 BinToHex = Hex$(num)
-'bintooct = Oct$(num)'8i”
-'Debug.Print num'\i”
+'bintooct = Oct$(num)'8é€²æ•°
+'Debug.Print num'åé€²æ•°
 End Function
 
-Sub Temp()'ƒRƒ}ƒ“ƒhƒo[‚Ì–¼‘OE“ú–{Œê–¼EƒRƒ“ƒgƒ[ƒ‹–¼E‚h‚cˆê——‚Ìì¬
+Sub Temp()'ã‚³ãƒãƒ³ãƒ‰ãƒãƒ¼ã®åå‰ãƒ»æ—¥æœ¬èªåãƒ»ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«åãƒ»ï¼©ï¼¤ä¸€è¦§ã®ä½œæˆ
      Dim cbr As Office.CommandBar
      Dim ctl As Office.CommandBarControl
      Dim CNT As Long
@@ -191,7 +191,7 @@ Sub Temp()'ƒRƒ}ƒ“ƒhƒo[‚Ì–¼‘OE“ú–{Œê–¼EƒRƒ“ƒgƒ[ƒ‹–¼E‚h‚cˆê——‚Ìì¬
      Let Application.ScreenUpdating = True
 End Sub
 
-Sub ƒGƒNƒZƒ‹‚©‚çƒAƒNƒZƒX‚ÉCSVƒtƒ@ƒCƒ‹‚ğw’è‚µ‚Ä“Ç‚İ‚Ü‚¹‚é()
+Sub ã‚¨ã‚¯ã‚»ãƒ«ã‹ã‚‰ã‚¢ã‚¯ã‚»ã‚¹ã«CSVãƒ•ã‚¡ã‚¤ãƒ«ã‚’æŒ‡å®šã—ã¦èª­ã¿è¾¼ã¾ã›ã‚‹()
     Dim appAC As Object
     Dim myDir As String
     Dim myDBpth As String
@@ -201,8 +201,8 @@ Sub ƒGƒNƒZƒ‹‚©‚çƒAƒNƒZƒX‚ÉCSVƒtƒ@ƒCƒ‹‚ğw’è‚µ‚Ä“Ç‚İ‚Ü‚¹‚é()
     i = 0
     strCSV = Application. _
         GetOpenFilename( _
-        filefilter:="CSVƒtƒ@ƒCƒ‹(*.csv),*.csv", _
-        Title:="CSVƒtƒ@ƒCƒ‹‚Ì‘I‘ğ")
+        filefilter:="CSVãƒ•ã‚¡ã‚¤ãƒ«(*.csv),*.csv", _
+        Title:="CSVãƒ•ã‚¡ã‚¤ãƒ«ã®é¸æŠ")
     If StrConv(strCSV, vbUpperCase) = "FALSE" Then
         Exit Sub
     End If
@@ -221,7 +221,7 @@ Sub ƒGƒNƒZƒ‹‚©‚çƒAƒNƒZƒX‚ÉCSVƒtƒ@ƒCƒ‹‚ğw’è‚µ‚Ä“Ç‚İ‚Ü‚¹‚é()
     Set appAC = Nothing
 End Sub
 
-Sub ƒtƒHƒ‹ƒ_[‚ğw’è‚µ‚ÄƒGƒNƒZƒ‹ƒtƒ@ƒCƒ‹‚É“Ç‚İæ‚èƒpƒXƒ[ƒh‚ğŠ|‚¯‚é()
+Sub ãƒ•ã‚©ãƒ«ãƒ€ãƒ¼ã‚’æŒ‡å®šã—ã¦ã‚¨ã‚¯ã‚»ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«ã«èª­ã¿å–ã‚Šãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã‚’æ›ã‘ã‚‹()
     Dim i As Long, j As Long
     Dim fPath As String
     Dim vPW As Variant
@@ -231,7 +231,7 @@ Sub ƒtƒHƒ‹ƒ_[‚ğw’è‚µ‚ÄƒGƒNƒZƒ‹ƒtƒ@ƒCƒ‹‚É“Ç‚İæ‚èƒpƒXƒ[ƒh‚ğŠ|‚¯‚é()
     Dim FS As FileSearch
     j = 0
     Set objShell = CreateObject("Shell.Application")
-    Set objFolder = objShell.BrowseForFolder(0, "ƒtƒHƒ‹ƒ_‚ğ‘I‚Ô", 0, "c:\\")
+    Set objFolder = objShell.BrowseForFolder(0, "ãƒ•ã‚©ãƒ«ãƒ€ã‚’é¸ã¶", 0, "c:\\")
     If objFolder Is Nothing Then Exit Sub
     fPath = objFolder.Items().Item().Path
     Set FS = Application.FileSearch
@@ -240,20 +240,20 @@ Sub ƒtƒHƒ‹ƒ_[‚ğw’è‚µ‚ÄƒGƒNƒZƒ‹ƒtƒ@ƒCƒ‹‚É“Ç‚İæ‚èƒpƒXƒ[ƒh‚ğŠ|‚¯‚é()
         .Filename = "*.xls"
         .Execute
         If .FoundFiles.Count = 0 Then
-            MsgBox "‘ÎÛƒtƒ@ƒCƒ‹‚Í‚ ‚è‚Ü‚¹‚ñ"
+            MsgBox "å¯¾è±¡ãƒ•ã‚¡ã‚¤ãƒ«ã¯ã‚ã‚Šã¾ã›ã‚“"
             Exit Sub
         End If
-    vPW = InputBox("İ’è‚·‚éƒpƒXƒ[ƒh‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢")
-    vPW2 = InputBox("Šm”F‚Ìˆ×‚à‚¤ˆê“x“ü—Í‚µ‚Ä‚­‚¾‚³‚¢")
+    vPW = InputBox("è¨­å®šã™ã‚‹ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„")
+    vPW2 = InputBox("ç¢ºèªã®ç‚ºã‚‚ã†ä¸€åº¦å…¥åŠ›ã—ã¦ãã ã•ã„")
     If vPW <> vPW2 Then
-        MsgBox "ƒpƒXƒ[ƒh‚ªˆê’v‚µ‚Ü‚¹‚ñ"
+        MsgBox "ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãŒä¸€è‡´ã—ã¾ã›ã‚“"
         Exit Sub
     Else
         For i = 1 To Len(vPW)
             If Asc(Mid(vPW, i, 1)) < 48 Or Asc(Mid(vPW, i, 1)) > 122 Then
                 MsgBox _
-                "ƒpƒXƒ[ƒh‚Ì’†‚É“ú–{ŒêWindows”ÅˆÈŠO‚ÌExcel‚Å‚Íg—p‚Å‚«‚È‚¢•¶š‚ªŠÜ‚Ü‚ê‚Ä‚¢‚Ü‚·BƒpƒXƒ[ƒh‚ğ‚±‚Ì‚Ü‚Üg—p‚µ‚Ü‚·BƒpƒXƒ[ƒh‚É‚ÍA" _
-                & "‰p”š(a-zA0-9)‚Æ(!A@A#A$A%A^A&A*A(A)A+A=A)‚ğg—p‚µ‚Ä‚­‚¾‚³‚¢B", vbOKCancel + vbExclamation
+                "ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã®ä¸­ã«æ—¥æœ¬èªWindowsç‰ˆä»¥å¤–ã®Excelã§ã¯ä½¿ç”¨ã§ããªã„æ–‡å­—ãŒå«ã¾ã‚Œã¦ã„ã¾ã™ã€‚ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã‚’ã“ã®ã¾ã¾ä½¿ç”¨ã—ã¾ã™ã€‚ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã«ã¯ã€" _
+                & "è‹±æ•°å­—(a-zã€0-9)ã¨(!ã€@ã€#ã€$ã€%ã€^ã€&ã€*ã€(ã€)ã€+ã€=ã€)ã‚’ä½¿ç”¨ã—ã¦ãã ã•ã„ã€‚", vbOKCancel + vbExclamation
             End If
         Next i
     
@@ -282,10 +282,10 @@ add_PW:
         End With
     End With
     If j > 0 Then
-        MsgBox j & "@ŒÂ‚Ìƒtƒ@ƒCƒ‹‚ÉƒpƒXƒ[ƒh‚ğİ’è‚Å‚«‚Ü‚¹‚ñ‚Å‚µ‚½"
+        MsgBox j & "ã€€å€‹ã®ãƒ•ã‚¡ã‚¤ãƒ«ã«ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã‚’è¨­å®šã§ãã¾ã›ã‚“ã§ã—ãŸ"
     End If
     MsgBox FS.FoundFiles.Count - j _
-        & "ŒÂ‚Ìƒtƒ@ƒCƒ‹‚ÉƒpƒXƒ[ƒh [" & vPW & "] ‚ğİ’è‚µ‚Ü‚µ‚½"
+        & "å€‹ã®ãƒ•ã‚¡ã‚¤ãƒ«ã«ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ [" & vPW & "] ã‚’è¨­å®šã—ã¾ã—ãŸ"
     Exit Sub
 ERR_cnt:
     i = i + 1
@@ -293,23 +293,23 @@ ERR_cnt:
     On Error GoTo 0
     Resume add_PW
 End Sub
-Sub •\¦Œ`®İ’è()'“ú•t‚ğŠ¿”š‚Å•\¦
-' ƒ}ƒNƒ‹L˜^“ú : 2005/7/8  ƒ†[ƒU[–¼ : •F
-    Selection.NumberFormatLocal = "[DBNum1]ggge""”N""m""Œ""d""“ú"""
+Sub è¡¨ç¤ºå½¢å¼è¨­å®š()'æ—¥ä»˜ã‚’æ¼¢æ•°å­—ã§è¡¨ç¤º
+' ãƒã‚¯ãƒ­è¨˜éŒ²æ—¥ : 2005/7/8  ãƒ¦ãƒ¼ã‚¶ãƒ¼å : å½¦
+    Selection.NumberFormatLocal = "[DBNum1]ggge""å¹´""m""æœˆ""d""æ—¥"""
     Selection.FormulaR1C1 = "7/8/2005"
 End Sub
 
-Sub ƒhƒ‰ƒCƒu‚Æƒtƒ@ƒCƒ‹‚Ì‘¶İ‚Ì—L–³()
-'ScriptingRuntime‚ÉQÆİ’è
+Sub ãƒ‰ãƒ©ã‚¤ãƒ–ã¨ãƒ•ã‚¡ã‚¤ãƒ«ã®å­˜åœ¨ã®æœ‰ç„¡()
+'ScriptingRuntimeã«å‚ç…§è¨­å®š
     Dim FSO As New FileSystemObject
     Dim FilePaht As String
-    filepath = ThisWorkbook.FullName 'ƒtƒ‹ƒpƒX
+    filepath = ThisWorkbook.FullName 'ãƒ•ãƒ«ãƒ‘ã‚¹
     MsgBox FSO.FileExists(filepath)
     MsgBox FSO.DriveExists("s:")
     MsgBox FSO.DriveExists("\\J:")
 End Sub
 
-Sub ƒuƒbƒN‚ğŠJ‚©‚¸‚Éƒf[ƒ^‚ğ‰ñû‚·‚é()'ŠJ‚­‚æ‚è‚à15”{’ö“x‚Ì‘¬“xƒAƒbƒv
+Sub ãƒ–ãƒƒã‚¯ã‚’é–‹ã‹ãšã«ãƒ‡ãƒ¼ã‚¿ã‚’å›åã™ã‚‹()'é–‹ãã‚ˆã‚Šã‚‚15å€ç¨‹åº¦ã®é€Ÿåº¦ã‚¢ãƒƒãƒ—
     Dim myFso As FileSearch
     Dim strPth As String
     Dim i As Long
@@ -344,10 +344,10 @@ Sub ƒuƒbƒN‚ğŠJ‚©‚¸‚Éƒf[ƒ^‚ğ‰ñû‚·‚é()'ŠJ‚­‚æ‚è‚à15”{’ö“x‚Ì‘¬“xƒAƒbƒv
     Set myfs = Nothing
     Application.ScreenUpdating = True
     time2 = Timer()
-    Debug.Print time2 - time1; cnt & " ƒtƒ@ƒCƒ‹"
+    Debug.Print time2 - time1; cnt & " ãƒ•ã‚¡ã‚¤ãƒ«"
 End Sub
-Sub DAO‚Åƒtƒ@ƒCƒ‹‚ğŠJ‚¢‚ÄƒV[ƒg–¼‚ğæ“¾()
-    'QÆİ’è Microsoft DAO 3.6 Object Library
+Sub DAOã§ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã„ã¦ã‚·ãƒ¼ãƒˆåã‚’å–å¾—()
+    'å‚ç…§è¨­å®š Microsoft DAO 3.6 Object Library
     Dim DB As DAO.Database
     Dim Tbl As DAO.TableDef
     Dim myFile As String
@@ -359,21 +359,21 @@ Sub DAO‚Åƒtƒ@ƒCƒ‹‚ğŠJ‚¢‚ÄƒV[ƒg–¼‚ğæ“¾()
     DB.Close
     Set DB = Nothing
 End Sub
-FileSearch‚ğg—p‚µ‚È‚¢ƒtƒ@ƒCƒ‹‚ÌŒŸõ‚Æƒf[ƒ^‚Ì‰ñû
-‘¬“x‚ÍFIleSearch‚ÆŒİŠp
-'y—vQÆzuMicrosoft Scripting Runtimev
+FileSearchã‚’ä½¿ç”¨ã—ãªã„ãƒ•ã‚¡ã‚¤ãƒ«ã®æ¤œç´¢ã¨ãƒ‡ãƒ¼ã‚¿ã®å›å
+é€Ÿåº¦ã¯FIleSearchã¨äº’è§’
+'ã€è¦å‚ç…§ã€‘ã€ŒMicrosoft Scripting Runtimeã€
 
-'ŒÄ‚Ño‚µ—p
+'å‘¼ã³å‡ºã—ç”¨
 Sub CallFilePathList1()
     Dim objFSO          As FileSystemObject
-    Dim strTargetPath   As String           '‘ÎÛƒtƒHƒ‹ƒ_ƒpƒX
+    Dim strTargetPath   As String           'å¯¾è±¡ãƒ•ã‚©ãƒ«ãƒ€ãƒ‘ã‚¹
   
     Set objFSO = New FileSystemObject
     strTargetPath = "C:\"
     Call EnumFilePathList1(objFSO.GetFolder(strTargetPath))
 End Sub
 
-'–{‘Ì
+'æœ¬ä½“
 Sub EnumFilePathList1(objFolder As Folder)
     Dim objTargetFile   As File
     Dim objSubFolder    As Folder
@@ -411,14 +411,14 @@ Sub EnumFilePathList1(objFolder As Folder)
     Debug.Print Cnt & " files"; time2
     Application.ScreenUpdating = True
 End Sub
-Sub CallGetFolderName()'“Á’è‚ÌƒtƒHƒ‹ƒ_‚ÌŒŸõ‚P
+Sub CallGetFolderName()'ç‰¹å®šã®ãƒ•ã‚©ãƒ«ãƒ€ã®æ¤œç´¢ï¼‘
     Dim objFSO              As New FileSystemObject
     Dim strTargetFldrPath   As String
     time1 = Timer()
     strTargetFldrPath = "c:\"
     Call GetFavoritPth(objFSO.GetFolder(strTargetFldrPath))
 End Sub
-'–{‘Ì
+'æœ¬ä½“
 Sub GetFavoritPth(myDir As Folder)
     Dim objFldr As Folder
     Dim objSubFolder As Folder
@@ -430,19 +430,19 @@ Sub GetFavoritPth(myDir As Folder)
         End If
     Next objFldr
     
-    'ƒTƒuƒtƒHƒ‹ƒ_‚ğŒŸõ
+    'ã‚µãƒ–ãƒ•ã‚©ãƒ«ãƒ€ã‚’æ¤œç´¢
     For Each objSubFolder In myDir.SubFolders
         Call GetFavoritPth(objSubFolder)
     Next objSubFolder
     
 End Sub
 
-Sub “Á’è‚ÌƒtƒHƒ‹ƒ_‚ÌŒŸõ‚Q()
+Sub ç‰¹å®šã®ãƒ•ã‚©ãƒ«ãƒ€ã®æ¤œç´¢ï¼’()
 Dim time1 As Single
 Debug.Print _
     CreateObject("wscript.shell").specialfolders("Favorites")
 End Sub
-Sub CallGetFilename()'FileSearch‚ğg‚í‚È‚¢ƒtƒ@ƒCƒ‹‚ÌŒŸõ
+Sub CallGetFilename()'FileSearchã‚’ä½¿ã‚ãªã„ãƒ•ã‚¡ã‚¤ãƒ«ã®æ¤œç´¢
     Dim objFSO  As New FileSystemObject
     Dim strTargetFilePath As String
     Application.ScreenUpdating = False
@@ -470,12 +470,12 @@ Sub GetFileName(ByVal myDir As Folder)
             End With
         End If
     Next objFile
-    'ƒTƒuƒtƒHƒ‹ƒ_‚ğŒŸõ
+    'ã‚µãƒ–ãƒ•ã‚©ãƒ«ãƒ€ã‚’æ¤œç´¢
     For Each objSubFldr In myDir.SubFolders
         Call GetFileName(objSubFldr)
     Next objSubFldr
 End Sub
- y—vQÆzuWindows Scripting Host Object Modelv'Command Prompt‚ğ—˜—p‚·‚éƒtƒ@ƒCƒ‹ŒŸõ
+ ã€è¦å‚ç…§ã€‘ã€ŒWindows Scripting Host Object Modelã€'Command Promptã‚’åˆ©ç”¨ã™ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«æ¤œç´¢
 Sub EnumFilePath(ByRef strTargetPath As String)
     Dim objWSHShell     As IWshRuntimeLibrary.WshShell
     Dim colProcessEnv   As IWshRuntimeLibrary.WshEnvironment
@@ -492,27 +492,27 @@ Sub EnumFilePath(ByRef strTargetPath As String)
     Set objWSHShell = New IWshRuntimeLibrary.WshShell
     Set objFSO = New IWshRuntimeLibrary.FileSystemObject
     
-    ' ˆê“I‚Éì¬‚·‚é Redirect File Path ¶¬
+    ' ä¸€æ™‚çš„ã«ä½œæˆã™ã‚‹ Redirect File Path ç”Ÿæˆ
     With objFSO
         strRedirectPath = _
             .GetSpecialFolder(TemporaryFolder) & "\" & .GetTempName
     End With
     
-    ' Command Prompt ‚Ì Path æ“¾
+    ' Command Prompt ã® Path å–å¾—
     Set colProcessEnv = objWSHShell.Environment("Process")
     strComPrmptPath = colProcessEnv.Item("COMSPEC")
     Set colProcessEnv = Nothing
     
-    ' Command ‚ğ¶¬
+    ' Command ã‚’ç”Ÿæˆ
     
     strCommand = strComPrmptPath & " /C DIR """ & strTargetPath _
         & """ /A-D /B /S > """ & strRedirectPath & """"
      
-    ' Command ‚ÌÀs
+    ' Command ã®å®Ÿè¡Œ
     lngReturn = objWSHShell.Run(strCommand, 7, True)
     Set objWSHShell = Nothing
     
-    ' o—Í‚µ‚½ Text “à—eæ‚èo‚µ
+    ' å‡ºåŠ›ã—ãŸ Text å†…å®¹å–ã‚Šå‡ºã—
     If lngReturn = 0 Then
         Set objRedirectFile = objFSO.GetFile(strRedirectPath)
         Set objRedirectTXT = _
@@ -536,12 +536,12 @@ Sub EnumFilePath(ByRef strTargetPath As String)
     End If
     Set objFSO = Nothing
 End Sub
-Sub test()'ƒuƒ‰ƒEƒU‚ğ‹N“®‚³‚¹‚ˆ‚”‚‚Œƒf[ƒ^‚Ì‚İi‰æ‘œ‚È‚µ‚Åjæ‚è‚Ş
+Sub test()'ãƒ–ãƒ©ã‚¦ã‚¶ã‚’èµ·å‹•ã•ã›ï½ˆï½”ï½ï½Œãƒ‡ãƒ¼ã‚¿ã®ã¿ï¼ˆç”»åƒãªã—ã§ï¼‰å–ã‚Šè¾¼ã‚€
 
-'¦«QÆİ’è‚µ‚Ä‚­‚¾‚³‚¢
+'â€»â†“å‚ç…§è¨­å®šã—ã¦ãã ã•ã„
 
-'QÆİ’è@Microsoft HTML Object Library
-'QÆİ’è@Microsoft Forms 2.0 Object Library
+'å‚ç…§è¨­å®šã€€Microsoft HTML Object Library
+'å‚ç…§è¨­å®šã€€Microsoft Forms 2.0 Object Library
 
     Dim ObjIE As Object
     Dim myHTML As String
@@ -572,13 +572,13 @@ Sub test()'ƒuƒ‰ƒEƒU‚ğ‹N“®‚³‚¹‚ˆ‚”‚‚Œƒf[ƒ^‚Ì‚İi‰æ‘œ‚È‚µ‚Åjæ‚è‚Ş
     Set ObjIE = Nothing
     Set myDoc = Nothing
 End Sub
-Sub ƒŒƒWƒXƒgƒŠ‚ğ“Ç‚Ş()
-'IEƒo[ƒWƒ‡ƒ“‚Ìæ“¾
+Sub ãƒ¬ã‚¸ã‚¹ãƒˆãƒªã‚’èª­ã‚€()
+'IEãƒãƒ¼ã‚¸ãƒ§ãƒ³ã®å–å¾—
 MsgBox CreateObject("WScript.Shell"). _
       RegRead("HKLM\SOFTWARE\Microsoft\Internet Explorer\Version")
 
 End Sub
-Sub ReadCSV()'Å‘¬CSV“Ç‚İ‚İ
+Sub ReadCSV()'æœ€é€ŸCSVèª­ã¿è¾¼ã¿
     Dim myPath As String
     Dim N As Integer
     Dim D As String
@@ -588,7 +588,7 @@ Sub ReadCSV()'Å‘¬CSV“Ç‚İ‚İ
     Dim timeS As Date
     Dim cnt As Long
     myPath = Application.GetOpenFilename( _
-        "CSVƒtƒ@ƒCƒ‹*.csv,*.csv")
+        "CSVãƒ•ã‚¡ã‚¤ãƒ«*.csv,*.csv")
     If VarType(myPath) = vbBoolean Then Exit Sub
     timeS = Now()
     N = FreeFile
@@ -610,7 +610,7 @@ Sub ReadCSV()'Å‘¬CSV“Ç‚İ‚İ
         rngDest.Resize(, UBound(myVals) + 1).Value = myVals
         Set rngDest = rngDest.Offset(1)
         cnt = cnt + 1
-        Application.StatusBar = cnt & " ƒŒƒR[ƒh“Ç‚İ‚İ’†"
+        Application.StatusBar = cnt & " ãƒ¬ã‚³ãƒ¼ãƒ‰èª­ã¿è¾¼ã¿ä¸­"
     Loop
     
     With Application
@@ -621,7 +621,7 @@ Sub ReadCSV()'Å‘¬CSV“Ç‚İ‚İ
     Close #N
     MsgBox "done"
 End Sub
-Private Type BITMAPINFOHEADER'ƒrƒbƒgƒ}ƒbƒv‚Ì•‚‚³[‚³‚ğæ“¾
+Private Type BITMAPINFOHEADER'ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ã®å¹…é«˜ã•æ·±ã•ã‚’å–å¾—
     biSize          As Long
     biWidth         As Long
     biHeight        As Long
@@ -647,7 +647,7 @@ On Error GoTo Err_Handler
     Dim fSuccess    As Boolean
     Dim bfType      As Integer
 
-    strFilePath = "C:\ƒpƒX\ƒtƒ@ƒCƒ‹–¼.bmp"
+    strFilePath = "C:\ãƒ‘ã‚¹\ãƒ•ã‚¡ã‚¤ãƒ«å.bmp"
 
     lngFileNum = FreeFile
     GetAttr strFilePath
@@ -670,18 +670,18 @@ On Error GoTo Err_Handler
                     " (" & .biBitCount & "bit)"
       End With
     Else
-        Debug.Print "ƒtƒ@ƒCƒ‹Œ`®‚ª•s–¾"
+        Debug.Print "ãƒ•ã‚¡ã‚¤ãƒ«å½¢å¼ãŒä¸æ˜"
     End If
 
 Exit_Proc:
     Exit Sub
 Err_Handler:
-    Debug.Print "ƒGƒ‰[F " & Err.Description
+    Debug.Print "ã‚¨ãƒ©ãƒ¼ï¼š " & Err.Description
     If fOpen Then Close #lngFileNum
     Resume Exit_Proc
 
 End Sub
-Sub ListModules()'ƒ‚ƒWƒ…[ƒ‹‚ğƒŠƒXƒgƒAƒbƒv
+Sub ListModules()'ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã‚’ãƒªã‚¹ãƒˆã‚¢ãƒƒãƒ—
     Dim objComp As VBComponent
     Dim objCodeMod As CodeModule
     Dim StartLine As Long
@@ -723,7 +723,7 @@ Function CompTypeToName(objComp As VBComponent) As String
 End Function
 </pre>
 <hr>
-<address>yamaV1.02ƒÀ</address>
+<address>yamaV1.02Î²</address>
 </div>
 </body>
 </html>

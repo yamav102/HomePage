@@ -5,8 +5,8 @@
 <meta http-equiv="content-type" content="text/html; charset=shift_jis">
 <meta http-equiv="content-style-type" content="text/css">
 <meta http-equiv="content-script-type" content="text/javascript">
-<meta name="keywords" content="EXCELVBA,HTML—Œ^,">
-<meta name="description" content="d–‚ÅŠy‚Å‚«‚éƒc[ƒ‹W">
+<meta name="keywords" content="EXCELVBA,HTMLé››å‹,">
+<meta name="description" content="ä»•äº‹ã§æ¥½ã§ãã‚‹ãƒ„ãƒ¼ãƒ«é›†">
 <link rel="stylesheet" href="./web/stylexlvba.css" type="text/css">
 <link rev="made" href="mailto:xatsushi&#64;tbb.t-com.ne.jp">
 <link rel="next" href="tsugi.htm">
@@ -33,9 +33,9 @@
 </head>
 <body>
 <div id="contents">
-<a href="GetStatment.txt">Get Statmentl</a>
-<a href="loadCSV.txt">CSVƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚Ş</a>
-<a href="oleObject.zip">WS_OLEObject‚ÌƒCƒxƒ“ƒgƒNƒ‰ƒX</a>
+<a href="GetStatment.txt">Get Statmentè€ƒ</a>
+<a href="loadCSV.txt">CSVãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã‚€</a>
+<a href="oleObject.zip">WS_OLEObjectã®ã‚¤ãƒ™ãƒ³ãƒˆã‚¯ãƒ©ã‚¹</a>
 <ul>
 <li class="clyoko"><a href="../">&gt;home</li>
 <li class="clyoko"><a href="./excel_vba1.htm">1</a></li>
@@ -59,8 +59,8 @@ Sub tashizan()
 Dim mystarttime As Single
 Dim mykasan As Variant, i As Variant, x As Variant
 Dim mymsg As String, mytitle As String
-mymsg = "‚¢‚­‚Â‚Ü‚Å‘«‚·‚©®”‚ğw’è‚µ‚Ä‚­‚¾‚³‚¢"
-mytitle = "‚P‚©‚çw’è‚µ‚½”‚Ü‚Å‰ÁZ‚·‚é"
+mymsg = "ã„ãã¤ã¾ã§è¶³ã™ã‹æ•´æ•°ã‚’æŒ‡å®šã—ã¦ãã ã•ã„"
+mytitle = "ï¼‘ã‹ã‚‰æŒ‡å®šã—ãŸæ•°ã¾ã§åŠ ç®—ã™ã‚‹"
 mykasan = Application.InputBox(prompt:=mymsg, Title:=mytitle, Default:=10000000, Type:=1)
 'mytime = (Timer - mystarttime)
 If mykasan = False Then
@@ -80,15 +80,15 @@ If mykasan = 10000000 Then
 Range("b6").Value = Timer - mystarttime
 Else
 Range("b9").Value = Timer - mystarttime
-Range("b8").Value = "1‚©‚ç" & mykasan & "‚Ü‚Å‚Ì‰ÁZˆ—‚É"
-Range("b10").Value = "•b‚©‚©‚è‚Ü‚µ‚½"
+Range("b8").Value = "1ã‹ã‚‰" & mykasan & "ã¾ã§ã®åŠ ç®—å‡¦ç†ã«"
+Range("b10").Value = "ç§’ã‹ã‹ã‚Šã¾ã—ãŸ"
 End If
 
-MsgBox x & "‚Å‚·", vbOKOnly, "‚P‚©‚ç" & mykasan & "‚Ü‚Å‰ÁZ‚µ‚½Œ‹‰Ê‚Í"
+MsgBox x & "ã§ã™", vbOKOnly, "ï¼‘ã‹ã‚‰" & mykasan & "ã¾ã§åŠ ç®—ã—ãŸçµæœã¯"
 
 
 Else
-MsgBox "®”‚ğw’è‚µ‚Ä‚­‚¾‚³‚¢"
+MsgBox "æ•´æ•°ã‚’æŒ‡å®šã—ã¦ãã ã•ã„"
 
 
 End
@@ -99,24 +99,24 @@ Sub tashizanyukapi()
 Dim sTime As Single
 Dim mykasan As Currency, i As Currency, x As Currency
 Dim mymsg As String, mytitle As String
-mymsg = "‚¢‚­‚Â‚Ü‚Å‘«‚·‚©®”‚ğw’è‚µ‚Ä‚­‚¾‚³‚¢"
-mytitle = "‚P‚©‚çw’è‚µ‚½”‚Ü‚Å‰ÁZ‚·‚é"
+mymsg = "ã„ãã¤ã¾ã§è¶³ã™ã‹æ•´æ•°ã‚’æŒ‡å®šã—ã¦ãã ã•ã„"
+mytitle = "ï¼‘ã‹ã‚‰æŒ‡å®šã—ãŸæ•°ã¾ã§åŠ ç®—ã™ã‚‹"
 mykasan = Application.InputBox(prompt:=mymsg, Title:=mytitle, Default:=10000000, Type:=1)
 
 If InStr(2, mykasan, ".") = 0 Then
 sTime = Timer
-'----------------------‚±‚±‚©‚ç----
+'----------------------ã“ã“ã‹ã‚‰----
 For i = 1 To mykasan
 x = x + i
 Next
-'----------------------‚±‚±‚Ü‚Å----
+'----------------------ã“ã“ã¾ã§----
 'MsgBox DateDiff("s", sTime, eTime)
 MsgBox Timer - sTime
 
-MsgBox x & "‚Å‚·", vbOKOnly, "‚P‚©‚ç" & mykasan & "‚Ü‚Å‰ÁZ‚µ‚½Œ‹‰Ê‚Í"
+MsgBox x & "ã§ã™", vbOKOnly, "ï¼‘ã‹ã‚‰" & mykasan & "ã¾ã§åŠ ç®—ã—ãŸçµæœã¯"
 
 Else
-MsgBox "®”‚ğw’è‚µ‚Ä‚­‚¾‚³‚¢"
+MsgBox "æ•´æ•°ã‚’æŒ‡å®šã—ã¦ãã ã•ã„"
 
 End
 End If
@@ -125,131 +125,131 @@ Sub tashizansagawa()
 Dim sTime As Single
 Dim mykasan As Variant, i As Variant, x As Variant
 Dim mymsg As String, mytitle As String
-mymsg = "‚¢‚­‚Â‚Ü‚Å‘«‚·‚©®”‚ğw’è‚µ‚Ä‚­‚¾‚³‚¢"
-mytitle = "‚P‚©‚çw’è‚µ‚½”‚Ü‚Å‰ÁZ‚·‚é"
+mymsg = "ã„ãã¤ã¾ã§è¶³ã™ã‹æ•´æ•°ã‚’æŒ‡å®šã—ã¦ãã ã•ã„"
+mytitle = "ï¼‘ã‹ã‚‰æŒ‡å®šã—ãŸæ•°ã¾ã§åŠ ç®—ã™ã‚‹"
 mykasan = Application.InputBox(prompt:=mymsg, Title:=mytitle, Default:=10000000, Type:=1)
 
-If InStr(1, mykasan, ".") = 0 Then 'instr‚ğg‚¤‚Æ15Œ…‚Ü‚ÅB‚P‚UŒ…‚Í"."‚ğŠÜ‚Ü‚È‚¢”’l‚Å‚à0‚ğ•Ô‚³‚È‚¢B
-'If (mykasan Mod 1) = 0 Then 'mod‚ğg‚¤‚Æ‚P‚OŒ…‚Ü‚ÅB11Œ…‚ÍƒI[ƒo[ƒtƒ[‚·‚éB
+If InStr(1, mykasan, ".") = 0 Then 'instrã‚’ä½¿ã†ã¨15æ¡ã¾ã§ã€‚ï¼‘ï¼–æ¡ã¯"."ã‚’å«ã¾ãªã„æ•°å€¤ã§ã‚‚0ã‚’è¿”ã•ãªã„ã€‚
+'If (mykasan Mod 1) = 0 Then 'modã‚’ä½¿ã†ã¨ï¼‘ï¼æ¡ã¾ã§ã€‚11æ¡ã¯ã‚ªãƒ¼ãƒãƒ¼ãƒ•ãƒ­ãƒ¼ã™ã‚‹ã€‚
 MsgBox (mykasan Mod 3)
 sTime = Timer
-'timerŠÖ”‚ÍŒß‘O0‚©‚çŒo‰ß‚µ‚½•b”‚ğ•\‚·’P¸“x•‚“®¬”“_”Œ^‚Ì’l‚ğ•Ô‚µ‚Ü‚·B					
-'----------------------‚±‚±‚©‚ç----					sample
+'timeré–¢æ•°ã¯åˆå‰0æ™‚ã‹ã‚‰çµŒéã—ãŸç§’æ•°ã‚’è¡¨ã™å˜ç²¾åº¦æµ®å‹•å°æ•°ç‚¹æ•°å‹ã®å€¤ã‚’è¿”ã—ã¾ã™ã€‚					
+'----------------------ã“ã“ã‹ã‚‰----					sample
 x = (mykasan + 1) * (mykasan / 2)					
 'For i = 1 To mykasan					
 'x = x + i					
 'Next					
 
 
-'----------------------‚±‚±‚Ü‚Å----					
+'----------------------ã“ã“ã¾ã§----					
 Range("d7").Value = Timer - sTime					
 
-MsgBox x & "‚Å‚·", vbOKOnly, "‚P‚©‚ç" & mykasan & "‚Ü‚Å‰ÁZ‚µ‚½Œ‹‰Ê‚Í"					
+MsgBox x & "ã§ã™", vbOKOnly, "ï¼‘ã‹ã‚‰" & mykasan & "ã¾ã§åŠ ç®—ã—ãŸçµæœã¯"					
 Else					
-MsgBox "®”‚ğw’è‚µ‚Ä‚­‚¾‚³‚¢"					
+MsgBox "æ•´æ•°ã‚’æŒ‡å®šã—ã¦ãã ã•ã„"					
 MsgBox InStr(1, mykasan, ".")					
 
 
 '
 End If
 End Sub
-Sub ƒuƒbƒN‚Ìì¬()
+Sub ãƒ–ãƒƒã‚¯ã®ä½œæˆ()
     Workbooks.Add
 End Sub
-Sub ƒuƒbƒN‚ğŠJ‚­()
-    Workbooks.Open Filename:="c:\my documents\ƒXƒPƒWƒ…[ƒ‹.xls"
+Sub ãƒ–ãƒƒã‚¯ã‚’é–‹ã()
+    Workbooks.Open Filename:="c:\my documents\ã‚¹ã‚±ã‚¸ãƒ¥ãƒ¼ãƒ«.xls"
 End Sub
-Sub ƒuƒbƒN‚ğŠJ‚­2()
+Sub ãƒ–ãƒƒã‚¯ã‚’é–‹ã2()
     Workbooks.Open Filename:="XXX.xls"
 End Sub
-Sub ƒuƒbƒN‚ğ•Â‚¶‚é()
+Sub ãƒ–ãƒƒã‚¯ã‚’é–‰ã˜ã‚‹()
 Workbooks.Close
 
 End Sub
-Sub ƒuƒbƒN‚ğ•Â‚¶‚é2()
+Sub ãƒ–ãƒƒã‚¯ã‚’é–‰ã˜ã‚‹2()
     ActiveWorkbook.Close
     
 End Sub
 
-Sub ƒuƒbƒN–¼‚ğw’è‚µ‚Ä•Â‚¶‚é()
+Sub ãƒ–ãƒƒã‚¯åã‚’æŒ‡å®šã—ã¦é–‰ã˜ã‚‹()
     Workbooks("excel.xls").Close
     
 End Sub
-Sub ”Ô–Ú‚ÉŠJ‚¢‚½ƒuƒbƒN‚ğ•Â‚¶‚é()
+Sub ç•ªç›®ã«é–‹ã„ãŸãƒ–ãƒƒã‚¯ã‚’é–‰ã˜ã‚‹()
     Workbooks(2).Close
 End Sub
-Sub Šm”FƒƒbƒZ[ƒW‚ğ•\¦‚³‚¹‚È‚¢‚ÅƒuƒbƒN‚ğ•Â‚¶‚é()
+Sub ç¢ºèªãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¡¨ç¤ºã•ã›ãªã„ã§ãƒ–ãƒƒã‚¯ã‚’é–‰ã˜ã‚‹()
     Workbooks("excel.xls").Close savechanges:=True
 End Sub
-Sub ƒuƒbƒN‚ğ•Û‘¶‚µ‚È‚¢‚Å•Â‚¶‚é()
+Sub ãƒ–ãƒƒã‚¯ã‚’ä¿å­˜ã—ãªã„ã§é–‰ã˜ã‚‹()
     Workbooks("excel.xls").Close False
-    'SaveChanges:=‚ğÈ—ª‚µ‚Ä‚¢‚é
+    'SaveChanges:=ã‚’çœç•¥ã—ã¦ã„ã‚‹
 End Sub
 
-Sub ƒvƒƒpƒeƒB‚Ì’l‚ğ’²‚×‚é()
+Sub ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã®å€¤ã‚’èª¿ã¹ã‚‹()
 Dim myname As String
 myname = Worksheets(1).Name
 MsgBox myname
 
 
 End Sub
-Sub ƒvƒƒpƒeƒB‚Ì’l‚ğ•ÏX‚·‚é()
+Sub ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã®å€¤ã‚’å¤‰æ›´ã™ã‚‹()
 Dim myname As String
 myname = "myname"
 Worksheets(1).Name = myname
-MsgBox "Œ³‚É–ß‚µ‚Ü‚·"
+MsgBox "å…ƒã«æˆ»ã—ã¾ã™"
 Worksheets(1).Name = "sample"
 
 
 End Sub
-Sub ƒV[ƒg‚Ì‘}“ü()
+Sub ã‚·ãƒ¼ãƒˆã®æŒ¿å…¥()
 Worksheets.Add after:=Worksheets(1), Count:=2
 
 End Sub
-Sub •¡”‚ÌƒV[ƒg‚ğ‘I‘ğ‚·‚é()
+Sub è¤‡æ•°ã®ã‚·ãƒ¼ãƒˆã‚’é¸æŠã™ã‚‹()
 Worksheets(Array(2, 4)).Select
 'ActiveWindow.SelectedSheets.Delete
 End Sub
-Sub ƒV[ƒg”‚ğ”‚¦‚ÄÅŒã‚ÌƒV[ƒg‚ğíœ‚·‚é()
+Sub ã‚·ãƒ¼ãƒˆæ•°ã‚’æ•°ãˆã¦æœ€å¾Œã®ã‚·ãƒ¼ãƒˆã‚’å‰Šé™¤ã™ã‚‹()
 Dim i As Integer
 i = Worksheets.Count
 Worksheets(i).Delete
 End Sub
-Sub ”z—ñ‚©‚ç’l‚ğæ“¾‚·‚é()
-Dim myweek As Variant '”z—ñ‚Ívariant‚ÉŠi”[‚³‚ê‚éB‘¼‚ÌŒ^‚¾‚Æ”z—ñ‚Æ‚µ‚Ä”F¯‚µ‚È‚¢B
-myweek = Array("“ú", "Œ", "‰Î", "…", "–Ø", "‹à", "“y")
+Sub é…åˆ—ã‹ã‚‰å€¤ã‚’å–å¾—ã™ã‚‹()
+Dim myweek As Variant 'é…åˆ—ã¯variantã«æ ¼ç´ã•ã‚Œã‚‹ã€‚ä»–ã®å‹ã ã¨é…åˆ—ã¨ã—ã¦èªè­˜ã—ãªã„ã€‚
+myweek = Array("æ—¥", "æœˆ", "ç«", "æ°´", "æœ¨", "é‡‘", "åœŸ")
 MsgBox myweek(1)
 End Sub
-Sub testresult() 'ƒ†[ƒU[’è‹`ŠÖ”‚P
+Sub testresult() 'ãƒ¦ãƒ¼ã‚¶ãƒ¼å®šç¾©é–¢æ•°ï¼‘
 Range("e37").Select
 MsgBox testmsg
 
 End Sub
 
-Function testmsg() As String 'ƒ^ƒCƒgƒ‹s‚Åƒf[ƒ^Œ^‚ğ’è‹`
+Function testmsg() As String 'ã‚¿ã‚¤ãƒˆãƒ«è¡Œã§ãƒ‡ãƒ¼ã‚¿å‹ã‚’å®šç¾©
 Select Case ActiveCell.Value
 Case Is > 80
-testmsg = "—D"
+testmsg = "å„ª"
 Case Is > 60
-testmsg = "—Ç"
+testmsg = "è‰¯"
 Case Is > 40
-testmsg = "‰Â"
+testmsg = "å¯"
 Case Else
-testmsg = "•s‰Â"
+testmsg = "ä¸å¯"
 End Select
-Caseß‚Ì‘‚«•û
-’l‚ª‚PC‚QC‚R‚Ì‚¢‚¸‚ê‚©‚Å‚ ‚éê‡@@@@@@@@@@@@@¨Case ‚PC‚QC‚R 
-’l‚ª‚P‚©‚ç5‚Ü‚Å‚Ì”ÍˆÍ‚Ì‚Ç‚ê‚©‚Å‚ ‚éê‡@@@@@@@@¨Case 1 To 5 
-’l‚ª‚PC‚Q‚©‚T‚©‚ç‚P‚O‚Ü‚Å‚Ì”ÍˆÍ‚Ì‚Ç‚ê‚©‚Å‚ ‚éê‡@@¨Case ‚PC‚QC‚T To 10 
-’l‚ª‚P‚OˆÈã‚Ìê‡@@@@@@@@@@@@@@@@@@@@@@@¨Case Is>=10 
+Caseç¯€ã®æ›¸ãæ–¹
+å€¤ãŒï¼‘ï¼Œï¼’ï¼Œï¼“ã®ã„ãšã‚Œã‹ã§ã‚ã‚‹å ´åˆã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€â†’Case ï¼‘ï¼Œï¼’ï¼Œï¼“ 
+å€¤ãŒï¼‘ã‹ã‚‰5ã¾ã§ã®ç¯„å›²ã®ã©ã‚Œã‹ã§ã‚ã‚‹å ´åˆã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€â†’Case 1 To 5 
+å€¤ãŒï¼‘ï¼Œï¼’ã‹ï¼•ã‹ã‚‰ï¼‘ï¼ã¾ã§ã®ç¯„å›²ã®ã©ã‚Œã‹ã§ã‚ã‚‹å ´åˆã€€ã€€â†’Case ï¼‘ï¼Œï¼’ï¼Œï¼• To 10 
+å€¤ãŒï¼‘ï¼ä»¥ä¸Šã®å ´åˆã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€â†’Case Is>=10 
 End Function
-Function ‚ÅŠ„‚é(Š„‚ç‚ê‚é‚à‚Ì As Single, Š„‚é•¨ As Single)
+Function ã§å‰²ã‚‹(å‰²ã‚‰ã‚Œã‚‹ã‚‚ã® As Single, å‰²ã‚‹ç‰© As Single)
 
-‚ÅŠ„‚é = Š„‚ç‚ê‚é‚à‚Ì / Š„‚é•¨
+ã§å‰²ã‚‹ = å‰²ã‚‰ã‚Œã‚‹ã‚‚ã® / å‰²ã‚‹ç‰©
 End Function
 
-Function myhex(\i” As Double)
-myhex = Hex(\i”)
+Function myhex(åé€²æ•° As Double)
+myhex = Hex(åé€²æ•°)
 End Function
 Function Uni(Moji As String) As String
     Application.Volatile
@@ -260,7 +260,7 @@ Function Uni(Moji As String) As String
     End If
 End Function
 
-Sub F‚Â‚«‚ÌƒZƒ‹‚ğƒJƒEƒ“ƒg‚·‚é()
+Sub è‰²ã¤ãã®ã‚»ãƒ«ã‚’ã‚«ã‚¦ãƒ³ãƒˆã™ã‚‹()
 Dim myhani As Range, myrng As Range, mycount As Integer, i As Integer
 
     Set myhani = Range("g57:g66")
@@ -281,19 +281,19 @@ Dim myhani As Range, myrng As Range, mycount As Integer, i As Integer
 
 End Sub
 
-Sub ƒV[ƒg‚ÌˆÚ“®()
-Worksheets("sample").Move after:=Worksheets("ŠÖ”")
+Sub ã‚·ãƒ¼ãƒˆã®ç§»å‹•()
+Worksheets("sample").Move after:=Worksheets("é–¢æ•°")
 End Sub
-Sub ƒV[ƒg‚ÌˆÚ“®‚ğ–ß‚·()
-Worksheets("sample").Move before:=Worksheets("ŠÖ”")
+Sub ã‚·ãƒ¼ãƒˆã®ç§»å‹•ã‚’æˆ»ã™()
+Worksheets("sample").Move before:=Worksheets("é–¢æ•°")
 End Sub
-Sub lŠp()
+Sub å››è§’()
 Dim i As Integer
 For i = 0 To 100
 Worksheets(1).Shapes.AddShape(msoShapeRectangle, 122 + i, 1222 + i, 8 + i, 6 + i).Select
 Next
 End Sub
-Sub lŠp‚ğíœ()
+Sub å››è§’ã‚’å‰Šé™¤()
 Dim Sh As Object, mydocument As Object
 Set mydocument = Worksheets("sample")
 For Each Sh In mydocument.Shapes
@@ -306,7 +306,7 @@ Sub test()
 
 
 Dim MyStr, MyInt
-' Let ƒXƒe[ƒgƒƒ“ƒg‚ğg‚Á‚Ä•Ï”‚ğ‘ã“ü‚µ‚Ü‚·B
+' Let ã‚¹ãƒ†ãƒ¼ãƒˆãƒ¡ãƒ³ãƒˆã‚’ä½¿ã£ã¦å¤‰æ•°ã‚’ä»£å…¥ã—ã¾ã™ã€‚
 Let MyStr = "Hello World"
 Let MyInt = 5
 
@@ -314,7 +314,7 @@ MsgBox MyStr & MyInt
 
 End Sub
 
-Sub zu()       '’Ç‰Á—p
+Sub zu()       'è¿½åŠ ç”¨
    Dim i As Integer
    
    For i = 0 To 200
@@ -325,7 +325,7 @@ Sub zu()       '’Ç‰Á—p
    Next
 End Sub
 
-Sub zu2()      'íœ—p
+Sub zu2()      'å‰Šé™¤ç”¨
    Dim Sh As Shape
    For Each Sh In Worksheets(1).Shapes
       If Sh.Type = msoAutoShape Then
@@ -340,57 +340,57 @@ Sub zu2()      'íœ—p
 End Sub
 
 
-Sub ƒOƒ‰ƒtƒV[ƒg‚Ìíœ()
-Dim mychart As Chart '’P‚Écharts.delete‚Æ‚·‚é‚ÆƒOƒ‰ƒtƒV[ƒg‚ª–³‚¢‚ÉƒGƒ‰[‚ª‚Å‚éB
+Sub ã‚°ãƒ©ãƒ•ã‚·ãƒ¼ãƒˆã®å‰Šé™¤()
+Dim mychart As Chart 'å˜ã«charts.deleteã¨ã™ã‚‹ã¨ã‚°ãƒ©ãƒ•ã‚·ãƒ¼ãƒˆãŒç„¡ã„æ™‚ã«ã‚¨ãƒ©ãƒ¼ãŒã§ã‚‹ã€‚
  For Each mychart In Charts
  mychart.Delete
  Next
  
 End Sub
-Sub ƒV[ƒg‚ğ”ñ•\¦‚É‚·‚é1()
-Worksheets(3).Visible = False 'ƒc[ƒ‹¨ƒV[ƒg¨•\¦‚µ‚È‚¢A‚Æ“¯‚¶‘€ì
+Sub ã‚·ãƒ¼ãƒˆã‚’éè¡¨ç¤ºã«ã™ã‚‹1()
+Worksheets(3).Visible = False 'ãƒ„ãƒ¼ãƒ«â†’ã‚·ãƒ¼ãƒˆâ†’è¡¨ç¤ºã—ãªã„ã€ã¨åŒã˜æ“ä½œ
 
 End Sub
-Sub ƒV[ƒg‚ğ”ñ•\¦‚É‚·‚é2()
-Worksheets(3).Visible = xlVeryHidden 'vba‚©‚ç‚Å‚È‚¢‚ÆÄ•\¦‚Å‚«‚È‚¢ƒo[ƒWƒ‡ƒ“
+Sub ã‚·ãƒ¼ãƒˆã‚’éè¡¨ç¤ºã«ã™ã‚‹2()
+Worksheets(3).Visible = xlVeryHidden 'vbaã‹ã‚‰ã§ãªã„ã¨å†è¡¨ç¤ºã§ããªã„ãƒãƒ¼ã‚¸ãƒ§ãƒ³
 End Sub
-Sub Ä•\¦()
+Sub å†è¡¨ç¤º()
 Worksheets(3).Visible = True
 
 
 End Sub
-Function ƒV[ƒg‚Ì–¼‘OŠÖ”(suuji As Integer)
+Function ã‚·ãƒ¼ãƒˆã®åå‰é–¢æ•°(suuji As Integer)
 Application.Volatile
-ƒV[ƒg‚Ì–¼‘OŠÖ” = Worksheets(suuji).Name
+ã‚·ãƒ¼ãƒˆã®åå‰é–¢æ•° = Worksheets(suuji).Name
 
 
 End Function
-Sub ƒV[ƒg‚ğˆÚ“®()
+Sub ã‚·ãƒ¼ãƒˆã‚’ç§»å‹•()
 Worksheets(1).Move after:=Worksheets(3)
 
 End Sub
-Sub ‘¼‚ÌƒuƒbƒN‚ÖƒV[ƒg‚ğˆÚ“®()
+Sub ä»–ã®ãƒ–ãƒƒã‚¯ã¸ã‚·ãƒ¼ãƒˆã‚’ç§»å‹•()
 Worksheets(3).Move before:=Workbooks("dummy.xls").Worksheets(1)
 
 End Sub
-Sub V‹KƒuƒbƒN‚Éƒ[ƒNƒV[ƒg‚ğˆÚ“®‚·‚é()
-Worksheets(1).Move 'moveƒƒ\ƒbƒh‚Ìˆø”‚ğÈ—ª‚·‚é‚ÆV‹KƒuƒbƒN“à‚ÉƒV[ƒg‚ªˆÚ“®‚·‚éB
+Sub æ–°è¦ãƒ–ãƒƒã‚¯ã«ãƒ¯ãƒ¼ã‚¯ã‚·ãƒ¼ãƒˆã‚’ç§»å‹•ã™ã‚‹()
+Worksheets(1).Move 'moveãƒ¡ã‚½ãƒƒãƒ‰ã®å¼•æ•°ã‚’çœç•¥ã™ã‚‹ã¨æ–°è¦ãƒ–ãƒƒã‚¯å†…ã«ã‚·ãƒ¼ãƒˆãŒç§»å‹•ã™ã‚‹ã€‚
 End Sub
-Sub ƒV[ƒg‚ğƒRƒs[‚·‚é1()
+Sub ã‚·ãƒ¼ãƒˆã‚’ã‚³ãƒ”ãƒ¼ã™ã‚‹1()
 Worksheets(1).Copy after:=Worksheets(3)
 
 
 End Sub
-Sub ƒV[ƒg‚ÌƒRƒs[2()
-Worksheets(1).Copy before:=Workbooks("XXX.xls").Sheets(2) '•Ê‚ÌƒuƒbƒN“à‚ÉƒRƒs[‚·‚é
+Sub ã‚·ãƒ¼ãƒˆã®ã‚³ãƒ”ãƒ¼2()
+Worksheets(1).Copy before:=Workbooks("XXX.xls").Sheets(2) 'åˆ¥ã®ãƒ–ãƒƒã‚¯å†…ã«ã‚³ãƒ”ãƒ¼ã™ã‚‹
 End Sub
 
-Sub ‹¤—LƒuƒbƒN‚É•ÏX‚ğó‚¯“ü‚ê‚³‚¹‚é()
+Sub å…±æœ‰ãƒ–ãƒƒã‚¯ã«å¤‰æ›´ã‚’å—ã‘å…¥ã‚Œã•ã›ã‚‹()
 ActiveWorkbook.AcceptAllChanges
 
 
 End Sub
-Sub ŠÖ”‚ÌŒ©o‚µ‚ÌƒZƒ‹‚ğ“h‚è‚Â‚Ô‚·()
+Sub é–¢æ•°ã®è¦‹å‡ºã—ã®ã‚»ãƒ«ã‚’å¡—ã‚Šã¤ã¶ã™()
 '
 Dim myrange As Range
 
@@ -423,7 +423,7 @@ With myrange.Borders(xlEdgeLeft)
         .Pattern = xlSolid
     End With
     With myrange.Font
-        .Name = "‚l‚r ‚oƒSƒVƒbƒN"
+        .Name = "ï¼­ï¼³ ï¼°ã‚´ã‚·ãƒƒã‚¯"
         .Size = 20
         .Strikethrough = False
         .Superscript = False
@@ -437,13 +437,13 @@ With myrange.Borders(xlEdgeLeft)
 End If
 Next
 End Sub
-Sub ƒ}[ƒJ[‚ÌƒNƒŠƒA()
+Sub ãƒãƒ¼ã‚«ãƒ¼ã®ã‚¯ãƒªã‚¢()
 Range("a:a").ClearFormats
 End Sub
 
-Sub ƒf[ƒ^‚ÌÅ‰ºs‚Ìsƒiƒ“ƒo[‚ğæ“¾‚·‚é()
+Sub ãƒ‡ãƒ¼ã‚¿ã®æœ€ä¸‹è¡Œã®è¡ŒãƒŠãƒ³ãƒãƒ¼ã‚’å–å¾—ã™ã‚‹()
 
-Dim n& 'rowƒvƒƒpƒeƒB‚Ílong‚ÅéŒ¾‚·‚éBlong‚ÌéŒ¾Œ^‚ÍƒAƒ“ƒpƒTƒ“ƒh
+Dim n& 'rowãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã¯longã§å®£è¨€ã™ã‚‹ã€‚longã®å®£è¨€å‹ã¯ã‚¢ãƒ³ãƒ‘ã‚µãƒ³ãƒ‰
 
 Range("a200").End(xlUp).Select
 n = Selection.Row
@@ -451,8 +451,8 @@ MsgBox n
 
 End Sub
 
-Sub a—ñƒf[ƒ^‚ÌÅ‰ºs‚©‚çã3ƒZƒ‹‚ğ‘I‚Ô()
-Dim n& 'rowƒvƒƒpƒeƒB‚Ílong‚ÅéŒ¾‚·‚éBlong‚ÌéŒ¾Œ^‚ÍƒAƒ“ƒpƒTƒ“ƒh
+Sub aåˆ—ãƒ‡ãƒ¼ã‚¿ã®æœ€ä¸‹è¡Œã‹ã‚‰ä¸Š3ã‚»ãƒ«ã‚’é¸ã¶()
+Dim n& 'rowãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã¯longã§å®£è¨€ã™ã‚‹ã€‚longã®å®£è¨€å‹ã¯ã‚¢ãƒ³ãƒ‘ã‚µãƒ³ãƒ‰
 Range("a200").End(xlUp).Select
 n = Selection.Row
 If n < 3 Then
@@ -464,7 +464,7 @@ End If
 
 End Sub
 
-Sub ¡“ú‚Ì“ú•t‚ÌƒZƒ‹‚ğ‘I‚Ô()
+Sub ä»Šæ—¥ã®æ—¥ä»˜ã®ã‚»ãƒ«ã‚’é¸ã¶()
 Dim myrange As Range, mycell As Range
 Set myrange = Worksheets(1).Range("1:1")
 
@@ -480,7 +480,7 @@ Next mycell
 End Sub
 
 
-Sub ‚Ó‚è‚ª‚Èî•ñ‚ğ‚à‚½‚È‚¢Š¿š‚ÉU‚è‰¼–¼‚ğU‚é()
+Sub ãµã‚ŠãŒãªæƒ…å ±ã‚’ã‚‚ãŸãªã„æ¼¢å­—ã«æŒ¯ã‚Šä»®åã‚’æŒ¯ã‚‹()
   Application.ScreenUpdating = False
     With Selection
       .SetPhonetic
@@ -489,55 +489,55 @@ Sub ‚Ó‚è‚ª‚Èî•ñ‚ğ‚à‚½‚È‚¢Š¿š‚ÉU‚è‰¼–¼‚ğU‚é()
   Application.ScreenUpdating = True
 End Sub
 
-Sub inputboxƒƒ\ƒbƒh() '”’l‚ğ“ü—Í‚³‚¹‚é‚·
+Sub inputboxãƒ¡ã‚½ãƒƒãƒ‰() 'æ•°å€¤ã‚’å…¥åŠ›ã•ã›ã‚‹ã™
     Dim mycopy As Integer
     Dim mymsg As String, mytitle As String
     
-    mymsg = "ˆóü•””‚ğw’è‚µ‚Ä‚­‚¾‚³‚¢"
-    mytitle = "‚±‚ÌƒV[ƒg‚ğˆóü‚·‚é"
+    mymsg = "å°åˆ·éƒ¨æ•°ã‚’æŒ‡å®šã—ã¦ãã ã•ã„"
+    mytitle = "ã“ã®ã‚·ãƒ¼ãƒˆã‚’å°åˆ·ã™ã‚‹"
     mycopy = Application.InputBox(prompt:=mymsg, Title:=mytitle, Default:=1, Type:=1)
     
     If mycopy <> 0 Then
         Worksheets("code").PrintOut copies:=mycopy
         
     Else
-        MsgBox "ˆóüw’è‚ÍƒLƒƒƒ“ƒZƒ‹‚³‚ê‚Ü‚µ‚½"
+        MsgBox "å°åˆ·æŒ‡å®šã¯ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã•ã‚Œã¾ã—ãŸ"
     End If
     
 End Sub
-Sub ˆóü”ÍˆÍ‚Ì‘I‘ğ‚ğ‘£‚·()
+Sub å°åˆ·ç¯„å›²ã®é¸æŠã‚’ä¿ƒã™()
 
     Dim mycell As Range
     Dim mymsg As String, mytitle As String
      
     Worksheets("code").Activate
-    mymsg = "ˆóü”ÍˆÍ‚ğƒ}ƒEƒX‚Åƒhƒ‰ƒbƒO‚µ‚Ä‚­‚¾‚³‚¢"
-    mytitle = "ˆóü”ÍˆÍ‚Ìw’è"
+    mymsg = "å°åˆ·ç¯„å›²ã‚’ãƒã‚¦ã‚¹ã§ãƒ‰ãƒ©ãƒƒã‚°ã—ã¦ãã ã•ã„"
+    mytitle = "å°åˆ·ç¯„å›²ã®æŒ‡å®š"
     
     On Error Resume Next
-    Set mycell = Application.InputBox(prompt:=mymsg, Title:=mytitle, Type:=8) '8‚ÍƒZƒ‹QÆBtype‚ğÈ—ª‚·‚é‚ÆƒeƒLƒXƒg‚ğ•Ô‚·
+    Set mycell = Application.InputBox(prompt:=mymsg, Title:=mytitle, Type:=8) '8ã¯ã‚»ãƒ«å‚ç…§ã€‚typeã‚’çœç•¥ã™ã‚‹ã¨ãƒ†ã‚­ã‚¹ãƒˆã‚’è¿”ã™
     If mycell Is Nothing Then Exit Sub
     With ActiveSheet
         .PageSetup.PrintArea = mycell.Address
         .PrintOut
     End With
-Sub inputboxŠÖ”() 'ƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒ‚[ƒ_ƒ‹iƒtƒH[ƒ€oŒ»’†‚ÍƒV[ƒg‚Ì‘€ì‚ªo—ˆ‚È‚¢j
+Sub inputboxé–¢æ•°() 'ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ãƒ¢ãƒ¼ãƒ€ãƒ«ï¼ˆãƒ•ã‚©ãƒ¼ãƒ å‡ºç¾ä¸­ã¯ã‚·ãƒ¼ãƒˆã®æ“ä½œãŒå‡ºæ¥ãªã„ï¼‰
     Dim myno As Integer
     Dim mymsg As String, mytitle As String
     
-    mymsg = "íœ‚·‚é“`•[No.‚ğw’è‚µ‚Ä‚­‚¾‚³‚¢"
-    mytitle = "”„ãƒf[ƒ^íœ"
+    mymsg = "å‰Šé™¤ã™ã‚‹ä¼ç¥¨No.ã‚’æŒ‡å®šã—ã¦ãã ã•ã„"
+    mytitle = "å£²ä¸Šãƒ‡ãƒ¼ã‚¿å‰Šé™¤"
     myno = Val(InputBox(prompt:=mymsg, Title:=mytitle))
     If myno <> 0 Then
-    MsgBox myno & "‚ğíœNo.‚Éw’è‚µ‚Ü‚µ‚½"
+    MsgBox myno & "ã‚’å‰Šé™¤No.ã«æŒ‡å®šã—ã¾ã—ãŸ"
     Else
-        MsgBox "ˆ—‚ğ’†’i‚µ‚Ü‚µ‚½"
+        MsgBox "å‡¦ç†ã‚’ä¸­æ®µã—ã¾ã—ãŸ"
     End If
     
     
     
 End Sub
-Sub ‘I‘ğ”ÍˆÍ‚Ìs‚Æ—ñ‚Ìæ“¾()
+Sub é¸æŠç¯„å›²ã®è¡Œã¨åˆ—ã®å–å¾—()
 
  Dim R As Range
     Set R = Selection
@@ -549,7 +549,7 @@ Sub ‘I‘ğ”ÍˆÍ‚Ìs‚Æ—ñ‚Ìæ“¾()
 
 
 End Sub
-Sub ƒ†[ƒU[‘¤‚Ì‚İƒV[ƒg‚ğ•ÛŒì‚·‚é()
+Sub ãƒ¦ãƒ¼ã‚¶ãƒ¼å´ã®ã¿ã‚·ãƒ¼ãƒˆã‚’ä¿è­·ã™ã‚‹()
  ActiveSheet.Protect userinterfaceonly:=True
     Dim i As Integer
     
@@ -567,9 +567,9 @@ Sub ƒ†[ƒU[‘¤‚Ì‚İƒV[ƒg‚ğ•ÛŒì‚·‚é()
 
      Next i
 end sub
-Sub ‘S‚Ä‚ÌƒRƒ}ƒ“ƒhƒo[EƒXƒNƒ[ƒ‹ƒo[‚ğ”ñ•\¦ƒ^ƒCƒgƒ‹ƒo[‚ÌƒJƒXƒ^ƒ}ƒCƒY()
+Sub å…¨ã¦ã®ã‚³ãƒãƒ³ãƒ‰ãƒãƒ¼ãƒ»ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ãƒãƒ¼ã‚’éè¡¨ç¤ºã‚¿ã‚¤ãƒˆãƒ«ãƒãƒ¼ã®ã‚«ã‚¹ã‚¿ãƒã‚¤ã‚º()
 Application.ScreenUpdating = False
-Dim mycb As CommandBar '‘S‚Ä‚ÌƒRƒ}ƒ“ƒhƒo[‚ğ”ñ•\¦‚É‚·‚é
+Dim mycb As CommandBar 'å…¨ã¦ã®ã‚³ãƒãƒ³ãƒ‰ãƒãƒ¼ã‚’éè¡¨ç¤ºã«ã™ã‚‹
 On Error Resume Next
 For Each mycb In Application.CommandBars
 mycb.Visible = False
@@ -578,15 +578,15 @@ On Error GoTo 0
 Application.CommandBars("Worksheet Menu Bar").Enabled = False
 Application.DisplayFormulaBar = False
 
-Application.Caption = "•ª‹‹—p"
-'ƒ^ƒCƒgƒ‹ƒo[–¼‚Ì’è‹`
+Application.Caption = "åˆ†çµ¦ç”¨"
+'ã‚¿ã‚¤ãƒˆãƒ«ãƒãƒ¼åã®å®šç¾©
 
-If Worksheets(3).Shapes("•œ‹Aƒ{ƒ^ƒ“").Visible = False And Worksheets(2).Range("c41").Value = 2 Then			
-myname1 = Worksheets(3).Range("a1").Value & "‹‹—^Œ" & Worksheets(3).Range("b1").Value & "Œ“xƒoƒbƒNƒAƒbƒv"			
+If Worksheets(3).Shapes("å¾©å¸°ãƒœã‚¿ãƒ³").Visible = False And Worksheets(2).Range("c41").Value = 2 Then			
+myname1 = Worksheets(3).Range("a1").Value & "çµ¦ä¸æœˆ" & Worksheets(3).Range("b1").Value & "æœˆåº¦ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—"			
 With ActiveWindow			
 .DisplayHeadings = False			
 .DisplayWorkbookTabs = False			
-.Caption = "‡Šœœ" & myname1			
+.Caption = "ãˆ±â—â—" & myname1			
 .DisplayHorizontalScrollBar = False			
 .DisplayVerticalScrollBar = False			
 End With			
@@ -594,45 +594,45 @@ End With
 end sub			
 Sub ie_make_table_test()			site="http://www.ken3.org/vba/"
 
-    Dim objIE    As Object  '‚h‚dƒIƒuƒWƒFƒNƒgQÆ—p			
-    Dim objTAG   As Object  'TAG‚ÌƒIƒuƒWƒFƒNƒg‚ğ‘ã“ü			
+    Dim objIE    As Object  'ï¼©ï¼¥ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆå‚ç…§ç”¨			
+    Dim objTAG   As Object  'TAGã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä»£å…¥			
     Dim y As Integer			
     Dim x As Integer
-    Dim objTableItem As Object 'TABLE“à‚ÌITEMŒŸõ—p
+    Dim objTableItem As Object 'TABLEå†…ã®ITEMæ¤œç´¢ç”¨
 
-    'ƒCƒ“ƒ^[ƒlƒbƒgƒGƒNƒXƒvƒ[ƒ‰[‚ÌƒIƒuƒWƒFƒNƒg‚ğì‚é
+    'ã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒƒãƒˆã‚¨ã‚¯ã‚¹ãƒ—ãƒ­ãƒ¼ãƒ©ãƒ¼ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œã‚‹
     Set objIE = CreateObject("InternetExplorer.application")
     
-    objIE.Visible = True 'Œ©‚¦‚é‚æ‚¤‚É‚·‚é(‚¨–ñ‘©)
+    objIE.Visible = True 'è¦‹ãˆã‚‹ã‚ˆã†ã«ã™ã‚‹(ãŠç´„æŸ)
 
-    '•¶š—ñ‚Åw’è‚µ‚½‚t‚q‚k‚É”ò‚Ô
+    'æ–‡å­—åˆ—ã§æŒ‡å®šã—ãŸï¼µï¼²ï¼¬ã«é£›ã¶
     'objIE.Navigate "http://www.ken3.org/cgi-bin/cnt/test.asp"
-    objIE.Navigate "C:\WINDOWS\ÃŞ½¸Ä¯Ìß\—X•Ö–‹ÆŒo‰cî•ñƒVƒXƒeƒ€7.htm"
+    objIE.Navigate "C:\WINDOWS\ï¾ƒï¾ï½½ï½¸ï¾„ï½¯ï¾Œï¾Ÿ\éƒµä¾¿äº‹æ¥­çµŒå–¶æƒ…å ±ã‚·ã‚¹ãƒ†ãƒ 7.htm"
 
-    '•\¦I—¹‚Ü‚Å‘Ò‚Â
+    'è¡¨ç¤ºçµ‚äº†ã¾ã§å¾…ã¤
      Do While objIE.Busy = True
-         '‰½‚à‚µ‚È‚¢ƒ‹[ƒviÎj
+         'ä½•ã‚‚ã—ãªã„ãƒ«ãƒ¼ãƒ—ï¼ˆç¬‘ï¼‰
          DoEvents
      Loop
      
-     '.body ‚Ìƒf[ƒ^‚ğƒ‹[ƒv‚·‚é
+     '.body ã®ãƒ‡ãƒ¼ã‚¿ã‚’ãƒ«ãƒ¼ãƒ—ã™ã‚‹
      For Each objTAG In objIE.document.body.all
-        'ƒe[ƒuƒ‹‚Ìƒ^ƒO‚ğ’T‚·
+        'ãƒ†ãƒ¼ãƒ–ãƒ«ã®ã‚¿ã‚°ã‚’æ¢ã™
         If objTAG.tagName = "TABLE" Then
-            'V‹KƒuƒbƒN‚ğ’Ç‰Á‚·‚é
+            'æ–°è¦ãƒ–ãƒƒã‚¯ã‚’è¿½åŠ ã™ã‚‹
             Workbooks.Add
-            'ƒJƒEƒ“ƒ^‚Ì‰Šú‰»
-            y = 0 'sƒJƒEƒ“ƒ^
-            'ƒe[ƒuƒ‹“à‚ÌITEM‚Åƒ‹[ƒv‚·‚é
+            'ã‚«ã‚¦ãƒ³ã‚¿ã®åˆæœŸåŒ–
+            y = 0 'è¡Œã‚«ã‚¦ãƒ³ã‚¿
+            'ãƒ†ãƒ¼ãƒ–ãƒ«å†…ã®ITEMã§ãƒ«ãƒ¼ãƒ—ã™ã‚‹
             For Each objTableItem In objTAG.all
                 If objTableItem.tagName = "TR" Then
-                    y = y + 1   'sƒJƒEƒ“ƒ^‚ğ+1
-                    x = 1 '—ñƒJƒEƒ“ƒ^‚ğ‚P(¶’[‚É‚·‚é)
+                    y = y + 1   'è¡Œã‚«ã‚¦ãƒ³ã‚¿ã‚’+1
+                    x = 1 'åˆ—ã‚«ã‚¦ãƒ³ã‚¿ã‚’ï¼‘(å·¦ç«¯ã«ã™ã‚‹)
                 End If
                 If objTableItem.tagName = "TD" Then
-                    'ƒeƒLƒXƒgƒf[ƒ^‚ğƒZƒbƒg‚·‚é
+                    'ãƒ†ã‚­ã‚¹ãƒˆãƒ‡ãƒ¼ã‚¿ã‚’ã‚»ãƒƒãƒˆã™ã‚‹
                     Cells(y, x) = objTableItem.innerText
-                    x = x + 1 '—ñƒJƒEƒ“ƒ^‚ğ+‚P(Ÿ‚É‚·‚é)
+                    x = x + 1 'åˆ—ã‚«ã‚¦ãƒ³ã‚¿ã‚’+ï¼‘(æ¬¡ã«ã™ã‚‹)
                 End If
             Next
         End If
@@ -641,7 +641,7 @@ Sub ie_make_table_test()			site="http://www.ken3.org/vba/"
 End Sub
 
 Private Sub Worksheet_Change(ByVal Target As Range)
-ƒ[ƒNƒV[ƒg‚ÌƒCƒxƒ“ƒgB4Œ…”’l‚ğŠÔ•\¦‚É‚·‚é
+ãƒ¯ãƒ¼ã‚¯ã‚·ãƒ¼ãƒˆã®ã‚¤ãƒ™ãƒ³ãƒˆã€‚4æ¡æ•°å€¤ã‚’æ™‚é–“è¡¨ç¤ºã«ã™ã‚‹
    Dim Temp As String
    With Target
       Temp = Format(.Text, "00:00")
@@ -653,10 +653,10 @@ Private Sub Worksheet_Change(ByVal Target As Range)
    End With
 End Sub
 
-Sub TestMain()'ƒV[ƒgã‚ÌhtmlƒŠƒ“ƒN‚Ìƒy[ƒW‰æ–Ê‚ğƒGƒNƒZƒ‹‚É“\‚è•t‚¯‚é
-' QÆİ’èFMicrosoft Forms 2.0 Object Library
-' QÆİ’èFMicrosoft HTML Object Library
-' QÆİ’èFMicrosoft Internet Controls
+Sub TestMain()'ã‚·ãƒ¼ãƒˆä¸Šã®htmlãƒªãƒ³ã‚¯ã®ãƒšãƒ¼ã‚¸ç”»é¢ã‚’ã‚¨ã‚¯ã‚»ãƒ«ã«è²¼ã‚Šä»˜ã‘ã‚‹
+' å‚ç…§è¨­å®šï¼šMicrosoft Forms 2.0 Object Library
+' å‚ç…§è¨­å®šï¼šMicrosoft HTML Object Library
+' å‚ç…§è¨­å®šï¼šMicrosoft Internet Controls
 
     Dim i As Range
     Dim j As Shape
@@ -712,29 +712,29 @@ Private Sub prcPaste(ByVal AURL As String)
     wkDO.PutInClipboard
 
 End Sub
-Sub ie_‚Ì‹N“®()
+Sub ie_ã®èµ·å‹•()
  Dim objIE As Object
  Set objIE = CreateObject("InternetExplorer.application")
  objIE.Visible = True
     
-    '•¶š—ñ‚Åw’è‚µ‚½‚t‚q‚k‚É”ò‚Ô
+    'æ–‡å­—åˆ—ã§æŒ‡å®šã—ãŸï¼µï¼²ï¼¬ã«é£›ã¶
     objIE.Navigate "http://www2.tba.t-com.ne.jp/yamazaki/"
-    'objIE.Navigate "C:\WINDOWS\ÃŞ½¸Ä¯Ìß\tefutefu.htm"
+    'objIE.Navigate "C:\WINDOWS\ï¾ƒï¾ï½½ï½¸ï¾„ï½¯ï¾Œï¾Ÿ\tefutefu.htm"
     
     Do While objIE.Busy = True
-         '‰½‚à‚µ‚È‚¢ƒ‹[ƒviÎj
+         'ä½•ã‚‚ã—ãªã„ãƒ«ãƒ¼ãƒ—ï¼ˆç¬‘ï¼‰
          DoEvents
      Loop
 
 
  End Sub						
 						
-Private Sub CommandButton2_Click()						refedi‚”‚Ìg‚¢•û
+Private Sub CommandButton2_Click()						refediï½”ã®ä½¿ã„æ–¹
 Application.ScreenUpdating = False						
 Range(RefEdit1.Value).Copy						
-With Worksheets("‹Ç–¼ƒf[ƒ^ƒx[ƒX")						
+With Worksheets("å±€åãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹")						
 .Range("i2").PasteSpecial Paste:=xlValues						
-.Range("i:i").Replace what:="@", replacement:="", lookat:=xlPart, _						
+.Range("i:i").Replace what:="ã€€", replacement:="", lookat:=xlPart, _						
      searchorder:=xlByRows, MatchCase:=False						
  .Range("i:i").Replace what:=" ", replacement:="", lookat:=xlPart, _						
  searchorder:=xlByRows, MatchCase:=False						
@@ -743,14 +743,14 @@ End With
 
 End Sub
 
-Sub –îˆó‚ğ•`‚­()
+Sub çŸ¢å°ã‚’æã()
 
 Dim mydocument As Worksheet
 
 Set mydocument = Worksheets(1)
 With mydocument.Shapes.AddLine(10, 10, 20, 30).Line
-'in“_‚Ì¶’[‚©‚ç‚Ìpx’l,n“_‚Ìã’[‚©‚ç‚Ìpx’l
-',I“_‚Ì¶’[‚©‚ç‚Ìpx’l,I“_‚Ìã’[‚©‚ç‚Ìpx’lj
+'ï¼ˆå§‹ç‚¹ã®å·¦ç«¯ã‹ã‚‰ã®pxå€¤,å§‹ç‚¹ã®ä¸Šç«¯ã‹ã‚‰ã®pxå€¤
+',çµ‚ç‚¹ã®å·¦ç«¯ã‹ã‚‰ã®pxå€¤,çµ‚ç‚¹ã®ä¸Šç«¯ã‹ã‚‰ã®pxå€¤ï¼‰
     .BeginArrowheadLength = msoArrowheadShort
     .BeginArrowheadStyle = msoArrowheadOval
     .BeginArrowheadWidth = msoArrowheadNarrow
@@ -759,10 +759,10 @@ With mydocument.Shapes.AddLine(10, 10, 20, 30).Line
     .EndArrowheadWidth = msoArrowheadWide
 End With					
 					
-Private Sub Workbook_Open()					ƒuƒbƒN‚ğŠJ‚­•Ê‚ÌƒuƒbƒN‚ğŠJ‚«A”ñ•\¦‚É‚·‚éB‚³‚ç‚É•Â‚¶‚é‚É•\¦‚³‚¹‚é
+Private Sub Workbook_Open()					ãƒ–ãƒƒã‚¯ã‚’é–‹ãæ™‚åˆ¥ã®ãƒ–ãƒƒã‚¯ã‚’é–‹ãã€éè¡¨ç¤ºã«ã™ã‚‹ã€‚ã•ã‚‰ã«é–‰ã˜ã‚‹æ™‚ã«è¡¨ç¤ºã•ã›ã‚‹
 
 Workbooks.Open Filename:= _					
-C:\WINDOWS\ÃŞ½¸Ä¯Ìß\visible.xls					
+C:\WINDOWS\ï¾ƒï¾ï½½ï½¸ï¾„ï½¯ï¾Œï¾Ÿ\visible.xls					
  ActiveWindow.Visible = False					
 					
 Private Sub Workbook_BeforeClose(Cancel As Boolean)					
@@ -773,7 +773,7 @@ End Sub
 					
 </pre>
 <hr>
-<address>yamaV1.02ƒÀ</address>
+<address>yamaV1.02Î²</address>
 </div>
 </body>
 </html>

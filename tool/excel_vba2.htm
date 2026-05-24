@@ -4,8 +4,8 @@
 <meta http-equiv="content-type" content="text/html; charset=shift_jis">
 <meta http-equiv="content-style-type" content="text/css">
 <meta http-equiv="content-script-type" content="text/javascript">
-<meta name="keywords" content="EXCELVBA,HTML���^,">
-<meta name="description" content="�d���Ŋy�ł���c�[���W">
+<meta name="keywords" content="EXCELVBA,HTML雛型,">
+<meta name="description" content="仕事で楽できるツール集">
 <link rel="stylesheet" href="./web/stylexlvba.css" type="text/css">
 <link rev="made" href="mailto:xatsushi&#64;tbb.t-com.ne.jp">
 <link rel="next" href="tsugi.htm">
@@ -49,18 +49,18 @@
 </ul>
 <h1>Excel VBA Sample 2</h1>
 <pre>					
-Sub fairusakusei()			�t�H���_���w�肵�ăG�N�Z���t�@�C��������������		
+Sub fairusakusei()			フォルダを指定してエクセルファイルをたくさん作る		
 Dim counter As Integer, mynum As Integer					
 Dim myname As Integer
-'counter�̐�����ID�Ɋ���U��
+'counterの数字をIDに割り振る
 counter = 3000
 
 Do
 counter = counter + 1
 myname = CStr(counter)
 
-ChDir "C:\WINDOWS\�޽�į��\ankeito"
-'�����t�@�C�����̃t�@�C���������Ă������B�㏑�����Ă��܂�
+ChDir "C:\WINDOWS\ﾃﾞｽｸﾄｯﾌﾟ\ankeito"
+'同じファイル名のファイルがあっても無視。上書きしてしまえ
 Application.DisplayAlerts = False
 ActiveWorkbook.SaveAs myname
 
@@ -69,13 +69,13 @@ Loop Until counter = 3200
 End Sub
 			
 Private Sub Worksheet_SelectionChange(ByVal Target As Range)			
-Dim i As Integer			�I���Z���̂���s���o���̕����̋���
+Dim i As Integer			選択セルのある行見出しの文字の強調
 Range("a:a").Font.Size = 10			
 i = Selection.Row			
 Range("a" & i).Font.Size = 30			
 End Sub			
 			
-Private Sub Workbook_Open()			�A�V�X�^���g�̕\��
+Private Sub Workbook_Open()			アシスタントの表示
 
     Sheets(1).Select			
     Assistant.Visible = True			
@@ -83,10 +83,10 @@ Private Sub Workbook_Open()			�A�V�X�^���g�̕\��
     			
     With Assistant.NewBalloon			
         .Icon = msoIconTip			
-        .Heading = "�W�v�̑���菇�ƒ���"
-        .Labels(1).Text = "�P�D�L���X�փf�[�^��ǂݍ��݂܂��B"
-        .Labels(2).Text = "�Q�D���s�{�^�������ŏW�v���J�n���܂��B"
-        .Labels(3).Text = "�i���Ӂj���j���[�̃V�[�g�͍폜���Ȃ��ł��������B"
+        .Heading = "集計の操作手順と注意"
+        .Labels(1).Text = "１．広告郵便データを読み込みます。"
+        .Labels(2).Text = "２．実行ボタン押下で集計を開始します。"
+        .Labels(3).Text = "（注意）メニューのシートは削除しないでください。"
         .Button = msoButtonSetOK
         .Show
     End With
@@ -94,10 +94,10 @@ Private Sub Workbook_Open()			�A�V�X�^���g�̕\��
     Assistant.Visible = False
 End Sub
 
-Sub �A�v���P�[�V�����̋N��()
+Sub アプリケーションの起動()
 
 Dim oWord As Object
-Set oWord = GetObject("C:\My Documents\���[�h����\�N���.doc")
+Set oWord = GetObject("C:\My Documents\ワード文書\年賀状.doc")
 oWord.Application.Visible = True
 oWord.UserControl = True
 
@@ -105,19 +105,19 @@ oWord.UserControl = True
 End Sub
 
 
-Sub ��O�̃V�[�g��I��������()
+Sub 一つ前のシートを選択させる()
 On Error GoTo z
 ActiveSheet.Previous.Select
 Exit Sub
 z: ActiveSheet.Next.Select
 End Sub
 
-Sub �ʃV�[�g�̃Z���̒l���Q�Ƃ���()
+Sub 別シートのセルの値を参照する()
     Range("h2").Formula = "=g2-" & "'" & ActiveSheet.Previous.Name & "'" & "!g2"
     Range("h2").AutoFill Destination:=Range("h2:" & "h" & i)
 end sub				
 				
-Sub 25���̐ȑւ�()				�n�������邩�E�E�E
+Sub 25名の席替え()				地道すぎるか・・・
 Application.ScreenUpdating = False				
 Range("a1:a5").Copy Destination:=Range("g1:g5")				
 Range("b1:b5").Copy Destination:=Range("g6:g10")				
@@ -147,7 +147,7 @@ ActiveSheet.UsedRange.Copy
  Range("a1").Select
 End Sub
 
-Dim myie As Object		���u�b�N���J���Ɠ�����IE���������A���鎞�͂���Ƃ��ɁB�v���V�[�W���̊O�ŕϐ���錾����̂����X�B
+Dim myie As Object		←ブックを開くと同時にIEたちあげ、閉じる時はもろともに。プロシージャの外で変数を宣言するのが味噌。
 		
 Private Sub Workbook_Open()		
    Dim url As String		
@@ -157,7 +157,7 @@ Private Sub Workbook_Open()
    myie.navigate url		
    myie.Visible = True		
    		
-   '5�b�ҋ@�E�E�E�E		
+   '5秒待機・・・・		
    Application.Wait (Now + TimeValue("00:00:05"))		
 
 ERR1:		
@@ -172,15 +172,15 @@ Private Sub Workbook_BeforeClose(Cancel As Boolean)
    Set myie = Nothing				
 End Sub				
 				
-Sub �t�B���^�[()				expression.AdvancedFilter(Action, CriteriaRange, CopyToRange, Unique)
-Dim database as range,Criteria as range				�t�B���^�[����������ɂ͉����������w�肵�Ȃ��ōēx�t�B���^�����s����
+Sub フィルター()				expression.AdvancedFilter(Action, CriteriaRange, CopyToRange, Unique)
+Dim database as range,Criteria as range				フィルターを解除するには何も条件を指定しないで再度フィルタを実行する
 Range("Database").AdvancedFilter _				
     Action:=xlFilterInPlace, _				
     CriteriaRange:=Range("Criteria")				
     				
 End Sub				
 
-Sub �t�B���^�[�Q()
+Sub フィルター２()
 Dim database as range,Criteria as range
 Range("Database").AdvancedFilter _
     Action:=xlFilterCopy, _
@@ -188,17 +188,17 @@ Range("Database").AdvancedFilter _
 CopyToRange:=sheet2.range("a1")
 End Sub
 
-Sub �_�C�A���O�Ńt�@�C�����J��()
+Sub ダイアログでファイルを開く()
     Dim vFileName As Variant
     Dim vObjFs As Variant
     Dim vGetFile As Variant
     Dim wMybook As Workbook
 
     vFileName = Application.GetOpenFilename( _
-                FileFilter:="Excel�t�@�C��(*.csv),*.csv", _					
-                Title:="�t�@�C���̓ǂݍ���", MultiSelect:=False)					
+                FileFilter:="Excelファイル(*.csv),*.csv", _					
+                Title:="ファイルの読み込み", MultiSelect:=False)					
     If vFileName = False Then Exit Sub					
-    '�t�@�C�����擾					
+    'ファイル情報取得					
     Set vObjFs = CreateObject("Scripting.FileSystemObject")					
     Set vGetFile = vObjFs.GetFile(vFileName)					
         With wMybook					
@@ -207,7 +207,7 @@ Sub �_�C�A���O�Ńt�@�C�����J��()
 
 End Sub					
 					
-Private Sub Worksheet_Change(ByVal Target As Range)					�X�V�㏈���Ŏ�����\��������
+Private Sub Worksheet_Change(ByVal Target As Range)					更新後処理で時刻を表示させる
 
     Dim rngU As Range					
     Dim i As Range					
@@ -217,7 +217,7 @@ Private Sub Worksheet_Change(ByVal Target As Range)					�X�V�㏈���Ŏ�����\����
     If rngU Is Nothing Then			
         Exit Sub			
     End If			
-'******�f�[�^�X�V�Ŏ�����ς������Ȃ����͉���1�s������			
+'******データ更新で時刻を変えたくない時は下の1行を入れる			
     'Application.EnableEvents = False			
     For Each i In rngU			
         i.Offset(0, 1).Value = Now			
@@ -226,71 +226,71 @@ Private Sub Worksheet_Change(ByVal Target As Range)					�X�V�㏈���Ŏ�����\����
 
 End Sub			
 			
-Private Sub Workbook_Open()			�A�v���P�[�V�����̔�\��
+Private Sub Workbook_Open()			アプリケーションの非表示
 Application.Visible = False				
 UserForm1.Show				
 End Sub				
 				
-Sub Excel����Word���N�����ĕ������J��()				�G�N�Z�����烏�[�h�t�@�C�����J��
+Sub ExcelからWordを起動して文書を開く()				エクセルからワードファイルを開く
 Dim o_Myword As Object				
 Dim o_myDocument As Object				
 Dim s_Mypass As String				
 '				
-    s_Mypass = "C:\a\b\xxx.doc"              '�t���p�X���쐬				
-    Set o_Myword = CreateObject("Word.Application") 'Word���N������				
-  o_Myword.Visible = True                       'Word��\������				
-    Set o_Mydocument = o_Myword.documents.Open(s_Mypass) 'Word�������J��				
+    s_Mypass = "C:\a\b\xxx.doc"              'フルパスを作成				
+    Set o_Myword = CreateObject("Word.Application") 'Wordを起動する				
+  o_Myword.Visible = True                       'Wordを表示する				
+    Set o_Mydocument = o_Myword.documents.Open(s_Mypass) 'Word文書を開く				
 End Sub				
 				
-Private Sub Document_Open()			�J�����[�h�t�@�C���̃I�[�v���C�x���g	
+Private Sub Document_Open()			開くワードファイルのオープンイベント	
     ActiveDocument.PrintPreview					
 
 
 End Sub					
-					�G�N�Z���t�@�C����MP3��炷
-	�ɂႲ	2003/11/02�i���j	�p�X���[�h		
+					エクセルファイルでMP3を鳴らす
+	にゃご	2003/11/02（日）	パスワード		
 		14:28:20			
-����ɂ���					
+こんにちは					
 
-����ȕ��@�łǂ��ł��傤�H					
-�iMP3�t�@�C���̍Đ����AWindows Media Player�Ɋ֘A�t����					
-��Ă���Ƃ������ƂŁj					
+こんな方法でどうでしょう？					
+（MP3ファイルの再生が、Windows Media Playerに関連付けら					
+れているということで）					
 
-1�jWindows Media Player�ɎQ�Ɛݒ肵�܂��B					
+1）Windows Media Playerに参照設定します。					
 
-2�j���[�N�V�[�g��					
-  �u�\���v-�u�c�[���o�[�v-�u�R���g���[���c�[���{�b�N�X�v
-   �́u�R���g���[���̑I���v���� Windows Media Player��
-   �I�����āA�K���ȑ傫���œ\��t���܂��B
+2）ワークシートへ					
+  「表示」-「ツールバー」-「コントロールツールボックス」
+   の「コントロールの選択」から Windows Media Playerを
+   選択して、適当な大きさで貼り付けます。
 
-3�j�\��t�����}���A�_�u���N���b�N�����VBE���J���A�v���p
-   �e�B����A�uURL�v�ɍĐ�������MP3�t�@�C���̃t���p�X��
-   �L�����܂��BWindows Media Player���\���ɂ��������
-   �uVisible�v���uFalse�v�ɐݒ肵�܂��B
+3）貼り付けた図を、ダブルクリックするとVBEが開き、プロパ
+   ティから、「URL」に再生したいMP3ファイルのフルパスを
+   記入します。Windows Media Playerを非表示にしたければ
+   「Visible」を「False」に設定します。
 
-4�j���[�N�V�[�g�֖߂��āA�f�U�C�����[�h���I�������āA��
-   �����ďI�����܂��B
+4）ワークシートへ戻って、デザインモードを終了させて、保
+   存して終了します。
 
-5�j�u�b�N���J���΁A�Đ��ł���Ǝv���܂��B
+5）ブックを開けば、再生できると思います。
 
-�i���j�A���Đ�����ꍇ�́A��H�v�K�v�ɂ��
+（注）連続再生する場合は、一工夫必要にゃ♪
 
-���ɗ����Ȃ���΂��߂�ɂ� (^^��   			
+役に立たなければごめんにゃ (^^♪   			
 			
 			
 			
 			
 			
-Sub test2()		�V�[�g�̏㏑���̔��f	
+Sub test2()		シートの上書きの判断	
     Dim S As String			
     Dim S2 As String			
-    Dim Theworkbook As String 'Thebook(�t���p�X�j			
+    Dim Theworkbook As String 'Thebook(フルパス）			
     Dim WBname As String			
     Dim Thesheet As Worksheet			
     Dim Thesheet2 As Worksheet			
     Dim Sht As Worksheet			
     Application.DisplayAlerts = False			
-    Theworkbook = "C:\WINDOWS\�޽�į��\Thebook.xls"			
+    Theworkbook = "C:\WINDOWS\ﾃﾞｽｸﾄｯﾌﾟ\Thebook.xls"			
     WBname = "Thebook.xls"	
     Set Thesheet = ThisWorkbook.Sheets(1)	
     Set Thesheet2 = ThisWorkbook.Sheets(2)	
@@ -300,7 +300,7 @@ Sub test2()		�V�[�g�̏㏑���̔��f
         Thesheet.Copy before:=Workbooks(WBname).Sheets(1)	
         For Each Sht In Workbooks(WBname).Sheets	
             If Sht.Name = S Then	
-                If MsgBox("�㏑�����܂���?", vbYesNo) = vbYes Then	
+                If MsgBox("上書きしますか?", vbYesNo) = vbYes Then	
                     Workbooks(WBname).Sheets(S).Delete	
                     Exit For	
                 Else	
@@ -317,7 +317,7 @@ a:
         Thesheet2.Copy before:=Workbooks(WBname).Sheets(1)
         For Each Sht In Workbooks(WBname).Sheets
             If Sht.Name = S2 Then
-                If MsgBox("�㏑�����܂���?", vbYesNo) = vbYes Then
+                If MsgBox("上書きしますか?", vbYesNo) = vbYes Then
                     Workbooks(WBname).Sheets(S2).Delete
                 Exit For
                 Else
@@ -347,12 +347,12 @@ End Sub
 
 
 
-���V�[�g�Ƃ��s�Ƃ���̍폜���֎~����
+■シートとか行とか列の削除を禁止する
 --------------------------------------------------------------------------------------
-'ThisWorkBook���W���[��
-'���̃T���v���� Sheet1 �̍s�̍폜�̂݋���
-'sheet1,2,3�̃V�[�g�̍폜�s��ƃZ���̍폜���֎~���܂��B
-'���̃u�b�N�ƃV�[�g�ɉe����^���܂���
+'ThisWorkBookモジュール
+'このサンプルは Sheet1 の行の削除のみ許可し
+'sheet1,2,3のシートの削除行列とセルの削除を禁止します。
+'他のブックとシートに影響を与えません
 Option Explicit
 Private WithEvents BtnCellPuUpDelete As Office.CommandBarButton
 Private WithEvents BtnDelete As Office.CommandBarButton
@@ -398,7 +398,7 @@ Private Sub BtnRwDelete_Click(ByVal Ctrl As Office.CommandBarButton, CancelDefau
 End Sub
 
 Private Sub StopDelete(CancelDefault As Boolean)
-    MsgBox "�폜�ł��܂���"
+    MsgBox "削除できません"
     CancelDefault = True
 End Sub
 
@@ -454,19 +454,19 @@ End Sub
 
 --------------------------------------------------------------------------------------		
 		
-Sub File_Name()		�t�@�C�����̎擾
+Sub File_Name()		ファイル名の取得
     Dim strWB As String, Mypos As Variant		
-    strWB = "C:\windows\�޽�į��\�G�N�Z��.xls"		
+    strWB = "C:\windows\ﾃﾞｽｸﾄｯﾌﾟ\エクセル.xls"		
     		
     Mypos = InStrRev(strWB, "\", Len(strWB), vbTextCompare)		
-    'len(strWB)��-1�Ƃ��Ă�������̒������擾�ł���B		
-    '�����āA�ȗ������-1�ɂȂ�̂ŁA		
-    'InStrRev(strWB,"\")�Ə����Ă�OK		
-    Debug.Print "\�̈ʒu", Mypos; Len(strWB)						
+    'len(strWB)は-1としても文字列の長さを取得できる。		
+    'そして、省略すると-1になるので、		
+    'InStrRev(strWB,"\")と書いてもOK		
+    Debug.Print "\の位置", Mypos; Len(strWB)						
     Debug.Print Right(strWB, Len(strWB) - Mypos)						
 End Sub						
 						
-Private Sub UserForm_Initialize()			RowSource�͈̔͂ɃV�[�g���܂Ŏw�肷��			
+Private Sub UserForm_Initialize()			RowSourceの範囲にシート名まで指定する			
    With Me						
     .nen.RowSource = Sheets(2).Range("h1:h12").Address(external:=True)						
     .tuki.RowSource = Sheets(2).Range("i1:i12").Address(external:=True)						
@@ -476,13 +476,13 @@ End Sub
 
 						
 Private Sub Worksheet_SelectionChange(ByVal Target As Range)						
-    If Application.CutCopyMode Then Exit Sub						�R�}���h�{�^������Ɉ��̃|�W�V�����̕\��������
+    If Application.CutCopyMode Then Exit Sub						コマンドボタンを常に一定のポジションの表示させる
     With Application.ActiveWindow.VisibleRange.Cells(1)						
         Me.CommandButton1.Left = .Left
         Me.CommandButton1.Top = .Top
     End With
 End Sub
-Sub ���[��()
+Sub メール()
 Dim mySendTo As String
 Dim mySubject As String
 Dim myBody As String
@@ -491,8 +491,8 @@ Dim myBCC As String
 mySendTo = "xxx@xxxx.xx"
 myCC = "abcd@xyz.co.jp"
 'myBCC = "hoge@hogehoge.jp"
-mySubject = "���ꂪ�����ł��B"
-myBody = "���ꂪ�{���ł��B" & vbCrLf & "2�s�ڂł��B"
+mySubject = "これが件名です。"
+myBody = "これが本文です。" & vbCrLf & "2行目です。"
 'myBody = Replace(Replace(myBody, vbCr, "%0D"), vbLf, "%0A")
 ThisWorkbook.FollowHyperlink _
         "mailto:" & mySendTo _
@@ -502,36 +502,36 @@ ThisWorkbook.FollowHyperlink _
         & "&Body=" & myBody
 
 End Sub
-Sub �񖼂̎擾()
+Sub 列名の取得()
 With Selection
         MsgBox Replace(.Address(False, False), .Row, "")
 End With
 
 End Sub
-sub ��Ă�ǉ����Ă��łɖ��O������
+sub ｼｰﾄを追加してついでに名前をつける
     Worksheets.Add(after:=Worksheets.Count).Name = "hoge"
 End Sub			
-Sub Temp()			�z��̑����Z
+Sub Temp()			配列の足し算
      With Range("D1:D8000")			
          .Value = "=SUM(A1:C1)"			
          .Value = .Value			
      End With			
 End Sub			
-���[�N�V�[�g�P�������̐V�����u�b�N�����A���̒��̃V�[�g�̖��O���u�ӂ�			
-�ӂɁv�ɂ��܂��B			
+ワークシート１枚だけの新しいブックを作り、その中のシートの名前を「ふに			
+ふに」にします。			
 			
-Sub add�̒萔()			
-    Workbooks.Add(Template:=xlWBATWorksheet).Worksheets(1).Name = "��			
-�ɂӂ�"			
-�e���v���[�g���Ăяo��������			
+Sub addの定数()			
+    Workbooks.Add(Template:=xlWBATWorksheet).Worksheets(1).Name = "ふ			
+にふに"			
+テンプレートを呼び出す書き方			
     Workbooks.Add Template:= _			
         "C:\WINDOWS\Application Data\Microsoft\Templates\test1.xlt"			
-End sub	�Ђ�	2004/05/27�i�؁j	�폜�ł��܂���
+End sub	ひこ	2004/05/27（木）	削除できません
 		0.034456019	
-yamaV1.02������C����ɂ��́D			
->autofill���Ă̂��Ȃ�			
+yamaV1.02βさん，こんにちは．			
+>autofillってのがなぁ			
 			
-Sub �����l���z��Ȃ�Ԃ�l���z��1()			
+Sub 検索値が配列なら返り値も配列1()			
     With Sheets("Sheet1").Range("B2:B1000")			
         .Value = WorksheetFunction.VLookup( _			
             .Offset(, -1), _			
@@ -540,11 +540,11 @@ Sub �����l���z��Ȃ�Ԃ�l���z��1()
     End With			
 End Sub			
 
->�Ȃ񂾂����������C�����Ă��Ă���			
-��`�C�ł��J���^���ōD�����Ȃ��D			
+>なんだか野暮ったい気がしてきていて			
+ん～，でもカンタンで好きだなあ．			
 
-Sub �����l���z��Ȃ�Ԃ�l���z��2()
-    Dim avntMatch As Variant, avntAns As Variant, avnt�l��Ԃ���̒l A
+Sub 検索値が配列なら返り値も配列2()
+    Dim avntMatch As Variant, avntAns As Variant, avnt値を返す列の値 A
 s Variant, Index As Long
     With Sheets("Sheet1").Range("B2:B1000")
         avntMatch = Application.Match( _
@@ -553,10 +553,10 @@ s Variant, Index As Long
             1 _
         )
         ReDim avntAns(LBound(avntMatch) To UBound(avntMatch), 1 To 1)
-        avnt�l��Ԃ���̒l = Sheets("Sheet2").Range("G:G").Value
+        avnt値を返す列の値 = Sheets("Sheet2").Range("G:G").Value
         For Index = LBound(avntMatch) To UBound(avntMatch)
-            '���S��v����͖����̂Ńp�X
-            avntAns(Index, 1) = avnt�l��Ԃ���̒l(avntMatch(Index, 1)
+            '完全一致判定は眠いのでパス
+            avntAns(Index, 1) = avnt値を返す列の値(avntMatch(Index, 1)
 , 1)
         Next			
         .Value = avntAns			
@@ -567,35 +567,35 @@ End Sub
 
 
 
-	���	2004/05/27�i�؁j	�폜�ł��܂���
+	上妻	2004/05/27（木）	削除できません
 		0.332777778	
->�E�E�E�E�ƍ��̌^����0����Ȃ��āE�E�E�H			
-��ʃf�[�^�̌��������ꍇ�́A���Ɍ����͈͂��L��			
-�ꍇ�AMatch�̏ƍ��̌^0���g���͔̂n���������Ƃł��B			
-����ŏ�������Ȃ߂Č������Ă����܂�����A			
-���Ԃ��������Ă��傤���Ȃ��ł��B			
+>・・・・照合の型って0じゃなくて・・・？			
+大量データの検索をやる場合は、特に検査範囲が広い			
+場合、Matchの照合の型0を使うのは馬鹿げたことです。			
+毎回最初から一つ一つなめて検索していきますから、			
+時間がかかってしょうがないです。			
 
-Match���g���ꍇ�́A�����͈͂��\�[�g���ďƍ��̌^��
-1(���邢�͏ȗ�)�ɂ����ق����ǂ��ł���B
-�ƍ��̌^��0�͒����T��(�n���T�[�`)�Ȃ̂ɂ������āA
-�ƍ��̌^��1��-1�͓񕪒T��(�o�C�i���T�[�`)�Ȃ̂ŁA
-���x���S�R�Ⴂ�܂��B
+Matchを使う場合は、検査範囲をソートして照合の型を
+1(あるいは省略)にしたほうが良いですよ。
+照合の型が0は逐次探索(馬鹿サーチ)なのにたいして、
+照合の型が1や-1は二分探索(バイナリサーチ)なので、
+速度が全然違います。
 
-���ӓ_�͌����͈͂͂�����ƃf�[�^�͈͂ɂ��邱�Ƃł��B
-���o�����܂߂�̂͂�����񂲖@�x�ł����A�]����
-���̋󔒂��܂߂�̂����@�x�ł��B
-���ׂ��ׂɏƍ��̌^0���x���Ȃ��Ă��܂��܂��B
+注意点は検査範囲はきちんとデータ範囲にすることです。
+見出しを含めるのはもちろんご法度ですが、余分に
+後ろの空白を含めるのもご法度です。
+あべこべに照合の型0より遅くなってしまいます。
 
-�Ȃ��֐��ł̃��W�b�N�́A�����ɂ��ǂ����ɏ�����
-�͂��ł����A��ʌf����
+なお関数でのロジックは、ここにもどこかに書いた
+はずですが、一般掲示板の
 http://www2.moug.net/app/bbs/message.php?cat=exopr&id=20040518-000027
-������2004/05/19�i���j10:27:58�ɂ������Ă܂��B
-������R�[�h�ɂ��邾���ł��B
-���Ă����Ă��ȒP�ł͂Ȃ����B^^;
-�̂��炠����قǏ����Ă邯�ǁA�c�O�Ȃ���ꕔ��
-����͂̂���l�ɂ����Z�����ĂȂ��݂����ł�����B
-Sub �l����2�i�������o��()
-    Dim x(4) As String '()��������
+ここの2004/05/19（水）10:27:58にも書いてます。
+これをコードにするだけです。
+っていっても簡単ではないか。^^;
+昔からあきるほど書いてるけど、残念ながら一部の
+理解力のある人にしか浸透してないみたいですから。
+Sub 四桁の2進数書き出し()
+    Dim x(4) As String '()内が桁数
     Dim atai(4) As String
     Dim i As Long
     x(1) = 0
@@ -621,7 +621,7 @@ Sub �l����2�i�������o��()
         Next
 End Sub
 Private Sub SoushinOK_Click()
-'�V�[�g�̃R�s�[��ԐM����
+'シートのコピーを返信する
     Dim sendWB As Workbook
     Dim Kenmei As Variant
     Dim myTemp As String
@@ -630,8 +630,8 @@ Private Sub SoushinOK_Click()
         .ScreenUpdating = False
     End With
     myTemp = Left(CurDir, InStr(1, CurDir, "\", vbBinaryCompare))
-    Kenmei = Sheet1.Range("b18").Value & "���߂�������������"
-    '̧��1���ۑ��ꏊ�ɓ�����̧�ق����Ȃ�����
+    Kenmei = Sheet1.Range("b18").Value & "取り戻し請求調査調書"
+    'ﾌｧｲﾙ1時保存場所に同名のﾌｧｲﾙを作らない処理
     i = 0
     'Debug.Print Dir(myTemp & Kenmei & ".xls")
     Do Until Dir(myTemp & Kenmei & ".xls") = ""
@@ -647,22 +647,22 @@ Private Sub SoushinOK_Click()
         
     Next Workbook
     Kenmei = Kenmei & ".xls"
-    If MsgBox("�ԐM���Ă�낵���ł����H", vbDefaultButton2 + vbInformation + vbYesNo, _
-        "�m�F�����肢�������܂�") = vbYes Then
-        If MsgBox("[�v���O���������[���𑗐M���悤�Ƃ��Ă��܂�]�A�����́A[���̧�ق̑I��]�Ƃ������炩�̃_�C�A���O���\������܂��B" & vbCrLf & _
-        "[OK]��I������ƃ��[���ő��M����܂��B", vbInformation + vbOKOnly, "���肢") = vbOK Then
+    If MsgBox("返信してよろしいですか？", vbDefaultButton2 + vbInformation + vbYesNo, _
+        "確認をお願いいたします") = vbYes Then
+        If MsgBox("[プログラムがメールを送信しようとしています]、或いは、[ﾌﾟﾛﾌｧｲﾙの選択]という何らかのダイアログが表示されます。" & vbCrLf & _
+        "[OK]を選択するとメールで送信されます。", vbInformation + vbOKOnly, "お願い") = vbOK Then
             With Sheet1
                 If .Range("b18").Value = "" Then
-                    MsgBox "�ב֔ԍ��������͂ł��B" & vbCrLf & _
-                    "���͂��m�F���Ă����蒼���Ă��������B"
+                    MsgBox "為替番号が未入力です。" & vbCrLf & _
+                    "入力を確認してからやり直してください。"
                     GoTo x
                 ElseIf .Range("k8").Value = "" Then
-                    MsgBox "�S���Җ��������͂ł��B" & vbCrLf & _
-                    "���͂��m�F���Ă����蒼���Ă��������B"
+                    MsgBox "担当者名が未入力です。" & vbCrLf & _
+                    "入力を確認してからやり直してください。"
                     GoTo x
                 ElseIf .Range("k9").Value = "" Then
-                    MsgBox "�d�b�ԍ��������͂ł��B" & vbCrLf & _
-                    "���͂��m�F���Ă����蒼���Ă��������B"
+                    MsgBox "電話番号が未入力です。" & vbCrLf & _
+                    "入力を確認してからやり直してください。"
                     GoTo x
                 End If
             End With
@@ -672,7 +672,7 @@ Private Sub SoushinOK_Click()
             With sendWB
                 .SendMail Recipients:="xatsushi@tbb.t-com.ne.jp", Subject:=Kenmei, ReturnReceipt:=True
             End With
-            If MsgBox("���M�����V�[�g��������܂���", vbDefaultButton1 + vbInformation + vbYesNo, "�u�͂��v��I������Ɖ�ʂ�������܂�") = vbYes Then
+            If MsgBox("送信したシートを印刷しますか", vbDefaultButton1 + vbInformation + vbYesNo, "「はい」を選択すると画面を印刷します") = vbYes Then
                 Sheet1.PrintOut
             End If
         End If
@@ -688,7 +688,7 @@ x:
     
 End Sub
 Sub dd()
-'��Ė��̏d�����
+'ｼｰﾄ名の重複回避
 Dim ii As Integer, i As Integer,intWS as integer
 ii = 0
 i = 0
@@ -711,20 +711,20 @@ ii = ii + 1
 End If
 MsgBox Err.Number & " :  " & Err.Description
 End Sub
-Sub 100�̼�Ă�V�K�u�b�N�ֈړ�()
+Sub 100のｼｰﾄを新規ブックへ移動()
 For i = 2 To 101
-select��false�ͼ�ăI�u�W�F�N�g�݂̂̈����B����܂őI�΂�Ă����V�[�g���I�������܂܂���ɃV�[�g��I������B
+selectのfalseはｼｰﾄオブジェクトのみの引数。それまで選ばれていたシートも選択したままさらにシートを選択する。
 ActiveWorkbook.Sheets(2).Select Replace:=False
 Next i
-Windows(1)��activewindow�̎�
+Windows(1)はactivewindowの事
 Set WB2 = Windows(1).SelectedSheets.Move
 End Sub
-Sub �u�b�N���̏㏑�����()
+Sub ブック名の上書き回避()
 
 Dim strWBname As String
 Dim intI As Integer
 Dim intWBname As Integer
-On Error GoTo ERR_�u�b�N���̏㏑�����
+On Error GoTo ERR_ブック名の上書き回避
 Application.DisplayAlerts = False
 intI = 0
 
@@ -740,17 +740,17 @@ intI = intI + 1
 strWBname = Left(strWBname, intWBname) & "(" & intI & ")"
 GoTo myUndo
 Exit Sub
-ERR_�u�b�N���̏㏑�����:
+ERR_ブック名の上書き回避:
 MsgBox Err.Number & " : " & Err.Description
 
 End Sub
 
-Sub �R���s���[�^�[���̎擾()
+Sub コンピューター名の取得()
 Dim cmName As String
 cmName = CreateObject("WScript.Network").ComputerName
 Debug.Print cmName;
 End Sub
-Sub web�̃p�X���[�h��˔j�p�^�[��1()
+Sub webのパスワードを突破パターン1()
     Dim ie    As Object
     Dim Obj1  As Object
     Set ie = CreateObject("internetexplorer.application")
@@ -762,11 +762,11 @@ Sub web�̃p�X���[�h��˔j�p�^�[��1()
     Application.Wait Now + TimeValue("00:00:02")
     Set Obj1 = ie.document
     With Obj1.all
-        .q.Value = "�G�N�Z�� vba"
+        .q.Value = "エクセル vba"
         .btnG.Click
     End With
 End Sub
-Sub web�̃p�X���[�h��˔j�p�^�[��2()
+Sub webのパスワードを突破パターン2()
     Dim ie    As Object
     Dim Obj1  As Object
     
@@ -781,7 +781,7 @@ Sub web�̃p�X���[�h��˔j�p�^�[��2()
     
     Set Obj1 = ie.document
     With Obj1.all
-        .Find.Value = "��ʌ����R�s" 'Find�̓I�u�W�F�N�g��name
+        .Find.Value = "埼玉県狭山市" 'Findはオブジェクトのname
         'Obj1.forms(0).submit			
         .form_1.submit			
         'Application.Wait Now + TimeValue("00:00:05")			
@@ -793,7 +793,7 @@ Sub web�̃p�X���[�h��˔j�p�^�[��2()
 End Sub			
 </pre>
 <hr>
-<address>yamaV1.02��</address>
+<address>yamaV1.02β</address>
 </div>
 </body>
 </html>

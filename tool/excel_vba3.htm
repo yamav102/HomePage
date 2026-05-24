@@ -4,8 +4,8 @@
 <meta http-equiv="content-type" content="text/html; charset=shift_jis">
 <meta http-equiv="content-style-type" content="text/css">
 <meta http-equiv="content-script-type" content="text/javascript">
-<meta name="keywords" content="EXCELVBA,HTML—Œ^,">
-<meta name="description" content="d–‚ÅŠy‚Å‚«‚éƒc[ƒ‹W">
+<meta name="keywords" content="EXCELVBA,HTMLé››å‹,">
+<meta name="description" content="ä»•äº‹ã§æ¥½ã§ãã‚‹ãƒ„ãƒ¼ãƒ«é›†">
 <link rel="stylesheet" href="./web/stylexlvba.css" type="text/css">
 <link rev="made" href="mailto:xatsushi&#64;tbb.t-com.ne.jp">
 <link rel="next" href="tsugi.htm">
@@ -49,31 +49,31 @@
 <h1>Excel VBA Sample 3</h1>
 
 <pre>		
-	ƒrƒŠ[	2005/01/27i–Øj	ƒpƒXƒ[ƒh
+	ãƒ“ãƒªãƒ¼	2005/01/27ï¼ˆæœ¨ï¼‰	ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰
 		0.003541667	
-‚±‚ñ‚Î‚ñ‚ÍBƒrƒŠ[‚Å‚·B			
-WEBƒy[ƒW‚ğæ‚è‚Ş			
-ƒeƒLƒXƒgƒf[ƒ^‚ğæ“¾‚·‚é‚Ì‚È‚çA‚±‚ñ‚È‚Ì‚Í‚Ç‚¤‚Å‚µ‚å‚¤H			
+ã“ã‚“ã°ã‚“ã¯ã€‚ãƒ“ãƒªãƒ¼ã§ã™ã€‚			
+WEBãƒšãƒ¼ã‚¸ã‚’å–ã‚Šè¾¼ã‚€			
+ãƒ†ã‚­ã‚¹ãƒˆãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—ã™ã‚‹ã®ãªã‚‰ã€ã“ã‚“ãªã®ã¯ã©ã†ã§ã—ã‚‡ã†ï¼Ÿ			
 
-' QÆİ’èFMicrosoft Internet Controls			
-' QÆİ’èFMicrosoft HTML Object Library
-' QÆİ’èFMicrosoft Forms 2.0 Object Library
+' å‚ç…§è¨­å®šï¼šMicrosoft Internet Controls			
+' å‚ç…§è¨­å®šï¼šMicrosoft HTML Object Library
+' å‚ç…§è¨­å®šï¼šMicrosoft Forms 2.0 Object Library
 
 Public Sub Main()
     Call PasteSheetHP("http://www.moug.net/" _
                     , ThisWorkbook.Worksheets(1))
-    MsgBox "I—¹"
+    MsgBox "çµ‚äº†"
 End Sub
 
 Private Function PasteSheetHP(ByVal AURL As String _
                             , ByRef ASheet As Worksheet) As Boolean
-'QÆİ’è‚·‚éê‡
-'  Microsoft HTML Object Library
-'‚Æ
-'  Microsoft Internet Controls
-'(¦ª‚ª‚à‚µŒ©‚Â‚©‚ç‚È‚¢ê‡‚ÍA
-'Microsoft Browser Helpers‚É
-'ƒ`ƒFƒbƒN‚ğ“ü‚ê‚Ä‚­‚¾‚³‚¢B)
+'å‚ç…§è¨­å®šã™ã‚‹å ´åˆ
+'â–¡ Microsoft HTML Object Library
+'ã¨
+'â–¡ Microsoft Internet Controls
+'(â€»â†‘ãŒã‚‚ã—è¦‹ã¤ã‹ã‚‰ãªã„å ´åˆã¯ã€
+'Microsoft Browser Helpersã«
+'ãƒã‚§ãƒƒã‚¯ã‚’å…¥ã‚Œã¦ãã ã•ã„ã€‚)
     Dim wkIE As New SHDocVw.InternetExplorer
     Dim wkDO As New MSForms.DataObject
     Dim wkDoc As MSHTML.HTMLDocument
@@ -82,23 +82,23 @@ Private Function PasteSheetHP(ByVal AURL As String _
     wkIE.Visible = True
     wkIE.navigate URL:=AURL
     
-    ' HP‚ª•\¦‚³‚ê‚é‚Ü‚Å‘Ò‚Â
+    ' HPãŒè¡¨ç¤ºã•ã‚Œã‚‹ã¾ã§å¾…ã¤
     Do
         DoEvents
     Loop Until (Not wkIE.Busy) And _
                (wkIE.readyState = READYSTATE_COMPLETE)
-    ' ‚g‚o‚ğƒeƒLƒXƒg‚Åæ“¾‚·‚é
+    ' ï¼¨ï¼°ã‚’ãƒ†ã‚­ã‚¹ãƒˆã§å–å¾—ã™ã‚‹
     Set wkDoc = wkIE.document
     'wkText = wkDoc.body.innerText
     wkText = wkDoc.body.innerHTML
-    ' IE‚ğI—¹‚·‚é
+    ' IEã‚’çµ‚äº†ã™ã‚‹
     wkIE.Quit
 
     wkDO.Clear
-    ' DataObject‚ğ‰î‚µ‚ÄƒNƒŠƒbƒvƒ{[ƒh‚É‘—‚é
+    ' DataObjectã‚’ä»‹ã—ã¦ã‚¯ãƒªãƒƒãƒ—ãƒœãƒ¼ãƒ‰ã«é€ã‚‹
     wkDO.SetText Text:=wkText
     wkDO.PutInClipboard
-    ' ƒV[ƒg‚É“\‚è•t‚¯‚é
+    ' ã‚·ãƒ¼ãƒˆã«è²¼ã‚Šä»˜ã‘ã‚‹
     Application.Goto Reference:=ASheet.Range("A1")
     ASheet.Paste
 
@@ -131,7 +131,7 @@ Set objIE = Nothing
 
 End Sub
 
-Sub ƒpƒXƒ[ƒh“Ë”j()
+Sub ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰çªç ´()
 Dim ie    As Object
 Dim Obj1  As Object
 Set ie = CreateObject("internetexplorer.application")
@@ -144,7 +144,7 @@ Application.Wait Now + TimeValue("00:00:05")
 Set Obj1 = ie.document
 Debug.Print "kokomade1"
 With Obj1.all
-.Find.Value = "“Œ‹“s•‘ –ìsŒä“aR"
+.Find.Value = "æ±äº¬éƒ½æ­¦è”µé‡å¸‚å¾¡æ®¿å±±"
 Obj1.forms(0).submit
 Application.Wait Now + TimeValue("00:00:05")
 End With
@@ -160,14 +160,14 @@ While ie.Busy
 Wend
 
 With Obj1.all
-.Find.Value = "é‹ÊŒ§‹·Rs‹·R‘ä"
+.Find.Value = "åŸ¼ç‰çœŒç‹­å±±å¸‚ç‹­å±±å°"
 Obj1.forms(0).submit
 'Application.Wait Now + TimeValue("00:00:05")
 End With
 
 End Sub
 
-‘g‚İ‡‚í‚¹EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+çµ„ã¿åˆã‚ã›ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»
 Dim ie    As Object
 Dim Obj1  As Object
 Const OLECMDID_COPY = 12&
@@ -175,7 +175,7 @@ Const OLECMDID_SELECTALL = 17&
 Const OLECMDEXECOPT_DODEFAULT = 0&
 
 
-Sub WEBƒy[ƒW‚ğæ‚è‚Ş(fl As Boolean)
+Sub WEBãƒšãƒ¼ã‚¸ã‚’å–ã‚Šè¾¼ã‚€(fl As Boolean)
 
 Dim ws As Worksheet
 ie.ExecWB OLECMDID_SELECTALL, OLECMDEXECOPT_DODEFAULT
@@ -193,10 +193,10 @@ Obj_Del ws
 End Sub
 
 
-Sub ƒpƒXƒ[ƒh“Ë”j()
+Sub ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰çªç ´()
 With Application
     .ScreenUpdating = False
-    .StatusBar = "ƒuƒ‰ƒEƒU‚ğ—§‚¿ã‚°‚Ä‚¢‚Ü‚·c"
+    .StatusBar = "ãƒ–ãƒ©ã‚¦ã‚¶ã‚’ç«‹ã¡ä¸Šã’ã¦ã„ã¾ã™â€¦"
 End With
 Set ie = CreateObject("internetexplorer.application")
 'ie.Visible = True
@@ -207,11 +207,11 @@ Wend
 Application.Wait Now + TimeValue("00:00:05")
 Set Obj1 = ie.document
 With Obj1.all
-.Find.Value = "“Œ‹“s•‘ –ìsŒä“aR‚Q’š–Ú‚V]‚P"
+.Find.Value = "æ±äº¬éƒ½æ­¦è”µé‡å¸‚å¾¡æ®¿å±±ï¼’ä¸ç›®ï¼—â€ï¼‘"
 Obj1.forms(0).submit
 Application.Wait Now + TimeValue("00:00:05")
 End With
-WEBƒy[ƒW‚ğæ‚è‚Ş False
+WEBãƒšãƒ¼ã‚¸ã‚’å–ã‚Šè¾¼ã‚€ False
 While ie.Busy
     DoEvents
 Wend
@@ -221,19 +221,19 @@ While ie.Busy
 Wend
 Application.Wait Now + TimeValue("00:00:05")
 Set Obj1 = ie.document
-Application.StatusBar = " ¡¡"
+Application.StatusBar = "â–¡â– â– "
 With Obj1.all
-.Find.Value = "é‹ÊŒ§‹·Rs‹·R‘ä‚R’š–Ú"
+.Find.Value = "åŸ¼ç‰çœŒç‹­å±±å¸‚ç‹­å±±å°ï¼“ä¸ç›®"
 Obj1.forms(0).submit
-Application.StatusBar = "  ¡"
+Application.StatusBar = "â–¡â–¡â– "
 End With
 Application.Wait Now + TimeValue("00:00:05")
 While ie.Busy
     DoEvents
 Wend
-Application.StatusBar = "   "
+Application.StatusBar = "â–¡â–¡â–¡"
 
-WEBƒy[ƒW‚ğæ‚è‚Ş True
+WEBãƒšãƒ¼ã‚¸ã‚’å–ã‚Šè¾¼ã‚€ True
     Set Obj1 = Nothing
     ie.Visible = False
     Set ie = Nothing
@@ -257,8 +257,8 @@ With ws
     
 End With
 End Sub
-‚±‚±‚Ü‚ÅEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
-ƒƒjƒ…[‚ÌƒJƒXƒ^ƒ}ƒCƒY
+ã“ã“ã¾ã§ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»
+ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®ã‚«ã‚¹ã‚¿ãƒã‚¤ã‚º
 Sub CustomMenuBar()
     Dim myCB As CommandBar
     Dim myCBCtrl As CommandBarControl
@@ -270,18 +270,18 @@ Sub CustomMenuBar()
     Next
     
     Set myCBCtrl = myCB.Controls.Add(Type:=msoControlPopup)
-    myCBCtrl.Caption = "ƒtƒ@ƒCƒ‹(&F)"
+    myCBCtrl.Caption = "ãƒ•ã‚¡ã‚¤ãƒ«(&F)"
         With myCBCtrl
         Set myCBCtrl = .Controls _
             .Add(Type:=msoControlPopup)
             
         With myCBCtrl
-            .Caption = "‘æ‚QŠK‘w‚Ö"
+            .Caption = "ç¬¬ï¼’éšå±¤ã¸"
             With myCBCtrl
                 Set myCBCtrl = .Controls.Add( _
                         Type:=msoControlPopup)
                 With myCBCtrl
-                    .Caption = "‘æ‚RŠK‘w‚Ö"
+                    .Caption = "ç¬¬ï¼“éšå±¤ã¸"
                     Set myCBCtrl = .Controls.Add( _
                         Type:=msoControlButton)
                         With myCBCtrl
@@ -298,32 +298,32 @@ Sub auto_open()
      Dim MMenu As CommandBarControl
      Dim SMenu As CommandBarControl
      Dim SSMenu As CommandBarControl
-   'eƒƒjƒ…[
+   'è¦ªãƒ¡ãƒ‹ãƒ¥ãƒ¼
   Set MMenu = Application.CommandBars("Worksheet Menu Bar").Controls _
         .Add(Type:=msoControlPopup)
-    MMenu.Caption = "ì¬(&L)"
-   'qƒƒjƒ…[
+    MMenu.Caption = "ä½œæˆ(&L)"
+   'å­ãƒ¡ãƒ‹ãƒ¥ãƒ¼
       Set SMenu = MMenu.Controls.Add(Type:=msoControlPopup)
        With SMenu
-        .Caption = "V‹Kì¬ (&A)"
+        .Caption = "æ–°è¦ä½œæˆ (&A)"
         .BeginGroup = False
       End With
-      '--‘·ƒƒjƒ…[’Ç‰Á
+      '--å­«ãƒ¡ãƒ‹ãƒ¥ãƒ¼è¿½åŠ 
         Set SSMenu = SMenu.Controls.Add
          With SSMenu
-           .Caption = "ƒƒbƒZ[ƒW (&B)"
-           .OnAction = "ƒƒbƒZ[ƒW"
+           .Caption = "ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ (&B)"
+           .OnAction = "ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸"
            .BeginGroup = False
          End With
         Set SSMenu = SMenu.Controls.Add
          With SSMenu
-           .Caption = "ƒƒbƒZ[ƒW2 (&C)"
-           .OnAction = "ƒƒbƒZ[ƒW2"
+           .Caption = "ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸2 (&C)"
+           .OnAction = "ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸2"
            .BeginGroup = False
          End With
 End Sub
 
-Sub ƒVƒ‡[ƒgƒJƒbƒg‚Ì–³Œø()
+Sub ã‚·ãƒ§ãƒ¼ãƒˆã‚«ãƒƒãƒˆã®ç„¡åŠ¹()
     With CommandBars("cell")
         ar = Array(3, 4)
         For i = LBound(ar) To UBound(ar)
@@ -331,7 +331,7 @@ Sub ƒVƒ‡[ƒgƒJƒbƒg‚Ì–³Œø()
         Next
     End With
 End Sub
-Sub ƒVƒ‡[ƒgƒJƒbƒg‚ÌƒJƒXƒ^ƒ}ƒCƒY()
+Sub ã‚·ãƒ§ãƒ¼ãƒˆã‚«ãƒƒãƒˆã®ã‚«ã‚¹ã‚¿ãƒã‚¤ã‚º()
     Dim myCB As CommandBar
     Dim myCtr As CommandBarControl
     Set myCB = CommandBars("cell")
@@ -340,10 +340,10 @@ Sub ƒVƒ‡[ƒgƒJƒbƒg‚ÌƒJƒXƒ^ƒ}ƒCƒY()
     Next
     Set myCtr = myCB.Controls.Add(Type:=msoControlPopup)
         With myCtr
-            .Caption = "‘æ‚QŠK‘w‚Ö"
+            .Caption = "ç¬¬ï¼’éšå±¤ã¸"
             Set myCtr = .Controls.Add(Type:=msoControlPopup)
             With myCtr
-                .Caption = "‘æ‚RŠK‘w‚Ö"
+                .Caption = "ç¬¬ï¼“éšå±¤ã¸"
                 Set myCtr = .Controls.Add(Type:=msoControlButton)
             End With
             With myCtr
@@ -352,13 +352,13 @@ Sub ƒVƒ‡[ƒgƒJƒbƒg‚ÌƒJƒXƒ^ƒ}ƒCƒY()
             End With
         End With
 End Sub
-Function f_GetFolder(ByVal strPrpt As String, Optional strDrv = "ƒ‹[ƒgƒfƒBƒŒƒNƒgƒŠ‚Ìw’è—á""c:\\""") As String
+Function f_GetFolder(ByVal strPrpt As String, Optional strDrv = "ãƒ«ãƒ¼ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®æŒ‡å®šä¾‹""c:\\""") As String
 '---------------------------------------------------------------
-'QÆİ’èFMicrosoft Shell Controls And Automation
-'ˆø”1Fƒvƒƒ“ƒvƒg
-'ˆø”2Fƒ‹[ƒgƒfƒBƒŒƒNƒgƒŠ‚Ìw’è
-'ŠT—vFƒtƒHƒ‹ƒ_æ“¾ƒ_ƒCƒAƒƒO‚ğ•\¦
-'•Ô‚è’lFƒtƒHƒ‹ƒ_ƒpƒX
+'å‚ç…§è¨­å®šï¼šMicrosoft Shell Controls And Automation
+'å¼•æ•°1ï¼šãƒ—ãƒ­ãƒ³ãƒ—ãƒˆ
+'å¼•æ•°2ï¼šãƒ«ãƒ¼ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®æŒ‡å®š
+'æ¦‚è¦ï¼šãƒ•ã‚©ãƒ«ãƒ€å–å¾—ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
+'è¿”ã‚Šå€¤ï¼šãƒ•ã‚©ãƒ«ãƒ€ãƒ‘ã‚¹
 '---------------------------------------------------------------
     Dim i As Long, j As Long
     Dim fPath As String
@@ -366,59 +366,59 @@ Function f_GetFolder(ByVal strPrpt As String, Optional strDrv = "ƒ‹[ƒgƒfƒBƒŒƒNƒ
     Dim objFolder As Folder3
     
     Set objFolder = objShell.BrowseForFolder(0, strPrpt, 513, strDrv) '"c:\\")
-    '513‚ÍuV‚µ‚¢ƒtƒHƒ‹ƒ_v‚ğ•\¦‚³‚¹‚È‚¢ˆ×‚ÌƒIƒvƒVƒ‡ƒ“
+    '513ã¯ã€Œæ–°ã—ã„ãƒ•ã‚©ãƒ«ãƒ€ã€ã‚’è¡¨ç¤ºã•ã›ãªã„ç‚ºã®ã‚ªãƒ—ã‚·ãƒ§ãƒ³
     If objFolder Is Nothing Then Exit Function
     fPath = objFolder.Self.Path
     f_GetFolder = fPath
     
     Set objFolder = Nothing
 End Function
-Sub ‹ô”ƒy[ƒW‚Ì‚İˆóü()
-    Dim ƒy[ƒW As Long
+Sub å¶æ•°ãƒšãƒ¼ã‚¸ã®ã¿å°åˆ·()
+    Dim ãƒšãƒ¼ã‚¸ As Long
     Dim i      As Long
     
-    ƒy[ƒW = Application.ExecuteExcel4Macro("Get.Document(50)")
-    For i = 2 To ƒy[ƒW Step 2
+    ãƒšãƒ¼ã‚¸ = Application.ExecuteExcel4Macro("Get.Document(50)")
+    For i = 2 To ãƒšãƒ¼ã‚¸ Step 2
         ActiveSheet.PrintOut From:=i, To:=i, Copies:=1
     Next
 End Sub
-Sub Sample()'ƒƒbƒZ[ƒWƒ{ƒbƒNƒX‚Å‰ï˜b
-    Dim ls“à—e As String
-'ƒTƒ“ƒvƒ‹ƒf[ƒ^İ’è
-    Range("A1").Resize(, 3).Value = Array("¿–â", "‚Í‚¢", "NO")
-        '[{"¿–â","‚Í‚¢","‚¢‚¢‚¦"}]
+Sub Sample()'ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒœãƒƒã‚¯ã‚¹ã§ä¼šè©±
+    Dim lså†…å®¹ As String
+'ã‚µãƒ³ãƒ—ãƒ«ãƒ‡ãƒ¼ã‚¿è¨­å®š
+    Range("A1").Resize(, 3).Value = Array("è³ªå•", "ã¯ã„", "NO")
+        '[{"è³ªå•","ã¯ã„","ã„ã„ãˆ"}]
     Range("A2").Resize(, 3).Value = _
-        [{"¡“ú‚Í°‚ê‚Ä‚Ü‚·‚©?","‚æ‚©‚Á‚½‚Ë",3}]
+        [{"ä»Šæ—¥ã¯æ™´ã‚Œã¦ã¾ã™ã‹?","ã‚ˆã‹ã£ãŸã­",3}]
     Range("A3").Resize(, 3).Value = _
-        [{"‰J‚¾‚Á‚½‚Ì?","•—×‚Ğ‚©‚È‚¢‚æ‚¤‚É‚Ë",4}]
+        [{"é›¨ã ã£ãŸã®?","é¢¨é‚ªã²ã‹ãªã„ã‚ˆã†ã«ã­",4}]
     Range("A4").Resize(, 3).Value = _
-        [{"“Ü‚è‚©‚È?‚Ü‚¾÷ç‚¢‚Ä‚é?",5,6}]
+        [{"æ›‡ã‚Šã‹ãª?ã¾ã æ¡œå’²ã„ã¦ã‚‹?",5,6}]
     Range("A5").Resize(, 3).Value = _
-        [{"‰ÔŒ©‚És‚Á‚½?","ãY—í‚¾‚Á‚½‚Å‚µ‚å","‘‚­s‚­‚Æ‚¢‚¢‚æ(^^)"}]
+        [{"èŠ±è¦‹ã«è¡Œã£ãŸ?","ç¶ºéº—ã ã£ãŸã§ã—ã‚‡","æ—©ãè¡Œãã¨ã„ã„ã‚ˆ(^^)"}]
     Range("A6").Resize(, 3).Value = _
-        [{"‰ÔŒ©‚És‚Á‚½?","—ˆ”N‚à‚½‚­‚³‚ñç‚­‚Æ‚¢‚¢‚Ë","—ˆ”N‚Ís‚±‚¤‚Ë"}]
-'ƒƒCƒ“ˆ—
-    ls“à—e = 2  '‚±‚±‚ğ•Ï‚¦‚ê‚ÎƒXƒ^[ƒg‚·‚é¿–â‚ª•Ï‚í‚éB
-    Do While IsNumeric(ls“à—e)
-        If MsgBox(Cells(ls“à—e, "A").Value, vbQuestion + vbYesNo) = vbYes Then
-            ls“à—e = Cells(ls“à—e, "B").Value
+        [{"èŠ±è¦‹ã«è¡Œã£ãŸ?","æ¥å¹´ã‚‚ãŸãã•ã‚“å’²ãã¨ã„ã„ã­","æ¥å¹´ã¯è¡Œã“ã†ã­"}]
+'ãƒ¡ã‚¤ãƒ³å‡¦ç†
+    lså†…å®¹ = 2  'ã“ã“ã‚’å¤‰ãˆã‚Œã°ã‚¹ã‚¿ãƒ¼ãƒˆã™ã‚‹è³ªå•ãŒå¤‰ã‚ã‚‹ã€‚
+    Do While IsNumeric(lså†…å®¹)
+        If MsgBox(Cells(lså†…å®¹, "A").Value, vbQuestion + vbYesNo) = vbYes Then
+            lså†…å®¹ = Cells(lså†…å®¹, "B").Value
         Else
-            ls“à—e = Cells(ls“à—e, "C").Value
+            lså†…å®¹ = Cells(lså†…å®¹, "C").Value
         End If
     Loop
-    MsgBox ls“à—e
+    MsgBox lså†…å®¹
 End Sub
-Sub ˆê–œs‚ÌƒfƒoƒbƒO()
+Sub ä¸€ä¸‡è¡Œã®ãƒ‡ãƒãƒƒã‚°()
     Dim myfno As Integer
     myfno = FreeFile
-    'ƒeƒLƒXƒgƒtƒ@ƒCƒ‹‚ÍŸè‚Éì‚ç‚ê‚é
+    'ãƒ†ã‚­ã‚¹ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã¯å‹æ‰‹ã«ä½œã‚‰ã‚Œã‚‹
     Open ThisWorkbook.Path & "\text.txt" For Output As #myfno
     For i = 0 To 10000
         Write #myfno, i
     Next
     Close #myfno
 End Sub
-Private Sub UserForm_Initialize()'ƒŠƒXƒgƒ{ƒbƒNƒX‚Ì’l‚ğæ“¾‚·‚éBlistboxX.value‚¾‚Æ‚¤‚Ü‚­‚¢‚©‚È‚¢–‚ª‚ ‚éB——R‚Í“äB
+Private Sub UserForm_Initialize()'ãƒªã‚¹ãƒˆãƒœãƒƒã‚¯ã‚¹ã®å€¤ã‚’å–å¾—ã™ã‚‹ã€‚listboxX.valueã ã¨ã†ã¾ãã„ã‹ãªã„äº‹ãŒã‚ã‚‹ã€‚ç†ç”±ã¯è¬ã€‚
     Dim vItem1 As Variant
     Dim vItem2 As Variant
     Dim vItem3 As Variant
@@ -455,7 +455,7 @@ Private Sub UserForm_Initialize()'ƒŠƒXƒgƒ{ƒbƒNƒX‚Ì’l‚ğæ“¾‚·‚éBlistboxX.value‚¾
 
 End Sub
 
-sendkeys {PRTSC}‚ÍƒTƒ|[ƒg‚³‚ê‚Ä‚¢‚È‚¢‚Ì‚ÅAPIde‚ÅƒRƒ“ƒgƒ[ƒ‹-----------------
+sendkeys {PRTSC}ã¯ã‚µãƒãƒ¼ãƒˆã•ã‚Œã¦ã„ãªã„ã®ã§APIdeã§ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«-----------------
 Public Declare Sub keybd_event Lib "user32" (ByVal bVk As Byte, _
     ByVal bScan As Byte, ByVal dwFlags As Long, ByVal dwExtraInfo As Long)
 
@@ -476,9 +476,9 @@ Sub priSc()
     Sheet1.Cells(1).PasteSpecial
     Sheet1.PrintPreview
 End Sub
----------------------------------------------------------‚±‚±‚Ü‚Å
+---------------------------------------------------------ã“ã“ã¾ã§
 
-Sub ”š‚É‘±‚­‘S‚Ä‚Ì‰¡ü‚ğ’u‚«Š·‚¦‚é()
+Sub æ•°å­—ã«ç¶šãå…¨ã¦ã®æ¨ªç·šã‚’ç½®ãæ›ãˆã‚‹()
     Dim c As Range
     Dim r As Range
     Dim s As String, s2 As String, s3 As String
@@ -489,22 +489,22 @@ Sub ”š‚É‘±‚­‘S‚Ä‚Ì‰¡ü‚ğ’u‚«Š·‚¦‚é()
             s = c.Value
             s2 = Mid(s, i, 2)
             s3 = Right$(s2, 1)
-            '”š‚ÌŒã‚É‘±‚­
-            'ƒnƒCƒtƒ“ (l•ª)
-            'ƒ_ƒbƒVƒ… (“ñ•ª)
-            'ƒ_ƒbƒVƒ… (‘SŠp)
-            '’·‰¹‹L†
-            '‰¡×ü‘f•Ğ
-            '‰¡‘¾ü‘f•Ğ
-            'ƒ_ƒbƒVƒ… (“ñ•ª)
-            'ƒnƒCƒtƒ“ƒ}ƒCƒiƒX
-            '‹@íˆË‘¶•¶š‚Ìˆê‚Â‚ğ"|iƒ}ƒCƒiƒXj"‚É
-            '’u‚«Š·‚¦‚Ü‚·B
-            'ƒnƒCƒtƒ“‚É’u‚«Š·‚¦‚é‚×‚«‚Æ‚±‚ë‚Å‚·‚ªA
-            'ƒGƒNƒZƒ‹‚Ìg—p‚Æ‚µ‚Ä‚Ü‚Ü“ú•t‚É•ÏŠ·‚³‚ê‚Ä‚µ‚Ü‚¤‚Ì‚Å
-            'ƒnƒCƒtƒ“‚ğ‘SŠp•ÏŠ·‚µ‚½‚Æ‚«‚É"|iƒ}ƒCƒiƒXj"‚Æ
-            '“¯‚¶•¶š‚É’u‚«Š·‚¦‚ç‚ê‚é‚Ì‚Å
-            'ƒ}ƒCƒiƒX‹L†‚Æ’u‚«Š·‚¦‚é–‚É‚µ‚Ü‚µ‚½B
+            'æ•°å­—ã®å¾Œã«ç¶šã
+            'ãƒã‚¤ãƒ•ãƒ³ (å››åˆ†)
+            'ãƒ€ãƒƒã‚·ãƒ¥ (äºŒåˆ†)
+            'ãƒ€ãƒƒã‚·ãƒ¥ (å…¨è§’)
+            'é•·éŸ³è¨˜å·
+            'æ¨ªç´°ç·šç´ ç‰‡
+            'æ¨ªå¤ªç·šç´ ç‰‡
+            'ãƒ€ãƒƒã‚·ãƒ¥ (äºŒåˆ†)
+            'ãƒã‚¤ãƒ•ãƒ³ãƒã‚¤ãƒŠã‚¹
+            'æ©Ÿç¨®ä¾å­˜æ–‡å­—ã®ä¸€ã¤ã‚’"ï¼ï¼ˆãƒã‚¤ãƒŠã‚¹ï¼‰"ã«
+            'ç½®ãæ›ãˆã¾ã™ã€‚
+            'ãƒã‚¤ãƒ•ãƒ³ã«ç½®ãæ›ãˆã‚‹ã¹ãã¨ã“ã‚ã§ã™ãŒã€
+            'ã‚¨ã‚¯ã‚»ãƒ«ã®ä½¿ç”¨ã¨ã—ã¦ã¾ã¾æ—¥ä»˜ã«å¤‰æ›ã•ã‚Œã¦ã—ã¾ã†ã®ã§
+            'ãƒã‚¤ãƒ•ãƒ³ã‚’å…¨è§’å¤‰æ›ã—ãŸã¨ãã«"ï¼ï¼ˆãƒã‚¤ãƒŠã‚¹ï¼‰"ã¨
+            'åŒã˜æ–‡å­—ã«ç½®ãæ›ãˆã‚‰ã‚Œã‚‹ã®ã§
+            'ãƒã‚¤ãƒŠã‚¹è¨˜å·ã¨ç½®ãæ›ãˆã‚‹äº‹ã«ã—ã¾ã—ãŸã€‚
             If IsNumeric(Left$(s2, 1)) _
                 And (s3 = Chr(-32419) _
                 Or s3 = Chr(-32443) _
@@ -523,15 +523,15 @@ Sub ”š‚É‘±‚­‘S‚Ä‚Ì‰¡ü‚ğ’u‚«Š·‚¦‚é()
     MsgBox "done"
 End Sub
 
-Private Sub Worksheet_Change(ByVal Target As Range)'ZŠ©“®“ü—Í
-'—X•Ö”Ô†«‘‚ğ—LŒø‚É‚µ‚Ä‚¨‚­
+Private Sub Worksheet_Change(ByVal Target As Range)'ä½æ‰€è‡ªå‹•å…¥åŠ›
+'éƒµä¾¿ç•ªå·è¾æ›¸ã‚’æœ‰åŠ¹ã«ã—ã¦ãŠã
     Dim objApp As Application
     If Target.Columns.Count > 1 _
     Or Target.Rows.Count > 1 Then Exit Sub
-    '’l‚ª•ÏX‚³‚ê‚½‚Ì‚ªa—ñ‚Ìê‡
+    'å€¤ãŒå¤‰æ›´ã•ã‚ŒãŸã®ãŒaåˆ—ã®å ´åˆ
     If (Target.Column = 1) Then
-        '“ü—Í‚³‚ê‚½’l‚Ì’·‚³‚ª3ˆÈã‚Ìê‡
-        '‚©‚ÂAB—ñ‚Ì“¯‚¶s‚ÌƒZƒ‹‚ª‹ó”’‚Ìê‡
+        'å…¥åŠ›ã•ã‚ŒãŸå€¤ã®é•·ã•ãŒ3ä»¥ä¸Šã®å ´åˆ
+        'ã‹ã¤ã€Båˆ—ã®åŒã˜è¡Œã®ã‚»ãƒ«ãŒç©ºç™½ã®å ´åˆ
         If (Len(Target.Value) >= 3) And _
         (Cells(Target.Row, 2) = "") Then
              Set objApp = Application
@@ -549,7 +549,7 @@ Private Sub Worksheet_Change(ByVal Target As Range)'ZŠ©“®“ü—Í
         End If
     End If
 End Sub
-ƒeƒLƒXƒgƒ{ƒbƒNƒX‚É‘SŠp•¶šˆÈŠO‚Ì“ü—Í‚ğ‹–‚³‚È‚¢
+ãƒ†ã‚­ã‚¹ãƒˆãƒœãƒƒã‚¯ã‚¹ã«å…¨è§’æ–‡å­—ä»¥å¤–ã®å…¥åŠ›ã‚’è¨±ã•ãªã„
 Private Sub TextBox1_Enter()
     With Me.TextBox1
         .IMEMode = xlIMEModeOn
@@ -560,18 +560,18 @@ End Sub
 Private Sub TextBox1_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
     With Me.TextBox1
         If .IMEMode = xlIMEModeOff Then
-            MsgBox "‚¿‚á‚¤!"
+            MsgBox "ã¡ã‚ƒã†!"
             KeyAscii = 0
             .IMEMode = xlIMEModeOn
             .IMEMode = fmIMEModeHiragana
         ElseIf .IMEMode <> xlIMEModeHiragana Then
-            MsgBox "‚¿‚á‚¤‚¿‚á‚¤I"
+            MsgBox "ã¡ã‚ƒã†ã¡ã‚ƒã†ï¼"
             KeyAscii = 0
             .IMEMode = fmIMEModeHiragana
         End If
     End With
 End Sub
-Sub ‰Â‹ƒZƒ‹ƒRƒs[‚Ì•Ê‚Ì•û–@()
+Sub å¯è¦–ã‚»ãƒ«ã‚³ãƒ”ãƒ¼ã®åˆ¥ã®æ–¹æ³•()
   Dim Sht1 As Worksheet
   Dim Rng As Range
   
@@ -584,16 +584,16 @@ Sub ‰Â‹ƒZƒ‹ƒRƒs[‚Ì•Ê‚Ì•û–@()
   End With
 End Sub
 
-Sub ˆÓ}‚·‚é”ÍˆÍ‚ğ‘I‘ğ‚µ‚Ä‚­‚ê‚é‚Ü‚ÅÄ‘I‘ğ‚ğ”—‚éapplication.inputbox()'************
+Sub æ„å›³ã™ã‚‹ç¯„å›²ã‚’é¸æŠã—ã¦ãã‚Œã‚‹ã¾ã§å†é¸æŠã‚’è¿«ã‚‹application.inputbox()'************
     Dim rngAns As Range
     Do
         Set rngAns = Dummy( _
             Application.InputBox( _
-            "A1`A3 ‚Ì‚Ç‚ê‚©‚ğw’è‚µ‚Ä‚­‚¾‚³‚¢", _
-            "ƒ}ƒEƒX‚Å‘I‘ğ", Type:=8) _
+            "A1ï½A3 ã®ã©ã‚Œã‹ã‚’æŒ‡å®šã—ã¦ãã ã•ã„", _
+            "ãƒã‚¦ã‚¹ã§é¸æŠ", Type:=8) _
         )
         If rngAns Is Nothing Then
-            MsgBox "‚«‚á‚ñ‚¹‚é"
+            MsgBox "ãã‚ƒã‚“ã›ã‚‹"
             Exit Do
         Else
             Select Case rngAns.Address(False, False)
@@ -611,31 +611,31 @@ Function Dummy(ByVal Value As Variant) As Range
         Set Dummy = Value
     End If
 End Function
-*****************************‚±‚±‚Ü‚Å
+*****************************ã“ã“ã¾ã§
 
-Option Compare Database'ƒ[ƒ‹‚ğ‘—MŒã‘—MÏ‚İƒgƒŒƒC‚ğ•\¦‚·‚é
+Option Compare Database'ãƒ¡ãƒ¼ãƒ«ã‚’é€ä¿¡å¾Œé€ä¿¡æ¸ˆã¿ãƒˆãƒ¬ã‚¤ã‚’è¡¨ç¤ºã™ã‚‹
 
-Private Sub ƒRƒ}ƒ“ƒh0_Click()
+Private Sub ã‚³ãƒãƒ³ãƒ‰0_Click()
     sub_DaitaiAn
 End Sub
 
 Sub sub_DaitaiAn()
-'outlook‚ÉQÆİ’è
+'outlookã«å‚ç…§è¨­å®š
     Dim myOlapp As New Outlook.Application
     Dim myMail As Outlook.MailItem
     Dim myOlFolder As MAPIFolder
     Set myOlFolder = myOlapp.Session.Folders(1) _
-                       .Folders("‘—MÏ‚İƒAƒCƒeƒ€")
+                       .Folders("é€ä¿¡æ¸ˆã¿ã‚¢ã‚¤ãƒ†ãƒ ")
     Set myMail = myOlapp.CreateItem(olMailItem)
     With myMail
-        .To = "hoge@xxx.xxx.ne.jp;hogehoge@1234"' .To =  "ˆ¶æ‚³‚Ü<bbbb_aaaa@cdfhhj.nnshg.co.jp>"
+        .To = "hoge@xxx.xxx.ne.jp;hogehoge@1234"' .To =  "å®›å…ˆã•ã¾<bbbb_aaaa@cdfhhj.nnshg.co.jp>"
 
         .Subject = "test"
         .Send
     End With
-    MsgBox "‘—MÏ‚İƒgƒŒƒC‚ğ•\¦‚µ‚Ü‚·B" _
-            & "‘—M‚³‚ê‚½–‚ğ©‚ç‚ÌÓ”C" _
-            & "‚É‚¨‚¢‚ÄŠm”F‚µ‚Ü‚µ‚å‚¤I", vbInformation
+    MsgBox "é€ä¿¡æ¸ˆã¿ãƒˆãƒ¬ã‚¤ã‚’è¡¨ç¤ºã—ã¾ã™ã€‚" _
+            & "é€ä¿¡ã•ã‚ŒãŸäº‹ã‚’è‡ªã‚‰ã®è²¬ä»»" _
+            & "ã«ãŠã„ã¦ç¢ºèªã—ã¾ã—ã‚‡ã†ï¼", vbInformation
     myOlFolder.Display
     
     Set myOlFolder = Nothing
@@ -643,27 +643,27 @@ Sub sub_DaitaiAn()
     Set myOlapp = Nothing
 End Sub
 
-Sub ƒ†[ƒU[ƒtƒH[ƒ€‚ğ–¼‘O‚ÅŒÄ‚Ô()
+Sub ãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒ•ã‚©ãƒ¼ãƒ ã‚’åå‰ã§å‘¼ã¶()
     UserForms.Add("UserForm1").Show
-    'Userform1.Show‚É“¯‚¶
+    'Userform1.Showã«åŒã˜
 End Sub
 
-Public WithEvents wrd As Word.Application'ƒ[ƒh‚ÌƒCƒxƒ“ƒg‚ğE‚¤
+Public WithEvents wrd As Word.Application'ãƒ¯ãƒ¼ãƒ‰ã®ã‚¤ãƒ™ãƒ³ãƒˆã‚’æ‹¾ã†
 
-“ú•t‚Ì“ü—Í‹K‘¥Fƒ[ƒh•Ò--------------------------------‚±‚±‚©‚ç
-Dim flg As Boolean 'True‚Ìê‡‚Ì‚İ“ü—Í‰Â
-Const myMsg As String = """2005/5/24"" ˆ½‚¢‚Í" & vbNewLine _
-                & " ""5/24"" ‚Ì‚æ‚¤‚É“ü—Í‚µ‚Ä‚­‚¾‚³‚¢"
+æ—¥ä»˜ã®å…¥åŠ›è¦å‰‡ï¼šãƒ¯ãƒ¼ãƒ‰ç·¨--------------------------------ã“ã“ã‹ã‚‰
+Dim flg As Boolean 'Trueã®å ´åˆã®ã¿å…¥åŠ›å¯
+Const myMsg As String = """2005/5/24"" æˆ–ã„ã¯" & vbNewLine _
+                & " ""5/24"" ã®ã‚ˆã†ã«å…¥åŠ›ã—ã¦ãã ã•ã„"
 Private Sub TextBox1_Change()
     With TextBox1
         If flg = False Then
             MsgBox myMsg, vbInformation _
-                , "”¼Šp”š‚Æ""/""‚Ì‚İ“ü—Í‰Â"
+                , "åŠè§’æ•°å­—ã¨""/""ã®ã¿å…¥åŠ›å¯"
                 flg = True
                 Me.TextBox1.Value = Empty
                 Exit Sub
         Else
-            '2005/5c‚Ì’iŠK‚Å“ú•t‚Æ”»’f‚³‚¹‚È‚¢
+            '2005/5â€¦ã®æ®µéšã§æ—¥ä»˜ã¨åˆ¤æ–­ã•ã›ãªã„
             If InStr(Left$(.Value, 4), "/") = 0 Then
                 Exit Sub
             
@@ -676,11 +676,11 @@ End Sub
 
 Private Sub TextBox1_KeyDown(ByVal KeyCode _
     As MSForms.ReturnInteger, ByVal Shift As Integer)
-    'ATOKƒ†[ƒU[‚¾‚ÆˆÓ–¡–³‚¢‚¯‚Ç‹C‹x‚ß‚Å
-    '“ú–{Œê“ü—ÍOFF
+    'ATOKãƒ¦ãƒ¼ã‚¶ãƒ¼ã ã¨æ„å‘³ç„¡ã„ã‘ã©æ°—ä¼‘ã‚ã§
+    'æ—¥æœ¬èªå…¥åŠ›OFF
     IMEMode = wdIMEModeOff
     flg = True
-    'BS‚ÆDEL‚ÆEnter‚Í‘€ì‰Â
+    'BSã¨DELã¨Enterã¯æ“ä½œå¯
     If KeyCode = 8 Or KeyCode = 46 Or KeyCode = 13 Then Exit Sub
     If Not (KeyCode >= 48 And KeyCode <= 57 Or KeyCode = 191) Then
        flg = False
@@ -688,8 +688,8 @@ Private Sub TextBox1_KeyDown(ByVal KeyCode _
 End Sub
 
 Private Sub TextBox1_LostFocus()
-    '2005/5 ‚Å‚à“ú•t‚Æ‚µ‚Ä‰ğß‚³‚ê‚é‚Ì‚Å
-    '“ú‚É‚¿‚Ü‚Å“ü‚ê‚È‚¢ê‡‚ÍƒŠƒZƒbƒg
+    '2005/5 ã§ã‚‚æ—¥ä»˜ã¨ã—ã¦è§£é‡ˆã•ã‚Œã‚‹ã®ã§
+    'æ—¥ã«ã¡ã¾ã§å…¥ã‚Œãªã„å ´åˆã¯ãƒªã‚»ãƒƒãƒˆ
     Dim i As Long, ii As Long
     i = 0
     With Me.TextBox1
@@ -700,13 +700,13 @@ Private Sub TextBox1_LostFocus()
         Next ii
 
         If i < 2 Then
-            MsgBox myMsg, vbInformation, """“ú""‚Ü‚Å“ü—Í‚µ‚ëƒ{ƒP‚ª‚ÁI"
+            MsgBox myMsg, vbInformation, """æ—¥""ã¾ã§å…¥åŠ›ã—ã‚ãƒœã‚±ãŒã£ï¼"
             .Value = Empty
         End If
     End With
 End Sub
-----------------------------‚±‚±‚Ü‚Å
----------------------------•K—vˆÈã‚É‘Ò‚½‚È‚¢WEBƒy[ƒW‚Ì“\‚è•t‚¯
+----------------------------ã“ã“ã¾ã§
+---------------------------å¿…è¦ä»¥ä¸Šã«å¾…ãŸãªã„WEBãƒšãƒ¼ã‚¸ã®è²¼ã‚Šä»˜ã‘
     Public Ie    As Object
     Public Obj1  As Object
     Const oleCmdie_Copy = 12&
@@ -716,7 +716,7 @@ Sub test()
     Dim objTxT As Object
     flg = False
     Set Ie = CreateObject("internetexplorer.application")
-    'ie‹N“®
+    'ieèµ·å‹•
     With Ie
         While .busy = True And Ie.ReadyState <> READYSTATE_COMPLETE
             DoEvents
@@ -724,7 +724,7 @@ Sub test()
         .navigate "http://www2.moug.net/bbs/exvba/thread000001.htm"
         .Visible = True
     End With
-    'ƒy[ƒW‚Ì’è‹`
+    'ãƒšãƒ¼ã‚¸ã®å®šç¾©
 myRetry:
     On Error GoTo Yarinaoshi
             Set Obj1 = Ie.Document
@@ -739,11 +739,11 @@ Yarinaoshi:
     Resume myRetry
 End Sub
 
-¡Yu_tang‚³‚ñƒR[ƒh@IE‚ğ‹N“®‚·‚éƒNƒ‰ƒX
+â– Yu_tangã•ã‚“ã‚³ãƒ¼ãƒ‰ã€€IEã‚’èµ·å‹•ã™ã‚‹ã‚¯ãƒ©ã‚¹
 Option Explicit
-'ƒNƒ‰ƒXƒ‚ƒWƒ…[ƒ‹‚É‹Lq
-'  Microsoft HTML Object Library
-'  Microsoft Internet Controls ‚ÉQÆİ’è—v
+'ã‚¯ãƒ©ã‚¹ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã«è¨˜è¿°
+'â–¡ Microsoft HTML Object Library
+'â–¡ Microsoft Internet Controls ã«å‚ç…§è¨­å®šè¦
 
 Private WithEvents ie As SHDocVw.InternetExplorer
 Private mDocumentComplete As Boolean
@@ -765,14 +765,14 @@ End Sub
 Public Property Get IeObject() As InternetExplorer
     Set IeObject = ie
 End Property
-'IE‚ÌƒCƒxƒ“ƒg‚Å“Ç‚İ‚İŠ®—¹‚ğŒŸ’m‚·‚é
+'IEã®ã‚¤ãƒ™ãƒ³ãƒˆã§èª­ã¿è¾¼ã¿å®Œäº†ã‚’æ¤œçŸ¥ã™ã‚‹
 Private Sub ie_DocumentComplete(ByVal pDisp As Object, URL As Variant)
     mDocumentComplete = True
 End Sub
 
 </pre>
 <hr>
-<address>yamaV1.02ƒÀ</address>
+<address>yamaV1.02Î²</address>
 </div>
 </body>
 </html>
