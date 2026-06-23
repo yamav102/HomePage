@@ -1,0 +1,681 @@
+<div class="boxShadow">
+<table class="response" border="0" cellpadding="0" cellspacing="0">
+<tbody><tr class="question_header">
+	<th class="pinkback messageHeaderL">
+		<img src="For_Random%E3%81%A8For_Binary_MOUG_VBA_files/post_type_question.gif" alt="質問" title="質問" height="21" width="37"><br>
+		<span style="line-height: 4px;"><br></span>&nbsp;
+		<img src="For_Random%E3%81%A8For_Binary_MOUG_VBA_files/urgency0.gif" alt="">
+	</th>
+	<th class="pinkback messageHeaderR">
+		<div>
+			<div class="floatR">
+				<span class="small">(Windows 7 Professional : Excel 2003)</span>
+			</div>
+			Putステートメント
+		</div>
+		<div>
+			<div class="floatR">
+				<span class="small">投稿日時:&nbsp;11/11/30 00:05:31</span>
+			</div>
+			<span class="small">投稿者:&nbsp;yamaV1.02β</span>
+		</div>
+		<div class="floatR" style="line-height: 1px;">
+			
+		</div>
+	</th>
+</tr>
+<tr>
+	<td colspan="2" valign="top" width="100%">
+		<div class="messageBox"><p>おせわになります。
+<br>
+&nbsp;<br>
+以下のコードを実行して作られた dat ファイルを
+<br>
+テキストエディタで開いた状態が理解できません。
+<br>
+</p><pre class="pre-for-code">Option Explicit
+Private Type Person
+    Age As Integer
+    Name As String * 32
+End Type
+
+Private Sub test()
+
+    Dim p As Person
+    Open "C:\test.dat" For Random As #1 Len = Len(p)
+
+    p.Age = 17
+    p.Name = "太郎"
+    Put #1, 1, p    
+    p.Age = 18
+    p.Name = "花子"
+    Put #1, 2, p
+    
+    Get #1, 1, p
+    Debug.Print p.Age
+    Debug.Print p.Name
+    Get #1, 2, p
+    Debug.Print p.Age
+    Debug.Print p.Name
+    Close #1
+
+    '-----イミディエイト-----------
+    ' 17 
+    '太郎                              
+    '18 
+    '花子                              
+    '-----/イミディエイト----------
+
+End Sub</pre><span class="postbody">
+<br>
+作成された test.dat をテキストエディタで開くと
+<br>
+-------------------------
+<br>
+&nbsp;17 
+<br>
+太郎                              
+<br>
+&nbsp;18 
+<br>
+花子                              
+<br>
+-------------------------
+<br>
+↑こうである事を予想していたのですが、
+<br>
+実際は↓こうでした。（メモ帳でひらいて Ctrl+A Ctrl+c ここで Ctrl+v）
+<br>
+-------------------------</span><pre class="pre-for-code"> 太郎                                                                                                                           花子                            </pre><span class="postbody">
+<br>
+-------------------------
+<br>
+メモ帳でみると 太郎 も 花子 も改行しないのですが、
+<br>
+ここに張り付けると改行が入ってしまいました。
+<br>
+&nbsp;<br>
+また 17 18 はどこにもありません。
+<br>
+p.Age はどうなってしまったのでしょうか？
+<br>
+&nbsp;<br>
+Putステートメントのヘルプはことさら難解に思えます。
+<br>
+<blockquote><strong>引用:</strong><br>ユーザー定義型の要素を Put ステートメントを使って書き込む場合、
+<br>
+各要素は独立しているかのように書き込まれます。
+<br>
+ただし、各要素の間には何も埋め込まれません。</blockquote>
+<br>
+この箇所だろうか、という場所を書きだしてみましたが、
+<br>
+理解が及びません。
+<br>
+&nbsp;<br>
+何が起きているのでしょう。<p></p></span></div>
+		<div class="txtR quoteButton">
+			
+		</div>
+	</td>
+</tr>
+
+
+
+
+</tbody></table>
+</div>
+
+<div class="boxShadow">
+<table class="response" border="0" cellpadding="0" cellspacing="0">
+
+
+
+<tbody><tr class="answer_header">
+	<th class="paleblue messageHeaderL">
+		<img src="For_Random%E3%81%A8For_Binary_MOUG_VBA_files/post_type_answer.gif" alt="回答" title="回答" height="21" width="37"> 
+	</th>
+	<th class="paleblue messageHeaderR">
+		<div>
+			<div class="floatR">
+				<span class="small">投稿日時:&nbsp;11/11/30 21:34:23</span>
+			</div>
+			<span class="small">投稿者:&nbsp;kanabun</span>
+		</div>
+		<div class="floatR" style="line-height: 1px;">
+			
+		</div>
+	</th>
+</tr>
+<tr>
+	<td colspan="2" valign="top" width="100%">
+		<div class="messageBox"><p>おじゃまします。
+<br>
+&nbsp;<br>
+Put#,Get#で文字列の出力、読み出しの際の問題点を見やすくするため、
+<br>
+タイプ文の Name As String * 32 を
+<br>
+Name As String * 14  
+<br>
+に変更して宣言してみます。
+<br>
+</p><pre class="pre-for-code">Option Explicit
+Private Type Person
+    Age As Integer
+    Name As String * 14
+End Type</pre><span class="postbody">この
+<br>
+&gt; Name As String * 14
+<br>
+というのは、文字列長として14文字ということでしょうか？
+<br>
+それとも
+<br>
+シフトJIS変換後のバイト数が32バイトということでしょうか？
+<br>
+論より証拠、実際に出力してみることにします。
+<br>
+</span><pre class="pre-for-code">Sub test2()
+    Dim p As Person
+    Dim Filename As String: Filename = "H:\(Data)\temp13\test.dat"
+    
+    Open Filename For Output As #1  'ファイルサイズを 0 にする
+    Close 1
+    Open Filename For Random As #1 Len = Len(p)
+
+    p.Age = 17
+    p.Name = "太郎Taro"
+    Put #1, 1, p
+    p.Age = 18
+    p.Name = "山田花子Hanako"
+    Put #1, 3, p
+    '---------------------------------- Binary表示
+    '11 00 91 BE 98 59 54 61 72 6F 20 20 20 20 20 20
+    '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    '12 00 8E 52 93 63 89 D4 8E 71 48 61 6E 61 6B 6F</pre><span class="postbody">Put#で出力した結果を
+<br>
+バイナリファイルエディタで覗いてみると上のようになっています。
+<br>
+（実際は改行コードは無く、一続きのデータです）
+<br>
+Integerデータは2バイト(リトルエンディアンですから、上位バイトが先に来ます)、
+<br>
+文字列はメモリ上のUnicode文字列が ShiftJISに自動変換され、（1）レコード目の
+<br>
+"太郎Taro" は ShiftJISで8バイトですから、のこりの6バイト分は スペースで
+<br>
+埋められ 20 が6個、置かれているのが分かります。
+<br>
+第2レコードは出力されていませんから、Chr$(0)が16個ならんでいるだけです。
+<br>
+第3レコードの文字列部分は ShiftJISで "山田花子Hanako"とちょうど定義長と
+<br>
+同じ長さの14バイト文字列で【スペースはありません】。
+<br>
+&nbsp;<br>
+で、これをGet#で読み込んでみます。
+<br>
+イミディエイト・ウィンドウには スペースがあったばあい確認しにくいので、
+<br>
+スペースを"x"に置き換え表示してみます。
+<br>
+</span><pre class="pre-for-code">    Get #1, 1, p
+    Debug.Print p.Age
+    Debug.Print Replace(p.Name, " ", "x"), Len(p.Name)
+    Get #1, 3, p
+    Debug.Print p.Age
+    Debug.Print Replace(p.Name, " ", "x"), Len(p.Name)
+    Close #1
+    '-----イミディエイト-----------
+    ' 17
+    '太郎Taroxxxxxxxx         14
+    ' 18
+    '山田花子Hanakoxxxx       14
+End Sub</pre><span class="postbody">
+<br>
+イミディエイト・ウィンドウにはこのように表示されます。
+<br>
+第1レコードも、第3レコードも、文字列は「14文字」と表示されますが、
+<br>
+これはスペースを含んでの文字長です。
+<br>
+不思議なのは、ファイルにShiftJISで保存されたときは
+<br>
+第1レコードは「太郎Tarou      」とスペースは6個だったのに、
+<br>
+Get# してみると、スペースが8個になっていることです。
+<br>
+もっと不思議なのは、3番目の「山田花子Hanako」というデータです。
+<br>
+As String * 14 と定義してファイルに格納したので、ファイル内では
+<br>
+<span style="color: red">お尻のスペースは無いはず</span>なのに、
+<br>
+As String * 14 の定義のままで Get#してみると【4個のスペース】がお尻に
+<br>
+ついていることです。
+<br>
+<p></p></span></div>
+		<div class="txtR quoteButton">
+			
+		</div>
+	</td>
+</tr>
+
+</tbody></table>
+</div>
+<div class="boxShadow">
+<table class="response" border="0" cellpadding="0" cellspacing="0">
+
+
+
+<tbody><tr class="answer_header">
+	<th class="paleblue messageHeaderL">
+		<img src="For_Random%E3%81%A8For_Binary_MOUG_VBA_files/post_type_answer.gif" alt="回答" title="回答" height="21" width="37"> 
+	</th>
+	<th class="paleblue messageHeaderR">
+		<div>
+			<div class="floatR">
+				<span class="small">投稿日時:&nbsp;11/12/01 01:12:00</span>
+			</div>
+			<span class="small">投稿者:&nbsp;kanabun</span>
+		</div>
+		<div class="floatR" style="line-height: 1px;">
+			
+		</div>
+	</th>
+</tr>
+<tr>
+	<td colspan="2" valign="top" width="100%">
+		<div class="messageBox"><p></p><blockquote><strong>yamaV1.02β さんの引用:</strong><br>他に For Binary ってあるので、これはバイナリファイルなのか、
+<br>
+と想像していましたが、
+<br>
+For Random が何なのか正体不明です。</blockquote>
+<br>
+For Random 「も」Binaryファイルです。
+<br>
+For Binary とのちがいは、
+<br>
+For Binary なら Get #1, 3, buf   ← ここで 3 は3バイト目を意味する
+<br>
+のに対し、
+<br>
+For Random のとき Get #1, 3, buf ← この3は3ブロック目(Record 3)を
+<br>
+意味するわけです。
+<br>
+For Output ですと、テキスト・モードですから、
+<br>
+整数データは文字列に変えて、
+<br>
+&nbsp;&nbsp;Print #1, "17","太郎Tarou"
+<br>
+&nbsp;&nbsp;Print #1,,
+<br>
+&nbsp;&nbsp;Print #1, "17","山田花子Hanako"
+<br>
+のような<span style="color: red">先頭から順に</span>（この場合はTAB区切りで）出力し、
+<br>
+読み込むときも、先頭から順に Input# で項目ごと
+<br>
+またはLine Input# で一行ごとに読むことになります。
+<br>
+ランダム・アクセス・モードならば、それこそ<span style="color: red">ランダムにレコードにアクセスできます。</span>
+<br>
+また、ランダム・アクセス・モードならば、数値データはそのまま構造体にセットすれば
+<br>
+Integerなら2バイト、Longなら4バイト、Doubleなら8バイトでいつもファイルに
+<br>
+格納されます。（ファイルサイズを縮小でき、アクセスが高速になります）
+<br>
+問題は「文字列」データですが、
+<br>
+As String * 14 
+<br>
+のように、固定長文字列で定義すると、ファイルにPutする場合は
+<br>
+自動で ShiftJISに変換し、14バイトに収まるように（満たない場合はスペースを
+<br>
+パディングして）出力してくれますが、これをGet#で読むと、
+<br>
+&gt; As String * 14 
+<br>
+14×2バイト分=28バイト分のメモリ領域を準備し、ファイルから14バイト分
+<br>
+読み込んだShiftJISコードをUnicodeに変換して格納する（ような処理をする）
+<br>
+ので、文字列が漢字など「2バイトコード」であるときは、その2バイトコード
+<br>
+の分だけ「お尻にスペースがつく」ことになります。
+<br>
+いま 
+<br>
+Name As String * 5
+<br>
+と宣言してPutした文字列が
+<br>
+"Tarou"
+<br>
+"太郎a"
+<br>
+と2レコードあったとしますと、Put#でファイルには そのとおり「5バイト」
+<br>
+で格納されるわけですが、Get#で読み込むとき、
+<br>
+5×2 = 10バイト分（5文字分）のメモリ領域を確保して、
+<br>
+□□□□□□□□□□
+<br>
+ここにファイルから 5バイト取り出し、それをUnicodeに変換した
+<br>
+文字を埋め込んでいくイメージになります。
+<br>
+ファイルの"Tarou"(5バイト) は Unicodeに変換すると10バイトです。
+<br>
+■■■■■■■■■■ <pre class="pre-for-code">T   a   r   o   u</pre><span class="postbody">
+<br>
+いっぽう、"太郎a"(5バイト)は Unicodeに変換すると 6バイトです。
+<br>
+■■■■■■□□□□ </span><pre class="pre-for-code">太  郎  a</pre><span class="postbody">
+<br>
+お尻の4バイト分は変換される文字が無いので、スペースのまま残ります。
+<br>
+（4バイト余るだけなのに、４文字分のスペースがつくので、この説明では
+<br>
+ちょっと不十分ですが、イメージとしては合ってると思います）
+<br>
+&nbsp;<br>
+（説明がへたなので、途中省略して、代替案を示します）
+<br>
+&nbsp;<br>
+代替案は 構造体内でStringを「固定長でなく不定長で」宣言することです。
+<br>
+Option Explicit
+<br>
+Type uPerson
+<br>
+&nbsp;&nbsp;Age As Integer
+<br>
+<span style="color: darkblue">  Name As String</span>
+<br>
+End Type
+<br>
+&nbsp;<br>
+Sub try1()
+<br>
+&nbsp;&nbsp;Dim p As uPerson
+<br>
+&nbsp;&nbsp;Dim Filename As String: Filename = "H:\(Data)\temp13\Try1.dat"
+<br>
+&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;Open Filename For Output As #1  'サイズを0にする
+<br>
+&nbsp;&nbsp;Close 1
+<br>
+&nbsp;&nbsp;Debug.Print Len(p) '→p構造体：Total 6バイト
+<br>
+&nbsp;&nbsp;'可能性として<span style="color: red">考えられる文字列の最大バイト長を加算して</span> 1レコードあたりの単位バイト長を
+<br>
+&nbsp;&nbsp;'指定してOpenします。↓
+<br>
+&nbsp;&nbsp;Open Filename For Random As #1 <span style="color: blue">Len = Len(p) + 14</span> ' 6 + 14 = 20バイト宣言
+<br>
+&nbsp;<br>
+&nbsp;&nbsp;p.Age = 17
+<br>
+&nbsp;&nbsp;p.Name = "太郎Taro"
+<br>
+&nbsp;&nbsp;Put #1, 1, p
+<br>
+&nbsp;&nbsp;p.Age = 18
+<br>
+&nbsp;&nbsp;p.Name = "山田花子Hanako"
+<br>
+&nbsp;&nbsp;Put #1, 3, p
+<br>
+&nbsp;&nbsp;p.Age = 20
+<br>
+&nbsp;&nbsp;Put #1, 4, p  ’同じ文字列を Record 4番目にもPut する
+<br>
+&nbsp;&nbsp;&nbsp;<br>
+'---------------------------------- Binary表示
+<br>
+' 6   ← Len(p) 1レコード最少長さ + 14 = 20バイト
+<br>
+&nbsp;<br>
+</span><pre class="pre-for-code">'11 00 08 00 91 BE 98 59 54 61 72 6F 00 00 00 00 00 00 00 00
+'00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+'12 00 0E 00 8E 52 93 63 89 D4 8E 71 48 61 6E 61 6B 6F 00 00
+'14 00 0E 00 8E 52 93 63 89 D4 8E 71 48 61 6E 61 6B 6F</pre><span class="postbody">
+<br>
+&nbsp;&nbsp;'Get# は 1ページ目と 3ページ目だけGetします。( Randomアクセス )
+<br>
+&nbsp;&nbsp;Get #1, 1, p
+<br>
+&nbsp;&nbsp;Debug.Print p.Age
+<br>
+&nbsp;&nbsp;Debug.Print Replace(p.Name, " ", "x"), Len(p.Name)
+<br>
+&nbsp;&nbsp;Get #1, 3, p
+<br>
+&nbsp;&nbsp;Debug.Print p.Age
+<br>
+&nbsp;&nbsp;Debug.Print Replace(p.Name, " ", "x"), Len(p.Name)
+<br>
+&nbsp;&nbsp;Close #1
+<br>
+End Sub
+<br>
+'----------------- イミディエイト・ウィンドウ
+<br>
+</span><pre class="pre-for-code">' 17
+'太郎Taro       6
+' 18
+'山田花子Hanako 10</pre><span class="postbody">
+<br>
+イミディエイト・ウィンドウで読み込み確認している
+<br>
+</span><pre class="pre-for-code">  Debug.Print Replace(p.Name, " ", "x"), Len(p.Name)</pre><span class="postbody">部分の 
+<br>
+スペースを"x"に置換する処理は実際には不要です。なぜなら、
+<br>
+不定長文字列宣言してファイルにPut#したときは、ファイル内のその文字列の直前に
+<br>
+文字列の実際のバイト長をSaveしてくれてるからです。 
+<br>
+<p></p></span></div>
+		<div class="txtR quoteButton">
+			
+		</div>
+	</td>
+</tr>
+
+</tbody></table>
+</div>
+<div class="boxShadow">
+<table class="response" border="0" cellpadding="0" cellspacing="0">
+
+
+
+<tbody><tr class="answer_header">
+	<th class="paleblue messageHeaderL">
+		<img src="For_Random%E3%81%A8For_Binary_MOUG_VBA_files/post_type_answer.gif" alt="回答" title="回答" height="21" width="37"> 
+	</th>
+	<th class="paleblue messageHeaderR">
+		<div>
+			<div class="floatR">
+				<span class="small">投稿日時:&nbsp;11/12/01 01:24:19</span>
+			</div>
+			<span class="small">投稿者:&nbsp;kanabun</span>
+		</div>
+		<div class="floatR" style="line-height: 1px;">
+			
+		</div>
+	</th>
+</tr>
+<tr>
+	<td colspan="2" valign="top" width="100%">
+		<div class="messageBox"><p>訂正
+<br>
+「固定長」の反対だから「不定長」なんて表現してしまいました m(_ _)m
+<br>
+通常 「可変長」と云ってますね。
+<br>
+</p></div>
+		<div class="txtR quoteButton">
+			
+		</div>
+	</td>
+</tr>
+
+</tbody></table>
+</div>
+<div class="boxShadow">
+<table class="response" border="0" cellpadding="0" cellspacing="0">
+
+
+
+<tbody><tr class="answer_header">
+	<th class="paleblue messageHeaderL">
+		<img src="For_Random%E3%81%A8For_Binary_MOUG_VBA_files/post_type_answer.gif" alt="回答" title="回答" height="21" width="37"> 
+	</th>
+	<th class="paleblue messageHeaderR">
+		<div>
+			<div class="floatR">
+				<span class="small">投稿日時:&nbsp;11/12/01 01:47:50</span>
+			</div>
+			<span class="small">投稿者:&nbsp;kanabun</span>
+		</div>
+		<div class="floatR" style="line-height: 1px;">
+			
+		</div>
+	</th>
+</tr>
+<tr>
+	<td colspan="2" valign="top" width="100%">
+		<div class="messageBox"><p>補足
+<br>
+Random Accessファイルは データベースそのものです。
+<br>
+可変長文字列データは VARCHAR2(38) などとDefしますが、それは
+<br>
+最大38文字ということで、固定長38文字のように 満たない分がスペースで
+<br>
+埋められることはありません。
+<br>
+&nbsp;<br>
+また、インデックスファイルを作っておくとアクセスが速いのも
+<br>
+ファイルの構造がそうなっているからです。
+<br>
+</p></div>
+		<div class="txtR quoteButton">
+			
+		</div>
+	</td>
+</tr>
+
+</tbody></table>
+</div>
+<div class="boxShadow">
+<table class="response" border="0" cellpadding="0" cellspacing="0">
+
+
+
+<tbody><tr class="answer_header">
+	<th class="paleblue messageHeaderL">
+		<img src="For_Random%E3%81%A8For_Binary_MOUG_VBA_files/post_type_answer.gif" alt="回答" title="回答" height="21" width="37"> 
+	</th>
+	<th class="paleblue messageHeaderR">
+		<div>
+			<div class="floatR">
+				<span class="small">投稿日時:&nbsp;11/12/01 08:18:31</span>
+			</div>
+			<span class="small">投稿者:&nbsp;kanabun</span>
+		</div>
+		<div class="floatR" style="line-height: 1px;">
+			
+		</div>
+	</th>
+</tr>
+<tr>
+	<td colspan="2" valign="top" width="100%">
+		<div class="messageBox"><p>すみません。もう一つ訂正です
+<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'<span style="color: red">11 00</span> 91 BE 98 59 54 61 72 6F 20 20 20 20 20 20
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'<span style="color: red">12 00</span> 8E 52 93 63 89 D4 8E 71 48 61 6E 61 6B 6F
+<br>
+<span style="color: darkred">&gt; バイナリファイルエディタで覗いてみると上のようになっています。 
+<br>
+&gt;（実際は改行コードは無く、一続きのデータです） 
+<br>
+&gt; Integerデータは2バイト(リトルエンディアンですから、上位バイトが先に来ます)</span>
+<br>
+　　　　　　　　　　　　　　　　　　　　　　　　　　　↓
+<br>
+　　　　　　　　　　　　　　　　　　　　　　　　　　　下位バイト
+<br>
+</p></div>
+		<div class="txtR quoteButton">
+			
+		</div>
+	</td>
+</tr>
+
+</tbody></table>
+</div>
+<div class="boxShadow">
+<table class="response" border="0" cellpadding="0" cellspacing="0">
+
+
+<tbody><tr class="thank_header">
+	<th class="pinkback messageHeaderL">
+		<img src="For_Random%E3%81%A8For_Binary_MOUG_VBA_files/post_type_thank.gif" alt="" title="お礼" height="21" width="37"> 
+	</th>
+	<th class="pinkback messageHeaderR">
+		<div>
+			<div class="floatR">
+				<span class="small">投稿日時:&nbsp;11/12/01 21:51:52</span>
+			</div>
+			<span class="small">投稿者:&nbsp;yamaV1.02β</span>
+		</div>
+		<div class="floatR" style="line-height: 1px;">
+			
+		</div>
+	</th>
+</tr>
+<tr>
+	<td colspan="2" valign="top" width="100%">
+		<div class="messageBox"><p>&gt;文字列はメモリ上のUnicode文字列が ShiftJISに自動変換され
+<br>
+&nbsp;<br>
+そうだったのですか。
+<br>
+ややこしいのですね。
+<br>
+自動でやられてしまうとは、ショックでした。
+<br>
+-------------------------------------------
+<br>
+kanabun さん、
+<br>
+解説ありがとうございます。
+<br>
+&nbsp;<br>
+Put ステートメントの使用例 でデータベースを
+<br>
+扱っている事に合点がいきました。
+<br>
+&nbsp;<br>
+横穴掘ると、疑問がいくらでも出てくる状態です。
+<br>
+収拾つかなくなりそうなので今回は封印いたします。
+<br>
+&nbsp;<br>
+ありがとうございました。
+<br>
+</p></div>

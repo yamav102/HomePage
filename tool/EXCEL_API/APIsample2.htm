@@ -1,0 +1,973 @@
+<html lang="Ja">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html401/strict.dtd">
+<meta http-equiv="Content-Type" content="text/html,charset=shift_jis">
+<meta name="description" content="Win32API">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta name="robots" content="noindex,nofollow">
+
+<link rel="stylesheet" type="text/css" href="./vb.css">
+<title>■Win32APIサンプル_2</title>
+
+<body>
+<div class="content">
+
+<h1>■Win32APIサンプル２</h1>
+
+<table id="hanrei">
+<tr>
+<td class="tdApi">API関数宣言</td>
+<td class="tdConst">定数宣言・構造体</td>
+<td class="tdProc">プロシージャのサンプル</td>
+</tr>
+</table>
+
+<h2>拡張子に関連付けられたプログラムを実行する</h2>
+<pre class="codeApi"><a name="ShellExecute"><span class="REM">'拡張子に関連付けられたプログラムを実行する関数
+'
+'戻り値     成功 = 32を超える数値
+'           失敗 = 31以下の数値</span>
+Declare Function ShellExecute Lib "Shell32.dll" _
+    Alias "ShellExecuteA" _
+    (ByVal hwnd As Long, _
+    ByVal lpOperation As String, _
+    ByVal lpFile As String, _
+    ByVal lpParameters As String, _
+    ByVal lpDirectory As String, _
+    ByVal nShowCmd As Long) As Long</a>
+<pre class="codeConst">
+<span class="REM"> 'ウィンドウを非表示にし他のウィンドウをアクティブ化する</span>
+ Const SW_HIDE = 0&
+<span class="REM"> 'ウィンドウを最大化する</span>
+ Const SW_MAXIMIZE = 3&
+<span class="REM"> 'ウィンドウをアクティブにし現在の位置とサイズで表示する</span>
+ Const SW_SHOW = 5&
+<span class="REM"> 'ウィンドウを最小化し次のトップレベルウィンドウをアクティブ化する</span>
+ Const SW_MINIMIZE = 6&
+<span class="REM"> 'ウィンドウをアクティブにし表示する。</span>
+ 'ウィンドウが最小化または最大化のときは元の位置とサイズに復元する</span>
+ Const SW_RESTORE = 9&
+<span class="REM"> 'STARTUPINFO構造体で指定したフラッグを使う</span>
+ Const SW_SHOWDEFAULT = 10&
+
+<span class="REM"> 'SW_RESTOREと同じ</span>
+ Const SW_SHOWNORMAL = 1&
+<span class="REM"> 'ウィンドウをアクティブにし最小化する</span>
+ Const SW_SHOWMINIMIZED = 2&
+<span class="REM"> 'ウィンドウをアクティブにし最大化する</span>
+ Const SW_SHOWMAXIMIZED = 3&
+<span class="REM"> '以前に表示された位置とサイズで表示する。
+ '現在アクティブなウィンドウはアクティブのままにする</span>
+ Const SW_SHOWNOACTIVATE = 4&
+<span class="REM"> 'ウィンドウを最小化する。
+ '現在アクティブなウィンドウはアクティブのままにする</span>
+ Const SW_SHOWMINNOACTIVE = 7&
+<span class="REM"> 'ウィンドウを表示する。
+ '現在アクティブなウィンドウはアクティブのままにする</span>
+ Const SW_SHOWNA = 8&
+
+<span class="REM"> 'ファイルが見つからない</span>
+ Const ERROR_FILE_NOT_FOUND = 2&
+<span class="REM"> 'パスが見つからない</span>
+ Const ERROR_PATH_NOT_FOUND = 3&
+<span class="REM"> 'ファイルが無効</span>
+ Const ERROR_BAD_FORMAT = 11&
+</pre>
+</pre>
+<p>
+以下のサンプルは、
+<code>
+rc = Shell("Notepad.exe " & strPath & "\sample.txt", vbNormalFocus)
+</code>で代用できます。</p>
+<pre class="codeProc">
+<span class="REM"><a name="ShellExecute_Sample">'summary:パスを指定してテキストファイルを開く</a>
+'remark:ブックと同じディレクトリに
+'sample.txtを作成してから実行します。</span>
+Sub ShellExecute_Sample()
+    
+    Dim strClassName As String  <span class="REM">'クラス名</span>
+    Dim strPath As String       <span class="REM">'パス名</span>
+    Dim hwnd As Long            <span class="REM">'親ウィンドウのハンドル</span>
+    Dim strOperation As String  <span class="REM">'実行する操作</span>
+    Dim strFile As String       <span class="REM">'ファイル名かディレクトリ名</span>
+    Dim rc As Long              <span class="REM">'リターンコード</span>
+    
+    strPath = ActiveWorkbook.Path
+    
+    <span class="REM">'クラス名を指定</span>
+    strClassName = "XLMAIN"
+    
+    <span class="REM">'Excelのウィンドウハンドルを取得</span>
+    hwnd = FindWindow(strClassName, _
+                    Application.Caption)
+    <span class="REM">'↑Excel2002-3であれば、次の書き方でOK
+    'hwnd = Application.hwnd
+    
+    '実行する操作を指定</span>
+    strOperation = "open"
+    
+    <span class="REM">'ファイル名を指定</span>
+    strFile = strPath & "\sample.txt"
+    
+    <span class="REM">'関連付けられているプログラムでファイルを開く</span>
+    rc = ShellExecute(hwnd, _
+                   strOperation, _
+                   strFile, _
+                   vbNullString, _
+                   vbNullString, _
+                   SW_SHOWNORMAL)
+                   
+    <span class="REM">'関数の呼び出し失敗</span>
+    If rc <= 31 Then
+        Select Case rc
+            Case 0&
+                MsgBox "メモリ不足です"
+            Case ERROR_FILE_NOT_FOUND
+                MsgBox "ファイルが見つかりません"
+            Case ERROR_PATH_NOT_FOUND
+                MsgBox "パスが見つかりません"
+            Case ERROR_BAD_FORMAT
+                MsgBox "ファイルが無効です"
+            Case Else
+                MsgBox "エラーが発生しました"
+        End Select
+    End If
+                   
+End Sub
+</pre>
+<pre class="codeProc"><a name="ShellExecute_Sample2"><span class="REM">
+'summary:拡張子に関連付けられたプログラムでファイルを印刷する</a>
+'remark:ブックと同じディレクトリに
+'sample.txtを作成してから実行します。</span>
+Sub ShellExecute_Sample2()
+
+    Dim strClassName As String  <span class="REM">'クラス名</span>
+    Dim strPath As String       <span class="REM">'パス名</span>
+    Dim hwnd As Long            <span class="REM">'親ウィンドウのハンドル</span>
+    Dim strOperation As String  <span class="REM">'実行する操作</span>
+    Dim strFile As String       <span class="REM">'ファイル名かディレクトリ名</span>
+    Dim rc As Long              <span class="REM">'リターンコード</span>
+    
+    strPath = ThisWorkbook.Path
+                    
+    <span class="REM">'クラス名を指定</span>
+    strClassName = "XLMAIN"
+    
+    <span class="REM">'Excelのウィンドウハンドルを取得</span>
+    hwnd = FindWindow(strClassName, _
+                   Application.Caption)
+    <span class="REM">'↑はxl2002以降なら↓でよい。
+    'hwnd = Application.hwnd
+    
+    '実行する操作を指定</span>
+    strOperation = "print"
+    
+    <span class="REM">'ファイル名を指定</span>
+    strFile = strPath & "\sample.txt"
+        
+    <span class="REM">'関連付けられているプログラムでファイルを印刷する</span>
+    rc = ShellExecute(hwnd, _
+                   strOperation, _
+                   strFile, _
+                   vbNullString, _
+                   vbNullString, _
+                   SW_HIDE)
+                   
+    <span class="REM">'関数の呼び出し失敗</span>
+    If rc <= 31 Then
+        Select Case rc
+            Case 0&
+                MsgBox "メモリ不足です"
+            Case ERROR_FILE_NOT_FOUND
+                MsgBox "ファイルが見つかりません"
+            Case ERROR_PATH_NOT_FOUND
+                MsgBox "パスが見つかりません"
+            Case ERROR_BAD_FORMAT
+                MsgBox "ファイルが無効です"
+            Case Else
+                MsgBox "エラーが発生しました"
+        End Select
+        
+    End If
+    
+End Sub
+</pre>
+<pre class="codeProc">
+<a name="ShellExecute_Sample3"><span class="REM">
+'summary:フォルダを指定してエクスプローラを起動する</span></a>
+Sub ShellExecute_Sample3()
+
+    Dim strClassName As String  <span class="REM">'クラス名</span>
+    Dim hwnd As Long            <span class="REM">'親ウィンドウのハンドル</span>
+    Dim strOperation As String  <span class="REM">'実行する操作</span>
+    Dim strFile As String       <span class="REM">'ファイル名かディレクトリ名</span>
+    Dim rc As Long              <span class="REM">'リターンコード</span>
+    
+    <span class="REM">'クラス名を指定</span>
+    strClassName = "XLMAIN"
+    
+    <span class="REM">'Excelのウィンドウハンドルを取得</span>
+    hwnd = FindWindow(strClassName, _
+                   Application.Caption)
+    <span class="REM">'xl2002以降は
+    'hwnd=Application.Hwnd　でもよい
+    
+    '実行する操作を指定</span>
+    strOperation = "explore"
+    
+    <span class="REM">'ディレクトリ名を指定
+    '&lt;使用しているOSに応じてディレクトリ名を変更してください&gt;</span>
+    strFile = "C:\Windows"
+    
+    <span class="REM">'エクスプローラを表示する</span>
+    rc = ShellExecute(hwnd, _
+                   strOperation, _
+                   strFile, _
+                   vbNullString, _
+                   vbNullString, _
+                   SW_SHOWNORMAL)
+                   
+    <span class="REM">'関数の呼び出し失敗</span>
+    If rc <= 31 Then
+        Select Case rc
+            Case 0&
+                MsgBox "メモリ不足です"
+            Case ERROR_FILE_NOT_FOUND
+                MsgBox "ファイルが見つかりません"
+            Case ERROR_PATH_NOT_FOUND
+                MsgBox "パスが見つかりません"
+            Case ERROR_BAD_FORMAT
+                MsgBox "ファイルが無効です"
+            Case Else
+                MsgBox "エラーが発生しました"
+        End Select
+    End If
+    
+End Sub</pre>
+<h2>[ファイルのプロパティ]ダイアログボックスを開く</h2>
+<pre class="codeApi"><span class="REM"><a name="ShellExecuteEx">
+'-------------------------------------------------
+'拡張子に関連付けられたプログラムを実行する関数
+'
+'戻り値     成功 = 0以外
+'           失敗 = 0
+'-------------------------------------------------</name></span>
+Declare Function ShellExecuteEx Lib "Shell32.dll" _
+    Alias "ShellExecuteExA" _
+    (lpExecInfo As SHELLEXECUTEINFO) As Long
+
+<pre class="codeConst"><span class="REM">
+'アプリケーションに関する情報を格納する構造体</span>
+Type SHELLEXECUTEINFO
+    cbSize As Long          <span class="REM">'構造体のバイト数</span>
+    fMask As Long           <span class="REM">'構造体の有効なメンバを指定する</span>
+    hwnd As Long            <span class="REM">'親ウィンドウのハンドル</span>
+    lpVerb As String        <span class="REM">'実行する操作</span>
+    lpFile As String        <span class="REM">'ファイル名もしくはディレクトリ名</span>
+    lpParameters As String  <span class="REM">'アプリケーションに渡すパラメータ</span>
+    lpDirectory As String   <span class="REM">'作業ディレクトリ名</span>
+    nShow As Long           <span class="REM">'表示方法を指定するフラグ</span>
+    hInstApp As Long        <span class="REM">'関数の実行結果を受け取るバッファ</span>
+    lpIDList As Long        <span class="REM">'以下、オプションフィールド</span>
+    lpClass As String
+    hkeyClass As Long
+    dwHotKey As Long
+    hIcon As Long
+    hProcess As Long
+End Type
+<span class="REM">'lpClassで与えるクラス名を使用する</span>
+ Const SEE_MASK_CLASSNAME = &H1&
+ <span class="REM">'hKeyClassで与えるクラスキーを使用する</span>
+ Const SEE_MASK_CLASSKEY = &H3&
+ <span class="REM">'lpIDListで与えられるitem idリストを使用する</span>
+ Const SEE_MASK_IDLIST = &H4&
+ <span class="REM">'アプリケーションを起動するためlpIDListで与えられるitem idリストを使用する</span>
+ Const SEE_MASK_INVOKEIDLIST = &HC&
+ <span class="REM">'hIconで与えられるアイコンを使用する</span>
+ Const SEE_MASK_ICON = &H10&
+ <span class="REM">'dwHotKeyで与えられるホットキーを使用する</span>
+ Const SEE_MASK_HOTKEY = &H20&
+ <span class="REM">'関数実行後プロセスの実行を継続する</span>
+ Const SEE_MASK_NOCLOSEPROCESS = &H40&
+ <span class="REM">'ドライブと接続する</span>
+ Const SEE_MASK_CONNECTNETDRV = &H80&
+ <span class="REM">'関数から戻る前に終了するためDDE接続を待つ</span>
+ Const SEE_MASK_FLAG_DDEWAIT = &H100&
+ <span class="REM">'lpDirectoryまたはlpFileで与えられる文字列内の環境変数を展開する</span>
+ Const SEE_MASK_DOENVSUBST = &H200&
+ <span class="REM">'エラー発生時にエラーメッセージボックスを表示しない</span>
+ Const SEE_MASK_FLAG_NO_UI = &H400&
+</pre></pre>
+<pre class="codeProc">
+<span class="REM">'summary:[ファイルのプロパティ]ダイアログボックスを開く</span>
+<a name="ShellExecuteEx_Sample">Sub ShellExecuteEx_Sample()</a>
+     
+     Dim udtSHELLEXEUTEINFO As SHELLEXECUTEINFO
+     Dim strClassName As String     <span class="REM">'クラス名</span>
+     Dim hwnd As Long               <span class="REM">'親ウィンドウのハンドル</span>
+     Dim rc As Long                 <span class="REM">'リターンコード</span>
+     
+     <span class="REM">'クラス名を指定</span>
+     strClassName = "XLMAIN"
+     
+     <span class="REM">'EXCELのウィンドウハンドルを取得</span>
+     hwnd = FindWindow(strClassName, _
+                    Application.Caption)
+     <span class="REM">'xl2002以降ならhwnd=Application.Hwnd</span>
+     
+     With udtSHELLEXEUTEINFO
+     
+        <span class="REM">'LenBをユーザー定義型に使用するとメモリ内でのサイズを返します。
+        '要素間の埋め込み(キーワード：パディング・アラインメント)も含まれています</span>
+        .cbSize = LenB(udtSHELLEXEUTEINFO)
+        .fMask = SEE_MASK_INVOKEIDLIST Or SEE_MASK_NOCLOSEPROCESS _
+            Or SEE_MASK_FLAG_NO_UI
+        .hwnd = hwnd
+        .lpVerb = "properties"
+        <span class="REM">'&lt;使用しているOSに応じて絶対パスを変更してください"&gt;</span>
+        .lpFile = "C:Windows\system32\Notepad.exe"
+        .lpParameters = vbNullString
+        .lpDirectory = vbNullString
+        .nShow = 0&
+        .hInstApp = 0&
+        .lpIDList = 0&
+        
+     End With
+     
+     rc = ShellExecuteEx(udtSHELLEXEUTEINFO)
+    
+End Sub</pre>
+<h2>フロッピーディスクをフォーマットするダイアログを表示させる</h2>
+<pre class="codeApi"><a name="SHFormatDrive"><span="REM">'-------------------------------------------------
+'フロッピーディスクをフォーマットするダイアログを表示させる
+'
+'戻り値     成功 = nFormatIDの値
+'           失敗 = -1
+'           キャンセル = -2
+'-------------------------------------------------</span>
+Declare Function SHFormatDrive Lib "Shell32.dll" _
+    (ByVal hwnd As Long, _
+    ByVal nDrive As Long, _
+    ByVal nFormatID As Long, _
+    ByVal nOption As Long) As Long</a>
+<pre class="codeConst">
+ Const SHFMT_OPT_QUICK = 0&   <span class="REM">'クイックフォーーマット</span>
+ Const SHFMT_OPT_FULL = 1&    <span class="REM">'通常のフォーマット</span>
+ Const SHFMT_OPT_SYSONLY = 2& <span class="REM">'起動専用</span>
+
+ Const SHFMT_ERROR = -1&      <span class="REM">'フォーマット中にエラーが発生</span>
+ Const SHFMT_CANCEL = -2&     <span class="REM">'フォーマットが取り消しされた</span>
+ Const SHFMT_NOFORMAT = -3&   <span class="REM">'フォーマットができないドライブを指定した</span></pre></pre>
+<pre class="codeApi"><a name="GetDriveType"><span class="REM">'-----------------------------------
+'指定されたドライブの種類を調べる関数
+'
+'戻り値     ドライブの種類を識別する値
+'------------------------------------</span>
+Declare Function GetDriveType Lib "kernel32" _
+    Alias "GetDriveTypeA" _
+    (ByVal nDrive As String) As Long</a>
+<pre class="codeConst">
+<span class="REM">'GetDriveType関数の返り値</span>
+ Const DRIVE_UNKNOWN = 0&     <span class="REM">'ドライブの種類が判別できない</span>
+ Const DRIVE_NO_ROOT_DIR = 1& <span class="REM">'指定のルートディレクトリが存在しない</span>
+ Const DRIVE_REMOVABLE = 2&   <span class="REM">'ドライブからディスクを抜くことができる</span>
+ Const DRIVE_FIXED = 3&       <span class="REM">'ドライブからディスクを抜くことができない</span>
+ Const DRIVE_REMOTE = 4&      <span class="REM">'リモート(ネットワーク)ドライブ</span>
+ Const DRIVE_CDROM = 5&       <span class="REM">'CD-ROMドライブ</span>
+ Const DRIVE_RAMDISK = 6&     <span class="REM">'RAMディスク</span></pre></pre>
+<pre class="codeProc"><span class="REM">'summary:フロッピディスクをフォーマットするダイアログを
+'表示させる</span>
+<a name="SHFormatDrive_Sample">Sub SHFormatDrive_Sample()</a>
+    
+    Dim hwnd As Long            <span class="REM">'親ウィンドウのハンドル</span>
+    Dim lngDrive As Long        <span class="REM">'ドライブ</span>
+    Dim lngFOrmatID As Long     <span class="REM">'フォーマットの形式</span>
+    Dim lngOption As Long       <span class="REM">'フォーマットの種類</span>
+    Dim rc As Long              <span class="REM">'リターンコード</span>
+    
+    Dim strDrive As String      <span class="REM">'ドライブ名</span>
+    Dim strClassName As String  <span class="REM">'クラス名</span>
+    
+    strDrive = InputBox _
+        (Prompt:="フロッピーのドライブ名を入力して下さい", _
+        Default:="A:\")
+    
+    strDrive = UCase(strDrive)  <span class="REM">'小文字を大文字に変換</span>
+    
+    <span class="REM">'ドライブの種類を取得</span>
+    rc = GetDriveType(strDrive)
+    
+    <span class="REM">'フロッピーディスクでない場合</span>
+    If rc <> DRIVE_REMOVABLE Then
+        MsgBox strDrive & " はフロッピーディスクではありません"
+        Exit Sub
+    End If
+    
+    strDrive = Left(strDrive, 1)
+    
+    <span class="REM">'クラス名を指定</span>
+    strClassName = "XLMAIN"
+    
+    <span class="REM">'Excelのウィンドウハンドルを取得</span>
+    hwnd = FindWindow(strClassName, _
+                  Application.Caption)
+    <span class="REM">'xl2002以降ならばhwnd=Application.Hwndで可</span>
+    
+    <span class="REM">'フォーマットするドライブの指定</span>
+    <span class="REM">'Aドライブ:0；</span>
+    <span class="REM">'Bドライブ:1；</span>
+    <span class="REM">'…</span>
+    lngDrive = Asc(strDrive) - 65
+    
+    <span class="REM">'フォーマット形式を指定</span>
+    lngFOrmatID = 0         <span class="REM">'1.44MB</span>
+    <span class="REM">'lngFormatID=5          '720KB</span>
+    
+    <span class="REM">'フォーマットの種類</span>
+    lngOption = SHFMT_OPT_QUICK     <span class="REM">'クイックフォーマット</span>
+    <span class="REM">'lngOption = SHFMT_OPT_FULL     '通常のフォーマット
+    'lngOption = SHFMT_OPT_SYSONLY  '起動専用クイックフォーマット</span>
+    
+    rc = SHFormatDrive(hwnd, _
+                    lngDrive, _
+                    lngFOrmatID, _
+                    lngOption)
+                    
+    <span class="REM">'以上のコードはフォーマットのダイアログを表示するだけ。
+    'ダイアログが実行かキャンセルされるまで本プロシージャ
+    'を抜ける事はありません。</span>
+    
+End Sub</pre>
+
+<h2>［Windowsの終了］ダイアログボックスを表示する</h2>
+<pre class="codeApi"><a name="PostMessage"><span class="REM">'-------------------------------------------------
+'メッセージキューにメッセージをポストする関数
+'
+'戻り値     成功 = 0以外
+'           失敗 = 0
+'-------------------------------------------------</a></span>
+Declare Function PostMessage Lib "user32" _
+    Alias "PostMessageA" _
+    (ByVal hwnd As Long, _
+    ByVal wMsg As Long, _
+    ByVal wParam As Long, _
+    ByVal lParam As Long) As Long
+<pre class="codeConst">
+Const WM_CLOSE = &H10&</pre></pre>
+<pre class="codeProc">
+<span class="REM">'summary:［Windowsの終了］ダイアログボックスを表示する</span>
+<a name="PostMessage_Sample">Sub PostMessage_Sample()</a>
+    Dim hwnd As Long            <span class="REM">'ウィンドウハンドル</span>
+    Dim strClassName As String  <span class="REM">'クラス名</span>
+    Dim rc As Long
+    
+    MsgBox "［Windowsの終了］ダイアログボックスを表示します"
+        
+    <span class="REM">'クラス名を指定</span>
+    strClassName = "ProgMan"
+    
+    <span class="REM">'プログラムマネージャーのウィンドウハンドルを取得</span>
+    hwnd = FindWindow(strClassName, _
+                    vbNullString)
+
+<span class="REM">'［Windowsの終了］ダイアログボックスを表示する</span>
+    rc = PostMessage(hwnd, _
+                    WM_CLOSE, _
+                    0&, _
+                    0&)
+End Sub
+</pre>
+<h2>システムをログオフ／シャットダウン／再起動する</h2>
+<p>この関数が成功するには条件があるようです。MSDNに詳細が
+ありますが容易に理解できる内容ではありません。実用の機会があるとも思えない関数です。</p>
+<pre class="codeApi"><a name="ExitWindowsEx"></a>
+<span class="REM">'システムをログオフ／シャットダウン／再起動する関数
+'戻り値 成功 = 0 以外
+' 失敗 = 0</span>
+Declare Function ExitWindowsEx Lib "user32" _
+(ByVal uFlags As Long, _
+ByVal dwReserved As Long) As Long
+ <pre class="codeConst">
+ Const EWX_LOGOFF = 0& <span class="REM">'ログオフ</span>
+ Const EWX_SHUTDOWN = 1& <span class="REM">'シャットダウン</span>
+ Const EWX_REBOOT = 2& <span class="REM">'再起動</span>
+ Const EWX_FORCE = 4& <span class="REM">'プロセスの強制終了</span>
+ Const EWX_POWEROFF = 8& <span class="REM">'シャットダウン後に電源を切る</span>
+ Const EWX_FORCEIFHUNG = 16& '</pre></pre>
+<pre class="codeProc">
+Sub ExitWindowsEx_Sample()
+Dim rc As Long
+<span class="REM">'システムをシャットダウン</span>
+rc = ExitWindowsEx(EWX_POWEROF, _
+0&)
+
+End Sub</pre>
+<h2>フォルダ選択用のディレクトリツリーを表示する</h2><pre class="codeApi"><a name="SHBrowseForFolder"><span class="REM">'----------------------------------------------------------------------
+'フォルダ選択用のディレクトリツリーを表示する関数
+'
+'戻り値     成功 = 選択されたフォルダをルートとするITEMIDリストへのポインタ
+'           キャンセル = 0
+'----------------------------------------------------------------------</a></span>
+Declare Function SHBrowseForFolder Lib "shell32.dll" _
+    Alias "SHBrowseForFolderA" _
+    (lpbi As BROWSEINFO) As Long
+
+<pre class="codeConst"><span class="REM">
+'ダイアログボックスを初期化する情報を格納した構造体</span>
+Type BROWSEINFO
+   hwndOwner As Long        <span class="REM">'ダイアログボックスの親ウィンドウのハンドル</span>
+   pidlRoot As Long         <span class="REM">'ルートフォルダ</span>
+   pszDisplayName As String <span class="REM">'ユーザーが選択したフォルダ名</span>
+   lpszTitle As String      <span class="REM">'ダイアログボックスに表示するメッセージ</span>
+   ulFlags As Long          <span class="REM">'動作方法を指定する</span>
+   lpfn As Long             <span class="REM">'コールバック関数へのポインタ</span>
+   lParam As Long           <span class="REM">'コールバック関数へのパラメータ</span>
+   iImage As Long           <span class="REM">'フォルダ用アイコンのシステムイメージリストのID</span>
+End Type
+
+<span class="REM">'ルートフォルダを指定する定数
+'デスクトップ</span>
+ Const CSIDL_DESKTOP = &H0&
+<span class="REM">'Windows\プログラム</span>
+ Const CSIDL_PROGRAMS = &H2&
+<span class="REM">'コントロールパネル</span>
+ Const CSIDL_CONTROLS = &H3&
+<span class="REM">'プリンタ</span>
+ Const CSIDL_PRINTERS = &H4&
+<span class="REM">'My Documents</span>
+ Const CSIDL_PERSONAL = &H5&
+<span class="REM">'Favorities</span>
+ Const CSIDL_FAVORITES = &H6&
+<span class="REM">'スタートアップ</span>
+ Const CSIDL_STARTUP = &H7&
+<span class="REM">'最近使ったファイル</span>
+ Const CSIDL_RECENT = &H8&
+<span class="REM">'送る</span>
+ Const CSIDL_SENDTO = &H9&
+<span class="REM">'ごみ箱</span>
+ Const CSIDL_BITBUCKET = &HA&
+<span class="REM">'スタートメニュー</span>
+ Const CSIDL_STARTMENU = &HB&
+<span class="REM">'Windows\デスクトップ</span>
+ Const CSIDL_DESKTOPDIRECTORY = &H10&
+<span class="REM">'マイコンピュータ</span>
+ Const CSIDL_DRIVES = &H11&
+<span class="REM">'ネットワーク</span>
+ Const CSIDL_NETWORK = &H12&
+<span class="REM">'Windows\NetHood</span>
+ Const CSIDL_NETHOO = &H13&
+<span class="REM">'Windows\Fonts</span>
+ Const CSIDL_FONTS = &H14&
+<span class="REM">'Windows\ShellNew</span>
+ Const CSIDL_TEMPLATES = &H15&
+<span class="REM">
+'動作方法を指定する定数
+'ディレクトリの選択のみ可能</span>
+ Const BIF_RETURNONLYFSDIRS = &H1&
+<span class="REM">'ネットワークフォルダを含まない</span>
+ Const BIF_DONTGOBELOWDOMAIN = &H2&
+<span class="REM">'ダイアログボックスにステータス表示領域を追加する</span>
+ Const BIF_STATUSTEXT = &H4&
+<span class="REM">'親ディレクトリのみを選択可能にする</span>
+ Const BIF_RETURNFSANCESTORS = &H8&
+<span class="REM">'ダイアログボックス内にアイテム名入力用のテキストボックスを追加する</span>
+ Const BIF_EDITBOX = &H10&
+<span class="REM">'無効なアイテム名が入力されたときBroeseCallbackProcコールバック関数を呼び出す</span>
+ Const BIF_VALIDATE = &H20&
+<span class="REM">'コンピュータフォルダのみ選択可能</span>
+ Const BIF_BROWSEFORCOMPUTER = &H1000&
+<span class="REM">'プリンタフォルダのみ選択可能</span>
+ Const BIF_BROWSEFORPRINTER = &H2000&
+<span class="REM">'ファイルも表示する</span>
+ Const BIF_BROWSEINCLUDEFILES = &H4000&
+
+<span class="REM">'フォルダ名の最大長</span>
+ Const MAX_PATH = 260</pre></pre>
+
+<pre class="codeApi"><name="SHGetPathFromIDList"><span class="REM">'----------------------------------------------------------------------
+'SHBrowseForFolderで取得した値からフォルダのフルパスを取得する関数
+'
+'戻り値     成功 = NOERROR(=0)
+'           失敗 = E_INVALIDARG(=&H80070057)
+'----------------------------------------------------------------------</span></a>
+Declare Function SHGetPathFromIDList Lib "shell32.dll" _
+    Alias "SHGetPathFromIDListA" _
+    (ByVal pidl As Long, _
+    ByVal pszPath As String) As Long</pre>
+<pre class="codeApi"><a name="CoTaskMemFree"><span class="REM">'----------------------------------------------------------------------
+'OLEアロケータによって確保したメモリブロックを開放する関数
+'引数：pv　解放されるべきメモリブロックへのポインタ
+'戻り値     なし
+'----------------------------------------------------------------------</span></a>
+Declare Function CoTaskMemFree Lib "OLE32.dll" _
+    (ByVal pv As Long) As Long
+</pre>
+<pre class="codeProc"><a name="SHBrowseForFolder_Sample">
+<span class="REM">'summary:フォルダ選択用のディレクトリツリーを表示する</span>
+Sub SHBrowseForFolder_Sample()</a>
+
+    Dim udtBROWSEINFO As BROWSEINFO
+    Dim lngPidl As Long                 <span class="REM">'SHBrowseForFolderの戻り値</span>
+    Dim strPath As String * MAX_PATH    <span class="REM">'フォルダ名格納</span>
+    Dim rc As Long
+    
+    Dim strClassName As String          <span class="REM">'クラス名</span>
+    
+    <span class="REM">'Excelのクラス名を指定</span>
+    strClassName = "XLMAIN"
+
+    With udtBROWSEINFO
+        <span class="REM">'ダイアログボックスの親ウィンドウのハンドル</span>
+        .hwndOwner = FindWindow(strClassName, _
+                                Application.Caption)
+        <span class="REM">'Excel2002の場合は　変数=Application.Hwnd　でもよい</span>
+                                
+        <span class="REM">'ルートフォルダをデスクトップにする</span>
+        .pidlRoot = CSIDL_DESKTOP
+        
+        <span class="REM">'タイトル</span>
+        .lpszTitle = "フォルダを選択してください"
+        
+        <span class="REM">'ディレクトリのみ選択可能にする</span>
+        .ulFlags = BIF_RETURNONLYFSDIRS
+    End With
+
+    <span class="REM">'[フォルダの参照]ダイアログボックスを開く</span>
+    lngPidl = SHBrowseForFolder(udtBROWSEINFO)
+    
+    If lngPidl = 0& Then
+        MsgBox "キャンセルが選択されました"
+        Exit Sub
+    End If
+    
+    <span class="REM">'SHBrowseForFolderで取得した値からフォルダのフルパスを取得</span>
+    rc = SHGetPathFromIDList(lngPidl, strPath)
+    
+    MsgBox "選択したフォルダ: " & _
+        Left(strPath, InStr(strPath, vbNullChar) - 1)
+    
+    <span class="REM">'割り当てられたメモリを開放</span>
+    Call CoTaskMemFree(lngPidl)
+End Sub</pre>
+<h2>ファイル/フォルダの操作</h2>
+<p>以下のサンプルの動作は、リッチな進捗表示やごみ箱に入る事に拘らなければKillステートメントRmDir、またFileSystemObjectを使用することで代用できるものばかりです。</p>
+<pre class="codeApi"><a name="SHFileOperation"><span class="REM">'----------------------------------------
+'ファイル操作(コピー、移動、削除）を行う関数
+'
+'戻り値     成功 = 0
+'           失敗 = 0以外
+'-----------------------------------------</span></a>
+Declare Function SHFileOperation Lib "shell32.dll" _
+    Alias "SHFileOperationA" _
+    (lpFileOp As SHFILEOPSTRUCT) As Long
+<pre class="codeConst"><span class="REM">'動作方法を指定する構造体</span>
+Type SHFILEOPSTRUCT
+    hwnd As Long                    <span class="REM">'ダイアログボックスの親ウィンドウのハンドル</span>
+    wFunc As Long                   <span class="REM">'操作内容を指定する</span>
+    pFrom As String                 <span class="REM">'操作元のファイル名、ディレクトリ名</span>
+    pTo As String                   <span class="REM">'操作先のファイル名、ディレクトリ名</span>
+    fFlags As Integer               <span class="REM">'操作内容を指定する</span>
+    fAnyOperationsAborted As Long   <span class="REM">'処理終了前にキャンセルしたときは「1」</span>
+    hNameMappings As Long           <span class="REM">'ファイルネームマッピングオブジェクト</span>
+    lpszProgressTitle As String     <span class="REM">'ダイアログボックスのキャプション</span>
+End Type
+
+<span class="REM">'操作内容を指定する定数</span>
+ Const FO_MOVE = &H1&         <span class="REM">'移動</span>
+ Const FO_COPY = &H2&         <span class="REM">'コピー</span>
+ Const FO_DELETE = &H3&       <span class="REM">'削除</span>
+ Const FO_RENAME = &H4&       <span class="REM">'名前を変更</span>
+
+<span class="REM">'動作方法指定する定数
+'複数の異なるディレクトリを指定する</span>
+ Const FOF_MULTIDESTFILES = &H1&
+<span class="REM"> '(使用不可)</span>
+ Const FOF_CONFIRMMOUSE = &H2&
+<span class="REM"> 'プログレスバーを表示しない</span>
+ Const FOF_SILENT = &H4&
+<span class="REM"> '重複名を避ける</span>
+ Const FOF_RENAMEONCOLLISION = &H8&
+<span class="REM"> '確認なし</span>
+ Const FOF_NOCONFIRMATION = &H10&
+<span class="REM"> 'FOF_RENAMEONCOLLISIONを設定したときhNameMappingsにファイル名を指定する</span>
+ Const FOF_WANTMAPPINGHANDLE = &H20&
+<span class="REM"> 'ごみ箱へ</span>
+ Const FOF_ALLOWUNDO = &H40&
+<span class="REM"> 'ワイルドカードを使うのでディレクトリを含まない</span>
+ Const FOF_FILESONLY = &H80&
+<span class="REM"> 'プログレスバーは表示するがファイル名は表示しない</span>
+ Const FOF_SIMPLEPROGRESS = &H100&
+<span class="REM"> 'ディレクトリ作成時に確認なし</span>
+ Const FOF_NOCONFIRMMKDIR = &H200&
+<span class="REM"> 'エラーが発生してもダイアログボックスを表示しない</span>
+ Const FOF_NOERRORUI = &H400&</pre></pre>
+
+<pre class="codeProc">
+<span class="REM">'summary:フォルダ単位でファイルをコピーする
+'remark:C:\TestFolderを作成してその中にファイルを保存してから実行します。
+'上書きするファイルがある場合、際警告を表示し,
+'サイズの大きいファイルコピーにはプログレスバーを表示します。</span>
+<a name="SHFileOperation_Sample">Sub SHFileOperation_Sample()</a>
+    Dim udtSHFILEOPSTRUCT As SHFILEOPSTRUCT
+    Dim rc As Long
+    
+    Dim strClassName As String  <span class="REM>'クラス名</span>
+    Dim intRtn As Integer
+    
+    intRtn = MsgBox("このサンプルを実行する前には C:\TestFolder を作成して" & Chr(13) & _
+        "その中にファイルを保存しておく必要があります" _
+        & Chr(13) & Chr(13) & _
+        "準備は整っていますか?", vbYesNo + vbQuestion)
+        
+    If intRtn = vbNo Then
+        Exit Sub
+    Else
+        MsgBox "処理を開始します。必要な条件が整っていないと実行時エラーが発生します"
+    End If
+    
+    <span class="REM">'Excelのクラス名を指定</span>
+    strClassName = "XLMAIN"
+
+    With udtSHFILEOPSTRUCT
+        <span class="REM">'ダイアログボックスの親ウィンドウのハンドル</span>
+        .hwnd = FindWindow(strClassName, _
+                            Application.Caption)
+        <span class="REM">'Excel2002の場合は　変数=Application.Hwnd　でもよい</span>
+                            
+        <span class="REM">'操作内容を「コピー」にする</span>
+        .wFunc = FO_COPY
+        
+        <span class="REM">'コピー元のファイルを指定</span>
+        .pFrom = "C:\TestFolder\*.*"
+        
+        <span class="REM">'コピー先のファイルを指定</span>
+        .pTo = "C:\TestFolder2"
+    End With
+    
+    <span class="REM">'ファイルのコピーを実行</span>
+    rc = SHFileOperation(udtSHFILEOPSTRUCT)
+End Sub</pre>
+
+<pre class="codeProc"><a name="SHFileOperation_Sample2"><span class="REM">'summary:同名のファイルが存在したら別名でコピーする
+'"C:\TestFolder\Test.txt"を用意して実行
+'コピー ～ Test.txtを作成します</span></a>
+Sub SHFileOperation_Sample2()
+    Dim udtSHFILEOPSTRUCT As SHFILEOPSTRUCT
+    Dim rc As Long
+    
+    Dim strClassName As String  <span class="REM">'クラス名</span>
+    Dim intRtn As Integer
+    
+    intRtn = MsgBox("このサンプルを実行する前には C:\TestFolder の中に" & Chr(13) & _
+        "Test.txt を作成しておく必要があります" _
+        & Chr(13) & Chr(13) & _
+        "準備は整っていますか?", vbYesNo + vbQuestion)
+        
+    If intRtn = vbNo Then
+        Exit Sub
+    Else
+        MsgBox "処理を開始します。必要な条件が整っていないと実行時エラーが発生します"
+    End If
+    
+    <span class="REM">'Excelのクラス名を指定</span>
+    strClassName = "XLMAIN"
+
+    With udtSHFILEOPSTRUCT
+        <span class="REM">'ダイアログボックスの親ウィンドウのハンドル</span>
+        .hwnd = FindWindow(strClassName, _
+                            Application.Caption)
+        <span class="REM">'Excel2002の場合は　変数=Application.Hwnd　でもよい
+                            
+        '操作内容を「コピー」にする</span>
+        .wFunc = FO_COPY
+        
+        <span class="REM">'コピー元のファイルを指定</span>
+        .pFrom = "C:\TestFolder\Test.txt"
+        
+        <span class="REM">'コピー先のファイルを指定</span>
+        .pTo = "C:\TestFolder"
+        
+        <span class="REM">'重複名を避ける</span>
+        .fFlags = FOF_RENAMEONCOLLISION
+    End With
+    
+    <span class="REM">'ファイルのコピーを実行</span>
+    rc = SHFileOperation(udtSHFILEOPSTRUCT)
+End Sub</pre>
+<pre class="codeProc"><a name="SHFileOperation_Sample3"><span class="REM">'summary:複数ファイルを
+'複数のコピー先を指定してコピーする
+'remark:ファイル名をNULLで区切って指定します。</span></a>
+Sub SHFileOperation_Sample3()
+    Dim udtSHFILEOPSTRUCT As SHFILEOPSTRUCT
+    Dim rc As Long
+    
+    Dim strClassName As String  <span class="REM">'クラス名</span>
+    Dim intRtn As Integer
+    
+    intRtn = MsgBox("このサンプルを実行する前には C:\TestFolder の中に" & Chr(13) & _
+        "Test.txt と Test2.txt を作成しておく必要があります" _
+        & Chr(13) & Chr(13) & _
+        "準備は整っていますか?", vbYesNo + vbQuestion)
+        
+    If intRtn = vbNo Then
+        Exit Sub
+    Else
+        MsgBox "処理を開始します。必要な条件が整っていないと実行時エラーが発生します"
+    End If
+    
+    <span class="REM">'Excelのクラス名を指定</span>
+    strClassName = "XLMAIN"
+
+    With udtSHFILEOPSTRUCT
+        <span class="REM">'ダイアログボックスの親ウィンドウのハンドル</span>
+        .hwnd = FindWindow(strClassName, _
+                            vbNullString)
+        <span class="REM">'Excel2002の場合は　変数=Application.Hwnd　でもよい</span>
+                            
+        <span class="REM">'操作内容を「コピー」にする</span>
+        .wFunc = FO_COPY
+        
+        <span class="REM">'コピー元の複数ファイルをNULL文字で区切って指定</span>
+        .pFrom = "C:\TestFolder\Test.txt" & vbNullChar & _
+            "C:\TestFolder\Test2.txt"
+        <span class="REM">'コピー先のファイルを指定</span>
+        .pTo = "C:\TestFolder2\test.txt" & vbNullChar & "C:\TestFolder3\test2.txt"
+        
+        <span class="REM">'複数の異なるディレクトリを指定する</span>
+        .fFlags = FOF_MULTIDESTFILES
+    End With
+    
+    <span class="REM">'ファイルのコピーを実行</span>
+    rc = SHFileOperation(udtSHFILEOPSTRUCT)
+End Sub</pre>
+
+<pre class="codeProc"><a name="SHFileOperation_Sample4"><span class="REM">'summary:ファイルをごみ箱に移動する</span></a>
+Sub SHFileOperation_Sample4()
+    Dim udtSHFILEOPSTRUCT As SHFILEOPSTRUCT
+    Dim rc As Long
+    
+    Dim strClassName As String  <span class="REM">'クラス名</span>
+    Dim intRtn As Integer
+    
+    intRtn = MsgBox("このサンプルを実行する前には C:\TestFolder を作成して" & Chr(13) & _
+        "その中にファイルを保存しておく必要があります" _
+        & Chr(13) & Chr(13) & _
+        "準備は整っていますか?", vbYesNo + vbQuestion)
+        
+    If intRtn = vbNo Then
+        Exit Sub
+    Else
+        MsgBox "処理を開始します。必要な条件が整っていないと実行時エラーが発生します"
+    End If
+    
+    <span class="REM">'Excelのクラス名を指定</span>
+    strClassName = "XLMAIN"
+
+    With udtSHFILEOPSTRUCT
+        <span class="REM">'ダイアログボックスの親ウィンドウのハンドル</span>
+        .hwnd = FindWindow(strClassName, _
+                            Application.Caption)
+        <span class="REM">'Excel2002の場合は　変数=Application.Hwnd　でもよい
+                            
+        '操作内容を「削除」にする</span>
+        .wFunc = FO_DELETE
+        
+        <span class="REM">'削除するファイルを指定</span>
+        .pFrom = "C:\TestFolder"
+        
+        <span class="REM">'ごみ箱へ</span>
+        .fFlags = FOF_ALLOWUNDO
+    End With
+    
+    <span class="REM">'ファイルの削除を実行</span>
+    rc = SHFileOperation(udtSHFILEOPSTRUCT)
+End Sub</pre>
+
+<pre class="codeProc"><a name="SHFileOperation_Sample5"><span class="REM">
+'summary:ファイルを移動する</span></a>
+Sub SHFileOperation_Sample5()
+    Dim udtSHFILEOPSTRUCT As SHFILEOPSTRUCT
+    Dim rc As Long
+    
+    Dim strClassName As String  <span class="REM">'クラス名</span>
+    Dim intRtn As Integer
+    
+    intRtn = MsgBox("このサンプルを実行する前には C:\TestFolder を作成して" & Chr(13) & _
+        "その中にファイルを保存しておく必要があります" _
+        & Chr(13) & Chr(13) & _
+        "準備は整っていますか?", vbYesNo + vbQuestion)
+        
+    If intRtn = vbNo Then
+        Exit Sub
+    Else
+        MsgBox "処理を開始します。必要な条件が整っていないと実行時エラーが発生します"
+    End If
+    
+    <span class="REM">'Excelのクラス名を指定</span>
+    strClassName = "XLMAIN"
+
+    With udtSHFILEOPSTRUCT
+        <span class="REM">'ダイアログボックスの親ウィンドウのハンドル</span>
+        .hwnd = FindWindow(strClassName, _
+                            Application.Caption)
+        <span class="REM">'Excel2002の場合は　変数=Application.Hwnd　でもよい
+                            
+        '操作内容を「移動」にする</span>
+        .wFunc = FO_MOVE
+        
+        <span class="REM">'移動元のファイルを指定</span>
+        .pFrom = "C:\TestFolder\*.*"
+        
+        <span class="REM">'移動先のファイルを指定</span>
+        .pTo = "C:\TestFolder2"
+    End With
+    
+    <span class="REM">'ファイルの移動を実行</span>
+    rc = SHFileOperation(udtSHFILEOPSTRUCT)
+End Sub</pre>
+<pre class="codeProc"><a name="SHFileOperation_Sample6"><span class="REM">
+'summary:ファイル名を変更する</span></a>
+Sub SHFileOperation_Sample6()
+    Dim udtSHFILEOPSTRUCT As SHFILEOPSTRUCT
+    Dim rc As Long
+    
+    Dim strClassName As String  <span class="REM">'クラス名</span>
+    Dim intRtn As Integer
+    
+    intRtn = MsgBox("このサンプルを実行する前には C:\TestFolder の中に" & Chr(13) & _
+        "Test.txt という名前のファイルを保存しておく必要があります" _
+        & Chr(13) & Chr(13) & _
+        "準備は整っていますか?", vbYesNo + vbQuestion)
+        
+    If intRtn = vbNo Then
+        Exit Sub
+    Else
+        MsgBox "処理を開始します。必要な条件が整っていないと実行時エラーが発生します"
+    End If
+    
+    <span class="REM">'Excelのクラス名を指定</span>
+    strClassName = "XLMAIN"
+
+    With udtSHFILEOPSTRUCT
+        <span class="REM">'ダイアログボックスの親ウィンドウのハンドル</span>
+        .hwnd = FindWindow(strClassName, _
+                            Application.Caption)
+        <span class="REM">'Excel2002の場合は　変数=Application.Hwnd　でもよい
+                            
+        '操作内容を「名前を変更」にする</span>
+        .wFunc = FO_RENAME
+        
+        <span class="REM">'変更前の名前を指定</span>
+        .pFrom = "C:\TestFolder\Test.txt"
+        
+        <span class="REM">'変更後の名前を指定</span>
+        .pTo = "C:\TestFolder\Test2.txt"
+    End With
+    
+    <span class="REM">'ファイル名の変更を実行</span>
+    rc = SHFileOperation(udtSHFILEOPSTRUCT)
+End Sub</pre>
+<hr>
+<div><a href="./index.htm">&gt;INDEX</a></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<pre>
+c:\>mysql -u root -p
+Enter password: *****************
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 18
+Server version: 5.7.17-log MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2016, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show tables
+    -> ;
+ERROR 1046 (3D000): No database selected
+mysql> show tables from goods;
+Empty set (0.00 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| goods              |
+| mysql              |
+| performance_schema |
+| sakila             |
+| sampledb           |
+| samplesdb          |
+| sys                |
+| world              |
++--------------------+
+9 rows in set (0.00 sec)
+
+mysql> show tables from goods;
+Empty set (0.00 sec)
+
+mysql> show tables from sampledb;
++--------------------+
+| Tables_in_sampledb |
++--------------------+
+| autotest           |
+| defaulttest        |
+| nulltest           |
+| t1                 |
+| tsstest            |
++--------------------+
+5 rows in set (0.00 sec)
+
+mysql>
+</pre>

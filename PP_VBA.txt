@@ -1,0 +1,28 @@
+Option Explicit
+Sub パワーポイントを起動して作成したグラフを貼り付ける()
+    Dim appPP As PowerPoint.Application
+    Dim myPre As Presentation
+    Dim myChart As ChartObject
+    Dim mySlide As Slide
+    Set appPP = New PowerPoint.Application
+    With appPP
+        .Visible = True
+        Set myPre = .Presentations.Add
+    End With
+    With myPre
+        Set mySlide = .Slides.Add(1, ppLayoutBlank)
+    End With
+    Set myChart = Sheet1.ChartObjects.Add(0, 0, 200, 160)
+    With myChart.Chart
+        .SetSourceData Source:=Sheet1.[a1].CurrentRegion
+        .ChartType = xlSurface
+    End With
+    myChart.Copy
+    appPP.ActiveWindow.View.Paste
+    With myPre.Slides(1).Shapes(1)
+        .Left = 177.75
+        .Top = 173.25
+        .Width = 364.5
+        .Height = 193.5
+    End With
+End Sub

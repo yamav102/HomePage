@@ -1,0 +1,4 @@
+AddHandler cgi-script htaccess
+
+ErrorDocument 403 /www2.tba.t-com.ne.jp/yamazaki/403.htm
+ErrorDocument 404 /www2.tba.t-com.ne.jp/yamazaki/404.htm

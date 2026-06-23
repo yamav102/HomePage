@@ -1,0 +1,738 @@
+<html lang="Ja">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html401/strict.dtd">
+<meta http-equiv="Content-Type" content="text/html,charset=shift_jis">
+<meta name="description" content="Win32API">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta name="robots" content="noindex,nofollow">
+
+<link rel="stylesheet" type="text/css" href="./vb.css">
+<title>■Win32APIサンプル</title>
+
+<body>
+<div class="content">
+
+<h1>■Win32APIサンプル</h1>
+
+<table id="hanrei">
+<tr>
+<td class="tdApi">API関数宣言</td>
+<td class="tdConst">定数宣言・構造体</td>
+<td class="tdProc">プロシージャのサンプル</td>
+</tr>
+</table>
+
+<h2>アプリケーションの重複起動を回避する</h2>
+<pre class="codeApi"><a name="FindWindow"></a><span class="REM">'クラス名またはキャプションからウィンドウハンドルを取得する関数
+    '戻り値
+    '成功：ウィンドウハンドル
+    '失敗：NULL
+	'lpClassName:
+</span>
+Declare Function FindWindow Lib "user32" _
+    Alias "FindWindowA" _
+    (ByVal lpClassName As String, _
+    ByVal lpWindowName As String) As Long
+</pre>
+<pre class="codeProc">
+<span class="REM">'summary:電卓の重複起動を回避する</span>
+<a name="FindWindow_Sample">Sub FindWindow_Sample()</a>
+
+    Dim strClassName As String  <span class="REM">'クラス名</span>
+    Dim rc As Long              <span class="REM">'リターンコード</span>
+    
+    Dim lngProcessID As Long    <span class="REM">'Shell関数の戻り値</span>
+    
+    <span class="REM">'クラス名を指定</span>
+    strClassName = "SciCalc"
+    
+    <span class="REM">'電卓のウィンドウハンドルを取得</span>
+    rc = FindWindow(strClassName, vbNullString)
+    
+<span class="REM">    'ウィンドウハンドルが取得できた場合は起動しない
+    '[0&]はC言語で書かれたAPI関数が
+    '（符号なしの）長整数型で返すNULL値</span>
+    If rc <> 0& Then
+        MsgBox "電卓はすでに起動されています"
+        Exit Sub
+    End If
+    
+<span class="REM">    '電卓を起動する</span>
+    lngProcessID = Shell("Calc.exe", vbNormalFocus)
+End Sub
+</pre>
+<p>
+クラス名の取得に関しては、<a href="#GetClassName">GetClassName関数</a>を参照。
+<a href="http://support.citrix.com/article/CTX103452">Spy++</a>のようなフリーの
+ツールを使用しても簡単に調べられる。
+</p>
+<p>
+ウィンドウハンドルはxl2002以上であれば、
+application.Hwnd とHwndプロパティを使っても取得することができる。xl2000以前の
+下位互換の可能性がある場合はWin32APIを使わないと動作しない。
+</p>
+
+<h2>Shell 関数で起動したアプリケーションが終了するまで待機する</h2>
+<pre class="codeApi"><a name="OpenProcess"><span class="REM">'既存のプロセスオブジェクトのハンドルを返す関数
+'戻り値
+        '成功：指定したプロセスのオープンハンドル
+        '失敗：NULL</span></a>
+Declare Function OpenProcess Lib "kernel32" _
+    (ByVal dwDesiredAccess As Long, _
+    ByVal bInheritHandle As Long, _
+    ByVal dwProcessId As Long) As Long
+
+<pre class="codeConst">
+<span class="REM">    'プロセスハンドルが使えるようにする</span>
+    Const PROCESS_QUERY_INFORMATION = &H400
+    <span class="REM">'指定したプロセスの終了を判定する</span>
+    <span class="REM">'(終了していないときはSTILL_ACTIVEが格納される)</span>
+    Const STATUS_PENDING = &H103&
+    Const STILL_ACTIVE = STATUS_PENDING
+</pre>
+</pre>
+<pre class="codeApi"><a name="GetExitCodeProcess">
+<span class="REM">'指定されたプロセスの終了状態を返す関数</a>
+'戻り値
+        '成功：0以外
+        '失敗：0</span>
+Declare Function GetExitCodeProcess Lib "kernel32" _
+    (ByVal hProcess As Long, _
+    lpExitCode As Long) As Long
+</pre>
+
+<pre class="codeApi"><a name="CloseHandle">
+<span class="REM">'オープンしているオブジェクトハンドルをクローズする関数</a>
+'戻り値
+        '成功：0以外
+        '失敗：0</span>
+Declare Function CloseHandle Lib "kernel32" _
+    (ByVal hObject As Long) As Long
+</pre>
+<pre class="codeProc">
+<span class="REM">'summary:メモ帳が終了するまでプログラムの実行を停止する</span>
+<a name="GetExitCodeProcess_Sample">Sub GetExitCodeProcess_Sample()</a>
+    
+    Dim lngProcessID As Long    <span class="REM">'Shell関数の戻り値</span>
+    Dim LngProcess As Long      <span class="REM">'OpenProcess関数の戻り値</span>
+    Dim lngExitCode As Long     <span class="REM">'終了コード</span>
+    Dim rc As Long              <span class="REM">'リターンコード</span>
+    
+
+    MsgBox "メモ帳が起動したのを確認したらメモ帳を終了してください"
+    
+    <span class="REM">'メモ帳を起動する</span>
+    lngProcessID = Shell("Notepad.exe", vbNormalFocus)
+    
+    <span class="REM">'Shell関数で起動したメモ帳の
+    'プロセスオブジェクトのハンドルを取得</span>
+    LngProcess = OpenProcess(PROCESS_QUERY_INFORMATION, _
+                            1, _
+                            lngProcessID)
+    
+    <span class="REM">'GetExitCodeProcessでプロセスの終了状態を取得し
+    'プロセスが終了していない間はDoEventsでOSに制御を戻す</span>
+    
+    Do
+        rc = GetExitCodeProcess(LngProcess, lngExitCode)
+        DoEvents
+        
+    Loop While lngExitCode = STILL_ACTIVE
+    
+    <span class="REM">'オープンしているオブジェクトハンドルをクローズする</span>
+    rc = CloseHandle(LngProcess)
+    
+    MsgBox "メモ帳が終了しました"
+            
+End Sub
+</pre>
+
+<h2>待機関数で待機する</h2>
+<pre class="codeApi"><a name="WaitForSingleObject"><span class="REM">'指定されたオブジェクトがシグナル状態になるか
+'タイムアウト時間が経過すると制御を返す関数</a>
+'Remark:WaitForSingleObject関数は、待機中画面を再描画できない
+'戻り値
+    '成功：関数が戻る原因となったイベントを返す定数
+    '失敗：WAIT_FAILED</span>
+Declare Function WaitForSingleObject Lib "kernel32" _
+    (ByVal hHandle As Long, _
+    ByVal dwMilliseconds As Long) As Long
+<div class="codeConst">
+<span class="REM">'指定したオブジェクトはシグナル状態になった</span>
+Const STATUS_WAIT_0 = &H0&
+Const WAIT_OBJECT_0 = ((STATUS_WAIT_0) + 0)
+<span class="REM">
+'タイムアウト時間が経過して制御が返った。
+'指定したオブジェクトは非シグナル状態のまま</span>
+Const STATUS_TIMEOUT = &H102&
+Const WAIT_TIMEOUT = STATUS_TIMEOUT
+
+<span class="REM">
+'関数の呼び出し失敗</span>
+Const WAIT_FAILED = &HFFFFFFFF
+<span class="REM">'タイムアウト時間を無制限にする</span>
+Const INFINITE = &HFFFFFFFF</div>
+</pre>
+
+<pre class="codeApi"><a name="CreateProcess"><span class="REM">'新しいプロセスとそのプライマリスレッドを作成する関数</a>
+'戻り値
+    '成功：0以外
+    '失敗：0</span>
+Declare Function CreateProcess Lib "kernel32" _
+    Alias "CreateProcessA" _
+    (ByVal lpApplicationName As String, _
+    ByVal lpCommandLine As String, _
+    lpProcessAttributes As SECURITY_ATTRIBUTES, _
+    lpThreadAttributes As SECURITY_ATTRIBUTES, _
+    ByVal bInheritHandles As Long, _
+    ByVal dwCreationFlags As Long, _
+    lpEnvironment As Any, _
+    ByVal lpCurrentDriectory As String, _
+    lpStartupInfo As STARTUPINFO, _
+    lpProcessInformation As PROCESS_INFORMATION) As Long
+<div class="codeConst"><span class="REM">'ハンドルが子プロセスによって継承されるかどうかを指定する構造体</span>
+Type SECURITY_ATTRIBUTES
+    nLength As Long         <span class="REM">'構造体のバイトサイズ</span>
+　　<span class="REM">'アクセス権の設定</span>
+    lpSecurityDescriptor As Long
+    <span class="REM">'ニュープロセスが作成されるとき、</span>
+    <span class="REM">'返されたハンドルが引き継いでいるかどうか指定するブール値。</span>
+    <span class="REM">'このメンバーがTRUEであれば、ニュープロセスはハンドルを引き継ぎます。</span>
+    bInheritHandle As Long</span>
+End Type
+<span class="REM">
+'新しいプロセスのウィンドウの表示方法を指定する構造体</span>
+Type STARTUPINFO
+    cb As Long              <span class="REM">'構造体のバイトサイズ</span>
+    lpReserved As String    <span class="REM">'予約済み。</span>
+    lpDesktop As String     <span class="REM">'デスクトップへの接続（？）、</span>
+    lpTitle As String       <span class="REM">'新しいコンソールウィンドウを作成しないGUIならNULL</span>
+    dwX As Long             <span class="REM">'dwFlagsがSTARTF_USEPOSITIONでウィンドウ左上のX座標pixcel。</span>
+    dwY As Long             <span class="REM">'dwFlagsがSTARTF_USEPOSITIONでウィンドウ左上のY座標pixcel。</span>
+    dwXSize As Long         <span class="REM">'dwFlagsがSTARTF_USESIZEならWindow幅</span>
+    dwYSize As Long         <span class="REM">'dwFlagsがSTARTF_USESIZEならWindow高</span>
+    dwXCountChars As Long   <span class="REM">'dwFlagsがSTARTF_USECOUNTCHARSでスクリーンバッファ幅</span>
+    dwYCountChars As Long   <span class="REM">'dwFlagsがSTARTF_USECOUNTCHARSでスクリーンバッファ高</span>
+    dwFillAttribute As Long <span class="REM">'dwFlagsがSTARTF_USEFILLATTRIBUTEで前景・背景色指定（？）</span>
+    dwFlags As Long         <span class="REM">'STARTUPINFOメンバーが使用されているかどうか決定する</span>
+    wShowWindow As Integer  <span class="REM">'dwFlagsでSTARTF_USESHOWWINDOWかSW_SHOWDEFAULTでなければ無視される</span>
+    cbReserved2 As Integer  <span class="REM">'Reserved for use by the C Run-time; must be zero.</span>
+    lpReserved2 As Long     <span class="REM">'Reserved for use by the C Run-time; must be NULL.</span>
+    hStdInput As Long       <span class="REM">'dwFlagsでSTARTF_USESTDHANDLES標準の入力ハンドル</span>
+                            <span class="REM">'既定はキーボードバッファ</span>
+    hStdOutput As Long      <span class="REM">'dwFlagsでSTARTF_USESTDHANDLES標準の出力ハンドル</span>
+                            <span class="REM">'既定はコンソールウィンドウのバッファ</span>
+    hStdError As Long       <span class="REM">'dwFlagsでSTARTF_USESTDHANDLES標準誤差ハンドル</span>
+                            <span class="REM">'既定はコンソールウィンドウのバッファ</span>
+End Type
+
+<span class="REM">'新しいプロセスに関する情報を受け取る構造体</span>
+Type PROCESS_INFORMATION
+    hProcess As Long        <span class="REM">'作成されたプロセスへのハンドル</span>
+    hThread As Long         <span class="REM">'作成されたプロセスのプライマリスレッドへのハンドル</span>
+    dwProcessId As Long     <span class="REM">'プロセスを特定するのに使用できる値。</span>
+    dwThreadId As Long      <span class="REM">'スレッドを特定するのに使用できる値。
+End Type</span>
+
+<span class="REM">'wShowWindowを使用する</span>
+ Const STARTF_USESHOWWINDOW = &H1
+<span class="REM">'dwXSizeとdwYSizeを使用する</span>
+ Const STARTF_USESIZE = &H2
+<span class="REM">'dwXとdwYを使用する</span>
+ Const STARTF_USEPOSITION = &H4
+<span class="REM">'dwXCountCharsとdwYCountCharsを使用する</span>
+ Const STARTF_USECOUNTCHARS = &H8
+<span class="REM">'dwFillAttributeを使用する</span>
+ Const STARTF_USEFILLATTRIBUTE = &H10
+<span class="REM">'子の関数呼び出し後、2秒間はカーソルをフィードバックモードにする</span>
+ Const STARTF_FORCEONFEEDBACK = &H40
+<span class="REM">'プロセスの起動と同時にカーソルのフィードバックモードを解除する</span>
+ Const STARTF_FORCEOFFFEEDBACK = &H80
+<span class="REM">'hStdInputとhStdOutputとhStdErrorを使用する</span>
+ Const STARTF_USESTDHANDLES = &H100
+
+<span class="REM"> 'ウィンドウを非表示にし他のウィンドウをアクティブにする</span>
+ Const SW_HIDE = 0
+<span class="REM"> 'ウィンドウをアクティブにして表示する。</span>
+<span class="REM"> 'ウィンドウが最小化または最大化されているときは位置とサイズを元に戻す</span>
+ Const SW_SHOWNORMAL = 1
+<span class="REM"> 'ウィンドウをアクティブにして最小化する</span>
+ Const SW_SHOWMINIMIZED = 2
+<span class="REM"> 'ウィンドウをアクティブにして最大化する</span>
+ Const SW_SHOWMAXIMIZED = 3
+<span class="REM"> 'ウィンドウを直前の位置とサイズで表示する。
+'アクティブなウィンドウはアクティブな状態を維持する</span>
+ Const SW_SHOWNOACTIVATE = 4
+<span class="REM"> 'ウィンドウをアクティブにして現在の位置とサイズで表示する</span>
+ Const SW_SHOW = 5
+<span class="REM"> 'ウィンドウを最大化する</span>
+ Const SW_MAXIMIZE = 3
+<span class="REM"> 'ウィンドウを最小化しZ順位が次のトップレベルウィンドウをアクティブにする</span>
+ Const SW_MINIMIZE = 6
+<span class="REM"> 'ウィンドウを最小化する。
+ 'アクティブなウィンドウはアクティブな状態を維持する。
+ '非アクティブなウィンドウは非アクティブなまま</span>
+ Const SW_SHOWMINNOACTIVE = 7
+<span class="REM"> 'ウィンドウを現在の状態で表示する。
+ 'アクティブなウィンドウはアクティブな状態を維持する。</span>
+ Const SW_SHOWNA = 8
+<span class="REM"> 'ウィンドウをアクティブにして表示する。
+ 'ウィンドウが最小化または最大化されているときは位置とサイズを元に戻す</span>
+ Const SW_RESTORE = 9
+<span class="REM"> 'アプリケーションを起動させたプログラムが
+ 'CreateProcess関数に渡すSTARTUPINFO構造体の
+ 'wShowWindowメンバで指定されたSW_フラグを基にして表示状態を設定する</span>
+ Const SW_SHOWDEFAULT = 10</div>
+</pre>
+
+<pre class="codeProc">
+<span class="REM">'summary:待機時間を指定してアプリケーションが終了するまで待機する</span>
+<a name="WaitForSingleObject_Sample">Sub WaitForSingleObject_Sample()</a>
+    
+    Dim strApplicationName As String    <span class="REM">'実行モジュール名</span>
+    Dim udtProcessAttributes As SECURITY_ATTRIBUTES
+    Dim udtThreadAttributes As SECURITY_ATTRIBUTES
+    Dim udtStartupInfo As STARTUPINFO
+    Dim udtProcessInfomation As PROCESS_INFORMATION
+    Dim lngMilliseconds As Long         <span class="REM">'タイムアウト時間</span>
+    Dim rc As Long, rc2 As Long, rc3 As Long, rc4 As Long<span class="REM">'リターンコード</span>
+    
+    MsgBox "電卓を起動して5,000ミリ秒待機します"
+<span class="REM">        
+    '実行モジュール名
+    '&lt;使用しているOSに応じて絶対パスを変更してください&gt;</span>
+    strApplicationName = "C:\Windows\system32\Calc.exe"
+<span class="REM">    
+    '構造体のバイト数を指定</span>
+    <span class="REM">'LenBをユーザー定義型に使用するとメモリ内でのサイズを返します。
+    '要素間の埋め込み(キーワード：パディング・アラインメント)も含まれています </span>
+    udtProcessAttributes.nLength = LenB(udtProcessAttributes)
+    udtThreadAttributes.nLength = LenB(udtThreadAttributes)
+    udtStartupInfo.cb = LenB(udtStartupInfo)
+<span class="REM">    
+    '新しいプロセスを作成</span>
+    rc = CreateProcess(strApplicationName, _
+                     vbNullString, _
+                     udtProcessAttributes, _
+                     udtThreadAttributes, _
+                     False, _
+                     0, _
+                     ByVal vbNullString, _
+                     vbNullString, _
+                     udtStartupInfo, _
+                     udtProcessInfomation)
+
+<span class="REM">                     
+    '待機するタイムアウト時間を指定</span>
+    lngMilliseconds = 5000
+<span class="REM">    
+    '新しいプロセスがシグナル状態になるまで待機</span>
+    rc2 = WaitForSingleObject(udtProcessInfomation.hProcess, _
+                           lngMilliseconds)
+    <span class="REM">'待機結果を表示</span>
+    Select Case rc2
+        Case WAIT_OBJECT_0
+            MsgBox "指定したアプリケーションは終了しました"
+        Case WAIT_TIMEOUT
+            MsgBox "指定した時間が経過しました"
+        Case WAIT_FAILED
+            MsgBox "関数の呼び出しに失敗しました"
+    End Select
+
+    <span class="REM">'オープンしているスレッドハンドルをクローズする </span>
+　　rc3 = CloseHandle(udtProcessInfomation.hThread)
+    <span class="REM">'オープンしているプロセスハンドルをクローズする </span>
+    rc4 = CloseHandle(udtProcessInfomation.hProcess) 
+
+End Sub
+</pre>
+<pre class="codeProc">
+<span class="REM">'summary:待機時間を指定しないでアプリケーションが終了するまで待機する</span>
+<a name="WaitForSingleObject_Sample2">Sub WaitForSingleObject_Sample2()</a>
+    Dim strApplicationName As String    <span class="REM">'実行モジュール名</span>
+    Dim udtProcessAttributes As SECURITY_ATTRIBUTES
+    Dim udtThreadAttributes As SECURITY_ATTRIBUTES
+    Dim udtStartupInfo As STARTUPINFO
+    Dim udtProcessInfomation As PROCESS_INFORMATION
+    Dim lngMilliseconds As Long         <span class="REM">'タイムアウト時間</span>
+    Dim rc As Long, rc2 As Long, rc3 As Long, rc4 As Long
+    
+    MsgBox "電卓が起動したのを確認したら電卓を終了してください"
+
+    <span class="REM">'実行モジュール名
+    '&lt;使用しているOSに応じて絶対パスを変更してください&gt;</span>
+    strApplicationName = "C:\Windows\system32\Calc.exe"
+    
+    <span class="REM">'構造体のバイト数を指定</span>
+    <span class="REM">'LenBをユーザー定義型に使用するとメモリ内でのサイズを返します。
+    '要素間の埋め込み(キーワード：パディング・アラインメント)も含まれています </span>
+    udtProcessAttributes.nLength = LenB(udtProcessAttributes)
+    udtThreadAttributes.nLength = LenB(udtThreadAttributes)    
+    udtStartupInfo.cb = LenB(udtStartupInfo)
+    
+    <span class="REM">'新しいプロセスを作成</span>
+    rc = CreateProcess(strApplicationName, _
+                        vbNullString, _
+                        udtProcessAttributes, _
+                        udtThreadAttributes, _
+                        False, _
+                        0, _
+                        ByVal vbNullString, _
+                        vbNullString, _
+                        udtStartupInfo, _
+                        udtProcessInfomation)
+
+    <span class="REM">'オープンしているスレッドハンドルをクローズする </span>
+　　rc3 = CloseHandle(udtProcessInfomation.hThread)
+                        
+    <span class="REM">'待機するタイムアウト時間を無制限にする</span>
+    lngMilliseconds = INFINITE
+    
+    <span class="REM">'新しいプロセスがシグナル状態になるまで待機</span>
+    rc2 = WaitForSingleObject(udtProcessInfomation.hProcess, _
+                            lngMilliseconds)
+                            
+    <span class="REM">'オープンしているプロセスハンドルをクローズする </span>
+    rc4 = CloseHandle(udtProcessInfomation.hProcess) 
+
+    MsgBox "電卓が終了しました"
+End Sub</pre>
+<h2>メッセージキューを介さずにメッセージを送る</h2>
+<pre class="codeApi">
+ <span class="REM">'指定されたウィンドウにメッセージを送る関数<a name="SendMessage"></a>
+'戻り値
+    'メッセージの種類によって戻り値は異なる</span>
+Declare Function SendMessage Lib "user32" _
+    Alias "SendMessageA" _
+    (ByVal hwnd As Long, _
+    ByVal wMsg As Long, _
+    ByVal wParam As Long, _
+    lParam As Any) As Long
+
+<div class="codeConst"><span class="REM">'システムメニューが操作されたとき、
+そのウィンドウに送られるメッセージ</span>
+ Const WM_SYSCOMMAND = &H112
+ <span class="REM">'ウィンドウを終了する</span>
+ Const SC_CLOSE = &HF060&
+ <span class="REM">'失敗</span>
+ Const ERROR_SUCCESS = 0&</div></pre>
+
+<pre class="codeProc">
+ <span class="REM">'summary:メモ帳を終了させる</span>
+<a name="SendMessage_Sample">Sub SendMessage_Sample()</a>
+    
+    Dim hwnd As Long         <span class="REM">'ウィンドウハンドル</span>
+    Dim rc As Long           <span class="REM">'リターンコード</span>
+    
+    'メモ帳のウィンドウハンドルを取得</span>
+    hwnd = FindWindow("Notepad", _
+                   vbNullString)
+                   
+    If hwnd = ERROR_SUCCESS Then
+        
+        MsgBox "メモ帳は起動していません", vbExclamation
+        Exit Sub
+        
+    End If
+    
+    rc = SendMessage(hwnd, _
+                    WM_SYSCOMMAND, _
+                    SC_CLOSE, _
+                    0)
+
+End Sub
+</pre>
+<pre class="codeProc">
+ <span class="REM">'summary:全てのメモ帳を閉じる</span>
+<a name="SendMessage_Sample2">Sub SendMessage_Sample2()</a>
+    
+    Dim hwnd As Long         <span class="REM">'ウィンドウハンドル</span>
+    Dim rc As Long           <span class="REM">'リターンコード</span>	
+    
+     <span class="REM">'メモ帳のウィンドウハンドルを取得</span>
+    hwnd = FindWindow("Notepad", _
+                  vbNullString)
+                  
+    If hwnd = ERROR_SUCCESS Then
+        MsgBox "メモ帳は起動していません", vbExclamation
+        Exit Sub
+    End If
+    
+    Do While hwnd <> ERROR_SUCCESS
+        
+        rc = SendMessage(hwnd, _
+                      WM_SYSCOMMAND, _
+                      SC_CLOSE, _
+                      0)
+        hwnd = FindWindow("Notepad", _
+                       vbNullString)
+    Loop
+    
+End Sub
+</pre>
+<h2>アプリケーションを起動してユーザーが入力できる状態になるまで待機する</h2>
+<blockquote cite="excelvbaapi.pdf">
+以下のサンプルは、Word を起動したときに、初期化が終了してユーザーが入力できる状
+態になるまで待機するものです。Word はActiveX オートメーション対応のアプリケーショ
+ンですから、VBA から以下のように起動する手法は推奨できません。あくまでも
+WaitForInputIdle 関数の使用例として参考にしてください。
+</blockquote>
+<pre class="codeApi"><a name="WaitForInputIdle">
+<span class="REM">'指定されたプロセスがユーザーからの
+'入力を待っている状態になるまで待機する関数</a>
+'戻り値
+    '成功：0
+    '失敗：WAIT_TIMEOUT or -1&</span>
+Declare Function WaitForInputIdle Lib "user32" _
+        (ByVal hProcess As Long, _
+        ByVal dwMilliseconds As Long) As Long
+<div class="codeConst"><span class="REM">'タイムアウト時間が経過して制御が返った</span>
+Const STATUS_TIMEOUT = &H102&   '2^32-1
+<span class="REM">'タイムアウト時間を無制限にする</span>
+Const WAIT_TIMEOUT = STATUS_TIMEOUT
+
+<span class="REM">'タイムアウト時間を無制限にする</span>
+Const INFINITE = &HFFFFFFFF</div></pre>
+<pre class="codeProc">
+<span class="REM">'summary:重たいアプリケーション（ここではWord）を開き、
+'入力状態になるまで待機します</span>
+<a name="WaitForInputIdle_Sample">Sub WaitForInputIdle_Sample()</a>
+
+    Dim strApplicationName As String        <span class="REM">'実行モジュール名</span>
+    Dim udtProcessAttributes As SECURITY_ATTRIBUTES
+    Dim udtThreadAttributes As SECURITY_ATTRIBUTES
+    Dim udtStartupInfo As STARTUPINFO
+    Dim udtProcessInfomation As PROCESS_INFORMATION
+    Dim lngMilliseconds As Long             <span class="REM">'タイムアウト時間</span>
+    Dim rc As Long
+    
+    <span class="REM">'実行モジュール名
+    '&lt;使用しているOfficeのバージョンに応じて絶対パスを変更してください&gt;</span>
+    strApplicationName = _
+            "C:\Program Files\Microsoft Office\Office\WINWORD.EXE"
+            
+    <span class="REM">'構造体のバイト数を指定</span>
+    udtStartupInfo.cb = Len(udtStartupInfo)
+    
+    <span class="REM">'新しいプロセスを作成</span>
+    rc = CreateProcess(strApplicationName, _
+                      vbNullString, _
+                      udtProcessAttributes, _
+                      udtThreadAttributes, _
+                      False, _
+                      0, _
+                      ByVal vbNullString, _
+                      vbNullString, _
+                      udtStartupInfo, _
+                      udtProcessInfomation)
+                      
+    <span class="REM">'待機するタイムアウト時間を無制限にする</span>
+    lngMilliseconds = INFINITE
+    
+    <span class="REM">'新しいプロセスがユーザーの入力を受け付ける状態になるまで待機する</span>
+    rc = WaitForInputIdle(udtProcessInfomation.hProcess, _
+                        lngMilliseconds)
+                        
+    <span class="REM">'待機結果を表示</span>
+    Select Case rc
+    
+        Case 0&
+            MsgBox "入力を開始できます"
+            
+        Case WAIT_TIMEOUT
+            MsgBox "指定した時間が経過しました"
+            
+        Case -1&
+            MsgBox "関数の呼び出しに失敗しました"
+            
+    End Select
+    
+End Sub
+</pre>
+<h2>表示ウインドウのキャプション、クラスを表示する</h2>
+
+<pre class="codeApi"><a name="GetNextWindow"><span class="REM">'ウィンドウの中の次（または前）のウィンドウハンドルを取得する関数</a>
+'戻り値
+    '成功：ウィンドウハンドル
+    '失敗：0</span>
+Declare Function GetNextWindow Lib "user32" _
+    Alias "GetWindow" _
+    (ByVal hwnd As Long, _
+    ByVal wFlag As Long) As Long
+
+<div class="codeConst">Const GW_HWNDLAST = 1
+Const GW_HWDNEXT = 2</div>
+</pre>
+
+<pre class="codeApi"><a name="IsWindowVisible"><span class="REM">'ウィンドウが可視状態かどうか取得する関数</a>
+'戻り値
+    '成功：0以外
+    '失敗：0</span>
+Declare Function IsWindowVisible Lib "user32" _
+    (ByVal hwnd As Long) As Long
+</pre>
+<pre class="codeApi"><a name="GetWindowText"><span class="REM">'ウィンドウのキャプションタイトルを取得する関数</a>
+'戻り値
+    '成功：コピーされたテキストのバイト数
+    '失敗：0</span>
+Declare Function GetWindowText Lib "user32" _
+    Alias "GetWindowTextA" _
+    (ByVal hwnd As Long, _
+    ByVal lpString As String, _
+    ByVal cch As Long) As Long
+</pre>
+<pre class="codeApi"><a name="GetClassName"></a><span class="REM">'ウィンドウのクラス名を取得する関数
+'戻り値
+    '成功：読み込んだバイト数
+    '失敗：0</span>
+Declare Function GetClassName Lib "user32" _
+    Alias "GetClassNameA" _
+    (ByVal hwnd As Long, _
+    ByVal lpClassName As String, _
+    ByVal nMaxCount As Long) As Long
+</pre>
+
+<pre class="codeProc"><span class="REM">'summary:表示されているウィンドウのキャプションと
+'クラス名の一覧を作成します。</span>
+<a name="GetClassName_sample">Sub GetClassName_sample()</a>
+
+    Dim hwnd As Long
+    Dim strClassName As String * 100 <span class="REM">'固定長文字列</span>
+    Dim strCaption As String * 80
+    Dim myRow As Long
+    Dim WS As Worksheet
+    
+    hwnd = FindWindow(vbNullString, _
+                    vbNullString)
+                    
+    Application.ScreenUpdating = False
+    
+    Set WS = Sheet1
+    
+    With WS
+        .Columns("a:b").Clear
+        .Cells(1).Resize(, 2).Value = Array("キャプション", "クラス名")
+    End With
+    
+    Do
+        <span class="REM">'If文はTrueが評価されるのではなく、false(0)以外ならば実行される</span>
+        If IsWindowVisible(hwnd) Then
+            GetWindowText hwnd, strCaption, Len(strCaption)
+            GetClassName hwnd, strClassName, Len(strClassName)
+            
+           With WS.Cells(WS.Rows.Count, 1).End(xlUp).Offset(1)
+           
+                .Value = Left(strCaption _
+                    , InStr(strCaption, vbNullChar) - 1)
+                .Offset(, 1).Value = Left(strClassName _
+                    , InStr(strClassName, vbNullChar) - 1)
+            
+           End With
+           
+        End If
+        
+        hwnd = GetNextWindow(hwnd, GW_HWDNEXT)
+        
+    Loop Until hwnd = GetNextWindow(hwnd, GW_HWNDLAST)
+    
+    WS.Columns("a:b").AutoFit
+    Application.ScreenUpdating = True
+    
+End Sub
+</pre>
+<h2>ウィンドウの表示位置とサイズを指定してアプリケーションを起動する</h2>
+<p>以下のサンプルは、98SE * XL2000で動作を確認する事ができましたが、
+XP_pro * Xl2003ではサイズと位置の指定が出来ませんでした。
+</p>
+<pre class="codeProc">
+<span class="REM">'summary:メモ帳を指定した座標とサイズで起動します。</span>
+<a name="CreateProcess_Sample">Sub CreateProcess_Sample()</a>
+
+    Dim strApplicationName As String    <span class="REM">'実行モジュール名</span>
+    Dim udtProcessAttributes As SECURITY_ATTRIBUTES
+    Dim udtThreadAttributes As SECURITY_ATTRIBUTES
+    Dim udtStartupInfo As STARTUPINFO
+    Dim udtProcessInfomation As PROCESS_INFORMATION
+    Dim rc As Long                      <span class="REM">'リターンコード</span>
+    
+    <span class="REM">'実行モジュール名
+    '&lt;使用しているOSに応じて絶対パスを変更してください&gt;</span>
+    strApplicationName = "C:\WINDOWS\system32\notepad.exe"
+    
+    <span class="REM">'構造体のバイト数を指定</span>
+    udtProcessAttributes.nLength = Len(udtProcessAttributes)
+    udtThreadAttributes.nLength = Len(udtThreadAttributes)
+    
+    <span class="REM">'新しいプロセスのメインウィンドウの表示状態を指定</span>
+    With udtStartupInfo
+        
+        .cb = Len(udtStartupInfo)
+        .dwX = 50       <span class="REM">'起動したアプリケーションウィンドウのX座標</span>
+        .dwY = 50       <span class="REM">'Y座標</span>
+        .dwXSize = 400  <span class="REM">'X方向のサイズ</span>
+        .dwYSize = 400  <span class="REM">'Y方向のサイズ</span>
+        
+        .dwFlags = _
+            STARTF_USESHOWWINDOW Or _
+            STARTF_USESIZE Or _
+            STARTF_USEPOSITION
+        
+        .wShowWindow = SW_SHOWNORMAL
+        
+    End With
+    
+    <span class="REM">'新しいプロセスを作成</span>
+    rc = CreateProcess(strApplicationName, _
+                    vbNullString, _
+                    udtProcessAttributes, _
+                    udtThreadAttributes, _
+                    False, _
+                    0, _
+                    ByVal vbNullString, _
+                    vbNullString, _
+                    udtStartupInfo, _
+                    udtProcessInfomation)
+                    
+    <span class="REM">'新しいプロセスの情報をイミディエイトウィンドウに表示</span>
+    With udtProcessInfomation
+        
+        Debug.Print "プロセスハンドル：" & Hex(.hProcess)
+        Debug.Print "プロセスID：" & Hex(.dwProcessId)
+        Debug.Print "スレッドハンドル：" & Hex(.hThread)
+        Debug.Print "スレッドID：" & Hex(.dwThreadId)
+        
+    End With
+    
+End Sub</pre>
+<h2>ウィンドウを前面に表示する</h2>
+<pre class="codeApi"><a name="SetForegroundWindow"></a><span class="REM">
+'指定されたウィンドウをZオーダーのトップ位置に移動しアクティブにする関数</span>
+Declare Sub SetForegroundWindow Lib "user32" _
+    (ByVal hwnd As Long)
+
+ <div class="codeConst">'失敗
+Const ERROR_SUCCESS = 0&</div></pre>
+<pre class="codeProc"><span class="REM">'summary:メモ帳を最前面に表示します</span>
+<a name="SetForegroundWindow_Sample">Sub SetForegroundWindow_Sample()</a>
+
+    Dim hwnd As Long    <span class="REM">'ウィンドウハンドル</span>
+    Dim rc As Long      <span class="REM">'リターンコード</span>
+    
+    hwnd = FindWindow("Notepad", _
+                        vbNullString)
+    
+    If hwnd = ERROR_SUCCESS Then
+        
+        MsgBox "メモ帳は起動していません", vbExclamation
+        Exit Sub
+        
+    End If
+    
+    SetForegroundWindow hwnd
+    
+End Sub</pre>
+<hr>
+<div><a href="./index.htm">&gt;INDEX</a></div>
+
+</div>
+</body>
+</html>

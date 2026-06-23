@@ -1,0 +1,318 @@
+<style>
+#forSearchEngine{
+   font-style:italic;
+   font-size:50%;
+   padding:1.5em 0;
+}body{
+	margin:0 3% 0 3%;
+}h1{
+   font-family: "Comic Sans MS","ダメ字","ダサ字",cursive;
+}h4{
+   font-size:100%;
+   border:solid steelblue 1px;
+   border-left:solid steelblue 5px;
+   border-top:none;
+   border-right:none;
+   margin:1em,1em,.5em,.5em;
+   padding:3px 10px;
+}pre.code1{
+/* スクロール表示コード */
+   border: 1px solid steelblue; 
+   height: 200px;
+   overflow: auto; 
+   padding-right: 1.5em; 
+   padding-left: 1.5em; 
+   font-size: 70%; 
+   background-color: ivory;
+
+}pre.code0{
+/* コード */
+   border: 1px solid steelblue;
+   margin-top:0px;
+   padding-right: 1.5em; 
+   padding-left: 1.5em; 
+   font-size: 85%; 
+   background-color:ivory;
+}button{
+   border: 1px solid blue; 
+   color: green; 
+   background-color: lavender;
+}.rem{
+/* コメント */
+   color: green;
+}p{
+   text-indent:.7em;
+}dfn{
+   font-style: normal;
+   border-bottom:dotted 1px;
+   color:blue;
+   padding:0 2px;
+   background-color:ivory;	
+}div.togaki{
+   background-color:oldlace;
+   padding:8px;
+   margin-bottom:.7em;
+}strong{
+   font-bold:bold;
+   background-color:oldlace;
+   color:blue;
+}
+</style>
+<div id="forSearchEngine">VBA プログラマの為の「クラスモジュールは飾りじゃない」</div>
+<h4>index</h4>
+<ul style="list-style-type:none;">
+   <li>カウンター変数をクラスで管理してみる</li>
+   <li>エクセルからメーラ―を操作してみる</li>
+   <li>自作関数をクラスで管理してみる</li>
+   <li>イベントを発生させる</li>
+   <li>イベントを捕まえる</li>
+   <li>implements を使ってみる</li>
+</ul>
+
+<div class="togaki">
+<p>
+VBA クラスモジュールの使い方を私なりにまとめてみました。
+この投稿は VBA をある程度書いてきたけれど、</p>
+<ul>
+<li>クラスモジュールの使い方が判らない。</li>
+<li>目障りに感じる。</li>
+<li>クラスモジュールを使って書かれているプロジェクトは手に負えない。</li>
+<li>オブジェクト指向を解説しているサイトを読んでも、取り上げられている言語が VBA でないので敷居が高い。</li>
+<li>あるいは、オブジェクト指向を判っている事を前提に書かれているのでついていけない。</li>
+<li>そもそもクラスモジュールって本当に何かの役に立つのか？</li>
+</ul>
+という人に読んで欲しいです。
+</p>
+<p>
+オブジェクト指向を理解できている人にとってクラスモジュールの使用は
+取るべくして取っているコーディングスタイルだと思われます。
+が、オブジェクト指向を理解できていない VBA プログラマにとって
+クラスモジュールを使用してかかれたプロジェクトは「脅威」とか
+「迷惑」
+と言いたくなるような代物です。
+どこを<ruby><rb>弄</rb><rp>(</rp><rt>いじ</rt><rp>)</rp></ruby>ると
+何処にどう影響が及ぶのか理解できていないから、
+怖くてコードに手を入れる事ができません。
+</p>
+</div>
+
+<div class="togaki">	
+<p>
+VBA で扱うお仕事は自分で一からプロジェクトを仕上げる仕事ばかりではありません。
+前任者の作ったプロジェクトを引き継ぎ業務内容の変更に合わせて改造するとか、
+使い勝手を「こうしてくれ」という要望に応えたりする事だったりもします。
+引き継いだプロジェクトでクラスモジュールが使われていてしかも、クラスの
+設計とか使い方がまずいために問題を起こしている場合だってあるのです。
+</p>
+<p>
+VBA を取り上げてオブジェクト指向を解説してくれる教材は
+（自分が知らないだけかもしれませんが）充実しているという状況には
+無いと思います。VBA という言語は「オブジェクト指向を解説するのに適してはいない
+（？）」という理由なのか？（知らんけど）。
+ VBA オンリーの私のような経歴の者には
+ゆゆしき状況です。
+</p>
+</div>
+
+<div class="togaki">
+<p>
+ここでは「正しくクラスモジュールを理解する」事は目指しません。
+私が勘違いしている事もあるかもしれません。
+が、少なくともクラスモジュールが役に立つ仕組みである事がわかり、
+積極的に使っていこう、という気分になれるところまで、また、
+クラスモジュールが多用されているプロジェクトに出会っても
+<ruby><rb>怯</rb><rp>(</rp><rt>ひる</rt><rp>)</rp></ruby>まず
+立ち向かえるように理解を身につけるところまでを目指します。
+</p>
+<p>
+内容に間違いがあったら、ご指摘頂けるとありがたいです。
+</p>
+<p>
+では、参ります。
+</p>
+</div>
+<h4>カウンター変数をクラスで管理してみる</h4>
+<p>
+カウンター変数を管理する Cls_Counter を作ってみます。
+</p>
+<p><img src="./clscounter0.jpg" width="513" height="185" alt="" />
+</p>
+<p>
+多くのカウンター変数を使う必要に迫られる場合があったとします。
+</p>
+<pre class="code0">
+<code>
+  Dim i As Long
+  Dim j As Long
+  Dim k As Long
+  Dim l As Long
+  Dim m As Long
+  Dim n As Long
+  ……
+</code>
+</pre>
+<p>
+↑これだと、どの変数が何を表しているのか判らなくなります。
+もっと判りやすい名前にしましょう。
+</p>
+
+<pre class="code0">  
+<code>
+  Dim WsCnt             As Long <span class="rem">'ワークシートの数を管理する</span>
+  Dim FilesCnt          As Long <span class="rem">'ファイルの数を管理する</span>
+  Dim PersonCnt         As Long <span class="rem">'職員の数を管理する</span>
+  Dim CompanyCnt        As Long <span class="rem">'事業所の数を管理する</span>
+  Dim RwsCnt            As Long <span class="rem">'行数</span>
+  Dim ColumnsCnt        As Long <span class="rem">'列数</span>
+ 
+  Dim WsCntMax          As Long <span class="rem">'ワークシートの最大数</span>
+  Dim FilesCntMax       As Long <span class="rem">'ファイル数の最大数</span> 
+
+</code>
+</pre>
+<p>
+なんとなくそれっぽい変数名なので、
+これなら他の人が見てもわかってくれそうに思います。
+コメントも書いてあるし。
+</p>
+<p>
+でも、この位の数があるとしんどく感じます。変数を沢山宣言すると、
+宣言したまま、結局使わないままに放置し、使っていない事に気づきもしないなんて
+よくある事です。
+<p>
+カウンター変数 WsCnt はワークシートの数で、WsCntMax は最大数です。
+処理する対象の数が不定の場合、終了するまでの目安をユーザーに
+伝える為、進捗状態を表示させる事は良くあります。だから変数によっては
+最大数も押さえておく必要があるのです。
+</p>
+<p>
+カウンター変数をクラスモジュールを作って管理すると
+変数の管理が楽になります。
+クラスモジュールの名前は Cls_Counter にしてみました。
+</p>
+<!--
+<div><button onclick="clipboardData.setData('Text', document.getElementById('code2').innerText);" type="submit">コピー</button></div>
+-->
+<div id="code2">
+<pre class="code0">  
+<code>
+Option Explicit
+<span class="rem">
+'----------------------------------------------------------------
+'カウンター変数を扱うクラス - Cls_Counter -
+'----------------------------------------------------------------
+</span>
+Private m_Cnt As Long
+Private m_Max As Long
+
+Private Sub Class_Initialize()
+    <span class="rem">'カウンターの初期化</span>
+    m_Cnt = 0
+End Sub
+
+<span class="rem">'カウンターの増加</span>
+Public Sub CountUp()
+    m_Cnt = m_Cnt + 1
+End Sub
+
+<span class="rem">'現在のカウンター値を返す</span>
+Public Property Get CurrentNumber()
+    CurrentNumber = m_Cnt
+End Property
+
+<span class="rem">'カウンター最大値の登録</span>
+Public Property Let MaxSize(ByVal n As Long)
+    m_Max = n
+End Property
+
+<span class="rem">'カウンター最大値の呼び出し</span>
+Public Property Get MaxSize() As Long
+    MaxSize = m_Max
+End Property
+
+</code>
+</pre>
+</div>
+<p>
+クラスモジュールは Initialize イベントを持ちます。
+オブジェクトが作成された時、最初に実行されるコードが Initialize です。
+ Initialize イベントはフォームモジュールでお馴染みです。フォームモジュールも
+シートモジュールも、ThisWorkbook モジュールもクラスモジュールの一つです。
+</p>
+<p>
+オブジェクト指向言語では、この役割をするプロシージャを<dfn>コンストラクタ</dfn>と呼びます。
+ここで、m_Cnt 変数を 0 で初期化していますが、VBA では数値型の変数の初期値は
+必ず 0 なのでここの処理は無くても結果に影響ありません。
+ここで 0 に初期化するコードをわざわざ書いたのは、気分の問題です。
+</p>
+<p>
+変数の頭に m_ と付けているのは、モジュールレベルである事を表す、よく見かける書き方です。
+ m_ を付けない人もよく見かけます。
+</p>
+<p>
+クラスモジュールには Sub プロシージャも Function プロシージャも記述できます。
+クラスモジュールに書かれた Sub プロシージャはそのクラスのメソッドとして振舞います。
+Function プロシージャはそのクラスの関数として振舞います。そして、Property プロシージャは
+そのクラスのプロパティとして振舞う事になります。
+</p>
+<p>
+基本的なクラスはだいたいこんな感じで設計します。
+Cls_Counterモジュールの構成を見ていきましょう。ひとつひとつのプロシージャは
+、モジュールレベルの変数に値を代入するか、値を取り出すか
+少しばかりの演算をしているだけです。
+</p>
+<pre class="code0">
+<code>
+Private m_Cnt As Long
+Private m_Max As Long
+</code>
+</pre>
+<p>
+↑モジュールレベルの変数は Private で宣言します。
+ Private で宣言しているので、直接他のモジュールから操作される事はありません。
+この部分を<dfn>オブジェクトの値</dfn>とか、<dfn>クラスのフィールド</dfn>などと言います。
+</p>
+<pre class="code0">
+<code>
+<span class="rem">'カウンターの増加</span>
+Public Sub CountUp()
+    m_Cnt = m_Cnt + 1
+End Sub
+</code>
+</pre>
+<p>
+この記述で CountUp メソッドを自作した事になります。モジュールレベル変数 m_Cnt を 1 ずつ増加させているだけです。
+この部分より下のプロシージャは全て Public で宣言しています。他のモジュールからでもアクセスできるので
+これら Public で宣言されているメソッドやプロパティの事を<dfn>クラスのインターフェイス</dfn>という言い方をします。
+<strong>
+他のモジュールに対し公開されている
+<dfn>インターフェイス</dfn>を通してしかオブジェクトへの操作を出来ないように設計します。
+</strong>
+</p>
+<h4>Property プロシージャ</h4>
+<p>
+Property プロシージャを説明しておきます。
+プロパティ（属性）というのは、フォームの Caption プロパティとか
+Range の Text プロパティとかのあのプロパティです。
+</p>
+<p>
+構文知らないとか忘れたとかの場合は、メニューバーにコードの
+自動生成機能がありますので利用しましょう。
+</p>
+<p>
+<img src="./insertProc.jpg" width="367" height="164" alt="プロシージャの追加">
+</p>
+<p>
+挿入(I) ⇒ プロシージャ(P) で [プロシージャの追加] というフォームが表示されます。
+</p>
+<img src="./insertProp.jpg" width="428" height="189" alt="プロパティプロシージャの自動生成">
+
+
+<div>
+<h4>参考に読んでみたサイト</h4>
+<ul>
+  <li><a href="http://www.atmarkit.co.jp/fdotnet/basics/oop01/oop01_01.html" target="_blank">＠IT：連載 オブジェクト指向プログラミング超入門</a></li>
+  <li><a href="http://www.atmarkit.co.jp/fdotnet/vb6tonet2/index/index.html" target="_blank">改訂版 プロフェッショナルVB.NETプログラミング － ＠IT</a></li>
+  <li><a href="http://homepage1.nifty.com/rucio/main/VBdotNet/Advance/index_adv.htm" target="_blank">Visual Basic 中学校 オブジェクト指向</a></li>
+</ul>
+</div>

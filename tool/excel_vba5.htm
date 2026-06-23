@@ -4,8 +4,8 @@
 <meta http-equiv="content-type" content="text/html; charset=shift_jis">
 <meta http-equiv="content-style-type" content="text/css">
 <meta http-equiv="content-script-type" content="text/javascript">
-<meta name="keywords" content="EXCELVBA,HTMLé››å‹,">
-<meta name="description" content="ä»•äº‹ã§æ¥½ã§ãã‚‹ãƒ„ãƒ¼ãƒ«é›†">
+<meta name="keywords" content="EXCELVBA,HTML—Œ^,">
+<meta name="description" content="d–‚ÅŠy‚Å‚«‚éƒc[ƒ‹W">
 <link rel="stylesheet" href="./web/stylexlvba.css" type="text/css">
 <link rev="made" href="mailto:xatsushi&#64;tbb.t-com.ne.jp">
 <link rel="next" href="tsugi.htm">
@@ -46,9 +46,9 @@
 <h1>Excel VBA Sample 5</h1>
 <pre>
 
-Option Explicit'ä»–ã®ãƒ–ãƒƒã‚¯ã®ãƒã‚¯ãƒ­ã‚’å®Ÿè¡Œã•ã›ã‚‹
+Option Explicit'‘¼‚ÌƒuƒbƒN‚Ìƒ}ƒNƒ‚ğÀs‚³‚¹‚é
 Sub smp()
-    'å‚ç…§è¨­å®šã§scripting runtimeã«ãƒã‚§ãƒƒã‚¯
+    'QÆİ’è‚Åscripting runtime‚Éƒ`ƒFƒbƒN
     Dim WB As Workbook
     Dim myPt As String
     Dim myBkname As String
@@ -59,9 +59,9 @@ Sub smp()
     myPt = ThisWorkbook.Path
     myBkname = ThisWorkbook.FullName
     myFldrName = myPt & "\BunkatuFiles"
-    'åŒåã®ãƒ•ã‚©ãƒ«ãƒ€ãƒ»ãƒ•ã‚¡ã‚¤ãƒ«ãŒå­˜åœ¨ã—ã¦ã‚‚
-    'ä¸Šæ›¸ãã—ãªã„ã‚ˆã†ã«
-    'ãƒ•ã‚©ãƒ«ãƒ€ã‚’ä½œæˆã—ã¦ãã®ä¸­ã«ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½œæˆ
+    '“¯–¼‚ÌƒtƒHƒ‹ƒ_Eƒtƒ@ƒCƒ‹‚ª‘¶İ‚µ‚Ä‚à
+    'ã‘‚«‚µ‚È‚¢‚æ‚¤‚É
+    'ƒtƒHƒ‹ƒ_‚ğì¬‚µ‚Ä‚»‚Ì’†‚Éƒtƒ@ƒCƒ‹‚ğì¬
     Do While FSO.FolderExists(myFldrName)
         i = i + 1
         myFldrName = _
@@ -72,50 +72,50 @@ Sub smp()
     With FSO
         .CopyFile _
             Source:=myBkname, _
-            Destination:=myFldrName & "\åˆ†å‰²A.xls"
+            Destination:=myFldrName & "\•ªŠ„A.xls"
         .CopyFile _
             Source:=myBkname, _
-            Destination:=myFldrName & "\åˆ†å‰²B.xls"
+            Destination:=myFldrName & "\•ªŠ„B.xls"
     End With
     Set FSO = Nothing
-    'åˆ†å‰²ã—ãŸãƒ–ãƒƒã‚¯ã®ãƒã‚¯ãƒ­ã‚’å®Ÿè¡Œã•ã›ã¦ã¿ã‚‹
+    '•ªŠ„‚µ‚½ƒuƒbƒN‚Ìƒ}ƒNƒ‚ğÀs‚³‚¹‚Ä‚İ‚é
     With Application
         .Run "'" & myFldrName _
-         & "\åˆ†å‰²A.xls" & "'!sampMacro"
-        Workbooks("åˆ†å‰²A.xls").Close _
+         & "\•ªŠ„A.xls" & "'!sampMacro"
+        Workbooks("•ªŠ„A.xls").Close _
          SaveChanges:=False
         .Run "'" & myFldrName _
-        & "\åˆ†å‰²B.xls" & "'!sampMacro"
-        Workbooks("åˆ†å‰²B.xls").Close _
+        & "\•ªŠ„B.xls" & "'!sampMacro"
+        Workbooks("•ªŠ„B.xls").Close _
          SaveChanges:=False
     End With
 End Sub
 Sub sampMacro()
-    'è‡ªãƒ–ãƒƒã‚¯ã®åå‰ã‚’è¡¨ç¤ºã™ã‚‹ãƒã‚¯ãƒ­
+    '©ƒuƒbƒN‚Ì–¼‘O‚ğ•\¦‚·‚éƒ}ƒNƒ
     MsgBox ThisWorkbook.Name
 End Sub
---------------------------------ä»–ã®ãƒ–ãƒƒã‚¯ã®ãƒã‚¯ãƒ­ã‚’å®Ÿè¡Œã“ã“ã¾ã§
-Declare Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)'å¾…ã¤
-Sub å¾…ã¤()
-    MsgBox "3ç§’å¾…ã¡ã¾ã™"
+--------------------------------‘¼‚ÌƒuƒbƒN‚Ìƒ}ƒNƒ‚ğÀs‚±‚±‚Ü‚Å
+Declare Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)'‘Ò‚Â
+Sub ‘Ò‚Â()
+    MsgBox "3•b‘Ò‚¿‚Ü‚·"
     Sleep (3000)
-    MsgBox "3ç§’çµŒã¡ã¾ã—ãŸ"
+    MsgBox "3•bŒo‚¿‚Ü‚µ‚½"
 Application.Wait Now + TimeValue("0:0:1")
 Application.Wait DateAdd("s", 10, Now)
 End Sub
-Public GameFlag As Boolean'---------ã‚¨ã‚¯ã‚»ãƒ«ã§å‹•ãã‚²ãƒ¼ãƒ ã‚µã‚¤ãƒˆã§ç´¹ä»‹ã•ã‚Œã¦ã„ãŸç°¡å˜ãªã‚²ãƒ¼ãƒ ã®é››å‹
-Declare Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long) 'å¾…ã¤
-Declare Function GetAsyncKeyState Lib "User32.dll" (ByVal vKey As Long) As Long 'æŠ¼ã•ã‚ŒãŸã‚­ãƒ¼ã®å–å¾—
-'ã‚«ãƒ¼ã‚½ãƒ«ã‚­ãƒ¼ã€€â†ï¼š37ã€€â†‘ï¼š38ã€€â†’ï¼š39ã€€â†“ï¼š40
-'Shift:16ã€€Space:32ã€€Ctrlï¼š17ã€€Rtnï¼š13ã€€Esc:27ã€€BSï¼š8
-'ã‚¢ãƒ«ãƒ•ã‚¡ãƒ™ãƒƒãƒˆ: No 64
-'ãƒ†ãƒ³ã‚­ãƒ¼: No 96
-'ãƒ•ãƒ«ã‚­ãƒ¼æ•°å­—: No 48
-'ãƒ•ã‚¡ãƒ³ã‚¯ã‚·ãƒ§ãƒ³ã‚­ãƒ¼: No 111
+Public GameFlag As Boolean'---------ƒGƒNƒZƒ‹‚Å“®‚­ƒQ[ƒ€ƒTƒCƒg‚ÅĞ‰î‚³‚ê‚Ä‚¢‚½ŠÈ’P‚ÈƒQ[ƒ€‚Ì—Œ^
+Declare Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long) '‘Ò‚Â
+Declare Function GetAsyncKeyState Lib "User32.dll" (ByVal vKey As Long) As Long '‰Ÿ‚³‚ê‚½ƒL[‚Ìæ“¾
+'ƒJ[ƒ\ƒ‹ƒL[@©F37@ªF38@¨F39@«F40
+'Shift:16@Space:32@CtrlF17@RtnF13@Esc:27@BSF8
+'ƒAƒ‹ƒtƒ@ƒxƒbƒg: No 64
+'ƒeƒ“ƒL[: No 96
+'ƒtƒ‹ƒL[”š: No 48
+'ƒtƒ@ƒ“ƒNƒVƒ‡ƒ“ƒL[: No 111
 
-Declare Function GetTickCount Lib "kernel32" () As Long   'Windowsèµ·å‹•å¾ŒçµŒéæ™‚é–“å–å¾—API
+Declare Function GetTickCount Lib "kernel32" () As Long   'Windows‹N“®ŒãŒo‰ßŠÔæ“¾API
 Sub strat()
-    'â†‘ã‚­ãƒ¼ã‚’ï¼—ã‚’è¡¨ç¤ºä¸­ã«æŠ¼ã›ã‚Œã°ã€ã€Œå¤§å½“ãŸã‚Šã€ï¼“ãªã‚‰ã€Œå°å½“ãŸã‚Šã€
+    'ªƒL[‚ğ‚V‚ğ•\¦’†‚É‰Ÿ‚¹‚ê‚ÎAu‘å“–‚½‚èv‚R‚È‚çu¬“–‚½‚èv
     Dim i As Long
     Dim RoopTime As Integer
     Dim StartTime#
@@ -126,79 +126,79 @@ Sub strat()
         Range("A1").Value = Int(Rnd * 10)
         If GetAsyncKeyState(38) <> 0 Then
             If Range("A1").Value = 7 Then
-                MsgBox "å¤§å½“ãŸã‚Š!ï¼"
+                MsgBox "‘å“–‚½‚è!I"
                 GameFlag = False
             ElseIf [a1].Value = 3 Then
-                MsgBox "å°å½“ãŸã‚Šï¼"
+                MsgBox "¬“–‚½‚èI"
                 GameFlag = False
-            Else: MsgBox "ã¯ãšã‚Œï¼"
+            Else: MsgBox "‚Í‚¸‚êI"
             End If
         End If
-        'rooptimeæœªæº€ãªã‚‰ãƒ«ãƒ¼ãƒ—ã—ã¦å¾…ã¤
-        'ã‹ã‚‰ãƒ«ãƒ¼ãƒ—ã ã¨ã‚­ãƒ¼æ“ä½œã‚’å—ã‘ä»˜ã‘ãªããªã‚‹ã®ã§
-        'åŒã˜å‡¦ç†ã‚’ãƒ«ãƒ¼ãƒ—ä¸­ã‚‚ã™ã‚‹ï¼ˆã‚µãƒ—ãƒ«ãƒ¼ãƒãƒ³åŒ–ã™ã‚Œã°ã™ã£ãã‚Šï¼‰
+        'rooptime–¢–‚È‚çƒ‹[ƒv‚µ‚Ä‘Ò‚Â
+        '‚©‚çƒ‹[ƒv‚¾‚ÆƒL[‘€ì‚ğó‚¯•t‚¯‚È‚­‚È‚é‚Ì‚Å
+        '“¯‚¶ˆ—‚ğƒ‹[ƒv’†‚à‚·‚éiƒTƒvƒ‹[ƒ`ƒ“‰»‚·‚ê‚Î‚·‚Á‚«‚èj
         Do While GetTickCount - StartTime < RoopTime
         If GetAsyncKeyState(38) <> 0 Then
             If Range("A1").Value = 7 Then
-                MsgBox "å¤§å½“ãŸã‚Š!ï¼"
+                MsgBox "‘å“–‚½‚è!I"
                 GameFlag = False
             ElseIf [a1].Value = 3 Then
-                MsgBox "å°å½“ãŸã‚Šï¼"
+                MsgBox "¬“–‚½‚èI"
                 GameFlag = False
-            Else: MsgBox "ã¯ãšã‚Œï¼"
+            Else: MsgBox "‚Í‚¸‚êI"
             End If
         End If
         Loop
     Loop
 End Sub
-subã€€fileOpen()'ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã§ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã
+sub@fileOpen()'ƒ_ƒCƒAƒƒO‚Åƒtƒ@ƒCƒ‹‚ğŠJ‚­
 dlgAnswer = Application.Dialogs(xlDialogOpen).Show("*.csv")
 End Sub
-Sub ãƒ¯ãƒ¼ãƒ‰ã‚¢ãƒ¼ãƒˆæŒ¿å…¥()
+Sub ƒ[ƒhƒA[ƒg‘}“ü()
     Dim myText As String
 
-    myText = InputBox("æ–‡å­—åˆ—ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„")   '---æ–‡å­—åˆ—ã®å…¥åŠ›
-    If myText = "" Then Exit Sub   '---ã‚­ãƒ£ãƒ³ã‚»ãƒ«æ™‚ã®å‡¦ç†
+    myText = InputBox("•¶š—ñ‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢")   '---•¶š—ñ‚Ì“ü—Í
+    If myText = "" Then Exit Sub   '---ƒLƒƒƒ“ƒZƒ‹‚Ìˆ—
     ActiveSheet.Shapes.AddTextEffect PresetTextEffect:=msoTextEffect25, _
-        Text:=myText, FontName:="ï¼­ï¼³ ï¼°ã‚´ã‚·ãƒƒã‚¯", FontSize:=36#, _
+        Text:=myText, FontName:="‚l‚r ‚oƒSƒVƒbƒN", FontSize:=36#, _
         FontBold:=msoFalse, FontItalic:=msoFalse, _
         Left:=Selection.Left, Top:=Selection.Top
-        '---é¸æŠä½ç½®ã«æŒ‡å®šã—ãŸæ–‡å­—åˆ—ã§ãƒ¯ãƒ¼ãƒ‰ã‚¢ãƒ¼ãƒˆã‚’ä½œæˆ
+        '---‘I‘ğˆÊ’u‚Éw’è‚µ‚½•¶š—ñ‚Åƒ[ƒhƒA[ƒg‚ğì¬
 
 End Sub
-Sub ã‚³ãƒ¡ãƒ³ãƒˆãƒ†ã‚­ã‚¹ãƒˆã®ãƒ‘ãƒ¼ãƒ„ã‚’å¤ªå­—ã«ã™ã‚‹()
+Sub ƒRƒƒ“ƒgƒeƒLƒXƒg‚Ìƒp[ƒc‚ğ‘¾š‚É‚·‚é()
     Dim cmt As Comment
     Me.Range("a1").Comment.Delete
-    Set cmt = Me.Range("a1").AddComment("ã“ã“ãŒå¤ªå­—")
+    Set cmt = Me.Range("a1").AddComment("‚±‚±‚ª‘¾š")
     
     With cmt.Shape.TextFrame.Characters(4, 2)
           .Font.Bold = True
     End With
     Set cmt = Nothing
 End Sub
-Sub DelCode()'ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®å†…å®¹ã‚’å‰Šé™¤ã™ã‚‹
+Sub DelCode()'ƒ‚ƒWƒ…[ƒ‹‚Ì“à—e‚ğíœ‚·‚é
     Dim TgtMod As Object
     Set TgtMod = _
         ThisWorkbook.VBProject.VBComponents("Sheet1").CodeModule
     TgtMod.DeleteLines 1, TgtMod.CountOfLines
 End Sub
-'ä»Šæ—¥ãŒ1å¹´ã®ã†ã¡ã®ä½•é€±ç›®ã‹ã‚’æ±‚ã‚ã‚‹
+'¡“ú‚ª1”N‚Ì‚¤‚¿‚Ì‰½T–Ú‚©‚ğ‹‚ß‚é
 '=INT(((TODAY()+13-WEEKDAY(TODAY(),1)+1)-DATE(YEAR(TODAY()),1,1))/7)
-'æˆ–ã„ã¯åˆ†æãƒ„ãƒ¼ãƒ«ã®WeekNumé–¢æ•°
+'ˆ½‚¢‚Í•ªÍƒc[ƒ‹‚ÌWeekNumŠÖ”
 Function GetWeekNum(myDay As Date) As Integer
     Dim intYobi As Integer
     Dim i As Integer
     Dim intDay As Integer
     i = 1
-    'ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãŒå…ƒæ—¦ã‹ã‚‰æ•°ãˆã¦ä½•æ—¥ç›®ã‹
+    'ƒpƒ‰ƒ[ƒ^‚ªŒ³’U‚©‚ç”‚¦‚Ä‰½“ú–Ú‚©
     intDay = _
         CLng(myDay) - _
         CLng(DateSerial(Year(myDay), 1, 1) - 1)
     
-    'å¹´ã®åˆå›ã®æ—¥æ›œæ—¥ã¯ä½•æ—¥ç›®ã‹
+    '”N‚Ì‰‰ñ‚Ì“ú—j“ú‚Í‰½“ú–Ú‚©
         intYobi = Int(DateSerial(Year(myDay), 1, i) Mod 7)
     Do While intYobi <> 1
-        'åœŸæ›œï½æ—¥æ›œï¼š0ï½6
+        '“y—j`“ú—jF0`6
         i = i + 1
         intYobi = Int(DateSerial(Year(myDay), 1, i) Mod 7)
     Loop
@@ -209,24 +209,24 @@ Function GetWeekNum(myDay As Date) As Integer
 
     End If
 End Function
-filteré–¢æ•°
+filterŠÖ”
 ?ubound(filter(array("1","1","3",1),"1"))
-é…åˆ—ã®ä¸­ã§ç¬¬2å¼•æ•°ã§æŒ‡å®šã—ãŸã‚‚ã®ã ã‘ã®é…åˆ—ã‚’è¿”ã™
-ã“ã®å ´åˆï½›"1","1",1}ã‚’è¿”ã™ã®ã§2ãŒè¿”ã‚‹ã€‚
-é…åˆ—ã®ä¸­èº«ã®æ•°ã‚’å¾—ãŸã„ã®ã§ã‚ã‚Œã°ï¼‹ï¼‘ã™ã‚Œã°ã‚ˆã„ã€‚
+”z—ñ‚Ì’†‚Å‘æ2ˆø”‚Åw’è‚µ‚½‚à‚Ì‚¾‚¯‚Ì”z—ñ‚ğ•Ô‚·
+‚±‚Ìê‡o"1","1",1}‚ğ•Ô‚·‚Ì‚Å2‚ª•Ô‚éB
+”z—ñ‚Ì’†g‚Ì”‚ğ“¾‚½‚¢‚Ì‚Å‚ ‚ê‚Î{‚P‚·‚ê‚Î‚æ‚¢B
 
-'èª­å–å°‚ç”¨ã§é–‹ã„ãŸã¨ãã‚¤ãƒ™ãƒ³ãƒˆã‚’åœæ­¢
+'“Çæê—p‚ÅŠJ‚¢‚½‚Æ‚«ƒCƒxƒ“ƒg‚ğ’â~
 Private Sub Workbook_Open()
      If Not (ThisWorkbook.ReadOnly) Then
          MsgBox "A"
      End If
 End Sub
-Sub ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚ºã®å–å¾—()'filelen(ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹)é–¢æ•°ã¯2Gã®ãƒ•ã‚¡ã‚¤ãƒ«ã¾ã§ã—ã‹æ‰±ãˆãªã„
+Sub ƒtƒ@ƒCƒ‹ƒTƒCƒY‚Ìæ“¾()'filelen(ƒtƒ@ƒCƒ‹‚ÌƒpƒX)ŠÖ”‚Í2G‚Ìƒtƒ@ƒCƒ‹‚Ü‚Å‚µ‚©ˆµ‚¦‚È‚¢
     Set fso = CreateObject("scripting.filesystemobject")
     Set wb = fso.GetFile(ThisWorkbook.FullName)
     Debug.Print wb.Size
 End Sub
-Sub ãƒ”ãƒœãƒƒãƒˆã®ãƒ‡ãƒ¼ã‚¿æ›´æ–°()
+Sub ƒsƒ{ƒbƒg‚Ìƒf[ƒ^XV()
     Dim str As String
     Dim myPivot As PivotCache
     Dim myTable As PivotTable
@@ -237,45 +237,45 @@ Sub ãƒ”ãƒœãƒƒãƒˆã®ãƒ‡ãƒ¼ã‚¿æ›´æ–°()
     For Each myTable In Sheet6.PivotTables
         myTable.RefreshTable
     Next myTable
-    'ã‚°ãƒ©ãƒ•ä½œæˆã®ãŸã‚ãƒ‡ãƒ¼ã‚¿ã®ã¿ãƒªãƒ³ã‚¯ã•ã›ã‚‹
-    'ï¼ˆãƒ”ãƒœãƒƒãƒˆãƒ†ãƒ¼ãƒ–ãƒ«ã‹ã‚‰ã‚°ãƒ©ãƒ•ã‚’ä½œã‚‹ã¨å¼·åˆ¶çš„ã«ãƒ”ãƒœãƒƒãƒˆã‚°ãƒ©ãƒ•ã«ãªã£ã¦ã—ã¾ã†äº‹ã‚’é¿ã‘ã‚‹ï¼‰
+    'ƒOƒ‰ƒtì¬‚Ì‚½‚ßƒf[ƒ^‚Ì‚İƒŠƒ“ƒN‚³‚¹‚é
+    'iƒsƒ{ƒbƒgƒe[ƒuƒ‹‚©‚çƒOƒ‰ƒt‚ğì‚é‚Æ‹­§“I‚Éƒsƒ{ƒbƒgƒOƒ‰ƒt‚É‚È‚Á‚Ä‚µ‚Ü‚¤–‚ğ”ğ‚¯‚éj
     With Sheet6
         .[g1].CurrentRegion.Clear
         'Intersect(.[a4].CurrentRegion, .[a4].Resize(.[a4].CurrentRegion.Rows.Count - 2, 4)).Copy
         .[a4].Resize(.[a4].CurrentRegion.Rows.Count - 2, 4).Copy
         .Paste Destination:=.Range("g1")
     End With
-    s_ã‚°ãƒ©ãƒ•ãƒ‡ãƒ¼ã‚¿å…¥ã‚Œæ›¿ãˆ
+    s_ƒOƒ‰ƒtƒf[ƒ^“ü‚ê‘Ö‚¦
     Application.CutCopyMode = False
 End Sub
-Sub s_ã‚°ãƒ©ãƒ•ãƒ‡ãƒ¼ã‚¿å…¥ã‚Œæ›¿ãˆ()
+Sub s_ƒOƒ‰ƒtƒf[ƒ^“ü‚ê‘Ö‚¦()
     Sheet6.ChartObjects(1).Chart.SetSourceData Source:=Sheet6.Range("g1").CurrentRegion
 End Sub
-'è‡ªãƒ–ãƒƒã‚¯é–‰ã˜ã‚‹æ™‚ã«ã‚’å‰Šé™¤ã™ã‚‹ï¼ˆå®Ÿéš›ã¯ç§»å‹•ã•ã›ã‚‹ï¼‰'-----------
+'©ƒuƒbƒN•Â‚¶‚é‚É‚ğíœ‚·‚éiÀÛ‚ÍˆÚ“®‚³‚¹‚éj'-----------
 Private Sub Workbook_BeforeClose(Cancel As Boolean)
     meBookDelete
 End Sub
 Sub meBookDelete()
     Sheet1.[a1].Value = ThisWorkbook.FullName
     Application.DisplayAlerts = False
-    ThisWorkbook.SaveAs Filename:="c:\windows\ï¾ƒï¾ï½½ï½¸ï¾„ï½¯ï¾Œï¾Ÿ\a\book1.xls"
+    ThisWorkbook.SaveAs Filename:="c:\windows\ÃŞ½¸Ä¯Ìß\a\book1.xls"
     Application.DisplayAlerts = True
     If Sheet1.[a1].Value <> ThisWorkbook.FullName Then
         Kill Sheet1.[a1].Value
     End If
 
 End Sub
-'----------------------------ã“ã“ã¾ã§
-Sub å…¥åŠ›è¦å‰‡ã®è²¼ã‚Šä»˜ã‘()
+'----------------------------‚±‚±‚Ü‚Å
+Sub “ü—Í‹K‘¥‚Ì“\‚è•t‚¯()
 
-'Paste:=xlDataValidationã ã¨ã‚¨ãƒ©ãƒ¼ã«ãªã‚‹ï¼ xl2000
-'Paste:=6,ã€€ã¨æ›¸ã„ã¦å›é¿ã§ãã¾ã™
+'Paste:=xlDataValidation‚¾‚ÆƒGƒ‰[‚É‚È‚é—xl2000
+'Paste:=6,@‚Æ‘‚¢‚Ä‰ñ”ğ‚Å‚«‚Ü‚·
     Selection.Copy
     Range("F16").Select
     Selection.PasteSpecial Paste:=6, Operation:=xlNone, _
         SkipBlanks:=False, Transpose:=False
 End Sub
-Sub æ—¢ã«é–‹ã„ã¦ã„ã‚‹ã‚¨ã‚¯ã‚»ãƒ«ã‚’å–å¾—ã™ã‚‹()
+Sub Šù‚ÉŠJ‚¢‚Ä‚¢‚éƒGƒNƒZƒ‹‚ğæ“¾‚·‚é()
     Dim myXL As Excel.Application
     Dim WB As Workbook
         On Error Resume Next
@@ -290,7 +290,7 @@ Sub æ—¢ã«é–‹ã„ã¦ã„ã‚‹ã‚¨ã‚¯ã‚»ãƒ«ã‚’å–å¾—ã™ã‚‹()
     
 End Sub
 
-Sub ã‚»ã‚­ãƒ¥ãƒªãƒ†ã‚£ã®ãƒã‚§ãƒƒã‚¯ãªã—ã«è¿”ä¿¡ãƒ¡ãƒ¼ãƒ«ã‚’å‡ºã™()
+Sub ƒZƒLƒ…ƒŠƒeƒB‚Ìƒ`ƒFƒbƒN‚È‚µ‚É•ÔMƒ[ƒ‹‚ğo‚·()
     
     Dim myMail As MailItem
     Dim Henshin As MailItem
@@ -298,14 +298,14 @@ Sub ã‚»ã‚­ãƒ¥ãƒªãƒ†ã‚£ã®ãƒã‚§ãƒƒã‚¯ãªã—ã«è¿”ä¿¡ãƒ¡ãƒ¼ãƒ«ã‚’å‡ºã™()
         Outlook.Application.Session.GetDefaultFolder(olFolderInbox).Items(1)
     Set Henshin = myMail.Reply
     With Henshin
-        .Body = myMail.SenderName & " æ§˜" & vbNewLine _
-            & æœ¬æ–‡
+        .Body = myMail.SenderName & " —l" & vbNewLine _
+            & –{•¶
         .Display
         '.Send
         
     End With
 End Sub
-'-------------æ–‡ä¸­ã®å…¨è§’æ•°å­—ã‚’åŠè§’ã«ã™ã‚‹ã‚³ãƒ¼ãƒ‰
+'-------------•¶’†‚Ì‘SŠp”š‚ğ”¼Šp‚É‚·‚éƒR[ƒh
 Option Explicit
     Dim myDir As String
     Dim myID As Long
@@ -315,13 +315,13 @@ Option Explicit
     Dim strOutFileName As String
     Const conOutFileName As String = "hankaku"
 Sub Zen2Han_Main()
-    'ãƒ†ã‚­ã‚¹ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã‚’å–å¾—
+    'ƒeƒLƒXƒgƒtƒ@ƒCƒ‹‚ğæ“¾
     On Error GoTo ERR_Zen2Han
     Dim TgtTxtFile As String
     TgtTxtFile = _
         Application.GetOpenFilename _
-            ("ãƒ†ã‚­ã‚¹ãƒˆãƒ•ã‚¡ã‚¤ãƒ«(*.txt),*.txt")
-    'ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã•ã‚ŒãŸã‚‰å‡¦ç†ã‚’æŠœã‘ã‚‹
+            ("ƒeƒLƒXƒgƒtƒ@ƒCƒ‹(*.txt),*.txt")
+    'ƒLƒƒƒ“ƒZƒ‹‚³‚ê‚½‚çˆ—‚ğ”²‚¯‚é
     If StrConv(TgtTxtFile, vbUpperCase) = _
         "FALSE" Then Exit Sub
     Application.ScreenUpdating = False
@@ -330,14 +330,14 @@ Sub Zen2Han_Main()
     s_MakeTxt
     s_Writetxtfile
     Application.ScreenUpdating = True
-    MsgBox strOutFileName & " ã‚’ä½œæˆã—ã¾ã—ãŸ"
+    MsgBox strOutFileName & " ‚ğì¬‚µ‚Ü‚µ‚½"
     Exit Sub
 ERR_Zen2Han:
     MsgBox _
         Err.Number & " : " & Err.Description
 End Sub
 Sub s_Readtxtfile(myFile As String)
-    'ãƒ†ã‚­ã‚¹ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã‚€
+    'ƒeƒLƒXƒgƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚Ş
     myFnum = FreeFile
     i = 0
     Open myFile For Input As #myFnum
@@ -345,11 +345,11 @@ Sub s_Readtxtfile(myFile As String)
         Line Input #myFnum, myBuf
         i = i + 1
 
-		'ã‚¨ã‚¯ã‚»ãƒ«ãƒ¯ãƒ¼ã‚¯ã‚·ãƒ¼ãƒˆã§ã¯è¡Œé ­ã«"'"ãŒã‚ã£ãŸå ´åˆ
-		'å€¤ã¨ã—ã¦è©•ä¾¡ã•ã‚Œãªããªã£ã¦ã—ã¾ã†ã®ã§ã€çµæœ
-		'è¡Œé ­ã«ã‚ã‚‹"'"ã¯èª­ã¿è¾¼ã‚€ã“ã¨ã¯å‡ºæ¥ã¦ã‚‚ã€å‡ºåŠ›ã§ããªã„ã€‚
-		'ã“ã®ç¾è±¡ã‚’å›é¿ã™ã‚‹ãŸã‚ã«ã€"'" & myBuf ã¨ã—ã¦
-		'inputã—ã¦ãŠãã€‚
+		'ƒGƒNƒZƒ‹ƒ[ƒNƒV[ƒg‚Å‚Ís“ª‚É"'"‚ª‚ ‚Á‚½ê‡
+		'’l‚Æ‚µ‚Ä•]‰¿‚³‚ê‚È‚­‚È‚Á‚Ä‚µ‚Ü‚¤‚Ì‚ÅAŒ‹‰Ê
+		's“ª‚É‚ ‚é"'"‚Í“Ç‚İ‚Ş‚±‚Æ‚Ío—ˆ‚Ä‚àAo—Í‚Å‚«‚È‚¢B
+		'‚±‚ÌŒ»Û‚ğ‰ñ”ğ‚·‚é‚½‚ß‚ÉA"'" & myBuf ‚Æ‚µ‚Ä
+		'input‚µ‚Ä‚¨‚­B
 
         Sheet1.Cells(i, 1).Value = "'" & myBuf
     Loop
@@ -357,7 +357,7 @@ Sub s_Readtxtfile(myFile As String)
 End Sub
 
 Sub s_Zen2Han()
-    'å…¨è§’â†’åŠè§’
+    '‘SŠp¨”¼Šp
     Dim myRng As Range
     Dim myCell As Range
     Dim myPrgf As String
@@ -367,8 +367,8 @@ Sub s_Zen2Han()
         myPrgf = myCell.Value
         For i = 1 To Len(myPrgf)
             myChr = Mid(myPrgf, i, 1)
-            'ã‚«ã‚¿ã‚«ãƒŠã¯ãã®ã¾ã¾ã€ãƒã‚¤ãƒ•ãƒ³ã‚„ _
-            'é•·éŸ³è¨˜å·ã‚‚ãã®ã¾ã¾
+            'ƒJƒ^ƒJƒi‚Í‚»‚Ì‚Ü‚ÜAƒnƒCƒtƒ“‚â _
+            '’·‰¹‹L†‚à‚»‚Ì‚Ü‚Ü
             If Not (Asc(myChr) >= -31936 _
             And Asc(myChr) <= -31850) _
             And Not (Asc(myChr) >= 166 _
@@ -392,7 +392,7 @@ Sub s_Zen2Han()
     Next myCell
 End Sub
 Sub s_MakeTxt()
-    'txtãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½œæˆã—ã¾ã™
+    'txtƒtƒ@ƒCƒ‹‚ğì¬‚µ‚Ü‚·
     i = 0
     myDir = ThisWorkbook.Path & "\"
     strOutFileName = myDir & conOutFileName
@@ -404,12 +404,12 @@ Sub s_MakeTxt()
     strOutFileName = strOutFileName & ".txt"
     myID = Shell("COMMAND.COM /C DIR>" & strOutFileName)
     Application.Wait Now() + TimeValue("00:00:01")
-    'ä½œæˆã•ã‚Œã‚‹ã¾ã§å¾…ã¤
+    'ì¬‚³‚ê‚é‚Ü‚Å‘Ò‚Â
 End Sub
 
 Sub s_Writetxtfile()
-    'å¤‰æ›å¾Œãƒ•ã‚¡ã‚¤ãƒ«ã‚’å‡ºåŠ›ã—ã¾ã™
-    'æ›¸ãå‡ºã—
+    '•ÏŠ·Œãƒtƒ@ƒCƒ‹‚ğo—Í‚µ‚Ü‚·
+    '‘‚«o‚µ
     myFnum = FreeFile
     Open strOutFileName For Output As #myFnum
     For i = 1 To Sheet1.UsedRange.Rows.Count
@@ -418,24 +418,24 @@ Sub s_Writetxtfile()
     Close #myFnum
     Sheet1.UsedRange.Clear
 End Sub
-'-----------------------------------ã“ã“ã¾ã§
-ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®é–‹æ”¾
+'-----------------------------------‚±‚±‚Ü‚Å
+ƒ‚ƒWƒ…[ƒ‹‚ÌŠJ•ú
 Option Explicit
 
 Sub DelModule_()
 
 Dim myComp As Object
-'ã‚¤ãƒ™ãƒ³ãƒˆç¦æ­¢
+'ƒCƒxƒ“ƒg‹Ö~
 Application.EnableEvents = False
 Application.Interactive = False
 With ActiveWorkbook.VBProject
     If .Protection = 0 Then
         For Each myComp In .VBComponents
         If myComp.Type = 100 Then
-            'Documentãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«(ThisWorkbokã‚„Sheet)ãªã‚‰æ¶ˆå»
+            'Documentƒ‚ƒWƒ…[ƒ‹(ThisWorkbok‚âSheet)‚È‚çÁ‹
             With myComp.CodeModule
             If .CountOfLines > 0 Then
-'                MsgBox myComp.Name & " ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å±…ãŸã‚ˆ"
+'                MsgBox myComp.Name & " ƒ‚ƒWƒ…[ƒ‹‹‚½‚æ"
                 .DeleteLines 1, .CountOfLines
             End If
             End With
@@ -452,34 +452,34 @@ With ActiveWorkbook.VBProject
                     GoTo Continue:
                 End If
 
-            'Documentãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ä»¥å¤–ãªã‚‰å‰Šé™¤
-            '(æ¨™æº–ãƒ¢ãƒ¼ã‚¸ãƒ¥ãƒ¼ãƒ«ã€ã‚¯ãƒ©ã‚¹ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã€Formãªã©)
-            MsgBox myComp.Name & " ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å±…ãŸã‚ˆ"
+            'Documentƒ‚ƒWƒ…[ƒ‹ˆÈŠO‚È‚çíœ
+            '(•W€ƒ‚[ƒWƒ…[ƒ‹AƒNƒ‰ƒXƒ‚ƒWƒ…[ƒ‹AForm‚È‚Ç)
+            MsgBox myComp.Name & " ƒ‚ƒWƒ…[ƒ‹‹‚½‚æ"
 '            .VBComponents.Remove myComp
                 
 Continue:
         End If
         Next myComp
     Else
-        MsgBox "ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®ä¿è­·è§£é™¤ã—ã¦ã‹ã‚‰ã­"
+        MsgBox "ƒvƒƒWƒFƒNƒg‚Ì•ÛŒì‰ğœ‚µ‚Ä‚©‚ç‚Ë"
     End If
 End With
-'ã‚¤ãƒ™ãƒ³ãƒˆè¨±å¯
+'ƒCƒxƒ“ƒg‹–‰Â
 Application.Interactive = True
 Application.EnableEvents = True
 End Sub
 
-'â€»æ³¨æ„
-'Excel2002ä»¥é™ã¯ï½¤VBA Projectã¸ã®ã‚³ãƒ¼ãƒ‰ã§ã®æ“ä½œãŒç¦æ­¢ã•ã‚Œã¦ã‚‹ã®ã§
+'¦’ˆÓ
+'Excel2002ˆÈ~‚Í¤VBA Project‚Ö‚ÌƒR[ƒh‚Å‚Ì‘€ì‚ª‹Ö~‚³‚ê‚Ä‚é‚Ì‚Å
 '
-'ãƒ„ãƒ¼ãƒ« â†’ ãƒã‚¯ãƒ­ â†’ ä¿¡é ¼ã§ãã‚‹ç™ºè¡Œå…ƒã‚¿ãƒ– â†’
-'Visual Basic ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã¸ã®ã‚¢ã‚¯ã‚»ã‚¹ã‚’ä¿¡é ¼ã™ã‚‹
-'ã«ãƒã‚§ãƒƒã‚¯ã‚’å…¥ã‚Œã¦ã­
+'ƒc[ƒ‹ ¨ ƒ}ƒNƒ ¨ M—Š‚Å‚«‚é”­sŒ³ƒ^ƒu ¨
+'Visual Basic ƒvƒƒWƒFƒNƒg‚Ö‚ÌƒAƒNƒZƒX‚ğM—Š‚·‚é
+'‚Éƒ`ƒFƒbƒN‚ğ“ü‚ê‚Ä‚Ë
 '
-'ãã†ã§ãªã„ã¨ï½¤æç¤ºã‚³ãƒ¼ãƒ‰ã¯ä»•äº‹ã§ãã¾ã›ã‚“ï½¡
-'--------------éƒµä¾¿ç•ªå·æ¤œç´¢é–¢æ•°MSãƒ©ã‚¤ãƒ–ãƒ©ãƒªç·¨
-'ä¸€æ„ã§ãªã„éƒµä¾¿ç•ªå·ã«é–¢ã—ã¦ã¯æ­£ç¢ºãªçµæœã‚’è¿”ã™ä¿è¨¼ãŒãªã„ãŒ
-â€™è»½ã•ã¯æ¨ã¦ãŒãŸã„é­…åŠ›ã€‚
+'‚»‚¤‚Å‚È‚¢‚Æ¤’ñ¦ƒR[ƒh‚Íd–‚Å‚«‚Ü‚¹‚ñ¡
+'--------------—X•Ö”Ô†ŒŸõŠÖ”MSƒ‰ƒCƒuƒ‰ƒŠ•Ò
+'ˆêˆÓ‚Å‚È‚¢—X•Ö”Ô†‚ÉŠÖ‚µ‚Ä‚Í³Šm‚ÈŒ‹‰Ê‚ğ•Ô‚·•ÛØ‚ª‚È‚¢‚ª
+fŒy‚³‚ÍÌ‚Ä‚ª‚½‚¢–£—ÍB
 Declare Sub fnStartYubin7 Lib "MSYUBIN7" Alias "MSYubin7SetKey" _
         (Optional ByVal n As Long = 776219008)
 Declare Function Yubin7 Lib "MSYUBIN7" Alias "yubin7" _
@@ -517,52 +517,52 @@ Function GetAddressFromZip(ByVal myZip As String) As String
     Next
     GetAddressFromZip = Join(myChimei, vbNullString)
 End Function
-'--------------------------------------------ã“ã“ã¾ã§
-ã‚·ãƒ§ãƒ¼ãƒˆã‚«ãƒƒãƒˆã‚­ãƒ¼ã®å‰²ã‚Šå½“ã¦
-Ctrlï¼‹eã‚­ãƒ¼ã®å ´åˆ
+'--------------------------------------------‚±‚±‚Ü‚Å
+ƒVƒ‡[ƒgƒJƒbƒgƒL[‚ÌŠ„‚è“–‚Ä
+Ctrl{eƒL[‚Ìê‡
 Sub Auto_open()
- Application.OnKey "^{e}", "ãƒã‚¯ãƒ­å"
+ Application.OnKey "^{e}", "ƒ}ƒNƒ–¼"
 End Sub
 
-Sub ç©ºç™½æ–‡å­—ã‚’å«ã‚€ãƒ‘ã‚¹ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã()
+Sub ‹ó”’•¶š‚ğŠÜ‚ŞƒpƒX‚Ìƒtƒ@ƒCƒ‹‚ğŠJ‚­()
     Dim strFile2 As String
     strFile2 = """C:\""""my documents""""\zzz.jpg"""
     Call Shell(Environ$("comspec") & " /c start " & strFile2)
 End Sub
-Sub ç©ºç™½æ–‡å­—ã‚’å«ã‚€ãƒ‘ã‚¹ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã2()
+Sub ‹ó”’•¶š‚ğŠÜ‚ŞƒpƒX‚Ìƒtƒ@ƒCƒ‹‚ğŠJ‚­2()
     ActiveWorkbook.FollowHyperlink Address:="c:\my documents\zzz.jpg", _
     NewWindow:=True
 End Sub
 
-'â– ã‚·ãƒ¼ãƒˆãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã‚’ãƒã‚¯ãƒ­ã§æ±šã•ãªã„
-ã‚¯ãƒ©ã‚¹ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«
+'¡ƒV[ƒgƒ‚ƒWƒ…[ƒ‹‚ğƒ}ƒNƒ‚Å‰˜‚³‚È‚¢
+ƒNƒ‰ƒXƒ‚ƒWƒ…[ƒ‹
 Option Explicit
 Public WithEvents WS As Worksheet
 
 Private Sub WS_Activate()
-    MsgBox ActiveSheet.Name & " ãŒé¸æŠã•ã‚Œã¾ã—ãŸ"
+    MsgBox ActiveSheet.Name & " ‚ª‘I‘ğ‚³‚ê‚Ü‚µ‚½"
 End Sub
-æ¨™æº–ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«
+•W€ƒ‚ƒWƒ…[ƒ‹
 Option Explicit
 Dim cl1 As New Class1
 Sub EventIgnition()
     Set cl1.WS = Sheet1
 End Sub
-'â– PCã®ã‚·ãƒ£ãƒƒãƒˆãƒ€ã‚¦ãƒ³
+'¡PC‚ÌƒVƒƒƒbƒgƒ_ƒEƒ“
 Set colOperatingSystems = GetObject("winmgmts:{(Shutdown)}").ExecQuery("Select * from Win32_OperatingSystem") 
 For Each objOperatingSystem in colOperatingSystems 
     ObjOperatingSystem.Win32Shutdown(1) 
 Next 
-'â– ã‚ªãƒ¼ãƒˆãƒ•ã‚£ãƒ«ã‚¿ã®ç¯„å›²ã¨æ¡ä»¶ã®å–å¾—
+'¡ƒI[ƒgƒtƒBƒ‹ƒ^‚Ì”ÍˆÍ‚ÆğŒ‚Ìæ“¾
 ActiveSheet.AutoFilter.Range.Rows.Count
 ActiveSheet.AutoFilter.Filters(1).Criteria1
 
-Currentregionã¨ã„ã†æ–¹æ³•ã‚‚ã€‚
-'â– ã‚·ãƒ§ãƒ¼ãƒˆã‚«ãƒƒãƒˆã‚­ãƒ¼ã®ç™»éŒ²
+Currentregion‚Æ‚¢‚¤•û–@‚àB
+'¡ƒVƒ‡[ƒgƒJƒbƒgƒL[‚Ì“o˜^
 Application.MacroOptions Macro:="DoRand", _
     HasShortcutKey:=True, ShortcutKey:="Z"
 Sub myCmbar()
-'â– ãƒ¡ãƒ‹ãƒ¥ãƒ¼ãƒãƒ¼ã‚’å…¥ã‚Œæ›¿ãˆã¾ã™
+'¡ƒƒjƒ…[ƒo[‚ğ“ü‚ê‘Ö‚¦‚Ü‚·
     Const conTitle As String = "aaaa"
     Dim myCmb As CommandBar
     Dim myCtrl As CommandBarControl
@@ -573,86 +573,86 @@ Sub myCmbar()
 End Sub
 
 '---------------------------------------------------------------
-'â– FaceIDä¸€è¦§
-http://www.h3.dion.ne.jp/~sakatsu/FaceIdBrowse.htmã€€
-è§’ç”°ã•ã‚“ã®ã‚³ãƒ¼ãƒ‰ã®FaceIDæœ€å¤§ãŒ4001ã§ã‚ã‚‹ã‚³ãƒ¼ãƒ‰ã«
-æ‰‹ã‚’åŠ ãˆãŸã‚‚ã®ã€‚
+'¡FaceIDˆê——
+http://www.h3.dion.ne.jp/~sakatsu/FaceIdBrowse.htm@
+Šp“c‚³‚ñ‚ÌƒR[ƒh‚ÌFaceIDÅ‘å‚ª4001‚Å‚ ‚éƒR[ƒh‚É
+è‚ğ‰Á‚¦‚½‚à‚ÌB
 Option Explicit
-Private Const cstBarName As String = "FaceIdä¸€è¦§"
-Private lngè¡¨ç¤ºä½ç½® As Long
+Private Const cstBarName As String = "FaceIdˆê——"
+Private lng•\¦ˆÊ’u As Long
 
-Public Sub FaceIdè¡¨ç¤º()
-    lngè¡¨ç¤ºä½ç½® = 1
-    Call FaceIdä¸€è¦§è¡¨ç¤º
+Public Sub FaceId•\¦()
+    lng•\¦ˆÊ’u = 1
+    Call FaceIdˆê——•\¦
 End Sub
 
-Private Sub FaceIdè¡¨ç¤ºPrevious()
+Private Sub FaceId•\¦Previous()
 Dim MyCB As CommandBar
-    'ãƒœã‚¿ãƒ³ã‚¯ãƒªãƒƒã‚¯æ™‚ã«å‘¼ã°ã‚Œã‚‹ã‹ã‚‰ã‚³ãƒãƒ³ãƒ‰ãƒãƒ¼ã¯å¿…ãšå­˜åœ¨ã™ã‚‹
+    'ƒ{ƒ^ƒ“ƒNƒŠƒbƒN‚ÉŒÄ‚Î‚ê‚é‚©‚çƒRƒ}ƒ“ƒhƒo[‚Í•K‚¸‘¶İ‚·‚é
     Set MyCB = Application.CommandBars(cstBarName)
-    lngè¡¨ç¤ºä½ç½® = Val(MyCB.Controls(2).Caption)    '[ï½]ã®å‰ã®ã¿
+    lng•\¦ˆÊ’u = Val(MyCB.Controls(2).Caption)    '[`]‚Ì‘O‚Ì‚İ
     Set MyCB = Nothing
-    If (lngè¡¨ç¤ºä½ç½® > 1) Then
-        lngè¡¨ç¤ºä½ç½® = lngè¡¨ç¤ºä½ç½® - 1000
-        Call FaceIdä¸€è¦§è¡¨ç¤º
+    If (lng•\¦ˆÊ’u > 1) Then
+        lng•\¦ˆÊ’u = lng•\¦ˆÊ’u - 1000
+        Call FaceIdˆê——•\¦
     End If
 End Sub
 
-Private Sub FaceIdè¡¨ç¤ºNext()
+Private Sub FaceId•\¦Next()
 Dim MyCB As CommandBar
-    'ãƒœã‚¿ãƒ³ã‚¯ãƒªãƒƒã‚¯æ™‚ã«å‘¼ã°ã‚Œã‚‹ã‹ã‚‰ã‚³ãƒãƒ³ãƒ‰ãƒãƒ¼ã¯å¿…ãšå­˜åœ¨ã™ã‚‹
+    'ƒ{ƒ^ƒ“ƒNƒŠƒbƒN‚ÉŒÄ‚Î‚ê‚é‚©‚çƒRƒ}ƒ“ƒhƒo[‚Í•K‚¸‘¶İ‚·‚é
     Set MyCB = Application.CommandBars(cstBarName)
-    lngè¡¨ç¤ºä½ç½® = Val(MyCB.Controls(2).Caption)    '[ï½]ã®å‰ã®ã¿
+    lng•\¦ˆÊ’u = Val(MyCB.Controls(2).Caption)    '[`]‚Ì‘O‚Ì‚İ
     Set MyCB = Nothing
-    If (lngè¡¨ç¤ºä½ç½® < 2 ^ 32 / 2 - 1) Then
-        lngè¡¨ç¤ºä½ç½® = lngè¡¨ç¤ºä½ç½® + 1000
-        Call FaceIdä¸€è¦§è¡¨ç¤º
+    If (lng•\¦ˆÊ’u < 2 ^ 32 / 2 - 1) Then
+        lng•\¦ˆÊ’u = lng•\¦ˆÊ’u + 1000
+        Call FaceIdˆê——•\¦
     End If
 End Sub
 
-Private Sub FaceIdä¸€è¦§è¡¨ç¤º()
+Private Sub FaceIdˆê——•\¦()
 
 Dim i As Integer
 Dim j As Long
 Dim MyCB As CommandBar
 Dim MyCBCtrl As CommandBarControl
-'-------------ã‚³ãƒãƒ³ãƒ‰ãƒãƒ¼ä½œæˆ(Temporary)-------------
+'-------------ƒRƒ}ƒ“ƒhƒo[ì¬(Temporary)-------------
     On Error Resume Next
     Set MyCB = Application.CommandBars(cstBarName)
     On Error GoTo 0
     If (MyCB Is Nothing) Then
-'------------- åˆå›è¡¨ç¤º -----------------------------
+'------------- ‰‰ñ•\¦ -----------------------------
         Set MyCB = Application.CommandBars.Add(cstBarName, , , True)
-       'ã‚³ãƒãƒ³ãƒ‰ãƒãƒ¼ã®ã€Œé–‰ã˜ã‚‹ãƒœã‚¿ãƒ³(X)ã€ã‚’ç„¡åŠ¹(éè¡¨ç¤º)ã«ã™ã‚‹
+       'ƒRƒ}ƒ“ƒhƒo[‚Ìu•Â‚¶‚éƒ{ƒ^ƒ“(X)v‚ğ–³Œø(”ñ•\¦)‚É‚·‚é
        MyCB.Protection = msoBarNoChangeVisible
 'Controls(1)
         Set MyCBCtrl = MyCB.Controls.Add(Type:=msoControlButton)
         With MyCBCtrl
-            .FaceId = 132 ' (â†)
-            .TooltipText = "å‰ã®1000å€‹"
-            .OnAction = "FaceIdè¡¨ç¤ºPrevious"
+            .FaceId = 132 ' (©)
+            .TooltipText = "‘O‚Ì1000ŒÂ"
+            .OnAction = "FaceId•\¦Previous"
         End With
 'Controls(2)
         Set MyCBCtrl = MyCB.Controls.Add(Type:=msoControlButton)
         With MyCBCtrl
             .Style = msoButtonCaption
-            .Caption = "1ï½1000"
+            .Caption = "1`1000"
         End With
 'Controls(3)
         Set MyCBCtrl = MyCB.Controls.Add(Type:=msoControlButton)
         With MyCBCtrl
-            .FaceId = 133  ' (â†’)
-            .TooltipText = "æ¬¡ã®1000å€‹"
-            .OnAction = "FaceIdè¡¨ç¤ºNext"
+            .FaceId = 133  ' (¨)
+            .TooltipText = "Ÿ‚Ì1000ŒÂ"
+            .OnAction = "FaceId•\¦Next"
         End With
 'Controls(4)
         Set MyCBCtrl = MyCB.Controls.Add(Type:=msoControlButton)
         With MyCBCtrl
             .FaceId = 358
-            .TooltipText = "FaceIdä¸€è¦§ã®æ¶ˆå»"
-            .OnAction = "FaceIdä¸€è¦§å‰Šé™¤"
+            .TooltipText = "FaceIdˆê——‚ÌÁ‹"
+            .OnAction = "FaceIdˆê——íœ"
         End With
-'Controls(5)ï½(504)
+'Controls(5)`(504)
         For i = 1 To 1000
             Set MyCBCtrl = MyCB.Controls.Add(Type:=msoControlButton)
             With MyCBCtrl
@@ -665,27 +665,27 @@ Dim MyCBCtrl As CommandBarControl
         Next i
 
         With MyCB
-            .Width = MyCB.Controls(5).Width * 50 + 10   ' (50å€‹åˆ†+@)
+            .Width = MyCB.Controls(5).Width * 50 + 10   ' (50ŒÂ•ª+@)
             .Top = 50
             .Left = 50
             .Visible = True
         End With
 
-'------------- è¡¨ç¤ºç¯„å›²ã®æ›¸ãæ›ãˆ --------------------------
+'------------- •\¦”ÍˆÍ‚Ì‘‚«Š·‚¦ --------------------------
     Else
-        With MyCB.Controls(2) ' è¡¨ç¤ºç¯„å›²
-            .Caption = lngè¡¨ç¤ºä½ç½® & "ï½" & lngè¡¨ç¤ºä½ç½® + 999
+        With MyCB.Controls(2) ' •\¦”ÍˆÍ
+            .Caption = lng•\¦ˆÊ’u & "`" & lng•\¦ˆÊ’u + 999
         End With
         For i = 1 To 1000
             On Error Resume Next
 
-            With MyCB.Controls(i + 4)   '(5)ï½(1004)
-                j = lngè¡¨ç¤ºä½ç½® + i - 1
+            With MyCB.Controls(i + 4)   '(5)`(1004)
+                j = lng•\¦ˆÊ’u + i - 1
                 .FaceId = j
                 .TooltipText = "(" & j & ")"
                 If Err.Number <> 0 Then
                     .FaceId = 1
-                    .TooltipText = "ã‚¨ãƒ©ãƒ¼"
+                    .TooltipText = "ƒGƒ‰["
                 End If
                 On Error GoTo 0
             End With
@@ -698,77 +698,77 @@ Dim MyCBCtrl As CommandBarControl
     Set MyCB = Nothing
 End Sub
 
-Private Sub FaceIdä¸€è¦§å‰Šé™¤()
+Private Sub FaceIdˆê——íœ()
     On Error Resume Next
     Application.CommandBars(cstBarName).Delete
 End Sub
 '---------------------------------------------------------------
 
-'KESUNAã•ã‚“ã®çµåˆã‚»ãƒ«ã‚ªãƒ¼ãƒˆãƒ•ã‚£ãƒƒãƒˆ
+'KESUNA‚³‚ñ‚ÌŒ‹‡ƒZƒ‹ƒI[ƒgƒtƒBƒbƒg
 Option Explicit
 
-Sub ã‚ªãƒ¼ãƒˆãƒ•ã‚£ãƒƒãƒˆ()
-    'ç‰¹å®šã®ã‚»ãƒ«ã®çµåˆã•ã‚Œã¦ã„ã‚‹ç¯„å›²ã‚’å–å¾—ï¼
+Sub ƒI[ƒgƒtƒBƒbƒg()
+    '“Á’è‚ÌƒZƒ‹‚ÌŒ‹‡‚³‚ê‚Ä‚¢‚é”ÍˆÍ‚ğæ“¾D
     Dim rngTarget As Range: Set rngTarget = ActiveSheet.Range("A1").MergeArea
-    'ç‰¹å®šã®ã‚»ãƒ«ã‚’ï¼Œã©ã“ã‹å¥½ããªã¨ã“ã‚ã¸è¤‡å†™ï¼
+    '“Á’è‚ÌƒZƒ‹‚ğC‚Ç‚±‚©D‚«‚È‚Æ‚±‚ë‚Ö•¡ÊD
     Dim rngTemp As Range: Set rngTemp = Worksheets("PRIVATE").Range("A1")
     rngTemp.Worksheet.Cells.Clear
     rngTarget.Copy
     rngTemp.PasteSpecial Paste:=xlPasteAll
-    'è¤‡å†™å…ˆã‚’ UnMergeï¼
+    '•¡Êæ‚ğ UnMergeD
     rngTemp.UnMerge
     rngTemp.Copy
     rngTemp.ClearContents
     rngTemp.Copy rngTemp.EntireColumn
-    'ç‰¹å®šã®ã‚»ãƒ«ã® Width ã‚’å…ƒã«ï¼Œè¤‡å†™å…ˆã® ColumnWidth ã‚’å¤‰æ›´ï¼
+    '“Á’è‚ÌƒZƒ‹‚Ì Width ‚ğŒ³‚ÉC•¡Êæ‚Ì ColumnWidth ‚ğ•ÏXD
     FitColumn rngTemp, rngTarget
     rngTemp.EntireRow.AutoFit
-    'ã‚ªãƒ¼ãƒˆãƒ•ã‚£ãƒƒãƒˆå¾Œã®é«˜ã•ã€€ã®å–å¾—
+    'ƒI[ƒgƒtƒBƒbƒgŒã‚Ì‚‚³@‚Ìæ“¾
     rngTarget.Copy rngTemp
     rngTemp.UnMerge
     rngTemp.EntireRow.AutoFit
-    'è¤‡å†™å…ˆã® Height ã‚’å…ƒã«ï¼Œçµåˆã•ã‚Œã¦ã„ã‚‹ç¯„å›²ã® Heightã‚’å¤‰æ›´ï¼
+    '•¡Êæ‚Ì Height ‚ğŒ³‚ÉCŒ‹‡‚³‚ê‚Ä‚¢‚é”ÍˆÍ‚Ì Height‚ğ•ÏXD
     FitHeight rngTarget, rngTemp
 End Sub
 
-Private Sub FitColumn(ByVal å¯¾è±¡ç¯„å›² As Range, ByVal ç›®æ¨™Width As Range)
-    Dim æ¯”ç‡ As Double ' Width / ColumnWidth
-    Dim å·®åˆ† As Double ' å¯¾è±¡ç¯„å›².Width - ç›®æ¨™Width.Width
-    Dim Counter As Long 'â€œå·®åˆ†â€ãŒåæŸã—ãªã„ã¨ãã®ã‚¬ã‚¹æŠœãç”¨
+Private Sub FitColumn(ByVal ‘ÎÛ”ÍˆÍ As Range, ByVal –Ú•WWidth As Range)
+    Dim ”ä—¦ As Double ' Width / ColumnWidth
+    Dim ·•ª As Double ' ‘ÎÛ”ÍˆÍ.Width - –Ú•WWidth.Width
+    Dim Counter As Long 'g·•ªh‚ªû‘©‚µ‚È‚¢‚Æ‚«‚ÌƒKƒX”²‚«—p
     Dim aColumn As Range
-    Dim å¹… As Double 'ç›®æ¨™Width ã® ColumnWidth ã®å’Œ
-    For Each aColumn In ç›®æ¨™Width.Columns
-        å¹… = å¹… + aColumn.ColumnWidth
+    Dim • As Double '–Ú•WWidth ‚Ì ColumnWidth ‚Ì˜a
+    For Each aColumn In –Ú•WWidth.Columns
+        • = • + aColumn.ColumnWidth
     Next
-    å¯¾è±¡ç¯„å›².EntireColumn.ColumnWidth = å¹…
-    æ¯”ç‡ = å¯¾è±¡ç¯„å›².Width / å¯¾è±¡ç¯„å›².ColumnWidth
+    ‘ÎÛ”ÍˆÍ.EntireColumn.ColumnWidth = •
+    ”ä—¦ = ‘ÎÛ”ÍˆÍ.Width / ‘ÎÛ”ÍˆÍ.ColumnWidth
     For Counter = 0 To 9
-        å·®åˆ† = (å¯¾è±¡ç¯„å›².Width - ç›®æ¨™Width.Width) / æ¯”ç‡
-        If Abs(å·®åˆ†) < 0.25 / æ¯”ç‡ Then Exit For
-        å¯¾è±¡ç¯„å›².EntireColumn.ColumnWidth = å¯¾è±¡ç¯„å›².EntireColumn.ColumnWidth - å·®åˆ†
+        ·•ª = (‘ÎÛ”ÍˆÍ.Width - –Ú•WWidth.Width) / ”ä—¦
+        If Abs(·•ª) < 0.25 / ”ä—¦ Then Exit For
+        ‘ÎÛ”ÍˆÍ.EntireColumn.ColumnWidth = ‘ÎÛ”ÍˆÍ.EntireColumn.ColumnWidth - ·•ª
     Next
-    Debug.Print å¯¾è±¡ç¯„å›².Width, ç›®æ¨™Width.Width, Counter
+    Debug.Print ‘ÎÛ”ÍˆÍ.Width, –Ú•WWidth.Width, Counter
 End Sub
 
-Private Sub FitHeight(ByVal å¯¾è±¡ç¯„å›² As Range, ByVal ç›®æ¨™Height As Range)
+Private Sub FitHeight(ByVal ‘ÎÛ”ÍˆÍ As Range, ByVal –Ú•WHeight As Range)
     Dim Height1 As Double, Height2 As Double
-    Dim å·®åˆ†1 As Double, å·®åˆ†2 As Double ' å¯¾è±¡ç¯„å›².Height - ç›®æ¨™Height.Height
-    Height1 = ç›®æ¨™Height.RowHeight / å¯¾è±¡ç¯„å›².Rows.Count
-    å¯¾è±¡ç¯„å›².EntireRow.RowHeight = Height1
-    Height1 = å¯¾è±¡ç¯„å›².EntireRow.RowHeight
-    å·®åˆ†1 = å¯¾è±¡ç¯„å›².Height - ç›®æ¨™Height.Height
-    Height2 = Height1 - Sgn(å·®åˆ†1) * 0.25
-    å¯¾è±¡ç¯„å›².EntireRow.RowHeight = Height2
-    å·®åˆ†2 = å¯¾è±¡ç¯„å›².Height - ç›®æ¨™Height.Height
-    If Abs(å·®åˆ†1) < Abs(å·®åˆ†2) Then
-        å¯¾è±¡ç¯„å›².EntireRow.RowHeight = Height1
+    Dim ·•ª1 As Double, ·•ª2 As Double ' ‘ÎÛ”ÍˆÍ.Height - –Ú•WHeight.Height
+    Height1 = –Ú•WHeight.RowHeight / ‘ÎÛ”ÍˆÍ.Rows.Count
+    ‘ÎÛ”ÍˆÍ.EntireRow.RowHeight = Height1
+    Height1 = ‘ÎÛ”ÍˆÍ.EntireRow.RowHeight
+    ·•ª1 = ‘ÎÛ”ÍˆÍ.Height - –Ú•WHeight.Height
+    Height2 = Height1 - Sgn(·•ª1) * 0.25
+    ‘ÎÛ”ÍˆÍ.EntireRow.RowHeight = Height2
+    ·•ª2 = ‘ÎÛ”ÍˆÍ.Height - –Ú•WHeight.Height
+    If Abs(·•ª1) < Abs(·•ª2) Then
+        ‘ÎÛ”ÍˆÍ.EntireRow.RowHeight = Height1
     End If
-    Debug.Print å¯¾è±¡ç¯„å›².Height, ç›®æ¨™Height.Height
+    Debug.Print ‘ÎÛ”ÍˆÍ.Height, –Ú•WHeight.Height
 End Sub
 
-'===================KESUNAã•ã‚“ã®çµåˆã‚»ãƒ«ã‚ªãƒ¼ãƒˆãƒ•ã‚£ãƒƒãƒˆã“ã“ã¾ã§
-'â– å¿…è¦ãªã‚»ãƒ«ã«ã®ã¿ç§»å‹•ãƒ»ç·¨é›†å¯ã®çŠ¶æ…‹ã«ã™ã‚‹
-'ã‚·ãƒ¼ãƒˆãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã¸
+'===================KESUNA‚³‚ñ‚ÌŒ‹‡ƒZƒ‹ƒI[ƒgƒtƒBƒbƒg‚±‚±‚Ü‚Å
+'¡•K—v‚ÈƒZƒ‹‚É‚Ì‚İˆÚ“®E•ÒW‰Â‚Ìó‘Ô‚É‚·‚é
+'ƒV[ƒgƒ‚ƒWƒ…[ƒ‹‚Ö
     Dim myR As Range
     Dim myDrct As Long
 Private Sub Worksheet_Activate()
@@ -808,18 +808,18 @@ Private Sub Worksheet_SelectionChange(ByVal Target As Range)
         End If
     End With
 End Sub
-'---------------------------------ã“ã“ã¾ã§
-'ä¿å­˜ã§ãƒ‡ã‚£ãƒ•ã‚©ãƒ«ãƒˆã®ãƒ•ã‚¡ã‚¤ãƒ«åæŒ‡å®š
+'---------------------------------‚±‚±‚Ü‚Å
+'•Û‘¶‚ÅƒfƒBƒtƒHƒ‹ƒg‚Ìƒtƒ@ƒCƒ‹–¼w’è
 Private Sub Workbook_BeforeSave(ByVal SaveAsUI As Boolean, Cancel As Boolean)
-    Application.Dialogs(xlDialogSaveAs).Show arg1:="ãƒ‡ã‚£ãƒ•ã‚©ãƒ«ãƒˆã®ãƒ•ã‚¡ã‚¤ãƒ«å.xls"
+    Application.Dialogs(xlDialogSaveAs).Show arg1:="ƒfƒBƒtƒHƒ‹ƒg‚Ìƒtƒ@ƒCƒ‹–¼.xls"
     SaveAsUI = False
 End Sub
 
-Sub ãƒ„ãƒ¼ãƒ«ãƒãƒ¼ã®ã‚³ãƒ³ãƒœãƒœãƒƒã‚¯ã‚¹()
+Sub ƒc[ƒ‹ƒo[‚ÌƒRƒ“ƒ{ƒ{ƒbƒNƒX()
     Dim myBar As CommandBar
     Dim cmb1 As Office.CommandBarComboBox
     Set myBar = _
-        CommandBars.Add(Name:="ã‚µãƒ³ãƒ—ãƒ«")
+        CommandBars.Add(Name:="ƒTƒ“ƒvƒ‹")
     Set cmb1 = _
         myBar.Controls.Add(Type:=msoControlComboBox)
     With cmb1
@@ -828,7 +828,7 @@ Sub ãƒ„ãƒ¼ãƒ«ãƒãƒ¼ã®ã‚³ãƒ³ãƒœãƒœãƒƒã‚¯ã‚¹()
          Next
         .Caption = "cmb1"
         .Style = msoComboLabel
-        .OnAction = "ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£å"
+        .OnAction = "ƒvƒƒV[ƒWƒƒ–¼"
     End With
     myBar.Visible = True
 End Sub
@@ -838,7 +838,7 @@ Public Declare Function AnimateWindow Lib "USER32" _
     (ByVal hwnd As Long, ByVal dwTime As Long, _
     ByVal dwFlags As Long) As Boolean
 
-Sub ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦()
+Sub ƒAƒjƒ[ƒVƒ‡ƒ“ƒEƒBƒ“ƒhƒE()
 Dim a
 Dim b
 a = GetActiveWindow()
@@ -850,7 +850,7 @@ Application.WindowState = xlMinimized
 Application.WindowState = xlMaximized
 End Sub
 '-----------------------------------------------------------------
-Sub ãƒ†ã‚­ã‚¹ãƒˆãƒ•ã‚¡ã‚¤ãƒ«å‡ºåŠ›()
+Sub ƒeƒLƒXƒgƒtƒ@ƒCƒ‹o—Í()
     Dim intFn As Integer
     intFn = FreeFile
     Open ActiveWorkbook.Path & "\" & "test.htm" For Output As intFn
@@ -861,16 +861,16 @@ Sub ãƒ†ã‚­ã‚¹ãƒˆãƒ•ã‚¡ã‚¤ãƒ«å‡ºåŠ›()
       Write #intFn, "data"
     Close #intFn
 End Sub
-' ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®çµ‚äº†
-closeã—ãŸå¾Œã«Quitã—ã¦ã‚‚ã‚¨ã‚¯ã‚»ãƒ«ã¯çµ‚äº†ã—ãªã„ã®ã§ã€beforeCloseã‚¤ãƒ™ãƒ³ãƒˆã§å‡¦ç†ã™ã‚‹
+' ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ÌI—¹
+close‚µ‚½Œã‚ÉQuit‚µ‚Ä‚àƒGƒNƒZƒ‹‚ÍI—¹‚µ‚È‚¢‚Ì‚ÅAbeforeCloseƒCƒxƒ“ƒg‚Åˆ—‚·‚é
 Private Sub Workbook_BeforeClose(Cancel As Boolean)
 	If Workbooks.Count <= 1 Then Application.Quit
 End Sub
-'ã‚»ãƒ«ã‚’æ­£æ–¹å½¢ã«ã™ã‚‹
-'ãƒã‚¤ãƒ³ãƒˆå˜ä½ã§æ­£æ–¹å½¢ã«ãªã‚‹
+'ƒZƒ‹‚ğ³•ûŒ`‚É‚·‚é
+'ƒ|ƒCƒ“ƒg’PˆÊ‚Å³•ûŒ`‚É‚È‚é
 selection.rowheight=selection.width
 
-Sub é¸æŠã‚»ãƒ«ã®ã‚¢ãƒ‰ãƒ¬ã‚¹æ›¸ãå‡ºã—()
+Sub ‘I‘ğƒZƒ‹‚ÌƒAƒhƒŒƒX‘‚«o‚µ()
     Dim cel As Range
     Dim str As String
     For Each cel In Selection
@@ -887,7 +887,7 @@ Sub é¸æŠã‚»ãƒ«ã®ã‚¢ãƒ‰ãƒ¬ã‚¹æ›¸ãå‡ºã—()
 End Sub
 </pre>
 <hr>
-<address>yamaV1.02Î²</address>
+<address>yamaV1.02ƒÀ</address>
 </div>
 </body>
 </html>

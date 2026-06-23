@@ -1,0 +1,44 @@
+<!-- TEST CODE -->
+<script type="text/javascript" src="./carender_func.js"></script>
+<script type="text/javascript" src="./carender.js"></script>
+
+<script type="text/javascript">
+<!--
+	//年月日
+	var y = 0;
+	var m = 0;
+	var d = 0;
+	var ShukuName = '';
+
+	for(y=1912;y<=2150;y++){
+		//うるう年の判定
+		if(f_isuruu(y)){
+			m_Max[2]=29;
+		}else{
+			m_Max[2]=28;
+		}
+		
+		for(m=1;m<13;m++){
+			for(d=1;d<=m_Max[m];d++){
+				var you = getYou(y, m, d);
+				ShukuName = f_isshuku(m *100 + d, y, you, m_Max[m], m_Max[m - 1]); 
+				if(ShukuName != ""){
+					document.write(y + "/" + m + "/" + d+":"+ ShukuName + "<br>");
+				}
+			}
+		}
+	}
+
+//曜日を返す（日曜が 0）
+function getYou(y, m, d){
+
+	//月の0～11を補正
+	var m2 = m - 1;
+	if(m2 < 0){
+		m2 = 12 + m2;
+	}
+	var dt1 = new Date(y, m2 , d);
+	return dt1.getDay();
+}
+// -->
+</script>

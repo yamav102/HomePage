@@ -1,0 +1,429 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<meta name="GENERATOR" content="IBM WebSphere Studio Homepage Builder Version 6.5.0.0 for Windows">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<style type="text/css">
+<!--
+p{
+margin-left:5%
+}
+-->
+</style>
+</head>
+<body>
+<p>	private sub コマンドクリック()<br>
+	<br>
+	'自分のフォームのフィルタプロパティに”ペンだこ=yes”という式を入れる<br>
+	me.filter=&quot;ペンだこ=yes&quot;<br>
+	me.filteron=true<br>
+	end sub<br>
+<br>
+	private フィルタの解除_クリック()<br>
+<br>
+	me.filter=&quot;&quot;<br>
+	me.filteron=true<br>
+<br>
+	end sub<br>
+<br>
+<br>
+<br>
+	private sub コンボで絞り込む()<br>
+	me.filter=&quot;為替番号='&quot; &amp; me!コンボ14 &amp; &quot;'&quot;<br>
+	me.filterOn= true<br>
+	end sub<br>
+<br>
+	private sub あいまい検索 ()<br>
+	<br>
+	me.filter = &quot;局名 like'&quot; &amp; &quot;*&quot; &amp; Me!テキスト16 &amp; &quot;*'&quot;<br>
+	me.filterOn = True <br>
+	end sub<br>
+<br>
+	me.filter=フィールド名 like  &quot;あ&quot;　　　　　　か？<br>
+<br>
+	レポートフッターのテキストボックスに<br>
+	=count(*)<br>
+	と入れると全件件数を数えてくれる。ページフッターでこれをやるとエラーになる。<br>
+<br>
+<br>
+	マクロをグループ化（？）するために[フォームを開く]などのアクションを作った後に<br>
+	xyz（マクロ名）フィールド（？）を追加する。[フォームを開く]が複数ある場合<br>
+	区別できるように名前を付けておく。<br>
+<br>
+	マクロ名は「社員入力」だが、名前をつけて保存の画面で「メニュー」という<br>
+	名前で一連のアクションを保存したりしている。何故か・・・<br>
+<br>
+	マクロ名　　　　アクション<br>
+	社員入力　　　　フォームを開く　　　　　　　　　↓1つのマクロ名に複数のアクションを登録すると<br>
+　　　　　　　　新規入力レコードへの移動　　　　　順番に実行してくれる<br>
+　　　　　　　　なんたら<br>
+　　　　　　　　かんたら<br>
+　　　　　　　　　　　　　　　←複数のアクションで1つのマクロになるので、<br>
+	社員一覧印刷　　ＸＸＸＸ　　　　ひとかたまりを認識しやすいように一行あける<br>
+	　　　　　　　　ＸＸＸＸ　　　<br>
+<br>
+	マクロ名　　条件　　　アクション<br>
+<br>
+	終了　　　　Msgbox(&quot;終わるぞ&quot;,4)=6'Msgbox(&quot;終わるぞ&quot;,vbyesno,&quot;終了確認&quot;)=vbyes<br>
+        	    ...        終了　<br>
+	<br>
+	例えばコンボボックスが更新されたイベント<br>
+	Private sub 組名_Afterupdate()<br>
+	DoCmd.Requery<br>
+	End Sub<br>
+<br>
+　　　　Private sub 組名_Afterupdate()<br>
+	Me.RecordSource=&quot;Q組みで抽出&quot;<br>
+	End Sub　　　　　<br>
+<br>
+	●コントロールの移動<br>
+	DoCmd.GoToControl&quot;個数&quot;<br>
+<br>
+	●コンボボックスの2列目の値の取得    '&quot;&quot;だったり[]だったり直フィールド名だったり・・・理解できない<br>
+	Me![商品名]=Me!商品番号.Column(1)    'フォーム名にスペースが含まれる場合は[]で囲まなくてはならない<br>
+　　　　　　　　　　　　　　　　　　　　　　　らしい。<br>
+					'forms!受注←○、forms![受　注]←○、forms(&quot;受注&quot;)←○、forms(0)←○<br>
+					↑どれでもOK<br>
+					Forms!受注.数量という書き方は、Forms!受注.Controls!数量とコントロールであることを明示的に<br>
+					書く書式を省略した書き方。<br>
+<br>
+	↑この方法だと各行更新するたびに商品名がみな同じに書き換わってしまう<br>
+<br>
+	●自動採番<br>
+	サブフォームの挿入前処理に<br>
+	Me![行番号]=Dmax(&quot;行番号&quot;,&quot;T_取次店&quot;)+1<br>
+	↑これだと、行番号の最大値に１足してしまうので、<br>
+	少なくとも、同じ為替番号のなかで最大値に１を足す、にしないとダメ<br>
+<br>
+	Me![行番号]=Dmax(&quot;行番号&quot;,&quot;T_取次店&quot;,&quot;為替番号=&quot; &amp; Forms!ゆう取り管理![為替番号]) + 1<br>
+	<br>
+	この処理をするときカーソルはサブフォームにあるのでゆう取り管理フォームにたいしてMeは<br>
+	使えない。<br>
+<br>
+	↑これだと、為替番号が初めて使われる場合にゆう取り管理フォームの中に該当為替番号が<br>
+	ないとDmaxは何も返さない。<br>
+	<br>
+	Private Sub Form_BeforeInsert(Cancel As Integer)<br>
+	If Dcount(&quot;行番号&quot;,&quot;T_取次店&quot;,&quot;為替番号=&quot; &amp; Forms!ゆう取り管理![為替番号] )=0 Then<br>
+	Me![行番号]=1<br>
+	Else<br>
+	Me![行番号]=Dmax(&quot;行番号&quot;,&quot;T_取次店&quot;,&quot;為替番号=&quot; &amp; Forms!ゆう取り管理![為替番号])+1<br>
+	End If<br>
+	End Sub<br>
+	　<br>
+	●コントロールの移動<br>
+	Private Sub コマンド8 Click()<br>
+	If IsNull(Me![社員番号]) Then'_____もし社員番号が入力されていなかったら<br>
+	MsgBox &quot;ちゃんと入力してやー&quot;'____メッセージを出しちゃおう。<br>
+	DoComd.GoToControl &quot;社員番号&quot;'___社員番号のとこにカーソルを移動<br>
+	Exit Sub<br>
+	End If<br>
+	DoCmd.GoToRecord, , acNewRec'新規レコードに移動<br>
+	Me![伝票番号] = DMax(&quot;伝票番号&quot;,&quot;売上明細&quot;)+1<br>
+	DoCmd.GoToControl&quot;売上日&quot;<br>
+	End Sub<br>
+	<br>
+	●コントロールの移動(サブフォームへのコントロールへの移動）<br>
+	Private Sub テキスト138_AfterUpdate()<br>
+	Me![埋め込み閲覧修正].Form![テキスト20].SetFocus<br>
+	Me![埋め込み閲覧修正].SetFocus<br>
+	End Sub<br>
+	'なんでこれで上手くいくのが不思議・・・<br>
+	フォーカスは1つしかないので目的のコントロールにフォーカスを移し、<br>
+	さらにサブフォーム自体にフォーカスを移してやらないと実際には移動できないという<br>
+	理屈らしい。<br>
+<br>
+	次の例は、[受注] フォームに含まれる [受注サブフォーム] コントロールの [数量] コントロールを参照する 2 とおりの方法です。<br>
+<br>
+	　●構文：Forms!formname.subformcontrolname.Form.Controls!controlname<br>
+	　　<br>
+		　Forms!受注.受注サブフォーム.Form.Controls!数量<br>
+	<br>
+	　●構文：Forms!formname.subformcontrolname!controlname<br>
+	<br>
+		　Forms!受注.受注サブフォーム!数量<br>
+	<br>
+<br>
+	●用語　マスター：繰り返しデータのない元になるテーブル<br>
+		トランザクション：マスターを元につくられたデータの溜まり場<br>
+	<br>
+	●format関数　format(date(),&quot;yyyy/mm&quot;)←Between and の代わりにもつかえる<br>
+		      format([シリアル値のフィールド],&quot;ge\年m\月&quot;)<br>
+<br>
+	●=Dlookup(&quot;名前&quot;,&quot;社員テーブルだわん&quot;,&quot;社員番号='&quot;&amp;[forms]![照会]![社員番号]&amp;&quot;'&quot;)<br>
+	↑社員番号がテキスト型の場合<br>
+	=Dlookup(&quot;名前&quot;,&quot;社員テーブル&quot;,&quot;社員番号=&quot; &amp;[forms]![紹介]![社員番号])<br>
+	↑社員番号が数値型の場合<br>
+<br>
+	●Private Sub コマンド9 Click()<br>
+	If IsNull(Me![社員番号])Then<br>
+	Me.Undo<br>
+	End If<br>
+	DoCmd.Close<br>
+	End Sub<br>
+	●表示形式に0と入れておくと指数表示をしなくなる。<br>
+<br>
+	●クエリのデザインビューでフィールド数が多い場合は＊と条件のフィールドのみ<br>
+	選択すると効率が良い。<br>
+<br>
+	●SQLサンプル<br>
+	Select * From 社員テーブル Where グループ=&quot;ぶち&quot;;<br>
+<br>
+	Select * From 社員テーブル Order by 売上 Desc;(降順)<br>
+	<br>
+	Select 名前,出身,生年月日 From 社員テーブル Order by 生年月日;(昇順)<br>
+<br>
+	Select 名前,出身,生年月日 From 社員テーブル Where 出身=&quot;大阪&quot; Order by 生年月日;<br>
+	<br>
+	Select 名前,出身,生年月日,売上 From 社員テーブル Where 売上&gt;5000000 Order by 売上 Desc;<br>
+<br>
+	Select 名前,出身,生年月日,売上 From 社員テーブル Where 生年月日&gt;=#1999/1/20#;<br>
+	<br>
+	文字列型の&quot;&quot;や日付時刻型の##をリテラルと呼ぶ<br>
+<br>
+	Select 名前,出身,生年月日,売上 from 社員テーブル Where Btween #1900/1/1# and #2000/12/31#; <br>
+<br>
+	Select 名前,出身,生年月日,売上 from 社員テーブル Where 出身=&quot;東京&quot; or &quot;埼玉&quot;;<br>
+<br>
+	Select 名前,出身,生年月日,売上 from 社員テーブル Where 出身 In (&quot;東京&quot;,&quot;埼玉&quot;);←Orと同じ<br>
+<br>
+	Select 名前,出身,生年月日,売上 from 社員テーブル Where 出身=&quot;東京&quot; and 売上&gt;500000;<br>
+<br>
+	and　を使用できる数は99まで。100の条件まで連結できると言う事。<br>
+<br>
+	Select 名前,出身,生年月日,売上 from 社員テーブル Where 出身=&quot;東京&quot; 売上&gt;=50000;<br>
+<br>
+	Select 名前,出身,生年月日,売上 from 社員テーブル Where 出身=&quot;東京&quot; Or 出身=&quot;埼玉&quot; And 売上&gt;=500000<br>
+<br>
+	Select 名前,出身,生年月日,売上 from 社員テーブル Where Like &quot;エ*&quot;;<br>
+<br>
+	Select 名前,出身,生年月日,売上 from 社員テーブル Where Like &quot;*エ*&quot;<br>
+<br>
+	Select 名前,出身,生年月日,売上,[売上]*1.5 As 式1 from 社員テーブル;<br>
+<br>
+	Select 名前,出身,グループ from 社員テーブル Where グループ &lt;&gt; &quot;ぶち&quot;;<br>
+<br>
+	Select 名前,出身,グループ from 社員テーブル Where 出身 &lt;&gt;&quot;大阪&quot; and 出身&lt;&gt;&quot;東京&quot;;<br>
+<br>
+	Select 名前,出身,グループ from 社員テーブル Where 出身 Not in(&quot;大阪&quot;,&quot;東京&quot;);<br>
+<br>
+	Select 名前,出身,グループ from 社員テーブル Where 出身 Is Null;<br>
+<br>
+	Select Top 5 名前,出身,売上 From 社員テーブル Order by 売上 Desc;<br>
+<br>
+	Select グループ,Sum(売上) As 売上の合計 From 社員テーブル Group by グループ;<br>
+<br>
+	Select グループ,Avg(売上) As 売上の平均　From 社員テーブル Group BY グループ;<br>
+<br>
+	Select グループ,count(番号) As 番号ののカウント From 社員テーブル Group By グループ;<br>
+<br>
+	Select 出身,Sum(売上) As 売上の合計 From 社員テーブル Group BY 出身 Having Sum(売上)&gt;=1000000000;<br>
+<br>
+	Select Distinct 出身 From 社員テーブル;←固有の値はこれ<br>
+<br>
+	Select 番号,名前,出身,生年月日 form 社員テーブル と、<br>
+	Select 番号,名前,出身,生年月日 form 社員アルバイトテーブルの両方から<br>
+	ダブらせずに一覧のテーブルを作るUNION<br>
+<br>
+	○メニューバー→クエリ→SQL→UNION（クエリのデザインビューでは作れないクエリ。SQLクエリと言うらしい。<br>
+	Select 番号,名前,出身,生年月日 form 社員テーブル UNION Select 番号,名前,出身,生年月日 form 社員アルバイトテーブル Order by 1;<br>
+<br>
+<br>
+	●関数<br>
+	Datediff(単位,開始日,終了日) <br>
+	<br>
+	Datediff(&quot;d&quot;,[生年月日],date())<br>
+<br>
+	Iif(条件,真,偽)<br>
+<br>
+	Iif([売上]&gt;=1000000,&quot;合格&quot;)<br>
+<br>
+	年齢:Iif(format([生年月日],&quot;mmdd&quot;)&gt;format(date(),&quot;mmdd&quot;),datediff(&quot;yyyy&quot;,[生年月日],date())-1,datediff(&quot;yyyy&quot;,[生年月日],date())) &amp; &quot;歳&quot;<br>
+<br>
+	format([売上]/1000,&quot;0.00&quot;) &amp; 千円　<br>
+<br>
+	Datepart(&quot;yyyy&quot;,[生年月日])<br>
+<br>
+	nz([売上])+nz([去年の売上])　Null値を0として計算<br>
+	 <br>
+	●モジュール（VBAでユーザー定義関数を作る作業場）<br>
+<br>
+	Public Function kingaku(uriage As Double) As String	<br>
+　　　　　　　　　　　　　↑<br>
+　　　　　　　　　　　　関数名　↑<br>
+　　　　　　　　　　　　　　　　フィールド名<br>
+　　　　　　　　　　　　　　　　　　　　　　↑　　　　　↑<br>
+	　　　　　　　　　　　　　　　　　フィールドのデータ型<br>
+　　　　　　　　　　　　　　　　　　　　　　　　　　　　↑<br>
+　　　　　　　　　　　　　　　　　　　　　　　　　　　　関数の返す結果のデータ型			<br>
+	<br>
+	<br>
+	●順位をつけるには<br>
+		○クエリで同じテーブルを2つ用意（結合線は無い状態で）<br>
+		○比較するフィールドを同じテーブルから2回選択し、<br>
+		片方の抽出条件に２つめのテーブルの同じフィールドよりも<br>
+		小さいという条件を入れる。<br>
+		（もとのテーブルの数値のひとつと、もう1つのテーブルの<br>
+		全ての数値を比較して、もう1つのテーブルのデータより小さい(もう1つのテーブルの各数値のほうが大きい数値のカウント）<br>
+		もとのテーブルの数値のカウントを順位とする。<br>
+		１位の値はもう1つのテーブルのすべてと比べてより小さい値のカウントは<br>
+		0個になり抽出されないので、カウントする主キーフィールドを<br>
+		もう1つのテーブルからOR条件で抽出する。もう1つのテーブルの全ての各データよりも<br>
+		小さい値が1つだけ選ばれるのは2位の値。もう1つのテーブルに2位の値の方が小さい値が<br>
+		1つあるという理屈。この1つと、もう1つのテーブルのなかから自分のIDを抽出した数を<br>
+		足してカウントすると2位になる。<br>
+		（自分の値以下の値を抽出すると、同列2位が存在したばあい、自分の値以下の数値が3つ存在する事になるので、<br>
+		2位という値をつけられない。2位が欠番になって3位が2つ出来る事になってしまう。<br>
+													<br>
+	●NOW()をDATE()で抽出するにはINT(NOW())にする<br>
+<br>
+<br>
+	●同じテキストを入力しようとしたら確認させる<br>
+<br>
+	<br>
+Private Sub 商品名_AfterUpdate()<br>
+Dim Hinmei As String<br>
+Dim Hinban As String<br>
+Dim Tourokubi As Date<br>
+<br>
+If IsNull(DLookup(&quot;商品名&quot;, &quot;商品マスター&quot;, &quot;商品名='&quot; &amp; Me!商品名 &amp; &quot;'&quot;)) Then<br>
+    If DCount(&quot;商品番号&quot;, &quot;商品マスター&quot;) = 0 Then<br>
+        Me!商品番号 = &quot;0001&quot;<br>
+    Else<br>
+        Me!商品番号 = Format(DMax(&quot;商品番号&quot;, &quot;商品マスター&quot;) + 1, &quot;0000&quot;)<br>
+    End If<br>
+Else<br>
+    Hinmei = DLookup(&quot;商品名&quot;, &quot;商品マスター&quot;, &quot;商品名='&quot; &amp; Me!商品名 &amp; &quot;'&quot;)<br>
+    Hinban = DLookup(&quot;商品番号&quot;, &quot;商品マスター&quot;, &quot;商品名='&quot; &amp; Me!商品名 &amp; &quot;'&quot;)<br>
+    Tourokubi = DLookup(&quot;登録日&quot;, &quot;商品マスター&quot;, &quot;商品名='&quot; &amp; Me!商品名 &amp; &quot;'&quot;)<br>
+    <br>
+    If MsgBox(Me!商品名 &amp; &quot;は登録済みみたいだけど、続ける？&quot; &amp; Chr(13) &amp; Chr(10) &amp; Chr(13) &amp; Chr(10) &amp; Hinban &amp; &quot; &quot; &amp; Hinmei &amp; &quot; &quot; &amp; Tourokubi &amp; &quot;に登録済み&quot;, vbYesNo + vbDefaultButton2) = vbYes Then<br>
+        Me!商品番号 = Format(DMax(&quot;商品番号&quot;, &quot;商品マスター&quot;) + 1, &quot;0000&quot;)<br>
+    Else<br>
+        Me.Undo<br>
+        DoCmd.GoToControl &quot;商品名&quot;<br>
+        Exit Sub<br>
+    End If<br>
+End If<br>
+<br>
+Me!埋め込み15.Form!商品番号 = Me!商品番号<br>
+Me!埋め込み15.Form!変更日 = Date<br>
+End Sub<br>
+<br>
+<br>
+<br>
+	●新しい値段を使用させる<br>
+Private Sub 商品番号_AfterUpdate()<br>
+Me!テキスト8 = DLookup(&quot;値段&quot;, &quot;値段変動テーブル&quot;, &quot;商品番号='&quot; &amp; Me!商品番号 &amp; &quot;' and 変更日 = #&quot; &amp; DMax(&quot;変更日&quot;, &quot;値段変動テーブル&quot;, &quot;商品番号='&quot; &amp; Me!商品番号 &amp; &quot;'&quot;) &amp; &quot;#&quot;) '&quot;変更日=#&quot; &amp; DMax(&quot;変更日&quot;, &quot;値段変動テーブル&quot;, &quot;商品番号='&quot; &amp; Me!商品番号 &amp; &quot;'&quot;) &amp; &quot;#&quot;)<br>
+Me!テキスト10 = DLookup(&quot;変更日&quot;, &quot;値段変動テーブル&quot;, &quot;商品番号='&quot; &amp; Me!商品番号 &amp; &quot;' and 変更日 = #&quot; &amp; DMax(&quot;変更日&quot;, &quot;値段変動テーブル&quot;, &quot;商品番号='&quot; &amp; Me!商品番号 &amp; &quot;'&quot;) &amp; &quot;#&quot;) '&quot;変更日=#&quot; &amp; DMax(&quot;変更日&quot;, &quot;値段変動テーブル&quot;, &quot;商品番号='&quot; &amp; Me!商品番号 &amp; &quot;'&quot;) &amp; &quot;#&quot;)<br>
+DoCmd.GoToControl &quot;値段&quot;<br>
+End Sub <br>
+<br>
+	追加クエリを使ったり、VBAでデータベースに接続してレコードセットにAddnew<br>
+<br>
+<br>
+	●「商品番号コンボボックス」の「更新後処理」イベントで、単価をコンボボックスの2列目から拾うのではなく、DlookupやDmax関数を駆使した方法に書き換えます↓。<br>
+<br>
+Private Sub 商品名_AfterUpdate()<br>
+Me!テキスト18 = DLookup(&quot;値段&quot;, &quot;値段変動テーブル&quot;, &quot;商品番号='&quot; &amp; Me!商品番号 &amp; &quot;' and 変更日 = #&quot; &amp; DMax(&quot;変更日&quot;, &quot;値段変動テーブル&quot;, &quot;商品番号='&quot; &amp; Me!商品番号 &amp; &quot;'&quot;) &amp; &quot;#&quot;) '&quot;変更日=#&quot; &amp; DMax(&quot;変更日&quot;, &quot;値段変動テーブル&quot;, &quot;商品番号='&quot; &amp; Me!商品番号 &amp; &quot;'&quot;) &amp; &quot;#&quot;)<br>
+DoCmd.GoToControl &quot;数量&quot;<br>
+End Sub <br>
+<br>
+	●数値型にして桁の減ってしまったフィールドはformat関数で揃える<br>
+		format([フィールド],&quot;000000&quot;)<br>
+<br>
+	●DoCmd OpenReport &quot;レポート名&quot;<br>
+<br>
+	大変ショックな事：フィールドサイズを小さくしたところでファイルサイズが小さくなるわけではない<br>
+	テーブル設計の一貫としては意味があるらしい<br>
+<br>
+	次のレコード<br>
+	on error resume next<br>
+	docmd.gotorecord,,acnext<br>
+	次のレコードが常にあるとは限らない<br>
+<br>
+<br>
+	●必ずしも、サブフォームにしているフォームの名前ってわけじゃないんですよ。<br>
+	「百人一首フォームという名前のフォームの中の埋め込み2という名前のコントロール」ということになります。<br>
+	で、さらに、この　埋め込み2　は、サブフォームを表示するためのコントロールであり、その中に［番号］というテキストボックスがあるわ、ということで、<br>
+<br>
+　　　　Forms!百人一首フォーム!埋め込み2.Form!番号<br>
+<br>
+	と書かなければなりません。<br>
+<br>
+<br>
+<br>
+	●If Me!番号 = Forms!百人一首フォーム!埋め込み2.Form!番号 Then<br>
+		MsgBox &quot;正解！&quot;<br>
+	Else<br>
+		MsgBox &quot;違う！&quot;<br>
+		me!チェック4=false←チェックボックスのチェックが消える<br>
+	End If<br>
+<br>
+	Me!テキストボックス名.ForeColor = 255<br>
+	●Meで良いと言う事はパブリックでない場合ということ。<br>
+	パブリックだったらフォーム名から書く<br>
+<br>
+	Me.OrderBy=&quot;[フィールド名] DESC&quot;'フィールド名は[]で囲わないとダメみたい。descは小文字じゃ動かなかった・・・<br>
+	Me.OderByOn=True<br>
+<br>
+<br>
+	debug　なんたら　とコードに書くと、イミディエイト<br>
+	<br>
+	●debug print　の使用例<br>
+	public sub kome()<br>
+	dim i as integer<br>
+	dim t_kome as long<br>
+	dim all_kome as long<br>
+<br>
+	t_kome=1<br>
+	all_kome=t_kome<br>
+<br>
+	debug.print &quot;日数&quot;,&quot;今日の分&quot;,&quot;トータル&quot;<br>
+	<br>
+	for i= 1 to 30<br>
+	debug.print i, t_kome, all_kome<br>
+	t_kome=t_kome+t_kome<br>
+	all_kome=all_kome+t_kome<br>
+	next i<br>
+	<br>
+	end sub<br>
+<br>
+	●ページフッターにsumの表示<br>
+	option compare database<br>
+	dim goukei as variant<br>
+________________________________________________<br>
+↑モヂュールのヘッダーで宣言。ページが切り替わるたびに宣言されないように<br>
+<br>
+で、private sub 詳細_print(cancel as integer,printcount as integer)<br>
+	goukei=goukei+me!goukei<br>
+	end sub<br>
+<br>
+詳細がプリントされる度に合計していき、<br>
+<br>
+ページフッターが印刷されるイベントに<br>
+テキストボックス1=goukei<br>
+goukei=0<br>
+と書いておく<br>
+<br>
+	●一行おきシマシマレポート<br>
+	option compare database<br>
+	dim cnt as integer<br>
+____________________________________________________<br>
+privatesub repoort_open<br>
+cnt=0<br>
+end sub<br>
+______________________________________________<br>
+private sub 詳細_print(cancel as integer)<br>
+cnt=cnt+1<br>
+<br>
+if cnt mod 2=1 then<br>
+	me.selection(0).backcolor=12341234<br>
+else<br>
+	me.selection.backcolor=14316546<br>
+end if<br>
+end sub</p>
+</body>
+</html>

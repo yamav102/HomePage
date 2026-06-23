@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="shift_jis"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:include schemaLocation="bookSub.xsd" />
+  
+  <xsd:element name="books">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="owner" type="ownerType" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="book"  type="bookType" minOccurs="0" maxOccurs="unbounded" />        
+      </xsd:sequence>
+      <xsd:attribute name="title" type="xsd:string" use="required" />
+    </xsd:complexType>
+  </xsd:element>
+  
+  <xsd:simpleType name="authorType">
+    <xsd:list itemType="xsd:string" />
+  </xsd:simpleType>
+
+  <xsd:attributeGroup name="bookAttr">
+    <xsd:attribute name="isbn" use="required">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="ISBN[0-9]{1}-[0-9]{4}-[0-9]{4}-[0-9]{1}" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+  </xsd:attributeGroup>
+  
+  
+  <xsd:complexType name="bookType">
+    <xsd:sequence>
+      
+      <xsd:choice>
+        <xsd:element name="name" type="xsd:string" />
+        <xsd:element name="title" type="xsd:string" />
+      </xsd:choice>
+
+     <xsd:element name="author">
+       <xsd:simpleType>
+         <xsd:restriction base="authorType">
+           <xsd:maxLength value="3" />
+         </xsd:restriction>
+       </xsd:simpleType>
+    </xsd:element>
+      <xsd:element name="logo" type="xsd:string" />
+
+      <xsd:element name="category">
+        <xsd:simpleType>
+          <xsd:restriction base ="xsd:string">
+            <xsd:enumeration value="ASP" />
+            <xsd:enumeration value="XML" />
+            <xsd:enumeration value="JSP・Servlet" />
+          </xsd:restriction>                           
+        </xsd:simpleType>        
+      </xsd:element>
+
+      <xsd:element name="url" type="xsd:string" minOccurs="0" />
+      <xsd:element name="price">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:positiveInteger">
+            <xsd:maxExclusive value="5000" />
+            <xsd:minExclusive value="1000" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+
+      <xsd:element name="publish">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="20" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+
+      <xsd:element name="pDate" type="xsd:date" />
+        <xsd:element name="memo" type="memoType" />
+    </xsd:sequence>
+    <xsd:attributeGroup ref="bookAttr" />
+
+  </xsd:complexType>
+  <xsd:complexType name="memoType" mixed="true">
+      <xsd:all>
+          <xsd:element name="keyword" type="xsd:string" minOccurs="0" />
+          <xsd:element name="ref" type="refType" minOccurs="0" />
+      </xsd:all>
+  </xsd:complexType>
+    <xsd:complexType name="refType" mixed="true">        
+            <xsd:attribute name="addr" use="required" type="xsd:anyURI" />
+    </xsd:complexType>
+  
+</xsd:schema>

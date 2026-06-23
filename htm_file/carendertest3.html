@@ -1,0 +1,43 @@
+<script type="text/javascript" src="./carender_func.js"></script>
+<script type="text/javascript" src="./carender.js"></script>
+
+<link rel="stylesheet" href="./carender.css" type="text/css">
+
+<script type="text/javascript">
+<!--
+	var y;
+	var m;
+	var d;
+
+	for(y=1972;y<=1973;y++){
+		//‚¤‚é‚¤”N‚Ì”»’è
+		if(f_isuruu(y)){
+			max[2]=29;
+		}else{
+			max[2]=28;
+		}
+		
+		for(m=1;m<13;m++){
+			for(d=1;d<=max[m];d++){
+				var you = getYou(y, m, d);
+				f_isshuku(m *100 + d, y, you, max[m], max[m - 1]); 
+				if(shukuName != ""){
+					document.write(y + "/" + m + "/" + d+":"+ shukuName + "<br>");
+				}
+			}
+		}
+	}
+
+//—j“ú‚ğ•Ô‚·i“ú—j‚ª 0j
+function getYou(y, m, d){
+
+	//Œ‚Ì0`11‚ğ•â³
+	var m2 = m - 1;
+	if(m2 < 0){
+		m2 = 12 + m2;
+	}
+	var dt1 = new Date(y, m2 , d);
+	return dt1.getDay();
+}
+// -->
+</script>

@@ -1,0 +1,333 @@
+<html><head><!--TOOLBAR_EXEMPT-->
+	<meta http-equiv="Content-Type" content="text/html; charset=shift-jis"><title>ファイル、フォルダ、およびドライブを使用した作業 : VBA のより詳しい使い方のヒント</title>
+    	
+<meta name="Description" content="ファイル、フォルダ、およびドライブを使用した作業 : VBA のより詳しい使い方のヒント">
+<meta name="Robots" content="">
+<meta name="Keywords" content="">
+<meta name="MS.LOCALE" content="ja">
+
+</head>
+
+<body>
+<p>Dictionary オブジェクトは、さまざまなデータ型のアイテム、およびそのアイテムを識別する文字列型 (String)
+の値の組み合わせのセットを含むデータ構造です。Dictionary オブジェクトは VBA の Collection
+オブジェクトと似ていますが、Dictionary オブジェクトには Collection
+オブジェクトにない、次のような特定の機能が含まれます。
+</p><ul type="disc">
+	<li>Exists メソッド。このメソッドを使用して、特定のキーおよび対応するアイテムが
+Dictionary オブジェクトに含まれるかどうかを調べます。Exists メソッドを使用すると、Collection
+オブジェクトの検索に比べて、Dictionary オブジェクトの検索がより簡単に、より効率的になります。</li>
+
+	<li>CompareMode
+プロパティ。このプロパティでは Dictionary
+オブジェクトに対するテキスト比較のモードを指定するため、大文字小文字の区別を有効または無効にしてキーを検索できます。既定では、
+BinaryCompare に設定され、Exists メソッドはバイナリ表示で一致するテキストが検索された場合にのみ True
+を返します。Collection オブジェクトからアイテムを取得するキーに対して、テキスト比較のモードを指定することはできません。</li>
+
+	<li>Key プロパティ。このプロパティにより、ディクショナリ内の特定のアイテムに対するキーが返されます。Collection オブジェクト内のアイテムにもキーが含まれます。このキーを使用してそのアイテムを取得できますが、キー自体を取得することはできません。 </li>
+
+	<li>RemoveAll
+メソッド。このメソッドは、Dictionary オブジェクト内のすべてのアイテムを削除します。Collection オブジェクトを
+Nothing に設定すると同時にすべてのアイテムを削除できますが、Collection
+オブジェクトにはこのような機能のメソッドはありません。 </li>
+</ul>
+
+<p>Collection オブジェクトに対して、Dictionary オブジェクトの主な利点は、アイテムの Dictionary
+オブジェクトは検索が簡単であるということです。この利点にもかかわらず、Dictionary オブジェクトを Collection
+オブジェクトの代わりにすべて使用することはできません。Dictionary オブジェクトより Collection
+オブジェクトのほうが役に立つ場合もあります。たとえば、カスタム オブジェクト モデルを作成する場合、Collection
+オブジェクトを使用してカスタム コレクションへの参照を保存することができますが、Dictionary オブジェクトではこの操作は行えません。</p>
+
+<p>Dictionary オブジェクトの詳細については、Microsoft Scripting Technologies の Web サイト (<a href="http://www.microsoft.com/japan/developer/scripting/">http://www.microsoft.com/japan/developer/scripting/</a>) を参照してください。</p>
+
+
+<h2>Microsoft Scripting Runtime オブジェクト ライブラリを使用した作業</h2>
+<p>Microsoft Scripting Runtime オブジェクト ライブラリは、Microsoft Office 2000
+と共にインストールされ、ファイルやディレクトリを使った作業に使用できるオブジェクトを持っています。ファイルやディレクトリにアクセスする場合、オブジェクト
+ライブラリは、上記で説明した VBA 関数よりも容易に使用できます。</p>
+<p>オブジェクト ライブラリを使用する前に、このライブラリへの参照を設定する必要があります。<b>Microsoft Scripting
+Runtime</b> が [プロジェクト] メニューの [参照設定] ダイアログ ボックスに表示されない場合は、Scrrun.dll というファイルを
+C:\Windows\System サブフォルダから検索する必要があります。</p>
+<p>以下の表は、Scripting Runtime ライブラリに含まれるオブジェクトを説明しています。</p>
+<table border="1" cellpadding="5" cols="3" frame="below" rules="rows">
+  <tbody>
+  <tr valign="top">
+    <td width="22%"><b>オブジェクト</b></td>
+    <td width="15%"><b>コレクション</b></td>
+    <td width="63%"><b>説明</b></td></tr>
+  <tr valign="top">
+    <td width="22%">Dictionary</td>
+    <td width="15%">&nbsp;</td>
+    <td width="63%">トップ レベル オブジェクト。VBA Collection オブジェクトと同じものです。</td></tr>
+  <tr valign="top">
+    <td width="22%">Drive</td>
+    <td width="15%">Drives</td>
+    <td width="63%">システム上のドライブまたはドライブのコレクションのことです。</td></tr>
+  <tr valign="top">
+    <td width="22%">File</td>
+    <td width="15%">Files</td>
+    <td width="63%">ファイル システム内のファイルまたはファイルのコレクションのことです。</td></tr>
+  <tr valign="top">
+    <td width="22%">FileSystemObject</td>
+    <td width="15%">&nbsp;</td>
+    <td width="63%">トップ レベル オブジェクト。ファイル
+  システム内のドライブ、フォルダ、およびファイルへのアクセスに使用します。</td></tr>
+  <tr valign="top">
+    <td width="22%">Folder</td>
+    <td width="15%">Folders</td>
+    <td width="63%">ファイル システム内のフォルダまたはフォルダのコレクションのことです。</td></tr>
+  <tr valign="top">
+    <td width="22%">TextStream</td>
+    <td width="15%">&nbsp;</td>
+    <td width="63%">テキスト
+  ファイルとの間で、読み取り、書き込み、または追加を行うテキストのストリームのことです。</td></tr></tbody></table><br>
+<p>Scripting Runtime オブジェクト ライブラリのトップ レベル オブジェクトは、<b>Dictionary</b> オブジェクトと
+<b>FileSystemObject</b> オブジェクトです。<b>Dictionary
+</b>オブジェクトを使用するには、<b>Dictionary</b> 型のオブジェクト変数を作成します。その後、<b>Dictionary
+</b>オブジェクトの新規インスタンスを設定します。</p><pre class="clsCode"><code>Dim dctDict As Scripting.Dictionary
+
+Set dctDict = New Scripting.Dictionary
+</code></pre>
+<p>コードでその他の Scripting Runtime ライブラリ オブジェクトを使用するには、以下のコード例で示すように、最初に
+<b>FileSystemObject</b> 型の変数を作成し、<b>New</b> キーワードを使用して、<b>FileSystemObject</b>
+の新規インスタンスを作成します。</p><pre class="clsCode"><code>Dim fsoSysObj As Scripting.FileSystemObject
+
+Set fsoSysObj = New Scripting.FileSystemObject
+</code></pre>
+<p>その後、<b>FileSystemObject</b>
+を参照する変数を使用して、<b>Drive</b>、<b>Folder</b>、<b>File</b>、および <b>TextStream</b>
+オブジェクトを使った作業が可能になります。</p>
+<h4>FileSystemObject を使用してファイルやフォルダで作業する方法</h4>
+<p><b>FileSystemObject</b> の新規インスタンス作成後に、これを使用してファイル
+システム内のドライブ、フォルダ、およびファイルを使って作業できます。</p>
+<p>以下のプロシージャは、<b>Dictionary</b> オブジェクトに特定のフォルダ内のファイルを返します。GetFiles プロシージャには 3
+つの引数があります。最初の引数はディレクトリへのパス、2 番目の引数は <b>Dictionary</b> オブジェクトです。3 番目の引数は省略可能な
+<b>Boolean</b> 型の引数で、このプロシージャが再帰的に呼び出されるかどうかを指定します。プロシージャは、プロシージャが正常終了したかどうかを示す
+<b>Boolean</b> 値を返します。</p>
+<p>プロシージャは、最初に <b>Folder</b> オブジェクトを返す <b>GetFolder</b> メソッドを使用します。その後、そのフォルダの
+<b>Files</b> コレクション全体をループして各ファイルのパスとファイル名を <b>Dictionary</b>
+オブジェクトに追加します。<b><i>blnRecursive</i></b> 引数が <b>True</b> に設定されている場合は、GetFiles
+プロシージャは各サブフォルダ内のファイルを返すために再帰的に呼び出されます。</p><pre class="clsCode"><code>Function GetFiles(strPath As String, _
+                dctDict As Scripting.Dictionary, _
+                Optional blnRecursive As Boolean) As Boolean
+
+   ' このプロシージャは、ディレクトリ内のすべてのファイルを
+   ' Dictionary オブジェクトに返します。再帰的に呼び出
+   ' される場合は、サブフォルダ内のファイルもすべて返します。
+
+   Dim fsoSysObj      As Scripting.FileSystemObject
+   Dim fdrFolder      As Scripting.Folder
+   Dim fdrSubFolder   As Scripting.Folder
+   Dim filFile        As Scripting.File
+
+   ' 新しい FileSystemObject を返します。
+   Set fsoSysObj = New Scripting.FileSystemObject
+
+   On Error Resume Next
+   ' フォルダを取得します。
+   Set fdrFolder = fsoSysObj.GetFolder(strPath)
+   If Err &lt;&gt; 0 Then
+      ' パスが間違っています。
+      GetFiles = False
+      GoTo GetFiles_End
+   End If
+   On Error GoTo 0
+
+   ' Files コレクションをループし、Dictionary に追加します。
+   For Each filFile In fdrFolder.Files
+      dctDict.Add filFile.path, filFile.path
+   Next filFile
+
+   ' 再帰フラグが真の場合、再帰的に呼び出します。
+   If blnRecursive Then
+      For Each fdrSubFolder In fdrFolder.SubFolders
+         GetFiles fdrSubFolder.path, dctDict, True
+      Next fdrSubFolder
+   End If
+
+   ' エラーが発生しなかった場合は、True を返します。
+   GetFiles = True
+
+GetFiles_End:
+   Exit Function
+End Function
+
+</code></pre>
+<p>以下のプロシージャを使用して、GetFiles プロシージャをテストできます。このプロシージャは、新規 <b>Dictionary</b>
+オブジェクトを作成し、作成したオブジェクトを GetFiles プロシージャに渡します。その後、strDirPath
+ディレクトリとそのサブディレクトリ内のすべてのファイルをイミディエイト ウィンドウに出力します。</p><pre class="clsCode"><code>Sub TestGetFiles()
+   ' GetFiles 関数をテストするために呼び出します。
+
+   Dim dctDict As Scripting.Dictionary
+   Dim varItem As Variant
+   Dim strDirPath As String
+
+   strDirPath = "c:\my documents\"
+   ' 新規 Dictionary を作成します。
+   Set dctDict = New Scripting.Dictionary
+   ' 再帰的に呼び出し、Dictionary オブジェクトにファイルを返します。
+   If GetFiles(strDirPath, dctDict, True) Then
+      ' Dictionary 内の項目を出力します。
+      For Each varItem In dctDict
+         Debug.Print varItem
+      Next
+   End If
+End Sub
+</code></pre>
+<p><b><i>strDirPath</i></b>
+引数に別の値を指定して、このプロシージャが別のディレクトリを使用してどのように機能するかを調べることができます。</p>
+<h4>FileSystemObject を使用し、ファイル属性を用いて作業する方法</h4>
+<p>以下の例で示すように、<b>File</b> オブジェクトと <b>Folder</b> オブジェクトは、ファイルやフォルダの属性を設定または取得できる
+<b>Attributes</b> プロパティを提供します。</p>
+<p>ChangeFileAttributes プロシージャには 4 つの引数があります。最初の引数はフォルダへのパスです。2
+番目の引数は省略可能で、設定する属性を指定する定数です。3 番目の引数も省略可能で、削除する属性を指定する定数です。4
+番目の引数も省略可能で、プロシージャが再帰的に呼び出されるかどうかを指定します。</p>
+<p>渡されたフォルダへのパスが有効な場合、プロシージャは <b>Folder</b> オブジェクトを返します。次に
+<b><i>lngSetAttr</i></b>
+引数が指定されているかどうかを調べます。指定されている場合は、プロシージャはフォルダ内のすべてのファイルをループして、新しい属性を既存の属性に追加します。続いて、<b><i>lngRemoveAttr</i></b>
+引数に対しても同様の処理を行います。ただし、この場合はコレクション内にファイルが存在するときに指定した属性を削除します。</p>
+<p>最後に、プロシージャは <b><i>blnRecursive</i></b> 引数が <b>True</b>
+に設定されているかどうかを調べます。設定されている場合は、<i><b>strPath</b></i>
+引数の各サブフォルダ内のファイルごとにプロシージャを呼び出します。</p><pre class="clsCode"><code>Function ChangeFileAttributes(strPath As String, _
+                            Optional lngSetAttr As FileAttribute, _
+                            Optional lngRemoveAttr As FileAttribute, _
+                            Optional blnRecursive As Boolean) As Boolean
+
+   ' この関数は、ディレクトリ パス、設定するファイル属性を示す値、
+   ' 削除するファイル属性を示す値、および再帰的に呼び出される
+   ' かどうかを示すフラグを引数として受け取ります。
+   ' エラーが発生しなかった場合は True を返します。
+
+   Dim fsoSysObj      As Scripting.FileSystemObject
+   Dim fdrFolder      As Scripting.Folder
+   Dim fdrSubFolder   As Scripting.Folder
+   Dim filFile        As Scripting.File
+
+   ' 新規 FileSystemObject を返します。
+   Set fsoSysObj = New Scripting.FileSystemObject
+
+   On Error Resume Next
+   ' フォルダを取得します。
+   Set fdrFolder = fsoSysObj.GetFolder(strPath)
+   If Err &lt;&gt; 0 Then
+      ' パスが間違っています。
+      ChangeFileAttributes = False
+      GoTo ChangeFileAttributes_End
+   End If
+   On Error GoTo 0
+
+   ' 呼び出し側が設定する属性を渡した場合は、すべてに対して設定します。
+   If lngSetAttr Then
+      For Each filFile In fdrFolder.Files
+         If Not (filFile.Attributes And lngSetAttr) Then
+            filFile.Attributes = filFile.Attributes Or lngSetAttr
+         End If
+      Next
+   End If
+
+   ' 呼び出し側が削除する属性を渡した場合は、すべてに対して削除します。
+   If lngRemoveAttr Then
+      For Each filFile In fdrFolder.Files
+         If (filFile.Attributes And lngRemoveAttr) Then
+            filFile.Attributes = filFile.Attributes - lngRemoveAttr
+         End If
+      Next
+   End If
+
+   ' 呼び出し側が blnRecursive 引数に True を設定した場合は、
+   ' 関数を再帰的に呼び出します。
+   If blnRecursive Then
+      ' サブフォルダをループします。
+      For Each fdrSubFolder In fdrFolder.SubFolders
+         ' サブフォルダのパスを指定して関数を呼び出します。
+         ChangeFileAttributes fdrSubFolder.path, lngSetAttr, _
+            lngRemoveAttr, True
+      Next
+   End If
+   ChangeFileAttributes = True
+
+ChangeFileAttributes_End:
+   Exit Function
+End Function
+</code></pre>
+<p>以下のプロシージャを使用して、ChangeFileAttributes プロシージャをテストできます。この例では、My Documents
+フォルダのすべてのファイルの隠しファイル属性を可視に設定します。</p><pre class="clsCode"><code>Sub TestChangeAttributes()
+    If ChangeFileAttributes("c:\my documents", , _
+        Hidden, False) = True Then
+        MsgBox "File attributes succesfully changed!"
+    End If
+End Sub
+</code></pre>
+<p>ChangefileAttributes の引数に別の値を指定して、プロシージャがどのように機能するかを調べることができます。</p>
+<h4>FileSearch オブジェクトを使用した作業</h4>
+<p><b>FileSearch</b> オブジェクトは、Microsoft Office 9.0 Object Library
+のメンバです。このライブラリは、Office の [ファイルを開く] ダイアログ ボックスのすべての機能に対するプログラム
+インターフェイスを公開します。公開されるインターフェイスには、[ファイルを開く] ダイアログ ボックスから利用できる [高度な検索] ダイアログ
+ボックスが持つ機能も含まれます。<b>FileSearch</b>
+オブジェクトのオブジェクト、メソッド、およびプロパティを使用して、指定した条件に基づいて、ファイルやファイルのコレクションを検索できます。</p>
+<p>以下の例は、<b>FileSearch</b> オブジェクトを使用して、<b><i>strFilespec</i></b>
+引数で指定された種類のファイルを 1
+つ以上検索する方法を示しています。セミコロンで区切られた拡張子のリストを指定することにより、複数のファイル拡張子を検索できるところに注目してください。</p><pre class="clsCode"><code>Function CustomFindFile(strFileSpec As String)
+    ' このプロシージャは、"c:\" ディレクトリ内で strFileSpec
+    ' 引数で指定されるファイル指定に一致するすべてのファ
+    ' イルの名前を持つメッセージ ボックスを表示する簡単な
+    ' ファイル検索ルーチンを示しています。
+    ' strFileSpec 引数は、セミコロンで区切られたリストを使
+    ' 用して、1 つ以上のファイル指定を含むことができます。
+    ' たとえば、strFileSpec 引数に "*.log;*.bat;*.ini" を指
+    ' 定すると、 "c:\" 内でこれらの拡張子を持つファイルが
+    ' すべて返されます。
+
+    Dim fsoFileSearch   As Office.FileSearch
+    Dim varFile         As Variant
+    Dim strFileList     As String
+
+    ' 入力が有効な場合に、ファイル検索を行います。
+    If Len(strFileSpec) &gt;= 3 And InStr(strFileSpec, "*.") &gt; 0 Then
+        Set fsoFileSearch = Application.FileSearch
+        With fsoFileSearch
+            .NewSearch
+            .LookIn = "c:\"
+            .FileName = strFileSpec
+            .SearchSubFolders = False
+            If .Execute() &gt; 0 Then
+                For Each varFile In .FoundFiles
+                    strFileList = strFileList &amp; varFile &amp; vbCrLf
+                Next varFile
+            End If
+        End With
+        MsgBox strFileList
+    Else
+        MsgBox strFileSpec &amp; " is not a valid file specification."
+        Exit Function
+    End If
+End Function
+</code></pre>
+<p><b>FileSearch</b> オブジェクトは 2 つのメソッドといくつかのプロパティを持っています。これらを使用して、独自の Office
+ソリューションに独自のファイル検索機能を構築できます。上記の例では、<b>NewSearch</b>
+メソッドを使用して以前の検索条件を消去し、<b>Execute</b> メソッドを使用して指定したファイルの検索を行います。<b>Execute</b>
+メソッドは、見つかったファイル数を返します。このメソッドは並べ替え順、並べ替えの方法、および検索の実行に保存した Find Fast
+インデックスだけを使用するかどうかなど、省略可能なパラメータもサポートします。検索で見つかったすべての一致するファイルの名前を持つ
+<b>FoundFiles</b> オブジェクトへの参照を返すには、<b>FoundFiles</b> プロパティを使用します。</p>
+<p><b>LookIn</b> プロパティを使用して、検索するディレクトリを指定します。さらに、<b>LookIn</b>
+プロパティで指定したディレクトリのサブディレクトリも検索するかどうかを指定するために <b>SearchSubFolders</b>
+プロパティを使用します。<b>FileName</b>
+プロパティは、ワイルドカード文字や、複数のファイル名またはファイルの種類を指定するセミコロンで区切られたリストもサポートします。</p>
+<h2>その他の詳細情報</h2>
+<p>ここで説明した技法や技術は、使用できるツールとは無関係に、ファイル
+システムを使って作業する場合の多くの考え方を提供しているつもりです。より詳細な情報については、以下のリソースを調べてください。
+</p><ul type="disc">
+  <li>Office ソリューションでの VBA を使用した作業の詳細については、「Visual
+  Basic for Applications を最大限に活用する」 を参照してください。<br><br>
+  </li><li><b>FileSystemObject</b> の使用の詳細については、<a href="http://support.microsoft.com/support/kb/articles/Q186/1/18.ASP">HOWTO:
+  Use FileSystemObject with Visual Basic</a> または「<a href="http://www.microsoft.com/japan/developer/library/vbcon98/vbconFolderFileProcessing.htm">ドライブ、フォルダ、ファイルの処理</a>」を参照してください。
+  <br><br>
+  </li><li><b>FileSearch</b> オブジェクトの高度な検索の詳細については、「詳細な条件付きの検索機能を使用する」を参照してください。<br><br>
+  </li><li>Office ソリューション開発の情報や技術資料については、<a href="http://www.microsoft.com/japan/developer/officedev/">Office Developer
+  Web Forum</a> を定期的に確認するようにしてください。 </li></ul>
+<hr noshade="noshade" size="1">
+
+<p class="clsMagFooter"><b>David Shank</b> は、Office
+チームのプログラマ/ライターであり、主に開発者向け文書を専門としています。うわさによると、彼は Redmond
+東の山頂に住んでおり、今でも北西部に住んでいる数少ない北西部出身者の 1 人であるとのことです。</p>
+ </body></html>

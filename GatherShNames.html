@@ -1,0 +1,79 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+<pre>
+<code>
+'module1
+Option Explicit
+
+Private outArr
+Private mRw As Long
+
+Sub シート名を集める()
+    Dim tgtFldr As Scripting.Folder
+    Dim fso As New Scripting.FileSystemObject
+    Dim stt As Date: stt = Now()
+    
+    Set tgtFldr = fso.GetFolder("D:\yamaDeskTop\ss")
+        
+    Dim f As Scripting.File
+    
+    ReDim outArr(1 To Sheet1.Rows.Count, 1 To 2)
+    
+    outArr(1, 1) = "fileName"
+    outArr(1, 2) = "ShName"
+    Dim wbCnt As Long
+    
+    mRw = 1
+    
+    For Each f In tgtFldr.Files
+        VBA.DoEvents
+        Debug.Print f.Name
+        If f.Name Like "*.xls*" Then
+            wbCnt = wbCnt + 1
+           Call GetWsNames(f)
+        End If
+    Next
+    
+    Sheet1.[a:b].Value = outArr
+    
+    MsgBox _
+        wbCnt & "ブック" & vbNewLine & _
+        mRw - 1 & "シート" & vbNewLine & _
+        "処理時間" & Format(Now() - stt, "hh:mm:ss")
+End Sub
+
+
+'閉じているエクセルブックのシート名を取得
+'エクセルブックのフルパスを引数に渡して実行
+ Private Sub GetWsNames(f As Scripting.File)
+    Const adSchemaTables As Long = 20
+    Dim adoCn As Object 'ADODB.Connection
+    Dim adoRs As Object 'ADODB.Recordset
+    
+    Set adoCn = CreateObject("ADODB.Connection")
+    
+    adoCn.Open ("Provider=Microsoft.ACE.OLEDB.12.0;" & _
+                "Data Source=" & f.Path & ";" & _
+                "Extended Properties=Excel 12.0;")
+                
+    Set adoRs = adoCn.OpenSchema(adSchemaTables)
+    
+    Dim bookName As String
+    bookName = f.Name
+    
+    Do Until adoRs.EOF
+        If adoRs Is Nothing Then Exit Do
+        mRw = mRw + 1
+        'シート名が出力されます
+        outArr(mRw, 1) = bookName
+        outArr(mRw, 2) = adoRs.Fields("TABLE_NAME").Value
+          
+        adoRs.MoveNext
+    Loop
+    
+    adoRs.Close
+    Set adoRs = Nothing
+    adoCn.Close
+    Set adoCn = Nothing
+End Sub
+</code>
+</pre>

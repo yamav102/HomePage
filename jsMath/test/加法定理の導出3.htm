@@ -1,0 +1,69 @@
+﻿
+<script src="../easy/load.js"></script>
+<script src="../jsMath.js"></script>
+
+<h1>TEST中… IEだけが表示崩れるの調整中…　　(ヽ´ω`)</h1>
+<p>
+このページの数式の表示には<a href="http://www.math.union.edu/~dpvc/jsMath/download/jsMath-fonts.html" target="_blank">
+<dfn>TeX</dfn>フォントのインストール</a>が必要です。
+数式の表示に時間がかかる場合があるかも知れません。
+</p>
+<h1>
+加法定理の証明
+</h1>
+
+<div class="iebm2" style="text-align: left; padding-left: 2em;">
+<a href="#sinp" style="text-decoration: none;"><span class="math">
+\sin(\alpha+\beta)=\sin\alpha\cos\beta+\cos\alpha\sin\beta</span>
+</a>
+</div>
+
+<div style="text-align: left; padding-left: 2em;">
+<a href="#sinm" style="text-decoration: none;">
+<span class="math">
+\sin(\alpha-\beta)=\sin\alpha\cos\beta-\cos\alpha\sin\beta</span>
+</a>
+</div>
+
+
+
+<script type="text/javascript">
+
+      if(window.navigator.appName=='Microsoft Internet Explorer'){
+          alert(window.navigator.appName);
+          var bmlist = document.getElementsByClassName('iebm');
+          for(var i = 0; i < bmlist.length; i++){
+            bmlist.item(i).style.marginBottom='2.5em';
+
+          }
+/*
+          var bmlist2 = document.getElementsByClassName('iebm2');
+          for(var i = 0; i < bmlist2.length; i++){
+            bmlist2.item(i).style.marginBottom='-1em';
+*/
+
+          }
+          var tmlist = document.getElementsByClassName('ietm');
+          for(var i = 0; i < tmlist.length; i++){
+            tmlist.item(i).style.marginTop='2.5em';
+
+          }
+          var tplist = document.getElementsByClassName('ietp');
+          for(var i = 0; i < tplist.length; i++){
+            tplist.item(i).style.paddingTop='-20px';
+
+          }
+          var ndlist = document.getElementsByClassName('iend');
+          for(var i = 0; i < ndlist.length; i++){
+            ndlist.item(i).style.textDecoration='none';
+
+          }
+
+          var tmlmlist = document.getElementsByClassName('ietmlm');
+          for(var i = 0; i < tmlmlist.length; i++){
+            tmlmlist.item(i).style.marginTop='2.5em';
+            tmlmlist.item(i).style.marginLeft='7em';
+          }
+      }
+
+</script>

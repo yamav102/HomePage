@@ -1,0 +1,385 @@
+<html lang="Ja">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html401/strict.dtd">
+<meta http-equiv="Content-Type" content="text/html,charset=shift_jis">
+<meta name="description" content="Win32API">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta name="robots" content="noindex,nofollow">
+
+<link rel="stylesheet" type="text/css" href="./vb.css">
+<title>■Win32APIメモ-関数の書き方/使い方-</title>
+
+<body>
+<div class="content">
+
+<h1>■Win32APIメモ-関数の書き方/使い方-</h1>
+<h2>
+APIの宣言の組み立て
+</h2>
+<h3>
+●関数名の指定↓
+</h2>
+<p>
+関数名は、基本的にC言語で宣言されたAPIの関数名と同じものを使います。
+関数の引数・定数・構造体の意味に関しては
+<a href="http://msdn.microsoft.com/en-us/default.aspx">MSDNライブラリ(英語版)</a>で
+検索すると詳細情報に辿り着けます。(2009.6現在)
+</p>
+<pre class="codeProc">
+Declare Function GetWindowsDirectory　...
+</pre>
+<p>
+関数名を自作しても（Alias節が正しければ）動作するが、慣習としてMicrosoftが定めた関数名を使用する。
+</p>
+<p>
+値を返さないAPI関数を宣言するときは、Function ではなく Sub を使用する。
+</p>
+<h3>
+●ライブラリの指定↓
+</h2>
+<p>
+APIのWindowsライブラリ Kernel32.dll, User32.dll, Gdi32.dll の３つに限っては、「Lib "Kernel32"」と拡張子を省略できる。その他のAPI関数を呼び出すときは「Lib "advapi32.dll」のように拡張子を記述する。
+</p>
+<pre class="codeProc">
+Declare Function GetWindowsDirectory Lib "kernel32"　...
+</pre>
+<h3>
+●DLLで公開されている正式な関数名の指定↓
+</h2>
+<pre class="codeProc">
+Delcare Function GetWindowsDirectory Lib "kernel32" _
+    Alias "GetWindowsDirectoryA" _　...
+</pre>
+<p>
+GetWindowDictoryという関数は実際には存在せず、「GebWindowsDirectoryA」
+と「GetWindowDirectoryW」の２つの関数名がDLLの中で公開されている。
+上記の書き方は、Alias節で、このうち「GetWindowsDirectoryA」を指定している。
+</p>
+<p>
+Alias節で使われる関数名は大文字と小文字を区別する。
+Alias "GETWINDOWSDIRECTORYA"と書くとエラーになる。
+</p>
+<h3>
+●引数の指定と、戻り値データ型の指定（完成）
+</h2>
+<pre class="codeProc">
+Declare Function GetWIndowsDirector Lib "kernel32" _
+   Alias "GetWindowsDirectoryA" _
+   (Byval lpBuffer As String, _
+   Byval nSize As Long) As Long
+</pre>
+<p>
+
+API関数は32ビットの値を返し、VBAでは一般的にLong型になる。
+</p>
+<p>
+宣言はモジュールの先頭に記述し、既定でPublicになる。
+標準モジュール以外で宣言した場合、Publicで宣言しても、
+Privateと見なされる。
+</p>
+</pre>
+<blockquote cite="MSDN">
+Windows Data Types
+
+The data types supported by Microsoft Windows are used to define function return values, function and message parameters, and structure members. They define the size and meaning of these elements. For more information about the underlying C/C++ data types, see Data Type Ranges.
+The following table contains the following types: character, integer, Boolean, pointer, and handle. The character, integer, and Boolean types are common to most C compilers. Most of the pointer-type names begin with a prefix of P or LP. Handles refer to a resource that has been loaded into memory.
+For more information about handling 64-bit integers, see Large Integers.</blockquote>
+<p>ポインタである型はLかLPのプリフィックスが殆どの場合付きます。LPはLong-Pointer(to *)なので、以下の表でLPで始まりLong型に対応していない項目は間違っている事が疑われます。<a href="http://msdn.microsoft.com/en-us/library/aa383751.aspx">詳細はMSDN英語版を[msdn windows data types]のキーワードで検索して下さい。</a>
+LPBYTE型などは、BYTE型であるかのように見えてしまいますが、ページの説明の通りBYTE型なのではなく、Pointer to a BYTE.でありポインタ型です。
+ポインタ型はLongで宣言します。しかし、変数の頭がLPであっても<a href="./APIsample6.htm#RegEnumKeyEx">RegEnumKeyEx関数の第3引数のlpName</a>(LPTSTR⇒Stringで宣言)のようにLPで始まるからLongであるわけでは無い。
+どういう理屈なのか理解できない。</p>
+<table border="1">
+<caption>C言語⇒VBAのデータ型対応表</caption>
+<tr>
+<th>C言語</th><th>VBA</th>
+<tr>
+<td>ATOM</td><td>Integer</td>
+</tr>
+<tr>
+<td>BOOL</td><td>Long</td>
+</tr>
+<tr>
+<td>BYTE</td><td>Byte</td>
+</tr>
+<tr>
+<td>CHAR</td><td>Byte</td>
+</tr>
+<tr>
+<td>COLORREF</td><td>Long</td>
+</tr>
+<tr>
+<td>DWORD</td><td>Long</td>
+</tr>
+<tr>
+<td>HWND、HDC、HMENUなどのWindowsのハンドル</td><td>Long</td>
+</tr>
+<tr>
+<td>INT、UINT</td><td>Long</td>
+</tr>
+<tr>
+<td>LONG</td><td>Long</td>
+</tr>
+<tr>
+<td>LPARAM</td><td>Long</td>
+</tr>
+<tr>
+<td>LPBYTE</td><td>Long</td>
+</tr>
+<tr>
+<td>LPDWORD</td><td>Long</td>
+</tr>
+<tr>
+<td>LPINT、LPUIN</td><td>Long</td>
+</tr>
+<tr>
+<td>LPRECT</td><td>ユーザー定義型の任意の変数</td>
+</tr>
+<tr>
+<td>LPSTR、LPCSTR</td><td>String</td>
+</tr>
+<tr>
+<td>LPVOID</td><td>Any</td>
+</tr>
+<tr>
+<td>LPWORD</td><td>Integer</td>
+</tr>
+<tr>
+<td>LRESULT</td><td>Long</td>
+</tr>
+<tr>
+<td>NULL</td><td>AnyもしくはLong</td>
+</tr>
+<tr>
+<td>SHORT</td><td>Integer</td>
+</tr>
+<tr>
+<td>WORD</td><td>Integer</td>
+</tr>
+<tr>
+<td>WPARAM</td><td>Long</td>
+</tr>
+<tr>
+</table>
+
+<h3>
+●完成したコードとAPI関数の利用例
+</h3>
+<pre class="codeProc">
+
+Declare Function GetWindowsDirectory Lib "kernel32" _
+    Alias "GetWindowsDirectoryA" _
+    (ByVal lpBUffer As String, _
+    ByVal nSize As Long) As Long
+
+<span class="REM">    
+'API　GetWindowsDirectoryAはANSI用。
+'GetWindowsDirectoryWはUnicode用なので、
+'Unicodeで動作するVBAではGetWindowsDirectoryWを
+'使うようにも思えるが、VBAがAPIに引数を渡すとき
+'自動でANSIに変換してしまう。そのため
+'GetWindowsDirectoryWを使うことはできず、
+'常にGetWindowsDirectoryAを使用することになる。
+</span>
+
+Public Const MAX_PATH = 260 'パスの最大長
+<span class="REM">
+'260はC言語で定義されている。
+'APIはC言語で書かれている。
+'VBAからAPIに文字列を渡すにはNULL(文字コード:0)で
+'埋めて渡す必要がある。
+</span>
+
+<span class="REM">'summary:Windowsディレクトリのパス名</span>
+Sub GetWindowsDirectory_Sample()
+
+    Dim strBuffer As String * MAX_PATH
+    Dim rc As Long 'rc:リターンコード
+    
+    Dim strPrompt As String
+    
+    <span class="REM">'Windowsディレクトリのパス名を取得</span>
+    rc = GetWindowsDirectory(strBuffer, Len(strBuffer))
+    <span class="REM">
+    'rcには関数の返り値のANSIでの<em>文字列長</em>が代入される。
+    'API関数の返り値はディレクトリのパス名ではなく
+    'パス名の文字列長を返すだけ。API関数実行時に、
+    '260のNULL文字が、
+    'Windowsディレクトリのパス＋260に満たない分の
+    'NULL文字に置き換えられるので、
+    'VBAでは置き換えられた後の<em>API関数の引数</em>からNULL文字を
+    '取り除いた値用いる。
+
+    '取得したデータから必要な文字列だけ抽出
+    </span>strPrompt = Left(strBuffer, InStr(strBuffer, vbNullChar) - 1)
+	<span class="REM">
+    'strPrompt = Left(strBuffer, rc)
+    '↑こう書いても正常に動作するが、
+    'rcはANSIでの文字列長なのでAPIが２バイト文字の<em>引数</em>を
+    '返した場合（妙な表現たが）文字列長が倍になってしまい
+    '（実際には２バイト文字を返すことは無いのだが)、余計な
+    'NULL文字を含む値を取得してしまうことになり、
+    '厳密には間違った書き方となる。
+    </span>	
+    MsgBox "Windowsディレクトリのパス名： " & strPrompt
+End Sub
+</pre>
+<h3>NULLで埋めるということ</h2>
+<pre class="codeProc">
+Public Const MAX_PATH = 260 'パスの最大長
+   Dim strBuffer As String * MAX_PATH
+</pre>
+<p>
+上記のコードは、固定長文字列で宣言する書き方。
+固定長で宣言すると、自動的にデータはNULLで埋まる。
+</p>
+<pre class="codeProc">
+Public Const MAX_PATH = 260 'パスの最大長
+
+    Dim strBuffer As String
+    strBuffer = String(MAX_PATH, vbNull)
+    <span class="REM">'strBuffer = String(MAX_PATH, 0)とも書ける</span>
+
+</pre>
+<p>
+のように、可変長で宣言した場合は、String関数を使って、
+引数をNULLで埋める。
+</p>
+<h2>API関数に文字列引数を渡すという事</h2>
+<p>
+VBAの場合、ByValキーワードで関数に「値渡し」した引数は、影響を受けない。
+VBAユーザーには、上に揚げたAPIサンプルの挙動が
+<em>奇っ怪で飲み込み難い。</em>
+ただし、ByRefキーワードを使用するか省略した場合は引数は
+「参照渡し」となり変化する。これがVBA環境での常識。
+</p>
+<pre class="codeProc">
+Sub AtaiWatashi()
+   Dim i As Long
+   Dim rc As Long
+		
+   i = 1
+   rc = FunctionA(i)
+        
+   MsgBox "rc = " & rc & " ; " & "i = " & i 
+<span class="REM">'ここで関数に渡した引数が変化する事など無い</span>
+End Sub
+
+Function FunctionA(<em>ByVal</em> l As Long) As Long
+	
+    l = 2
+    FunctionA = l
+    
+End Function
+
+</pre>
+<p>
+結論として、C言語に文字列の引数は<em>ByValキーワードを
+使う事によってのみ値を渡せる仕組みになっている。
+(32ビットのメモリアドレス{ポインタと呼ばれる}を渡している)
+そして、渡してしまった
+引数は預け先の関数の影響を受ける事になる。</em>
+異なる言語で変数をやりとりする
+以上VBA環境での常識が通らないという事を受け入れる事が重要。
+(数値を引数として渡す場合はByVal/ByRefの仕様はVBA環境のまま使用できる。)
+</p>
+<h2>Longで宣言するという事</h2>
+<p>
+C言語で書かれたWIN32API関数は符号なし32ビット長整数を
+扱うことができる（unsingned long型）。しかし、VBAには
+対応する型のサポートが無いため、（しかたなく）符号付き32ビット
+長整数型のLongで代用する事になる。しかたなく使っている以上
+ここには落とし穴がある。
+</p>
+<table border="1">
+<caption>
+unsigned long と long範囲の比較
+</caption>
+<tr>
+<th>言語</th><th>データ型</th><th>値の範囲</th>
+</tr>
+<tr>
+<td>C言語</td><td>符号なし長整数</td><td>0～4,294,967,295</td>
+</tr>
+<tr>
+<td>VB</td><td>符号付き長整数</td><td>-2,147,483,648～2,147,483,647</td>
+</tr>
+</table>
+<p>
+落とし穴とは、APIがLongの上限を超えた値を返す時、オーバーフローにはならず、
+Longの最上位ビットに1が立ち、負数を返してくる事である。
+なので、Longに負数が返った場合には、返ってきた負数に2^32を加算し、「正」の
+値に反転させて使わなければならない。8ビットで考えると、<br>
+1,1,1,1,1,1,1,1  は、[符号なし]では255をあらわすが、[符号付き」では、
+最上位ビットが負数を表し、負数の最大値である-1を表す。-1が返ってきたら、
+2^8を加算してやれば、[符号なし]の値である255を取得する事ができる。
+</p>
+<h2>その他引数を渡す時の概要</h2>
+<h3>●引数が構造体の時</h3>
+<p>
+VBAではユーザー定義型を作成して、APIの構造体に値を渡します。
+VBAのユーザー定義型は<em>参照渡し(ByRef)でのみ値を渡せる</em>ように設計されているので、
+ByValキーワードを使用する事はできません。<br>
+<a href="./APIsample.htm#CreateProcess">例）：CreateProcess関数</a>
+</p>
+
+<h3>●引数が配列の時</h3>
+<p>
+Win32APIは基本的に、VBAから配列全体を引き受ける事はできない。
+For...Nextステートメントのようなループで順番に渡す事になる。
+しかし、数値配列に限り配列全体を渡すことができる。
+</p>
+
+<h3>●引数がNULLの時</h3>
+<p>
+引数が文字列の場合は[vbNullString]を使い、
+引数が長整数の場合は[0&]を使用する。<br>
+<a href="./APIsample.htm#FindWindow">例）：FindWindow関数</a>
+</p>
+<h3>●As Any節</h3>
+<p>
+Win32APIには、１つの引数で複数のデータ型を受け取れるものがある。
+引数を「As Any」と宣言すると型の制限をなくします。
+「As Any」を使用すると参照渡しになる。<br>
+<a href="./APIsample.htm#CreateProcess">例）：CreateProcess関数</a>
+</p>
+<blockquote cite="EXCEL2003_Help_Declare ステートメント">
+引数 arglist 内では、標準のデータ型以外に As Any も指定できます。
+Any を指定すると、データ型のチェックを抑止し、任意のデータ型をプロシージャに渡せます。
+</blockquote>
+<h3>●Win32APIの「True」とVBAの「True」</h3>
+<p>
+VBAのTrueは[-1]ですが、C言語のTrueは[1]であり、APIが
+Trueを返した場合、Trueの判定には注意を要する。
+（Falseはともに[0]であり同じように比較できる。)
+</p>
+<pre class="codeProc">
+If (戻り値) = True Then
+</pre>
+<p>と書くと、-1 と 1 を比較するという無意味な作業になり間違いを犯す。</p>
+<pre class="codeProc">
+If (戻り値) <> False then
+</pre>
+<p>と書くと、正しく判定することができる。
+VBAのIF文は、Trueだから評価されるのではなく、Falseで無い場合に評価されるので、
+以下のようにも書ける。
+</p>
+<pre class="codeProc"><span class="REM">'if 1 then msgbox "[1]でも[-1]でも実行される"
+'if -1 then msgbox "[1]でも[-1]でも実行される"</span>
+If (戻り値)  then
+</pre>
+<h2>
+その他のポイント
+</h2>
+<h3>●ビット演算</h3>
+<p><a href="./APIsample4.htm#GetVersionEx">例）：GetVersionEx関数</a></p>
+<h3>●シフト演算</h3>
+<p><a href="./APIsample4.htm#GetDiskFreeSpaceEx">例):GetDiskFreeSpaceEx関数</a></p>
+<h3>●Win32APIのエラー処理</h3>
+<p>VBAのErrオブジェクトのLastDllErrorプロパティで、APIのエラー情報
+を取得できる。<br>
+<a href="./APIsample3.htm#GetFileAttributes">例）：GetFileAttributes関数</a>
+</p>
+<hr>
+<div><a href="./index.htm">&gt;INDEX</a></div>
+</div>
+</body>
+</html>

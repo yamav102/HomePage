@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="shift-jis" ?>
+<?xml-stylesheet type="text/xsl" href="address.xsl" ?>
+<addressBook>
+	<member id="0003">
+		<name>金子貴郎</name>
+		<email>takao@xxx.yama.co.ym</email>
+		<address>新潟市某町3-3-33</address>
+		<old>109</old>
+	</member>
+	<member id="00002">
+		<name>川村智美</name>
+		<email>tomomi@xxx.yama.co.ym</email>
+		<address>横浜市緑区何処町1-1-11</address>
+		<old>29</old>
+	</member>
+	<member id="00001">
+		<name>本多こずえ</name>
+		<email>kozue@xxx.yama.co.ym</email>
+		<address>千葉県千葉市何某町9-9-99</address>
+		<old>28</old>
+	</member>
+	<member id="00003">
+		<name>川端真一</name>
+		<email>shinichi@xxx.yama.co.ym</email>
+		<address>旭川市奈辺町5-5-45</address>
+		<old>33</old>
+	</member>
+	<member id="00004">
+		<name>山田祥寛</name>
+		<email>yoshihiro@xxx.yama.co.ym</email>
+		<address>静岡市静岡町2-9-00</address>
+		<old>18</old>
+	</member>
+</addressBook>

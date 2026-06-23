@@ -1,0 +1,1073 @@
+<style>
+body{
+	margin:0 3% 0 3%;
+}*{
+	font-size:105%;
+	line-height:115%;
+	font-family:'ヒラギノ角ゴ Pro W3','Hiragino Kaku Gothic Pro','メイリオ',Meiryo,'ＭＳ Ｐゴシック',sans-serif;
+
+}h1{
+   font-family: Comic Sans MS,"ダメ字","ダサ字",cursive;
+}h4, h5, h6{
+   color:indianred; //darkorange;
+   background-color:aliceblue;
+   border:solid steelblue 1px;
+   border-left:solid steelblue 5px;
+   border-top:none;
+   border-right:none;
+   margin:1em,1em,.5em,.5em;
+   padding:3px 10px;
+
+   font-size:100%;
+}h5,h6{
+   margin-left:2em;
+}pre.code1{
+/* スクロール表示コード */
+   border: 1px solid steelblue; 
+   height: 200px;
+   overflow: auto; 
+   padding-right: 1.5em; 
+   padding-left: 1.5em; 
+   font-size: 70%; 
+   background-color: ivory;
+
+}pre.code0{
+/* コード */
+   border: 1px solid steelblue;
+   margin-top:0px;
+   padding-right: 1.5em; 
+   padding-left: 1.5em; 
+   font-size: 85%; 
+   background-color:ivory;
+}button{
+   border: 1px solid blue; 
+   color: green; 
+   background-color: lavender;
+}.rem{
+/* コメント */
+   color: green;
+}p{
+   text-indent:.7em;
+   line-height:150%;
+}dfn{
+   font-style: normal;
+   /*font-weight:bold;*/
+   color:darkblue;
+   /*font-size:110%;*/
+   
+/*
+   font-weight:bold;
+*/
+/*
+   border-bottom:dotted 1px;
+   color:blue;
+   padding:0 2px;
+   background-color:ivory;	
+*/
+}.togaki{
+   background-color:oldlace;
+   padding:8px;
+   margin-bottom:.7em;
+}strong{
+   font-bold:bold;
+   /*background-color:oldlace;*/
+   /*color:blue;*/
+}div#index{
+    border-style:outset;
+    padding:.7em;
+    background-color:#ffe;
+    margin-bottom:1em;
+    margin-top:.7em;
+}div#index h4,div#index h5,div#index h6{
+    border-color:green;
+    background-color:ivory;
+    margin-left:1em;
+
+}ol li{
+	margin-bottom:.5em;
+	border-bottom:dotted 1px #333;
+
+}ul li{
+	line-height:180%;
+	font-size:95%;
+}
+</style>
+<div id="index">
+<h4>index</h4>
+<ul>
+   <h5>クラスモジュールを使ってみた</h5>
+     <ul>
+	   <li><a href="#counter">カウンター変数をクラスで管理してみた</a></li>
+	   <li><a href="#mailer">エクセルからメーラ―を操作してみた</a></li>
+			<ul>
+				<li>ユーザー定義型（構造体）との比較</li>
+				<li>列挙体</li>
+			</ul>
+	   <li><a href="#myfunc">自作関数をクラスで管理してみた</a></li>
+	 </ul>
+   <h5>クラスモジュールに用意されている機能</h5>
+     <ul>
+      <li><a href="#event1">イベントを発生させる</a></li>
+      <li><a href="#event2">イベントを捕まえる</a></li>
+      <li><a href="#event3">複数のオブジェクトのプロパティとイベントを一つのクラスで管理する</a></li>
+		<ul>
+			<li><a href="#event3_1">テキストボックス編</a></li>
+			<li><a href="#event3_2">フォーム編</a></li>
+			<li><a href="#event3_3">フォームとテキストボックスの合わせ技編</a></li>
+			
+		</ul>
+     <h6>Instancingプロパティを使う</h6>
+         <ul>
+ 			<li><a href="#Instancing">クラスをネストして使う</a></li>
+ 			<li><a href="#refer">プロジェクトを参照設定して使う</a></li>
+            <ul>
+                <a href="#friend">Friend キーワードを使う</a>
+            </ul>
+         </ul>
+      <li><a href="#implements">implementsステートメントを使ってみる</a></li>
+</ul>
+</div>
+</div>
+<div class="togaki">
+<p>
+VBA のクラスモジュールを使ってみた感じた事をまとめてあります。
+多分基本的な事しか書いてありません。が、<dfn>VBA</dfn> での
+クラスモジュールの使い方の初歩をまとめてあるサイトを私は知りません。
+クラスモジュールって何？オブジェクト指向って何？ってモヤモヤの解消の
+一助になる事を目指します。
+クラスモジュールの高度な使用例を紹介するサイトではありません。
+断りの無い場合を除き <dfn>Excel VBA</dfn> を扱っています。
+</p>
+</div>
+<h3>クラスモジュールを使ってみた</h3>
+<p>
+レンジやワークシートは <dfn>オブジェクト</dfn> である、という事は
+何となく理解できると思います。
+</p>
+<h4><a name="counter">カウンター変数をクラスで管理してみる</a></h4>
+
+<p>多くのカウンター変数を使う必要に迫られる場合があったとします。
+</p>
+<pre class="code0">
+<code>
+  Dim i As Long
+  Dim j As Long
+  Dim k As Long
+  Dim l As Long
+  Dim m As Long
+  Dim n As Long
+  ……
+</code>
+</pre>
+<p>
+↑これだと、どの変数が何を表しているのか判らなくなります。
+もっと判りやすい名前にしましょう。
+</p>
+
+<pre class="code0">  
+<code>
+  Dim WsCnt             As Long <span class="rem">'ワークシートの数を管理する</span>
+  Dim FilesCnt          As Long <span class="rem">'ファイルの数を管理する</span>
+  Dim PersonCnt         As Long <span class="rem">'職員の数を管理する</span>
+  Dim CompanyCnt        As Long <span class="rem">'事業所の数を管理する</span>
+  Dim RwsCnt            As Long <span class="rem">'行数</span>
+  Dim ColumnsCnt        As Long <span class="rem">'列数</span>
+ 
+  Dim WsCntMax          As Long <span class="rem">'ワークシートの最大数</span>
+  Dim FilesCntMax       As Long <span class="rem">'ファイル数の最大数</span> 
+
+</code>
+</pre>
+<p>
+なんとなくそれっぽい変数名なので、
+これなら他の人が見てもわかってくれそうに思います。
+コメントも書いてあるし。
+</p>
+<p>
+でも、この位の数があるとしんどく感じます。変数を沢山宣言すると、
+宣言したまま、結局使わないままに放置し、使っていない事に気づきもしないなんて
+よくある事です。
+<p>
+カウンター変数 WsCnt はワークシートの数で、WsCntMax は最大数です。
+処理する対象の数が不定の場合、終了するまでの目安をユーザーに
+伝える為、進捗状態を表示させる事もあります。変数によっては
+最大数も押さえておく必要があるのです。
+</p>
+<p>
+カウンター変数を管理する Cls_Counter を作ってみます。
+</p>
+<p><img src="./clscounter0.jpg" width="513" height="185" alt="" />
+</p>
+<p>
+カウンター変数を扱うオブジェクトを作って変数の管理をさせるのです。
+クラスモジュールの名前は Cls_Counter にしてみました。
+</p>
+<!--
+<div><button onclick="clipboardData.setData('Text', document.getElementById('code2').innerText);" type="submit">コピー</button></div>
+-->
+<div id="code2">
+<pre class="code0">  
+<code>
+Option Explicit
+<span class="rem">
+'----------------------------------------------------------------
+'カウンター変数を扱うクラス - Cls_Counter -
+'----------------------------------------------------------------
+</span>
+Private m_Cnt As Long
+Private m_Max As Long
+
+Private Sub Class_Initialize()
+    <span class="rem">'カウンターの初期化</span>
+    m_Cnt = 0
+End Sub
+
+<span class="rem">'カウンターの増加</span>
+Public Sub CountUp()
+    m_Cnt = m_Cnt + 1
+End Sub
+
+<span class="rem">'現在のカウンター値を返す</span>
+Public Property Get CurrentNumber()
+    CurrentNumber = m_Cnt
+End Property
+
+<span class="rem">'カウンター最大値の登録</span>
+Public Property Let MaxSize(ByVal n As Long)
+    m_Max = n
+End Property
+
+<span class="rem">'カウンター最大値の呼び出し</span>
+Public Property Get MaxSize() As Long
+    MaxSize = m_Max
+End Property
+
+</code>
+</pre>
+</div>
+<p>
+クラスモジュールは <dfn>Initialize</dfn> イベントを持ちます。
+オブジェクトが作成された時、最初に実行されるコードが <dfn>Initialize</dfn> です。
+ <dfn>Initialize</dfn> イベントはフォームモジュールでお馴染みです。<dfn>フォームモジュール</dfn>も
+<dfn>シートモジュール</dfn>も、<dfn>ThisWorkbook モジュール</dfn>もクラスモジュールです。
+</p>
+<p>
+オブジェクト指向言語では、この <dfn>Initialize</dfn> の役割をするプロシージャを
+<dfn>コンストラクタ</dfn>と呼びます。
+ここで、m_Cnt 変数を 0 で初期化していますが、VBA では数値型の変数の初期値は
+必ず 0 なのでここの処理は無くても結果に影響ありません。
+ここで 0 に初期化するコードをわざわざ書いたのは、気分の問題です。
+</p>
+<hr>
+<p>
+<dfn>Excel VBA</dfn> の <dfn>コンストラクタ</dfn> についてもう少し説明しておきます。
+</p>
+<p>
+クラスモジュールには <dfn>コンストラクタ</dfn> があるものなのですが、
+<dfn>シートモジュール</dfn>と<dfn>ThisWorkbook モジュール</dfn> には、
+少なくともユーザーの眼に触れる場所には <dfn>Initialize</dfn> がありません。
+<dfn>コンストラクタ</dfn>あるとすれば、WorkSheets.Add される時、また、Workbooks.Add される
+時に（つまり、シートオブジェクトやブックオブジェクトがメモリにロードされる時に）必ず最初に
+実行されるのが <dfn>コンストラクタ</dfn> ですから、敢えて言えば <dfn>ThisWorkbook</dfn>
+ オブジェクトの <dfn>Open</dfn> イベントがシートオブジェクトとブックオブジェクト共通の
+<dfn>コンストラクタ</dfn> と言えるのかもしれません。
+</p>
+<p>
+<dfn>Excel VBA</dfn> でのオブジェクト指向には、特殊だったり不十分だったりする面が
+あるようです。「あるようです」とは、私自信が他に比較できる程習得しているオブジェクト指向言語
+がありませんので、推測で語るしかないわけです。</p>
+<p>
+<dfn>Excel VBA</dfn> で <dfn>オブジェクト指向</dfn> を語る解説書やサイトが稀有なのは、
+こういった事情によるものなのでしょう。
+<strong>「VBA しか知らない人間はクラスモジュールに書かれた
+コードに出会ってしまった時どうすればいいのだ。／(＾o＾)＼」</strong>
+
+
+<hr>
+<p>コードの説明に戻ります。</p>
+<p>
+変数の頭に m_ と付けているのは、モジュールレベルである事を表す、よく見かける書き方です。
+ m_ を付けない人もよく見かけます。
+</p>
+<p>
+クラスモジュールには Sub プロシージャも Function プロシージャも記述できます。
+クラスモジュールに書かれた Sub プロシージャはそのクラスのメソッドとして振舞います。
+Function プロシージャはそのクラスの関数として振舞います。そして、Property プロシージャは
+そのクラスのプロパティとして振舞う事になります。
+</p>
+<p>
+入門書で最初に紹介されるクラスはだいたいこんなもんです。
+Cls_Counter モジュールの構成を見ていきましょう。ひとつひとつのプロシージャは
+、モジュールレベルの変数に値を代入するか、値を取り出すか
+少しばかりの演算をしているだけです。
+</p>
+<pre class="code0">
+<code>
+Private m_Cnt As Long
+Private m_Max As Long
+</code>
+</pre>
+<p>
+↑モジュールレベルの変数は Private で宣言します。
+ Private で宣言しているので、直接他のモジュールから操作される事はありません。
+この部分を<dfn>オブジェクトの値</dfn>とか、<dfn>クラスのフィールド</dfn>などと言います。
+</p>
+<pre class="code0">
+<code>
+<span class="rem">'カウンターの増加</span>
+Public Sub CountUp()
+    m_Cnt = m_Cnt + 1
+End Sub
+</code>
+</pre>
+<p>
+この記述で CountUp メソッドを自作した事になります。
+モジュールレベル変数 m_Cnt を 1 ずつ増加させているだけです。
+この部分より下のプロシージャは全て Public で宣言しています。
+他のモジュールからでもアクセスできるのでこれら Public で宣言されているメソッドや
+プロパティの事を<dfn>クラスのインターフェイス</dfn>という言い方をします。
+<strong>
+他のモジュールに対し公開されている
+<dfn>インターフェイス</dfn>を通しのみ<dfn>フィールド</dfn>への操作を出来るように設計します。
+</strong>
+
+フィールドを <dfn>Public</dfn> で宣言してしまうと、
+フィールドの値を操作する手段を複数用意してしまう事になり、
+ややこしくなるのでダメですし、インターフェイスを通せばプログラマーが設計した通りの
+処理だけ実行される事が保証されていますが、（ここでは 1 を加算した値を m_Cnt に代入している）
+Public で宣言してしまったら、どんな値も無規則に代入できてしまいます。
+フィールドの値は Private で隠蔽して、決まった手順以外の接触から保護してやらねばなりません。
+</p>
+<pre class="code0">
+<code>
+<span class="rem">'------------------------------------------------------------
+'クラスフィールドをパブリックで宣言してしまった場合
+'の値を書き換えてられてしまう悪い例
+'------------------------------------------------------------
+'<標準モジュール></span>
+Dim objCounter As cls_Counter
+Dim i As Integer
+Set objCounter = New cls_Counter
+
+For i = 1 To 10
+<span class="rem">'▼ CountUp メソッドとして公開されているインターフェイスを操作する。</span>
+   objCounter.CountUp
+Next
+
+<span class="rem">'▼ CountUp メソッドを通さずにフィールドの値を変更。</span>
+m_Cnt = 10
+
+<span class="rem">'▼ 10回しか CountUp していないのに CurrentNumberプロパティ は 20 を返す</span>
+Debug.Pring objCounter.CurrentNumber
+<span class="rem">'20</span>
+</code>
+</pre>
+
+<p>
+<dfn>カプセル化</dfn>とか<dfn>隠蔽</dfn>という言葉は、
+この外部に公開する部分と非公開の部分を分けて作る様子を表す用語です。
+</p>
+<p>
+「フィールドの値は Private で隠蔽して、決まった手順以外の接触から保護してやらねばなりません。」
+と書きましたが、では以下のようなクラスがあった場合はどうでしょうか？
+</p>
+<pre class="code0">
+<code>
+<span class="rem">'------------------------------------------------------------
+'渡した値を記憶しておくだけのクラス - Cls_ValueKeeper -
+'このクラスはカプセル化されていると言うのだろうか？
+'------------------------------------------------------------</span>
+Private m_Value As Long
+
+Public Property Let Value(ByVal n As Long)
+    m_Value = n
+End Property
+
+Public Property Get Value() As Long
+    Value = m_Value
+End Property
+</pre>
+<p>
+<dfn>Property</dfn> プロシージャは後の説明となりますが、
+こんなクラスを設計するぐらいなら <dfn>Public</dfn> でフィールドの値を
+一つ用意する方がマシだと思います。
+</p>
+<pre class="code0">
+<code>
+<span class="rem">'------------------------------------------------------------
+'渡した値を記憶しておくだけのクラス - Cls_ValueKeeper -
+'このクラスはカプセル化されていると言うのだろうか？
+'------------------------------------------------------------</span>
+<strong>Public</strong> Value As Long
+
+</pre>
+<p>
+この状態を <dfn>カプセル化</dfn> と呼ぶかどうか… …
+「呼ぶ」というのが正解である筈と思いつつ、もし情報処理試験での
+設問であれば、「カプセル化ではない」と解答しておきます。
+この用語の定義はよーわかりません。
+</p>
+<p>
+因みに<dfn>隠蔽</dfn>という言葉はオブジェクト指向以外でも使われる用語です。
+<dfn>隠蔽</dfn>とは <dfn>Private</dfn> で宣言された変数が外部から参照できなくなるという
+スコープの状態を指す言葉です。</p>
+<p>
+<dfn>カプセル化</dfn> って言葉もそうなのですが、<dfn>オブジェクト指向</dfn> で使われる用語というのは、
+妙に謎めいています。用語の謎めき具合に対して、
+解説を読んでしまうと「へ？」っと思うような当たり前の事ばかり言っている、という印象を受けます。
+</p>
+
+<h4>Property プロシージャ</h4>
+<p>
+Property プロシージャを説明しておきます。
+プロパティ（属性）というのは、フォームの Caption プロパティとか
+Range の Text プロパティとかのあのプロパティです。
+</p>
+<p>
+構文知らないとか忘れたとかの場合は、メニューバーにコードの
+自動生成機能がありますので利用しましょう。
+</p>
+<p>
+<img src="./insertProc.jpg" width="367" height="164" alt="プロシージャの追加">
+</p>
+<p>
+挿入(I) ⇒ プロシージャ(P) で [プロシージャの追加] というフォームが表示されます。
+</p>
+<p>
+<img src="./insertProp.jpg" width="428" height="189" alt="プロパティプロシージャの生成機能">
+</p>
+<p>
+次の中身の無い構文が自動生成されます。
+</p>
+<pre class="code0">
+<code>
+Public Property <strong>Get</strong> TEST() As Variant
+
+End Property
+
+Public Property <strong>Let</strong> TEST(ByVal vNewValue As Variant)
+
+End Property
+</code>
+</pre>
+<p>
+<dfn>Get</dfn> の方にオブジェクトの値を取得させる中身を記述し、
+<dfn>Let</dfn> の方にオブジェクトの値を設定する中身を記述します。
+自動生成なので、値の型がなんでも済むように <dfn>Variant</dfn> になっていますので、
+ここは当然相応の型に書き換えて使用します。
+<dfn>String</dfn> 型のプロパティ <dfn>m_Text</dfn> を用意して使ってみます。
+</p>
+<pre class="code0">
+<code>
+Option Explicit
+<span class="rem">
+'------------------------
+'Class1
+'------------------------
+</span>
+Private m_Text As String
+
+Public Property Get Text() As String
+    Text = m_Text
+End Property
+
+Public Property Let Text(ByVal strValue As String)
+    m_Text = strValue
+End Property
+</code>
+</pre>
+<p>ちゃんと動くかどうか確認してみます。</p>
+<pre class="code0">
+<code>
+Option Explicit
+<span class="rem">
+'------------------------
+'Module1
+'------------------------
+</span>
+Sub プロパティのテスト()
+
+    Dim Obj1 As New Class1
+    Obj1.Text = "AAAA"
+
+    Debug.Print Obj1.Text
+
+    <span class="rem">'AAAA</span>
+
+End Sub
+</code>
+</pre>
+<p>
+<dfn>Get</dfn> 、<dfn>Let</dfn> の他に、<dfn>Set</dfn> という書き方も用意されています。
+
+</p>
+<pre class="code0">
+<code>
+Option Explicit
+<span class="rem">
+'------------------------
+'Class2
+'------------------------
+</span>
+Private m_Range As Range
+
+Public Property Get Range() As Range
+    Set Range = m_Range
+End Property
+
+Public Property <strong>Set</strong> Range(ByVal newRng As Range)
+    Set m_Range = newRng
+End Property
+</code>
+</pre>
+<p>
+<p>これも、ちゃんと動くかどうか確認してみます。</p>
+</p>
+<pre class="code0">
+<code>
+Option Explicit
+<span class="rem">
+'------------------------
+'Module2
+'------------------------
+</span>
+Sub プロパティGETのテスト()
+    
+    Dim instRng As New Class2
+    
+    Set instRng.Range = Sheet1.Range("a1")
+    Debug.Print instRng.Range.Address
+    
+    <span class="rem">'$A$1</span>
+    
+End Sub
+</code>
+</pre>
+<p>
+<dfn>VBA</dfn> でのオブジェクトの代入式には <dfn>Set</dfn> ステートメントを使いますから、
+ご推察の通り、プロパティSetはオブジェクトをデータ型とするプロパティを用意する時に使います。
+</p>
+<p>
+<dfn>VBA</dfn> でのオブジェクトの代入式に <dfn>Set</dfn> ステートメントを使う事は、
+慣れ親しんだ文法なので違和感があると思いますが、実はわざわざ <dfn>Set</dfn> でプロパティを
+用意しなくても、<dfn>Let</dfn> のままオブジェクトのプロパティを記述出来ます。
+</p>
+<pre class="code0">
+<code>
+Option Explicit
+<span class="rem">
+'------------------------
+'Class3
+'------------------------
+</span>
+Private m_Range As Range
+
+Public Property Get Range() As Range
+    Set Range = m_Range
+End Property
+
+Public Property <strong>Let</strong> Range(ByVal newRng As Range)
+    Set m_Range = newRng
+End Property
+</code>
+</pre>
+<p>
+このようにすると、インスタンスを利用する場合に <dfn>Set</dfn> を使わずに
+オブジェクトの代入式を記述できます（しなければなりません）。
+</p>
+<pre class="code0">
+<code>
+Option Explicit
+<span class="rem">
+'------------------------
+'Module3
+'------------------------
+</span>
+Sub プロパティLETでも動作するテスト()
+    
+    Dim instRng As New Class2
+    
+    instRng.Range = Sheet1.Range("a1")
+    Debug.Print instRng.Range.Address
+    
+    <span class="rem">'$A$1</span>
+    
+End Sub
+</code>
+</pre>
+
+<p>
+<strong>クラス は オブジェクト の型 </strong>なので <dfn>New</dfn> キーワードで
+<dfn>インスタンス</dfn>を生成してやらないと使えません。
+<dfn>Class1</dfn>型のオブジェクトを <dfn>New</dfn> キーワードで<dfn>インスタンス</dfn>を生成しています。
+<dfn>インスタンス</dfn>を生成とは、オブジェクトの<dfn>フィールド</dfn>のメモリ領域を確保するという事です。
+動的メモリ確保というのは時間がかかる作業です。
+クラスが抱えている変数のサイズが大きい程時間がかかります。
+また、それ以上に<dfn>インスタンス</dfn>に使用されていたリソースが解放される時に時間がかかります。
+なので、インスタンスの生成と解放をループの内側に配置して何万回も廻わすような事をしてしまうと、
+時に使用に耐えない程実行速度は劣化します。
+</p>
+<p>
+クラスを使う事で実行速度の向上を期待するのは正しくありません。
+どちらかと言えば遅くなる理由の方が見つけやすいです。
+それでもクラスを使うのは、コードがこんがらがりにくく、仕様に変更が入った場合、
+修正が局所的な書き換えで済む為品質の向上が期待できる、というメリットを期待できるからです。
+（少なくともコーディングした本人は、よりスッキリした書き上げたコードを把握しやすくなるでしょうから、
+書かなくてよい冗長な処理を排除でき、結果実行速度がアップ、という事なれば理想的なんだと思います。）
+</p>
+
+<p>
+オブジェクト指向の手法を使うと安全なコーディングが出来る事は確かです。
+それはフィールドの値を「<dfn>隠蔽</dfn>」しているから安全なのではなく、
+生成したインスタンス（つまりオブジェクト）自体のスコープをプログラマーが
+コントロールできるから安全なのです。<dfn>Public</dfn> で生成してしまった
+インスタンスは、どこからでも値を変更出来てしまうので、安全でもなんでもありません。
+</p>
+<hr>
+<p>
+コードの説明にもどります。
+</p>
+<pre class="code0">
+<code>
+    Dim Obj1 As New Class1
+</code>
+</pre>
+<p>
+という書き方は、
+</p>
+<pre class="code0">
+<code>
+    Dim Obj1 As Class1
+    Set Obj1 = New Class1
+</code>
+</pre>
+<p>
+という書き方のバリエーションですが、メモリ領域確保の時間を計測してみると
+、<dfn>New</dfn> で宣言した部分では Obj1 を配列で２０万個宣言してみても
+殆ど時間がかりません。実際にメモリが確保されるのは、インスタンスが
+最初に使用されるタイミングであるように見えます。また、 <dfn>Set</dfn> と対に使用された
+場合は、その時点でメモリが確保されているように見えます。
+</p>
+<p>
+<strong>クラス は オブジェクト の型 </strong> と書きましたが、ここでは <dfn>Class1</dfn>型で
+オブジェクトを <dfn>As</dfn> で宣言しています。Class1 のフィールドは
+ <dfn>String</dfn> 型ですが <strong>型のネスト</strong> が行われている為に、「実際のデータ型が隠蔽されている」
+等と表現されます。そして、<strong>Class1型</strong>では訳が判りませんのでもっとピンとくる名前をつけるべきです。
+このクラスはテキストを記憶しておくだけの何の役にも
+</p>
+<h4><a name="mailer">エクセルからメーラ―を操作してみた</a></h4>
+
+<h4><a name="myfunc">自作関数をクラスで管理してみた</a></h4>
+
+
+<h3>クラスモジュールに用意されている機能</h3>
+
+<h4><a name="event1">イベントを発生させる</a></h4>
+
+・Event ステートメント⇒クラスモジュールでのみ使用できる。
+・RaiseEvent ステートメント
+・
+<h4><a name="event2">イベントを捕まえる</a></h4>
+<p>
+通常ワークシートのイベントを発生させるには、
+ワークシートのモジュール内に、コードを記述する事になります。
+</p>
+<p>
+クラスモジュールを使うと、何もコードを書いていないワークシートの
+イベントも捕まえる事ができます。
+イベントを発生させたいワークシートをコードで汚す（？）事がないどころか、
+目的のワークシートを含むエクセルブックに一切コードを書かなくてもイベントを
+利用する事ができるようになります。
+</p>
+<p>
+このワークシートでイベントを利用して業務に役立つコードを走らせたい。しかし
+対象のエクセルブックが無数にあり、全てのエクセルブックにコーディングするわけにはいかない、とか、
+お得意様の作成した作成したワークシートで、
+勝手にコードを仕込んだりすると何言われるか判らないから弄れない、なんて時に
+この手法は使えます。
+</p>
+<pre class="code0">
+<code>
+Option Explicit
+<span class="rem">'Cls_EventCatcher-----------------------------------
+'ワークシートのイベントを捕まえるクラス
+'------------------------------------------------
+</span>
+Private WithEvents m_WS As Worksheet
+</code>
+</pre>
+<p>
+クラスモジュール Cls_EventCatcher を作成し、
+先ず Worksheet 型のモジュールレベル変数 m_WS を一つ宣言します。
+宣言する際に WithEvents キーワードを付けて宣言します。
+このキーワードを付けるとオブジェクト（この場合はワークシート）のイベントを
+発生させる事が出来るようになります。WithEvents キーワードを使う事が出来るのは、
+クラスモジュール(シートモジュール、ThisWorkbook モジュールを含む)だけです。
+ここまで書くと、<dfn>オブジェクトボックス</dfn>に m_WS が表示されるようになります。
+</p>
+<p>
+<img src="./objectbox.png" width="460" height="98" alt="">
+</p>
+<h4><a name="event3">複数のオブジェクトのプロパティとイベントを一つのクラスで管理する</a></h4>
+<h5><a name="event3_1">テキストボックス編</a></h5>
+<p>
+ワークシートに配置したテキストボックスを１０個配置する事を考えてみます。
+このテキストボックスの規定の背景色は薄い緑色で、１０００以下の整数しか入れられ無いという条件があったとします。
+１０００を超えた数字や、数字でない値が入力された場合は、テキストボックスの色が警告色になり、
+メッセージボックスを表示するようにします。１０個のテキストボックスのイベントプロシージャを
+コーディングするしたり背景色をそれぞれ設定するような冗長な事はできればやりたくありません。
+これが１００個のテキストボックスであれば尚の事です。
+</p>
+<p>
+特定のスタイルとイベントを持つテキストボックスのクラスを作成してみましょう。この作業は
+どことなく、<dfn>html</dfn> の <dfn>CSS（スタイルシート）</dfn> の <dfn>Class</dfn> の設計に似ています。
+</p>
+<pre class="code0">
+<code>
+</code>
+</pre>
+<h5>コマンドボタン編</h5>
+<h5><a name="event3_2">フォーム編</a></h5>
+<h5><a name="event3_3">フォームとテキストボックスの合わせ技編</a></h5>
+
+<h4><a name="Instancing">クラスをネストして使う</a></h4>
+<p>クラスのプロパティに Instancing というのがあります。</p>
+<p>
+<img src="./Instancing.jpg" width="572" height="504" alt="Instancingプロパティ">
+</p>
+<p>
+F1キーでヘルプを読もうと思いましたが何も表示されません。(*｀ﾛ´ﾉ)ﾉ。
+</p>
+<p>
+このプロパティは以下のように使えるようです。
+</p>
+<ol>
+	<li>PublicNotCreatable に設定すると、他のクラスモジュール内で Public なインスタンスを生成する事ができます。
+	（Instancing プロパティが Private の設定でも Public なインスタンスを生成できるのですが、Public なインスタンスを生成するクラスモジュール自体が 
+	PublicNotCreatable に設定されていた場合、
+	<blockquote>プライベート オブジェクト モジュールを、パブリック オブジェクト モジュール内で、
+	パブリック プロシージャの引数または戻り値、パブリック データ メンバ、
+	またはパブリックのユーザー定義型のフィールドとして、使用することはできません。</blockquote>  という実行時エラーが発生します。）
+<br><img style="margin:1em 0em;" src="./instancing3.jpg" width="486" height="168" alt="コンパイル エラー:
+プライベート オブジェクト モジュールを、パブリック オブジェクト モジュール内で、パブリック プロシージャの引数または戻り値、パブリック データ メンバ、またはパブリックのユーザー定義型のフィールドとして、使用することはできません。
+"><br>
+	 
+	</li>
+	<li>PublicNotCreatable に設定すると、他のプロジェクトからインスタンスを参照することが出来ます。
+	が、他のプロジェクト内でインスタンスを生成する事はできません。
+	</li>
+</ol>
+<p>
+文章にすると難解そうですが、実際にやってみれば判ります。
+複数のクラスを一まとめにする方法は<a href="http://www.vba-manners.info/vba/base/basic/ClassModule2.html" title="常駐型クラスモジュール" target="_blank">
+こちらのサイト</a>の受け売りです。ある程度クラスモジュールの数が多くなってきて、
+複数のクラスをグループ毎にまとめて管理したい場合に使える方法かも知れません。
+</p>
+<p>
+<img src="./Instancing2b.jpg" width="246" height="236" alt="Instancingプロパティ">
+</p>
+<p>
+Cls_000subALL のインスタンスを作れば、Cls_sub1～Cls_sub3 をまとめて使用できるようにしてましょう。
+プロジェクトウィンドウ内のモジュールは名前順に並ぶものの、ツリービューのようには表示出来ません。クラスモジュールの
+名前は、機能をまとめたクラスが上下に並んで表示されるように一工夫して付けた方が良いです。
+</p>
+<pre class="code0">
+<code>
+Option Explicit
+<span class="rem">'Cls_000_FncALL-----------------------------------
+'Cls_001_Fnc1, Cls_001_Fnc2, Cls_001_Fnc3 を
+'まとめてインスタンスにするクラス
+'------------------------------------------------
+</span>
+Public fnc1 As New Cls_001_Fnc1
+Public fnc2 As New Cls_001_Fnc2
+Public fnc3 As New Cls_001_Fnc3
+</code>
+</pre>
+<p>
+Cls_001_Fnc1, Cls_001_Fnc2, Cls_001_Fnc3 には、それぞれ自分のクラス名を返す関数をそれぞれ作っておきます。
+この３つのクラスの <dfn>Instancing</dfn> プロパティは <dfn>PublicNotCreatable</dfn> に設定します。
+</p>
+<pre class="code0">
+<code>
+<span class="rem">'Cls_001_Fnc1----------------------------------------
+'クラス名を返すクラス１
+'------------------------------------------------
+</span>
+Public Function ClsName() As String
+    ClsName = "Cls_001_Fnc1"
+End Function
+</code>
+</pre>
+<pre class="code0">
+<code>
+<span class="rem">'Cls_001_Fnc2----------------------------------------
+'クラス名を返すクラス２
+'------------------------------------------------
+</span>
+Public Function ClsName() As String
+    ClsName = "Cls_001_Fnc2"
+End Function
+</code>
+</pre>
+<pre class="code0">
+<code>
+<span class="rem">'Cls_001_Fnc3----------------------------------------
+'クラス名を返すクラス３
+'------------------------------------------------
+</span>
+Public Function ClsName() As String
+    ClsName = "Cls_001_Fnc3"
+End Function
+</code>
+</pre>
+<p>
+ここまで出来たら、標準モジュールで Cls_000_FncALL のインスタンスを作成して３つのクラスの関数を呼び出せる事を確認できます。
+</p>
+<p>
+myFnc という変数名でインスタンスを作成し、myFnc.（ドット）と入力すれば、ネストしたクラスのインスタンスの一覧が表示されます。
+</p>
+<p>
+<img src="./instancing4.jpg" width="366" heigh="158" alt="">
+</p>
+<p>
+fnc1 を選択し、.（ドット）を入力すると、fnc1 オブジェクトの ClsName 関数が入力候補に表示されます。
+</p>
+<p>
+<img src="./instancing5.jpg" width="352" height="143" alt="">
+</p>
+<p>
+test() を実行すると、ちゃんと関数の結果が返っている事を確認できました。
+</p>
+<p>
+<img src="./instancing6.jpg" width="191" height="73" alt="">
+</p>
+
+<h4><a name="refer">プロジェクトを参照設定して使う</a></h4>
+
+<h5><a name="friend">Friend キーワードを使う</a></h5>
+<h4><a name="implements">implementsステートメント を使ってみる</a></h5>
+<p>
+<dfn>Implements</dfn> は「実装する」という意味のステートメントです。
+<dfn>実装</dfn> とは実際に動作するだけのコーディングをする事です。
+という事は、<dfn>実装</dfn> されていない <strong>何か</strong> がプロシージャが何処かにあって、
+それに実際に動作するコード部分を <dfn>実装</dfn> するという事になります。
+</p>
+<p>
+<strong>何か</strong> とは、 <dfn>インターフェイス</dfn> と呼ばれるクラスです。<dfn>インターフェイス</dfn>
+はクラスモジュールにプロシージャや変数の <dfn>プロトタイプ</dfn>（量産前の仮設計）だけを記述します。
+通常のクラスモジュールと同じようにモジュールの名前を付けてしまうと、区別がつかなくなるので、
+<dfn>VB.net</dfn> では、<strong>I</strong> を頭につける事が慣習となっています（Class1 ではなく、<strong>I</strong>Class1 みたいな）。<dfn>VBA</dfn> でも
+このやり方に習って名前を付けておくと判りやすいと思います。
+</p>
+<p>
+この仕組みを使うと何がいいのか？。以下サンプルをあげていきます。
+</p>
+<h5>サンプル１</h5>
+<p>
+このサンプルは「VB6プログラマーのための入門Visual Basic.NET独習講座（技術評論社）」
+で、<dfn>VB.net</dfn> のオブジェクト指向の説明として挙げられているものを下敷きにしています。
+<dfn>VBA</dfn> でも同様の事ができます。
+</p>
+<p>次のようなフォームを想定します。</p>
+<p>
+<img src="Implements.jpg" width="320" height="240" alt="">
+</p>
+<p>
+このフォームは、どのオプションボタンが選択されているかによって
+ボタンがクリックされた時の処理を切り分けます。
+</p>
+<p>
+クラスモジュールを使わずにわけなくコーディングできますょ、こんなもの、えぇ。
+でも、ここで仕様変更があり、オプションボタンの選択肢が３つから６つに増えたと
+したらどうでしょう( ﾟ∀ﾟ )ｶｯ？。ボタンで実行されるプロシージャでは <dfn>If</dfn> 文か、<dfn>Select Case</dfn> 
+文で処理を切り分けていますから、この場合ボタンのイベントプロシージャに
+変更を加えなくてはなりません。しかし、オブジェクト指向のコーディングでは、
+既にデバッグの済んでいる既存のコードに一切手を入れる事なく、ボタンのイベントプロシージャの
+機能を３つから６つに追加する事ができます。既存のコードに手を入れずに済むのですから、
+バグを作りこむリスクを最小に抑える事が出来ます。これは素晴らしい事です。
+</p>
+<p>
+ボタンのイベントプロシージャが、幾つもの役割を持ち得る様子は、オブジェクト指向の <dfn>多能性（ポリモーフィズム）</dfn>
+と呼ばれるものの側面の一つです。
+</p>
+<h6>インターフェイスとクラスの作成</h6>
+<pre class="code0">
+<code>
+<span class="Rem">'------------------------------------
+'IBase
+'------------------------------------</span>
+Public Sub SomethingMethod()
+
+End Sub
+</code>
+</pre>
+<p>
+インターフェイス IBase を上のように定義します。プロシージャの中身は空のままで何も記述しません。
+</p>
+<p>
+次に、この <dfn>IBase</dfn> インターフェイスを <dfn>Implements（実装）</dfn> するクラスを３つ作成します。
+</p>
+<p>
+<img src="ImplementsTree.jpg" width="116" height="126" alt="">
+</p>
+<p>
+クラスモジュールに <dfn>Implements</dfn> とタイプすると、入力候補の中から <dfn>IBase</dfn> を選択できます。
+</p>
+<p>
+<img src="ImplementsIBase.jpg" width="384" height="175" alt="">
+</p>
+<p>
+<dfn>IBase</dfn> を <dfn>Implements</dfn> したモジュールのオブジェクトボックスから <dfn>IBase</dfn> を
+選択すると、インターフェイスで作成したプロトタイプ <dfn>SomethingMethod</dfn> を作成する事ができます。
+自動生成されるプロシージャが <dfn>Private</dfn> で作成されるところにも注目です。
+</p>
+<p>
+<img src="ImplementsIBase2.jpg" width="472" height="74" alt="">
+</p>
+
+<pre class="code0">
+<code>
+Option Explicit
+Implements IBase
+
+<span class="Rem">'----------------------------------
+'Class1 何かの処理
+'----------------------------------</span>
+
+Private Sub IBase_SomethingMethod()
+    <span class="Rem">'何かの処理</span>
+    MsgBox "Class1の処理を実行しました"
+End Sub
+</code>
+</pre>
+<pre class="code0">
+<code>
+Option Explicit
+Implements IBase
+
+<span class="Rem">'----------------------------------
+'Class2 何かの処理
+'----------------------------------</span>
+
+Private Sub IBase_SomethingMethod()
+    <span class="Rem">'何かの処理</span>
+    MsgBox "Class2の処理を実行しました"
+End Sub
+</code>
+</pre>
+<pre class="code0">
+<code>
+Option Explicit
+Implements IBase
+
+<span class="Rem">'----------------------------------
+'Class3 何かの処理
+'----------------------------------</span>
+
+Private Sub IBase_SomethingMethod()
+    <span class="Rem">'何かの処理</span>
+    MsgBox "Class3の処理を実行しました"
+End Sub
+</code>
+</pre>
+<h6>フォームモジュールの作成</h6>
+<p>
+フォームモジュールのコードは以下のようになります。
+</p>
+<pre class="code0">
+<cpde>
+<span class="Rem">'--------------------------------------
+'UserForm1モジュール
+'--------------------------------------</span>
+Option Explicit
+Private inst As IBase
+
+Private Sub OptionButton1_Click()
+    Set inst = New Class1
+End Sub
+
+Private Sub OptionButton2_Click()
+    Set inst = New Class2
+End Sub
+
+Private Sub OptionButton3_Click()
+    Set inst = New Class3
+End Sub
+
+Private Sub CommandButton1_Click()
+    If inst Is Nothing Then
+        MsgBox "オプションボタンを選択して下さい"
+    Else
+        inst.SomethingMethod
+    End If
+End Sub
+
+</code>
+</pre>
+<p>
+モジュールレベル変数 <dfn>inst</dfn> を <dfn>IBase</dfn> 型で宣言しています。
+この <dfn>IBase</dfn> 型の <dfn>inst</dfn> に各クリックイベントのプロシージャ内で
+ <dfn>Class1～3</dfn> 型を代入してもエラーになりません。<dfn>IBase</dfn> と <dfn>IBase</dfn> を
+<dfn>Implements</dfn> した各クラスは親子関係にあります。<dfn>IBase</dfn> を <dfn>スーパークラス</dfn> とか
+<dfn>基底クラス</dfn> 、子クラス側は <dfn>サブクラス</dfn> と呼ばれるものに相当します。
+親クラス型で宣言した変数には子クラス型のオブジェクトを代入する事が出来ます。
+</p>
+<p>
+どれだけオプションボタンが増えても、<dfn>CommandButton1_Click</dfn> の内容に
+一切変更を加える必要が無い事が、この手法の素晴らしいところです。
+他のクリックイベントのコードにも一切影響がありません。
+<dfn>SomethingMethod</dfn> メソッドは如何様の処理もこなす <dfn>多能性（ポリモフィズム）</dfn>を発揮します。
+</p>
+<hr>
+<p>
+<dfn>サブクラス</dfn>のインスタンスは、<dfn>スーパークラス</dfn>で宣言した変数に代入してもエラーにならない、
+のですが、実のところ、エラーにならないどころではなく、<dfn>VBA</dfn> ではこの手続きは必須です。
+こう書かないと動作しません。２回型宣言するのがちょっと面倒です。
+必ずしも代入が必須という事ではなく、親子両方のクラスのオブジェクト型なのだ、と
+いう事が宣言できれば良いようで、例えば下のような書き方でも動作します。
+</p>
+<pre class="code0">
+<code>
+Option Explicit
+Sub Test()
+    Dim inst As New Class1
+    
+    <span class="Rem">'ここで inst. とタイプしても
+    '入力候補は表示されない</span>
+    
+    RunSomething inst
+End Sub
+
+Sub RunSomething(<strong>ByRef obj As IBase</strong>)
+    
+　　<img src="Intelligence.png" width="329" height="94" alt="'obj. とタイプすれば入力候補が表示される">
+    obj.SomethingMethod
+End Sub
+</code>
+</pre>
+<p>
+<img src="msgbx.jpg" width="193" height="118" alt="Class1の処理を実行しました">
+</p>
+<h6>デメリット</h6>
+<p><dfn>インターフェイス</dfn> を実装したクラスは、<dfn>インターフェイス</dfn> に
+定義されているプロトタイプが全て実装されていないと、エラーになって動作しません。
+言い方を変えると、<dfn>インターフェイス</dfn> を実装したクラスには、<dfn>インターフェイス</dfn> に
+定義されているメンバが全て実装されている事が保証されている事になります。
+そして、<dfn>インターフェイス</dfn> に定義さていないメンバを <dfn>サブクラス</dfn> にだけ
+実装してもメンバとして認識されません。
+さらに言い方を変えると、<strong><dfn>インターフェイス</dfn> に変更を入れる事態が発生した場合、
+対応する <dfn>サブクラス</dfn> の全てが影響を受ける事になります。これは恐ろしい事です。</strong>
+</p>
+<p>「オブジェクト指向はプログラムの変更が局所的で済むから良い」とは真逆の事が起きてしまいます。
+ <dfn>インターフェイス</dfn> は、慎重に設計する必要があります。
+</p>
+<h5>サンプル２-クラスのフィールドを実装する-</h5>
+
+<div>
+<h4>参考に読んでみたサイト</h4>
+<ul>
+  <li><a href="http://www.h3.dion.ne.jp/~sakatsu/Breakthrough_P-Ctrl_Arrays.htm" target="_blank">[擬似からの脱却]</a></li>
+  <li><a href="http://members3.jcom.home.ne.jp/daruma_kyo/" target="_blank">トップページ - だるまのエクセルVBA</a></li>  
+  <li><a href="http://www.atmarkit.co.jp/fdotnet/basics/oop01/oop01_01.html" target="_blank">＠IT：連載 オブジェクト指向プログラミング超入門</a></li>
+  <li><a href="http://www.atmarkit.co.jp/fdotnet/vb6tonet2/index/index.html" target="_blank">改訂版 プロフェッショナルVB.NET

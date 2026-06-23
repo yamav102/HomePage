@@ -1,0 +1,169 @@
+
+<meta http-equiv="Content-Type" content="text/html; charset="shift_JIS">
+<pre>
+Private Declare Function GetComputerName _
+Lib "kernel32" Alias _
+"GetComputerNameA" (ByVal lpBuffer As String, _
+nSize As Long) As Long
+Private Const MAX_COMPUTERNAME_LENGTH As Long = 15&
+
+Public Function ComputerName() As String
+'-----------------------------------------------------------
+'  コンピュータ名を返す
+'-----------------------------------------------------------
+    Dim nLen As Long
+    Dim strComputerName As String
+    nLen = MAX_COMPUTERNAME_LENGTH
+    strComputerName = String$(nLen, 0)
+    GetComputerName strComputerName, nLen
+    strComputerName = Left$(strComputerName, nLen)
+    ComputerName = strComputerName
+End Function
+'MsgBox Environ("COMPUTERNAME")
+'で事足りる。
+
+
+■画面解像度の取得
+Declare Function GetSystemMetrics Lib "user32.dll" _
+(ByVal nIndex As Long) As Long
+
+Const SM_CXSCREEN = 0
+Const SM_CYSCREEN = 1
+
+Sub MyWindow_Num()
+   Dim lngMetricsValueCx As Long, lngMetricsValueCy As Long
+  
+   lngMetricsValueCx = GetSystemMetrics(SM_CXSCREEN)
+   lngMetricsValueCy = GetSystemMetrics(SM_CYSCREEN)
+   MsgBox lngMetricsValueCx & " * " & lngMetricsValueCy
+End Sub
+
+
+'■DPIの取得’EXCEL2003以降
+Option Explicit
+
+Private Const LOGPIXELSX As Long = &H58&
+Private Const LOGPIXELSY As Long = &H5A&
+
+Private Declare Function GetDeviceCaps Lib "gdi32" ( _
+        ByVal hDc As Long, ByVal nIndex As Long _
+      ) As Long
+Private Declare Function GetDC Lib "User32" ( _
+        ByVal hWnd As Long) As Long
+Private Declare Sub ReleaseDC Lib "User32" ( _
+        ByVal hWnd As Long, ByVal hDc As Long)
+
+Sub Sample()
+    Dim hWnd As Long
+    Dim hDc As Long
+    hWnd = Excel.Application.hWnd
+    hDc = GetDC(hWnd)
+    '水平方向DPI
+    Debug.Print GetDeviceCaps(hDc, LOGPIXELSX)
+    '垂直方向DPI
+    Debug.Print GetDeviceCaps(hDc, LOGPIXELSY)
+    ReleaseDC hWnd, hDc
+End Sub
+Sub DPI取得2()
+
+'要参照　Microsoft WMI Scripting VX.X Library
+Dim objWMIService As WbemScripting.SWbemServices
+Dim colItems      As WbemScripting.SWbemObjectSet
+Dim objItem       As WbemScripting.SWbemObject
+
+Set objWMIService = GetObject("winmgmts:\\.\root\CIMV2")
+Set colItems = objWMIService.ExecQuery( _
+    "SELECT LogPixels, PelsHeight, PelsWidth FROM Win32_DisplayConfiguration", _
+    "WQL", wbemFlagReturnImmediately + wbemFlagForwardOnly)
+
+For Each objItem In colItems
+    Debug.Print "LogPixels: " & objItem.LogPixels
+    Debug.Print "PelsHeight: " & objItem.PelsHeight
+    Debug.Print "PelsWidth: " & objItem.PelsWidth
+Next objItem
+
+End Sub
+
+Sub DPI取得3()
+'XPと2000以外では動作しません
+Dim objWMIService As Object, colItems As Object
+Dim Service As Object, objItem As Object
+Set objWMIService = _
+CreateObject("WbemScripting.SWbemLocator").ConnectServer
+Set colItems = objWMIService.ExecQuery _
+("SELECT LogPixels, PelsHeight, PelsWidth FROM Win32_DisplayConfiguration", _
+    "WQL", wbemFlagReturnImmediately + wbemFlagForwardOnly)
+
+For Each objItem In colItems
+    Debug.Print "LogPixels: " & objItem.LogPixels
+    Debug.Print "PelsHeight: " & objItem.PelsHeight
+    Debug.Print "PelsWidth: " & objItem.PelsWidth
+Next objItem
+End Sub
+
+Private Declare Function URLDownloadToFile Lib "urlmon" Alias _
+"URLDownloadToFileA" (ByVal pCaller As Long, ByVal szURL As String, ByVal _
+szFileName As String, ByVal dwReserved As Long, ByVal lpfnCB As Long) As Long
+                
+Sub Webからファイルをダウンロードする()
+    Dim returnValue As Long
+    Dim strURL As String
+    Dim fileName As String
+    Dim tgtDir As String
+    
+    tgtDir = "C:\TESTA/"
+    fileName = "img_logo.gif"
+    strURL = "http://210.158.217.104/img/" & fileName
+    returnValue = _
+        URLDownloadToFile(0, strURL, tgtDir & fileName, 0, 0)
+    
+    
+    If returnValue Then
+        On Error Resume Next
+        Err.Raise _
+            Number:=513, _
+            Description:=tgtDir & fileName & " が見つかりません"
+    End If
+    
+    If Err.Number Then
+        MsgBox Err.Description, vbExclamation
+        On Error GoTo 0
+    End If
+End Sub
+
+'■===== 標準モジュール =====
+Option Explicit
+
+Private Declare Function SafeArrayGetDim Lib "oleaut32.dll" (ByVal psa As Long) As Long
+Private Declare Sub GetMem4 Lib "msvbvm60" (ByVal ptr As Long, ByRef ret As Long)
+'配列の中身を判定する関数
+Public Function GetDim(ByVal sa As Variant) As Long
+    If IsArray(sa) Then
+        Dim p As Long
+        GetMem4 VarPtr(sa) + 8, p
+        If p = 0 Then
+            GetDim = 0  '初期化されていない配列
+        Else
+            GetDim = SafeArrayGetDim(p) '次元数
+        End If
+    Else
+        GetDim = -1     '配列では無い
+    End If
+End Function
+
+Sub testDim()
+    Dim myArray() As String
+    Dim rslt As Long
+    
+    rslt = GetDim(myArray)
+    Debug.Print rslt
+    '0:初期化されていな配列
+    
+    ReDim myArray(3)
+    rslt = GetDim(myArray)
+    Debug.Print rslt
+    '1：一次元の配列
+End Sub
+
+
+</pre>

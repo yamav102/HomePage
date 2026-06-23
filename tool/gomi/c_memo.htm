@@ -1,0 +1,3507 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<link rel="stylesheet" type="text/css" href="./EXCEL_API/vb.css">
+<style>
+	pre{
+		margin-left:3em;
+	}h1,h2,h3{
+		margin-bottom:1em;
+	}
+</style>
+
+<body>
+<div class="content">
+
+<h1>C言語メモ</h1>
+<ul>
+<li>関数レファレンス
+<a href="#a">a</a>
+<a href="#b">b</a>
+<a href="#c">c</a>
+<a href="#d">d</a>
+<a href="#e">e</a>
+<a href="#f">f</a>
+<a href="#g">g</a>
+<a href="#i">i</a>
+<a href="#l">l</a>
+<a href="#m">m</a>
+<a href="#p">p</a>
+<a href="#q">q</a>
+<a href="#r">r</a>
+<a href="#s">s</a>
+</li>
+<li><a href="#list">リスト構造</a></li>
+<li><a href="#ascii">ASCII表</a></li>
+<li><a href="#kaigyo">コード内で改行を使う</a></li>
+<li><a href="#henkanshi">出力変換指定子</a></li>
+</ul>
+
+<pre>
+リダイレクションによる入力と出力を標準入力のリダイレクション/標準出力のリダイレクションと呼ぶ
+kansuu < imp.txt > out.txt｜kannsuu > out.txt < imp.txt
+でファイルのコピー
+/*kansuu 同じファイルを入力出力するとファイルが破棄される*/
+#include &lt;stdio.h&gt
+main(){
+	int c;
+
+	while ((c = getchar()) != EOF)
+		putchar(c);
+}
+fgets()/fputs() 行ごとの入出力
+getchar()/putchar() 標準入力に対し読み書きを行う
+fgetc()/fputc() ストリームに対し読み書きを行う fはfileのf?かな？
+printf("%s\n", *argv)/fprintf(stdout, "%s\n", name) も同様だが、
+fprintf(stderr,"can't open %s\n", *argv);
+とストリームの指定にstderrを使用すると、リダイレクションでファイル出力に
+切り替えられても、エラーメッセージは切り替えられずそのまま画面に表示される。
+データの出力にエラーメッセージを混ざる事を防ぐ。
+
+main()関数のだい２引数(たとえばargv)
+	argv: argument vector
+  char  *argv: ポインタとして宣言
+  char **argv: ポインタ変数のアドレスを指し示すポインター
+
+C言語は、char型の配列で文字列を処理してるのですから、 
+たとえば "ABC" は{'A','B','C'}であって、 
+しかも argv[] と *argv が同じに解釈されるということは、 
+*argvはポインターなのですから、"ABC" と書けばこれもポインターである 
+事になります。 
+ 
+'A'はchar型、"ABC"と書くと、'A'へのポインターを表す。 
+だから、文字列はchar型のポインターとして宣言出来る。 
+だから、以下のような宣言が可能。 
+#include &lt;stdio.h&gt;
+
+main()
+{
+	char str[] = "ABC";
+	char *str2 = "DEF";
+
+	printf("%s\n", str);　/* ABC */
+	printf("%s\n", str2); /* DEF */
+}
+
+C言語には文字列型はなく、文字列は文字型Charの配列として扱う。
+文字の終端には\0をつけて「終端」である事を明示するため、配列の要素数は文字数＋１になる。
+"hello"であれば、5文字＋1文字となる。
+
+配列の添え字はデータの個数であり、インデックスは０から始まる。
+	char str[] = "ABC";　なら、
+
+str[0] は 'A'
+str[1] は 'B'
+str[2] は 'C'
+
+　変数 a のポインターを &a と表せる。
+  int *i;　/* ポインタ型で宣言 */
+  int  a;
+
+  i = &a; i に a のポインタを渡している。
+  a = *i; a に i の値そのものを渡している。
+
+<h2><a name="kaigyo" id="kaigyo">コード内で改行する</a></h2>
+
+#include &lt;stdio.h&gt;
+void main (void)
+{
+	fprintf(stdout, \
+		"コードを" \
+		"見やすく" \
+		"する目的で" \
+		"改行するには" \
+		"\\を" \
+		"使う" \
+		"\n(￢_,￢)b" \
+		"\n(￢_,￢)b" \
+		"\n(￢_,￢)b");
+}
+/* ▼出力 */
+コードを見やすくする目的で改行するには\を使う
+(￢_,￢)b
+(￢_,￢)b
+(￢_,￢)b
+
+<h2>**argv の考察</h2>
+
+#include &lt;stdio.h&gt;
+	void main(int argc, char **argv)
+	{
+	/* 引数としての **argv は文字列の先頭のアドレス値をもつアドレス */
+		int i;
+	}の中で以下コードを実行した場合の挙動。
+
+
+	for (i = 0; i < argc; i++){
+		printf("iは %d argvは %p\n", i, argv++);
+
+	/* >コマンド名 abc def 実行　で
+
+		iは 0 argvは 003929D0 ポインター先頭のアドレス
+		iは 1 argvは 003929D4 sizeof(char *)分進む
+		iは 2 argvは 003929D8 sizeof(char *)分進む
+	*/
+
+	}
+
+	for (i = 0; i < argc; i++){
+		printf("argv[%d]は %s\n", i, argv[i]);
+
+	/* >コマンド名 abc def 実行　で
+		argv[0]は コマンド名
+		argv[1]は abc
+		argv[2]は def
+	*/
+
+	}
+
+	for (i = 0; i < argc; i++){
+		printf("iは %d *argv++は %s\n", i, *argv++);
+
+	/* >コマンド名 abc def 実行　で
+	
+	コード中の *argv は「文字列の先頭のアドレス値をもつアドレス」の「先頭のアドレス」
+	からの終端文字までの「文字列」
+		iは 0 *argv++は コマンド名
+		iは 1 *argv++は abc
+		iは 2 *argv++は def
+	*/
+
+	}
+
+	for (i = 0; i < argc; i++){
+		printf("iは %d **argv++は %c\n", i, **argv++);
+
+	/* >コマンド名 abc def 実行　で
+
+	コード中の **argv は、「文字列の先頭のアドレス値をもつアドレス」の「先頭のアドレス」
+	の値だから、「文字char」を返す。
+
+		iは 0 **argv++は コマンド名の１文字目
+		iは 1 **argv++は a
+		iは 2 **argv++は d
+	*/
+
+	}
+
+		printf("*argv+0は %s\n", *argv + 0);
+		printf("*argv+1は %s\n", *argv + 1);
+		printf("*argv+2は %s\n", *argv + 2);
+		printf("*argv+3は %s\n", *argv + 3);
+
+	/* >コマンド名(test5) 実行　で
+
+		*argv+1は test5
+		*argv+1は est5
+		*argv+2は st5
+		*argv+3は t5
+	*/
+
+<h2><a name="henkanshi" id="henkanshi">■出力変換指定子■</a></h2>
+
+	%c 	文字として表示
+	%s	終端文字まで表示
+	%hd	shortとして表示
+	%d 	intとして表示
+	%ld	longとして表示
+	%f	doubleとして表示
+	%lf floatとして表示
+	%p  アドレスを１６進表記で表示
+	%X	short16進数で表示
+	%lx long16進数で表示
+	%o	8進数で表示
+	%e	指数形式で表示
+
+		printf("%f\n",10.000/3.000);
+		と書けば、3.333333　になるが、
+		printf("%f\n",10/3);
+		だと、int/intと解釈される結果
+		0.000000　になってしまう。
+
+		double a;
+		double b;
+	
+		a = 10;
+		b = 3;
+	
+		printf("%f\n",a/b);
+
+		と書けば、3.333333が得られる。
+
+	数値は 0から記述すると８進数と解釈され
+	0X | 0x から記述すると16進数と解釈され
+　　100 とかけば int型に解釈され、100. と書けばdouble に解釈される。
+
+<h2>■変数の初期化■</h2>
+
+/*	
+	グローバル変数は
+	プログラム開始時点で０に初期化されるので
+	初期化不要。
+ */
+
+#include &lt;stdio.h&gt;
+
+int i;
+
+int main(void)
+{
+	int j;
+
+	printf("%d\n", i);　/* 0が戻る */
+	printf("%d\n", j);  /* 予測不能 */
+
+	return 0;
+}
+
+<h3>staticで宣言した場合もグローバル変数同様に初期化される。</h3>
+
+#include &lt;stdio.h&gt;
+
+int countfunc(void);
+
+int main(void)
+{
+	countfunc();
+	countfunc();
+	countfunc();
+	return 0;
+}
+int countfunc(void)
+{
+	static int count; /* 静的なローカル変数 */
+	/*
+		仮に count = 0 と
+		初期化しても、
+		初期化されるのは最初の
+		一回のみなので、カウントされ続ける。
+	*/
+	count++;
+	printf("%d\n",count);
+	return count;
+}
+
+<h3>配列の初期化は宣言時のみ可能</h3>
+
+int array[] = {42,79,13};	
+/* 	要素数が省略されている 
+	要素数より少ない要素で初期化すると、
+	残りの配列は 0 で初期化される。							
+*/
+
+<h2>配列の要素数を求める</h2>
+
+配列全体のサイズ を 配列１つのサイズで割れば求まる。
+
+#include &lt;stdio.h&gt;
+
+int main(void)
+{
+	int array[] = {1, 2, 3, 4};
+
+	printf("配列の要素数は%d", sizeof(array) / sizeof(array[0]));
+
+	return 0;
+}
+
+
+int array[];
+
+array[] = {1, 2, 3};←こうは書けない。
+
+array[0] = 1; ←面倒でも一個一個代入していくしかない。
+array[1] = 2:
+array[2] = 3;
+
+
+<h2>桁表示</h2>
+
+	printf("%5d\n", 3);
+	printf("%5d\n", 300);
+	printf("%5d\n", -1000);
+
+	printf("%05d\n", 3);
+	printf("%05d\n", 300);
+	printf("%05d\n", -1000);
+
+	/* 全体の桁数:8, 少数の桁数 */
+	printf("%8.2f\n", 3.0123);
+	printf("%8.2f\n", 300);
+	printf("%8.2f\n", -1000.001);
+
+	/*
+		3
+	  300
+	-1000
+
+	00003
+	00300
+	-1000
+
+		3.01
+		0.00
+	-1000.00
+	*/
+
+どの型がどれだけのメモリを消費するかは処理系によって同じではないが
+sizeofで表示できる。
+	printf("shortのメモリ使用バイト数 %d\n",sizeof(short));
+	printf("intのメモリ使用バイト数 %d\n",sizeof(int));
+	printf("longのメモリ使用バイト数 %d\n",sizeof(long));
+	printf("floatのメモリ使用バイト数 %d\n",sizeof(float));
+	printf("doubleのメモリ使用バイト数 %d\n",sizeof(double));
+	printf("long doubleのメモリ使用バイト数 %d\n",sizeof(long double));
+
+  int	i, *p;
+
+  i = 100;
+  p = &i; 
+
+/* *p = 100;　と書いてはいけない。
+値のアドレス *pが初期化されていない変数なので、
+なんの保証もないアドレスに値を放り込むことになり、、
+仮にプログラムが記憶されているアドレスであった場合
+たちまちクラッシュする  */
+
+		printf("pの値は　%d\n",*p);
+		printf("p(変数)のアドレスは　%p\n",&p);
+		printf("p(値)のアドレスは%p\n",p);
+		
+
+
+メモリを確保する関数:malloc;#include &lt;stdlib.h&gt;
+int *p;
+p=malloc(sizeof(int));
+
+int分のメモリを確保する処理系によって２バイトか４バイトである事が多い。
+確保したアドレスの先頭を返す。
+メモリには制限があるので、確保できなかった場合はNULLが返る。
+
+if(p==NULL) exit(1);
+
+メモリの開放
+free(p);
+
+int１００個分の領域を確保
+int *p;
+p=malloc(sizeof(int)*100);
+
+１００個の領域に値を代入する
+
+*p=100;
+*(p+1)=127;	⇒ポインタは「型」と「アドレス」を持っているので、１を足せば、型のサイズ分アドレスを移動してくれる。
+*(p+2)=1234;
+...
+*(p+99)=333; /*ここまで。(p+100)を指定してもエラーにはならないが、空いている保証のないメモリを使うことになり、最悪の場合フリーズする*/
+
+配列を使ってメモリを確保する；
+int i[100];
+
+配列名はポインタ
+
+*i=100;
+*(i+1)=127;
+*(i+2)=1234;
+...
+
+と書ける。が配列名は変数では無いので、
+
+i++;
+と書いてアドレスの変更は出来ない。
+
+i[0]=100;
+i[1]=127;
+i[2]=1234;
+...
+
+↑こう書くのが普通。
+
+逆にポインタも配列なので添え字を使える
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+main()
+{
+   int *p;
+   
+   p=malloc(sizeof(int)*3);
+   if(p==NULL) exit(1);
+   
+  p[0]=10;
+  p[1]=20;
+  p[2]=30;
+  
+  printf("%d\n",p[0]+p[1]+p[2]);
+  
+  free(p);
+}
+
+エスケープシーケンス
+\＃＃＃；　＃部分は３桁の数値⇒８進数に解釈される
+\x＃＃；＃部分は２桁の数値⇒２桁までの１６進数に解釈される
+↑のどちらもASCIIコードの空白部分を指定するために使う（らしい）
+
+getchar関数
+	char c;
+
+	c = getchar();
+	printf("文字:　%c 文字コード（１６進）%X\n", c, c);
+		c = getchar();
+	printf("文字:　%c 文字コード（１６進）%X\n", c, c);
+		c = getchar();
+	printf("文字:　%c 文字コード（１６進）%X\n", c, c);
+
+コマンド名 ABC [ENTER]で
+
+ABC
+文字:　A 文字コード（１６進）41
+文字:　B 文字コード（１６進）42
+文字:　C 文字コード（１６進）43
+
+scantf関数
+scanf（"形式文字列",ポインター）;
+
+  int i;
+  
+  scanf("%d", &i);
+  printf("入力された数値は、%dです。\n", i);
+
+コマンド名 123 [ENTER]で
+
+入力された数値は、123 です。
+
+scanf("%d", i);と書いてしまうと、初期化されていない変数iの値をアドレスだと解釈して
+該当アドレスのメモリーを入力した値を書き込んでしまうので、最悪フリーズする（たぶん）。
+
+C言語は大文字と小文字が区別される。
+C言語では0はFALSE 0以外はTRUEに評価される
+
+<h2>条件付コンパイル condtional compilation</h2>
+
+　MSVC++での操作はソリューションエクスプローラ
+で、プロジェクトのコンテキストメニューから
+プロパティ⇒C/C++⇒プリプロセッサ⇒プリプロセッサの定義に
+HAVE_GETCH=1(真に評価される)；HAVE_GETCH=0(偽に評価される)と指定してからビルドする。
+UNIXでの操作は　-D スィッチに続けて-DHAVE_GETCH=0 とスペースを
+入れずにタイプする。
+
+#if HAVE_GETCH
+	…
+#else
+	…
+#endif
+
+
+fopen(*argv, "r") ファイルを読み取り専用スイッチ"r"を指定して開いている。
+fclose(fp);ファイルを閉じる。
+<h2>extern指定子</h2>
+
+extern指定子を付けると、「宣言が他の場所にも書かれている」ことをコンパイラに知らせることができます。 
+コンパイラはexternが付いていることを発見すると、
+他の場所で同様の名前で宣言されている変数を見つけてもエラーを 
+出しません。なお、定義はプログラム中で１箇所だけしか許されないので、
+ソースファイルの側に記述しておきま す。
+このとき、そのソースファイルが、
+宣言の記述されているヘッダファイルをインクルードしている必要があります 
+（正確には、宣言が見える位置に定義を書かなければならない）。
+なお、extern指定子は、関数プロトタイプに付けるこ ともできますが、
+関数に関しては付けなくても問題はありません
+（元々定義はソースファイル側の１箇所にしかないはず だから）。
+
+<h2>キャスト cast</h2>
+
+(void)fclose(fp);変数の値または関数の戻り値を、指定したデータ型に変換する。
+「あえてそうやっている」事をコンパイラに伝え、警告メッセージを抑止する。
+int kg, cm, age;
+ cm = 168;
+age = 30;
+kg = (int)(cm * cm * (age +100) / 61901.25)
+
+printf("文字列の出力\n");
+printf("%d %s %c \n", 
+fprintf(stdout,"文字列の出力\n");
+strstr(buf,KEYWORD)bufにKYEWORDが含まれれば、見つかった最初に現れる位置へのポインターを返す。
+見つからなければNULLを返す。
+NULLで返るという事は、NULL POINTERである 0 が返るという事。
+アドレス 0 はどこも指し示していないことが保証されているアドレス。
+NULL文字は文字コードが 0 の文字であって別物。NULLが0である事はマクロで定義されている(stddef.h他)。
+
+ポインターに0を代入すると、コンパイラはナルポインタと解釈するが、
+混乱を招くのでNULLという名前を使うべき。
+
+配列の名前を関数の引数に渡すと、その配列の先頭のアドレスが渡され、関数はポインターとして受け取る。
+
+<h2>制御文</h2>
+
+/* if 文 */
+
+↓のサンプルコードで強調したいことは、NULL　が　０（FALSE)として
+評価される事。
+\0 も NULL も整数に直せば 0 なので以下のように記述が可能。
+
+ != '\0'  != NULL と書いた方が分かりやすいことは言うまでもない。
+
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdlib.h&gt;
+
+#define LINE_MAX 256 /* 一行の最大文字数制限 */
+
+/*
+	指定したファイルの行から "abc" を含む行のみを標準出力する
+
+*/
+void main (int argc, char **argv)
+{
+	FILE *fp;	
+	char buf[LINE_MAX];
+	char substr[] = "abc";
+
+	--argc;
+	++argv;
+
+	if (argc == 0){
+		fprintf(stderr, "使い方：コマンド名 ファイル名1　ファイル名2…\n");
+		exit (0);
+	}
+
+	while (argc--) {
+
+		<strong>if (fp = fopen(*argv, "r"))</strong>{
+			
+			while (fgets(buf, LINE_MAX, fp)){
+
+				<strong>if (strstr(buf, substr)) 	
+					fputs(buf, stdout);</strong>
+				
+			}
+
+			argv++;
+			
+		}else{
+
+			fprintf(stderr, "指定されたファイル：%s を開けませんでした\n", *argv);
+			exit (0);
+		}
+	}
+
+
+
+/* while文の例 */
+
+#include &lt;stdio.h&gt;
+
+main()
+{
+  int i = 0;
+
+  while(i &lt; 10){
+    i++;
+    printf("%d\n", i);
+  }
+}	　
+/* do while文の例 */
+
+#include &lt;stdio.h&gt;
+
+main()
+{
+  int i = 0;
+
+  do{
+    i++;
+    printf("%d\n", i);
+  }while(i &lt; 10);
+}
+
+#include &lt;stdio.h&gt;
+
+main()
+{
+  int a = 1;
+  /* switchが判断できるのは整数値のみ。大小の比較などは不可能 */
+  switch(a){
+    case 1: printf("ａは１です。\n"); break;
+    case 2: printf("ａは２です。\n"); break;
+    default: printf("ａは１でも２でもありません。\n"); break;
+  }
+}
+#include <stdio.h>
+
+/* for 文 */
+main()
+{
+	int i;
+
+	for (i = 0; i < 10; i++){
+		printf("ブロック内を処理してからi++が実行される: i = %d\n", i);
+	}
+
+	printf("for文を抜ける時 i は加算されている i = %d\n", i);
+
+	return(0);
+}
+
+/* continue文 */
+
+実行をスキップして繰り返す
+#include <stdio.h>
+
+main()
+{
+  int i;
+  
+  for (i=0; i<10; i++) {
+
+    if (i==5)
+      continue;
+	/* 5 だけプリントされない */
+    printf("i = %d\n", i);
+  }
+}
+
+/* swithc文 */
+
+
+void main ()
+{
+	char c[] = "abc\0";
+
+
+	switch (*c){
+
+		case 'a':
+			printf("一文字目は'a'です\n");
+			break;
+		case 'p':
+			printf("一文字目は'p'です\n");
+			break;
+		default:
+		/*
+		 default はスペルを間違えると、(goto文の)ラベルとして解釈され
+		エラーにならないのでスペルミスがバグの温床となりやすい
+		 */
+			*c = '\0';
+			break;
+
+	}
+
+	
+}
+
+
+<h2>演算子</h2>
+
+ ^ はべき乗ではなく排他的論理和。同じ数字だと 0 異なれば 1 を返す。
+
+key = 5;/* 0～255の範囲内 */
+
+2 ^ key = 7   /* 暗号化 */ 
+
+010
+101 (key)
+---
+111
+
+7 ^ key = 2   /* 復号化 */
+
+111
+101 (key)
+---
+010
+
+
+暗号化キーとして使い、同じキーで復号できる。
+256通り試すと解除できてしまう脆弱な暗号化。
+
+% は剰余演算子(modulus operator)
+
+printf("%d", 4 % 2);　/* 0 が返る */
+
+<h2>条件式</h2>
+
+間違いやすい例
+a < b < c　⇒　a < b が 真か偽に評価されてから、その結果の 1 か 0 と c と比較される。
+↓
+a < b && b < c;
+論理演算子 && は 関係演算子より優先順位が低いので括弧は不要。
+
+t=100 || r=10　
+↓
+t == 100 || r == 10
+
+<h2>ポインタに関する考察</h2>
+
+#include &lt;stdio.h&gt;
+
+main()
+{
+	int i = 100;
+	int *p;
+	int **q;
+	int *r;
+
+	printf("int i = 100 を宣言しました\n");
+	printf("変数iの値：　%d\n",i);
+	printf("変数iのバイト数：　%d\n",sizeof(int));	
+	printf("変数iのアドレス：　%p\n",&i);	
+
+	p = &i;
+	printf("ポインター*pを宣言し、&iを代入しました\n");
+	printf("ポインター変数pのアドレス&pは %p です\n", &p);
+	printf("pそのもの p は 代入したiのアドレスになり %p です\n", p);
+	printf("pの値*pは %d です\n", *p);
+	printf("pの値のアドレス&*pは %p です\n", &*p);
+
+	q = &p;
+	printf("ポインタのポインタ**qを宣言し、&pを代入しました\n");
+	printf("qの値は変数 %p はpのアドレス %p と同じ筈です", q, &p);
+
+	r = &p;
+	printf("ポインタ*rを宣言し、&pを代入しました\n");
+	printf("rの値は変数 %p はpのアドレス %p と同じ筈です", r, &p);
+}
+<h2>文字</h2>
+
+#include &lt;stdio.h&gt;
+
+main()
+{
+	char c = 'a';
+
+	
+	printf("%c\n", c);
+
+}
+<h2>文字列</h2>
+
+	/*
+	int i[10], *p;
+	p = i;/* 配列名だけだと先頭のアドレスになる。p = &i;と同じ事になる*/
+
+	char s[4] = "ABC";/* 要素数 + 終端文字\0の数が[4] */
+	printf("%s\n", s);/*文字列は配列。配列名だけ指定すると、					  
+					  文字列の先頭のアドレスの意味になる。
+					  &s と書いても同じ事になる。*/
+
+/*添え字は書かなくても、自動で判断してくれる*/
+大きく間違えるとメモリの無駄遣い。
+少なく間違えると、メモリ確保していな領域分を表示しているのか（？）
+意味不明のもじが表示される。
+#include &lt;stdio.h&gt;
+
+main()
+{
+
+	char s[] = "ABC";
+	printf("%s\n", s);
+
+
+}
+
+/* これはNG
+#include <stdio.h>
+
+main()
+{
+	char name[3];
+
+	name = "AB";左のオペランドが、左辺値になっていません。＞配列名は変数ではないので代入ができない
+	
+	printf("%s", name);
+}
+/* これはOK
+#include <stdio.h>
+
+main()
+{
+	char name[3] = "AB";
+	
+	printf("%s", name);
+}
+*/
+/*これはOK
+
+#include <stdio.h>
+
+main()
+{
+	char *name;
+	
+	name = "AB";
+	printf("%s", name);
+}
+*/
+
+シングルクォートとダブルクォート
+	printf("value is %d\n", "R");　⇒間違った書き方
+	printf("value is %d\n", 'R');　⇒シングルクォートで囲まないとCharとして解釈されない（みたい）
+	
+/*	value is 4282188
+	value is 82 */
+
+でも、配列である文字列は""で囲む。
+
+	printf("%s\n","ABC");　⇒ "ABC"　が返る
+	printf("%s\n",'ABC');　⇒ 異常な文字列が返る
+
+'A'はchar型、"ABC"と書くと、'A'へのポインターを表す。
+だから、文字列はchar型のポインターとして宣言出来る。
+
+#include &lt;stdio.h&gt;
+
+main()
+{
+	char str[] = "ABC";
+	char *str2 = "DEF";
+
+	printf("%s\n", str);　/* ABC */
+	printf("%s\n", str2); /* DEF */
+}
+
+ただし、char *s;だけだと、メモリ領域を確保したことに
+ならず、以下はコンパイルは通るが、どこだかわからない
+アドレスに文字列を書き込もうとするため、やってはならない。
+#include &lt;stdio.h&gt;
+
+main()
+{
+	char *s;
+
+	printf("文字を入力してください\n");
+	scanf("%s", s);/* scanfの第2引数はポインタ、配列名の記述なので　&s と書いても同じ事　*/
+	printf("あなたの入力した文字は、%s です\n", *s);
+}
+
+#include &lt;stdio.h&gt;
+
+main()
+{
+	char s[100] , c;
+	int i = 0;
+
+	printf("%d 文字以内で文字を入力してください\n", sizeof(s));
+	
+	while ((s[i] = getchar()) != '\n') i++;
+
+	s[i] = '\0';
+	
+	printf("あなたの入力した文字は「 %s 」です\n", s);
+	
+}
+
+<h3>EOS終端文字を明示すれば配列の要素数を省略できる</h3>
+
+char str[] = {'M','A','R','I','O','\0'};
+
+/* ↓要素数が１つ多い部分に 0 が代入され、
+	終端文字と解釈されるのでＯＫ。
+ */
+char str[6] = {'M','A','R','I','O'};
+
+/*↓終端文字がないので、メモリ上に偶然現れる
+0 に出会うまでを文字列と解釈してしまうのでＮＧ */
+×： char str[] = {'M','A','R','I','O'};
+
+
+<h2>構造体</h2>
+
+struct {char name[32]; int age; int pay;} a;
+
+aという１つの変数に３２文字分のchar型データと
+２つのint型を収める事ができる。
+
+この場合 a が構造体名で、構造体名を付けると
+実際にメモリーに割り当てられる。。
+
+構造体の形を定義するだけなら、構造体名を付けずに
+タグtagと呼ばれる名前をつける。
+
+struct person {char name[32]; int age; int pay;};
+
+struct タグ名 {メンバーの宣言} 構造体名;
+
+タグ名は省略可能。構造体名はあれば、実際にメモリが割り当てられる。
+
+構造体を指すポインターを用意した場合、
+
+struct person *p;
+
+(*p).pay = 30000; と書くとメンバーにアクセスできる。
+p->pay = 30000; とも書くことができ、こちらの記述が
+一般的（アロー演算子）。
+
+構造体の型の宣言は、
+
+struct person a;
+struct person b;
+
+また、構造体の配列として宣言する場合、
+
+struct person x[100];/* 100人分の構造体を配列で宣言 */
+
+などとするが、typedefというキーワードを使うと少し簡潔に宣言できる。
+typedefは（一般的には）データ型の名前を作るキーワード。
+
+#include &lt;stdio.h&gt;
+typedef struct{
+	char		*name;
+	int			age;
+	int			pay;
+} PERSON;
+
+main()
+{
+	PERSON x[3];
+	int i;
+
+	
+	x[0].name = "AB";
+	x[0].age = 32;
+	x[0].pay = 100;
+	
+	x[1].name = "CDEF";
+	x[1].age = 40;
+	x[1].pay = 20;
+
+	x[2].name = "GHIJKL";
+	x[2].age = 17;
+	x[2].pay = 10;
+
+	for (i = 0; i < 3; i++)
+		printf("%s の *age は %d 、pay は %d\n", x[i].name, x[i].age, x[i].pay);
+	
+}
+
+<h3>構造体の初期化例</h3>
+int main(void)
+{
+
+    typedef struct Point { int x, y; } POINT;
+
+	POINT pt1 = {10, 20};
+	POINT pt2 = {100, 200};
+
+	POINT *p1 = &pt1;
+	POINT *p2 = &pt2;
+	
+	
+
+	printf("%d %d %d %d\n", p1->x, p1->y, p2->x, p2->y);
+
+	
+}
+
+<h3><a name="list" id="list">リスト構造の構造体へデータを追加する</a></h3>
+
+<p>
+	<img src="./c_gazo/list0.jpg" width="1171" height="450"
+	alt="リスト構造へデータが挿入される様子の図解5-1" />
+</p>
+
+<p>
+	<img src="./c_gazo/list1.jpg" width="1171" height="351"
+	alt="リスト構造へデータが挿入される様子の図解5-2" />
+</p>
+
+<p>
+	<img src="./c_gazo/list2.jpg" width="1171" height="350"
+	alt="リスト構造へデータが挿入される様子の図解5-3" />
+</p>
+
+<p>
+	<img src="./c_gazo/list3.jpg" width="1171" height="351"
+	alt="リスト構造へデータが挿入される様子の図解5-4" />
+</p>
+
+<p>
+	<img src="./c_gazo/list4.jpg" width="1171" height="363"
+	alt="リスト構造へデータが挿入される様子の図解5-5" />
+</p>
+
+<h3>環状のリスト構造を作る</h3>
+
+<p>
+	<img src="./c_gazo/list2_0.jpg" width="642" height="488"
+	alt="環状のリスト構造作成の図解11-1" />
+</p>
+
+<p>
+	<img src="./c_gazo/list2_1.jpg" width="766" height="324"
+	alt="環状のリスト構造作成の図解11-2" />
+</p>
+
+<p>
+	<img src="./c_gazo/list2_2.jpg" width="784" height="347"
+	alt="環状のリスト構造作成の図解11-3" />
+</p>
+
+<p>
+	<img src="./c_gazo/list2_3.jpg" width="784" height="349"
+	alt="環状のリスト構造作成の図解11-4" />
+</p>
+
+<p>
+	<img src="./c_gazo/list2_4.jpg" width="784" height="349"
+	alt="環状のリスト構造作成の図解11-5" />
+</p>
+
+<p>
+	<img src="./c_gazo/list2_5.jpg" width="784" height="349"
+	alt="環状のリスト構造作成の図解11-6" />
+</p>
+
+<p>
+	<img src="./c_gazo/list2_6.jpg" width="992" height="440"
+	alt="環状のリスト構造作成の図解11-7" />
+</p>
+
+<p>
+	<img src="./c_gazo/list2_7.jpg" width="868" height="345"
+	alt="環状のリスト構造作成の図解11-8" />
+</p>
+
+<p>
+	<img src="./c_gazo/list2_8.jpg" width="884" height="383"
+	alt="環状のリスト構造作成の図解11-9" />
+</p>
+
+<p>
+	<img src="./c_gazo/list2_9.jpg" width="884" height="391"
+	alt="環状のリスト構造作成の図解11-10" />
+</p>
+
+<p>
+	<img src="./c_gazo/list2_10.jpg" width="884" height="560"
+	alt="環状のリスト構造作成の図解11-11" />
+
+
+</p>
+
+<p>
+リスト構造は、行の追加や削除が柔軟に対応できる。
+ポインターを繋ぎ変えるだけで済む。
+</p>
+
+<h2>defineによるマクロ定義</h2>
+
+#define使うと定数宣言ができる。
+プログラムの先頭に書くのが一般的。
+
+	#define YES 1
+	#define NO  0
+
+としておくと、１や０を使う代わりに、YES　NOが使えて
+可読性の為によい。定義する名前は大文字を使うのが一般的。
+
+×	#define YES 1;←セミコロンは付けない
+×	#define NO  0;←セミコロンは付けない
+
+#defineは単なる置き換えなので、演算子ついた数値は
+括弧で囲んでおくべき。
+
+	#define OKIKAE  (80 + 1)
+
+	#define OKIKAE  80 + 1  ←×
+
+	printf("%d\", 3 * OKIKAE);
+	↑計算の順番が変わってしまう事になる。
+
+文字列リテラルの定数宣言もできる。
+
+	#define AUTHOR "フーマンチュウ博士"
+
+■#define は単に置き換えをするだけなので、
+関数のようにも使える。
+
+#include &lt;stdio.h&gt;
+
+#define  ALPH "abcdefghijklmnopqrstuvwxyz"
+#define PRINT_ALPH printf("%s", ALPH)
+
+void main(void)
+{
+	
+	PRINT_ALPH; /* abcdefghijklmnopqrstuvwxyz */
+
+}
+
+■名前の後に()を使うと括弧内のアルファベットを
+特定の値に置き換える事ができ、この機能がマクロ
+と呼ばれている。
+通常の関数の使用より若干高速に動作するが、
+（関数の実態は一箇所にしかないのに比べ）
+マクロを使う場所の全てで置き換えが起こるので、
+プログラムのサイズが極端に肥大化する場合がある。
+
+#include &lt;stdio.h&gt;
+
+#define  ALPH "abcdefghijklmnopqrstuvwxyz"
+#define PRINT_X(X) printf("%s", (X))
+
+void main(void)
+{
+
+	PRINT_X(ALPH); /* abcdefghijklmnopqrstuvwxyz */
+
+}
+
+一般的に、決まりきった数式にマクロを使用する。
+
+#include &lt;stdio.h&gt;
+
+#define GET_TRAPEZOID_AREA(A,B,H) (A + B) * H / 2
+
+int main(void)
+{
+	int up,down,h,s;
+	printf("上底、下底、高さ:");
+	scanf("%d,%d,%d",&up,&down,&h);
+	s = GET_TRAPEZOID_AREA(up,down,h);
+	printf("面積:%d\n",s);
+	return 0;
+}
+
+<h2>constによる定数宣言</h2>
+
+	const double EXCISETAX = 0.05;
+
+定数は大文字で書くのが一般的。
+代入できない。読み取り専用である事を除けば、
+通常の変数と扱いは同じ。
+
+#define での定数宣言が多いらしい、が
+特定の関数の中だけで使用する定数であれば
+const を使うと便利。
+
+<h2>enum(エナム)定数</h2>
+
+やはり大文字で書く。
+
+上から順に 0, 1, 2, 3, 4 が自動で割り当てられる。
+主にフラグ定数として使用される。
+定数をカンマで区切って記述する。
+構造体の宣言同様に最後に ; を付ける。
+ 
+enum {
+	STATE_NORMAL, /* 通常 */
+	STATE_POISON, /* 毒 */
+	STATE_NUMBLY, /* マヒ */
+	STATE_CURSE /* 呪われ */
+};
+
+数値を指定することもできるが、整数値の
+指定しかできない。
+
+enum {
+	ENUM_0,
+	ENUM_1,
+	ENUM_5 = 5,
+	ENUM_6,
+	ENUM_7,
+	ENUM_9 = 9, 
+};
+
+/*
+	0, 1, 5, 6, 7, 9
+	が割り当てられる。
+	1つ下の定数は１増加した値になる。
+*/
+
+
+<h2>共用体</h2>
+
+union（共用体)は、宣言の記述が構造体(struct)と似ているが、
+働きは異なる。
+
+union yen_tag{
+	int iyen;
+	double dyen;
+} money
+
+共用体のメモリー領域はメンバー変数のうち最大の型のデータを入れるのに
+必要な分だけ確保される。
+同時に使えるメンバーは１つだけで、あるメンバー変数に値を代入したら、
+他のメンバー変数の内容を壊してしまう。
+変数に何がはいるのか決められない場合に使用する。
+データ領域を無駄遣いしないための仕組みだが、構造体に比べると
+使われる場面ははるかに少ないらしい。
+
+
+<h2>ヘッダーファイル</h2>
+
+ヘッダーファイルには宣言部分のみまとめる。
+宣言とは
+・プロトタイプ宣言
+・構造体宣言
+・#defineによる定義
+（不足があるかもしれないが上記は確認済み）
+
+で、１：１で対応する宣言部分のない
+ソースファイルを拡張子[.c]で同名で
+作成し、インクルードするソースファイルには
+自作ヘッダーファイルであれば、ダブルクォーテーションで囲み
+
+#include "list.h"
+
+として利用する。
+
+/* main.c */
+
+#include &lt;stdio.h&gt;
+#include "test.h"
+
+void main()
+{
+	printf("%d", sigma(10, 1));
+}
+
+/* test.c */
+
+int sigma(int max, int min)
+{
+	int i = 0;
+
+	i = (max + min) * (max - min + 1) / 2;
+
+	return i;
+}
+
+/* test.h */
+
+int sigma(int max, int min);
+
+■ヘッダーファイルは以下のように作るのが理想
+
+/* sum.h */
+#ifndef _INCLUDE_SUM_
+#define _INCLUDE_SUM_
+
+/* min～max間の合計値を計算する関数
+int min 最小値
+int max 最大値
+戻り値 int 合計値
+*/
+extern int sum(int min,int max);
+
+#endif
+
+externは宣言だけして「定義」をソースファイル内で
+１っ回のみ行うと、どのファイルからも使用できる
+変数を作成できる。（書いてある通りにならないので、
+理解不十分）
+
+プロトタイプ宣言はもともと定義をしていないので
+extern はつけてもつけなくても同じ動作になる（たぶん）
+
+#ifndef 記号 ～ #endif は、記号が定義されていない
+場合にコンパイルが実行される。
+最終的に1つのファイルとしてコンパイルされるので
+重複してコンパイルされることを避ける為に記述する。
+（どう使われるのか、理解不十分）
+
+<h3>#ifndef 記号　～　#endif使用例</h3>
+
+/* People.h */
+#ifndef __PEOPLE_H__
+#define __PEOPLE_H__
+
+#include <stdio.h>
+#include <string.h>
+
+typedef struct {
+	char name[256];
+	int age;
+	int sex;
+} People;
+
+/* 個人データを入力する */
+extern void InputPeople(People *data);
+
+/* 個人データを表示する */
+extern void ShowPeople(People data);
+
+#endif
+
+/* Peple.c */
+
+void InputPeople(People *data)
+{
+	printf("名前:");
+	scanf("%s",data->name);
+	printf("年齢:");
+	scanf("%d",&data->age);
+	printf("性別(1-男性、2-女性):");
+	scanf("%d",&data->sex);
+	printf("\n");
+}
+
+void ShowPeople(People data)
+{
+	char sex[16];
+	
+	printf("名前:%s\n",data.name);
+	printf("年齢:%d\n",data.age);
+	
+	if (data.sex == 1) {
+		strcpy(sex,"男性");
+	} else {
+		strcpy(sex,"女性");
+	}
+	
+	printf("性別:%s\n",sex);
+	printf("\n");
+}
+
+<h2>定義済み定数</h2>
+
+#include &lt;stdio.h&gt;
+#include &lt;limits.h&gt;
+void main()
+{
+	/* 定義済み定数 */
+
+	printf("行数を返す %d\n", __LINE__);
+	printf("実行ソースファイル名を返す %s\n", __FILE__);
+	printf("日付を返す %s\n", __DATE__);
+	printf("時刻を返す %s\n", __TIME__);
+
+
+	/* 以下 limits.h 要参照 */
+
+	printf("char型のビット単位のサイズ %d\n", CHAR_BIT);
+	printf("char型の最大値 %d\n", CHAR_MAX);
+	printf("char型の最小値 %d\n", CHAR_MIN);
+	printf("int型の最大値 %d\n", INT_MAX);
+	printf("int型の最小値 %d\n", INT_MIN);
+	printf("long型の最大値 %ld\n", LONG_MAX);
+	printf("long型の最小値 %ld\n", LONG_MIN);
+	printf("signed　char型の最大値 %d\n", SCHAR_MAX);
+	printf("signed　char型の最小値 %d\n", SCHAR_MIN);
+	printf("short型の最大値 %d\n", SHRT_MAX);
+	printf("short型の最小値 %d\n", SHRT_MIN);
+	printf("unsigned　char型の最大値 %d\n", UCHAR_MAX);
+	printf("unsigned　int型の最大値 %lx\n", UINT_MAX);
+	printf("unsigned　long型の最大値 %lxd\n", ULONG_MAX);
+	printf("unsigned　short型の最大値 %d\n", USHRT_MAX);
+}
+
+<h2>■■C言語関数レファレンス■■</h2>
+<div><a name = "a" id="a">a</a></div>
+<h3>abort関数</h3>
+
+強制終了する。
+
+<h3>abs関数</h3>
+
+stdlib.h 要参照
+
+絶対値を戻す
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+void main(void)
+{
+	printf("%d\n",abs(10));
+	printf("%d\n",abs(-10));
+	
+	return;
+}
+
+<h3>atoi関数/atof関数</h3>
+
+#include &lt;stdlib.h&gt;
+数字を数値に変換する。
+数字でない文字列であれば 0 が戻る。
+
+変数 = atoi(文字列);
+
+実数であれば、
+
+変数 = atof(文字列);
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+/* ２乗を返す */
+int main(void)
+{
+	char str[256];
+	int i;
+
+	
+	fgets(str, sizeof(str), stdin);
+	/* "5だ～" を入力 */
+	
+	/* atoi は数字以外の文字以降を無視する */
+	i = atoi(str);
+	
+	printf("\n%s\n", "--------　解　---------");
+	printf("%sの２乗は %d です\n", str, i * i);
+
+	/*
+	--------　解　---------
+	5だ～
+	の２乗は 25 です
+	*/
+	
+	return 0;
+}
+
+<a name ="c" id="c">c</a>
+
+<h3>cpringf関数</h3>
+
+conio.h 要参照
+
+printfと同じ。何が違うのか謎。
+コンソールへの出力を意識して使うように
+見える。
+
+
+<a name ="e" id="e">e</a>
+<h3>exit関数</h3>
+stdlib.h要参照
+
+プログラムを終了させる。
+
+exit(0); /* エラー終了 */
+exit(1); /* エラー以外の終了 */
+
+<a name ="f" id="f">f</a>
+<h3>feof関数</h3>
+
+(バイナリ)ファイルの終端であれば 0 以外(true)を返す。
+FILE *fp;
+while(!feof(fp) {
+  fread(...);
+  ...
+}
+
+<h3>fflush関数</h3>
+
+stdio.h要参照
+
+一部のコンパイラでしか使えない為使用は邪道とされる。
+
+出力バッファを強制出力する。
+
+<h3>fgetc関数/getc関数</h3>
+
+#include &lt;stdio.h&gt;要参照。
+fscanf関数の変換文字を%cにした場合と同じ。
+int fgetc(FILE *stream)
+引数はファイルポインターのみ。
+返り値は文字コード。EOFを読み取るために
+char型ではなく、intが返る。
+
+fgetc(stdin)とすれば、getchar()とほぼ同じ。
+
+<h3>fgets関数</h3>
+
+#include &lt;stdio.h&gt;要参照。
+行単位で文字列を取得する関数
+第一引数：1行分データ格納場所の先頭アドレス
+第二引数：第一引数の格納場所のサイズ
+指定されたストリームから MAX_SIZE - 1 か 改行文字が現れるまで読み込み「行」だと判断する。
+読み込んだ最後の文字(\n)の後にナル文字が書かれる。
+第三引数：読み込むストリームのファイルポインター
+
+while (fgets(buf, MAX_SIZE, fp) != NULL)
+	fputs(buf, stdout)
+
+<h3>fputs関数</h3>
+
+#include &lt;stdio.h&gt;要参照。
+第一引数：書き出す文字列
+第二引数：書き出し先ストリーム
+
+<h3>fopen/fclose関数</h3>
+
+stdio.h要参照
+
+FILE型 *fp
+FILE *fp;
+fp=fopen（"file.txt","w"）;
+開けなかった場合は NULL を返す
+/*
+\tがタブ文字に解釈されてしまうのを
+\\tとして回避する必要がある。
+開いたファイルはfclose関数で閉じる事。
+*/
+fp=fopen("c:\\txt\\test.txt","w");
+/*　～　処理　～　*/
+fclose(fp);
+fopen(ファイル名,モード)
+<table border="1">
+<tbody>
+  <tr>
+    <td>テキストファイル時モード(バイナリファイル時モード)</td>
+    <td>意味</td>
+  </tr>
+  <tr>
+    <td>r(rb)</td>
+    <td>読み出し用にファイルを開く。ファイルが存在しない場合や見つからない場合は失敗する。</td>
+  </tr>
+  <tr>
+    <td>w(wb)</td>
+    <td>書き込み用にファイルを作成、ファイルが存在する場合はそのファイルの内容は破棄する。</td>
+  </tr>
+  <tr>
+    <td>a(ab)</td>
+    <td>追加書き込みのために既存のファイルを開く。ファイルが存在しない場合は作成する。 </td>
+  </tr>
+  <tr>
+    <td>r+(rb+)</td>
+    <td>読み書き用に開く。ファイルは存在していなければならない。 </td>
+  </tr>
+  <tr>
+    <td>w+(wb+)</td>
+    <td>読み書き用にファイルを作成。ファイルが存在する場合はそのファイルの内容は破棄する。</td>
+  </tr>
+  <tr>
+    <td>a+(ab+)</td>
+    <td>読み出しと追加の両方のモードでファイルを開く。ファイルが存在しない場合は作成する。</td>
+  </tr>
+</tbody>
+</table>
+
+
+<h3>fprintf関数</h3>
+
+stdio.h 要参照
+
+printf関数とほぼ同じ使い方。
+fprintf(stdout, … とすれば、printfと同じ。
+第一引数にファイルポインタを指定。	
+コンソールではなく、ファイルに書き込む。
+fprintf(fp, "iの値は%dです。\n", i);
+
+コンソールに書き込む場合は stdout | strderr を指定する。
+fprintf（stdout, "test\n"）;
+
+<h3> fputc関数/putc関数</h3>
+
+stdio.h 要参照
+関数型 : int fputc(int c, FILE *fp);
+引数　 : 文字、ファイルポインタ
+戻り値 : 出力文字。失敗したときはEOF。
+機能　 : ファイルに1文字書き込む。
+
+<h3>fscanf関数</h3>
+
+stdio.h要参照
+ファイルからテキストを読み込む。
+scanfと使い方は同じ。
+引数が1つ増えて、第一引数にファイルポインタを指定する。
+fscanf(stdin, "%d", ポインター)
+とかするとscanf()と同じ。
+
+ファイルの先頭から読み込む。
+ファイルに "test100" とあった場合、
+"%d" の指定だと、数字の 100 のみを
+読み込む。
+
+
+
+<h3>fread関数</h3>
+
+stdio.h要参照
+
+バイナリファイルから読み込む
+fwrite関数と使い方は同じ。
+
+<h3>fwrite関数</h3>
+
+stdio.h要参照	
+バイナリファイルにバイトを書き込む
+fwrite(&i, sizeof(int), 1, fp);
+&i:書き込む内容のポインター
+sizeof(int)：書き込む内容のバイト数
+1：書き込む回数（通常は 1回 の指定になる)
+fp:書き込み先ファイルのファイルポインタ
+
+正常に処理された場合の返り値は、書き込み回数に
+指定した数値。上記の場合は 1 以外が返ると
+エラー。
+
+<h3>ftell関数</h3>
+
+stdio.h要参照
+関数型 : long ftell(FILE *fp);
+引数　 : ファイルポインタ
+戻り値 : 現在のファイル位置。
+機能　 : ファイル位置を取得する。
+
+<he>fseek</h3>
+
+stdio.h要参照
+関数型 : int fseek(FILE *fp, long offset, int ptrname);
+引数　 : ファイルポインタ、ファイル位置の移動数、ファイル位置の基準
+戻り値 : 成功した場合は0、失敗したときは0以外。
+機能　 : ファイル位置を変更する。
+位置　 : SEEK_SET 先頭、SEEK_CUR 現在の位置、SEEK_END 終わり。
+
+<h3>fgetpos関数</h3>
+
+stdio.h要参照
+関数型 : int fgetpos(FILE *fp, fpos_t *ptr);
+引数　 : ファイルポインタ、ファイル位置を格納する変数のポインタ
+戻り値 : 成功した場合は0、失敗したときは0以外。
+機能　 : 現在のファイル位置を格納する。
+
+
+<h3>fsetpos関数</h3>
+
+stdio.h要参照
+関数型 : int fsetpos(FILE *fp, const fpos_t *ptr);
+引数　 : ファイルポインタ、ファイル位置を格納する変数のポインタ
+戻り値 : 成功した場合は0、失敗したときは0以外。
+機能　 : ファイル位置を変更する。
+
+
+<a name ="g" id="g">g</a>
+
+<h3>getch関数</h3>
+
+conio.h要参照
+
+getchar関数と同じ使い方？
+Unix の cursesライブラリ、
+MicrosoftのCコンパイラにある。
+この関数をもたない処理系もある。
+
+
+<h3>getchar関数</h3>
+
+キーボードの入力をまって
+文字コードを返す
+#include &lt;stdio.h&gt;
+
+main()
+{
+  char c;
+  
+  c=getchar();
+  printf("文字:%c コード:%X",c,c);
+}
+
+<h3>gets関数</h3>
+
+stdio.h要参照
+
+行単位で文字列を読み込む。
+空白文字も読み込む。
+文字配列数指定を超えた、超えないの
+判断をしないのでバグの温床となる関数。
+fgets関数の使用推奨。
+
+#include &lt;stdio.h&gt;
+
+int main(void)
+{
+	char str[256];
+	
+	/*
+	　gets(str); バグの元なので使わない
+	　↓fgets()を使う。
+	*/
+
+	fgets(str, sizeof(str), stdin);
+
+	puts(str);
+	
+	return 0;
+}
+<a name ="i" id="i">i</a>
+<h3>isalnum関数</h3>
+
+#include <ctype.h>
+英数字	(A～Z,a～z,0～9)であるかを判定する。
+
+<h3>isdigit関数</h3>
+
+#include <ctype.h>
+10進数	(0～9)であるかを判定する。
+
+
+<h3>isxdigit関数</h3>
+
+#include &lt;ctype.h&gt;
+16進数	(A～F,a～f,0～9)であるかを判定する
+
+<h3>isalpha関数</h3>
+
+#include &lt;ctype.h&gt;
+英字	(A～Z,a～z)であるかを判定する。
+
+<h3>isupper</h3>
+
+
+英大文字	(A～Z)であるかを判定する。
+
+<h3>islower関数</h3>
+
+#include &lt;ctype.h&gt;
+英小文字	(a～z)であるかを判定する
+
+
+<h3>ispunct</h3>
+
+#include &lt;ctype.h&gt;
+記号	(!"#$%&'()*+,- /:;<=>?@^_`{|}~)であるかを判定する
+
+<h3>isspace</h3>
+
+#include &lt;ctype.h&gt;
+スペース	(0x09～0x0D,0x20)であるかを判定する。
+
+
+
+<a name ="m" id="m">m</a>
+<h3>malloc(エムアロック)関数/free関数</h3>
+
+ポインタ変数 = malloc(必要なメモリのバイトサイズ);
+メモリを確保できなかった場合は NULL が返る。
+
+領域が確保できたときの戻り値は void型のポインター。
+代入するポインタ変数がint * だった場合、
+
+ポインタ変数 = (int *)malloc(必要なメモリのバイトサイズ);
+
+とキャストしてやらないと、C++コンパイラではエラーになる。
+
+配列は要素数をプログラム中で変更できないので
+malloc関数を使うと便利だが、配列で用が足りるなら
+配列を使ったほうが安全とされる。
+(malloc の信用性が低い？)
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;/* for malloc | free */
+
+int main(void)
+{
+	int *p; /* 初期化していない状態のポインターは
+			どのアドレスを記憶しているのか
+			何の保証もない*/
+	
+	p = malloc(sizeof(int));  /* int型の領域確保 */
+	if( p == NULL )    /* 領域確保に失敗したか */
+	{
+		printf( "%dバイトの領域確保に失敗", sizeof(int) );
+		return 1;
+	}
+	
+	*p = 150;
+	printf( "%d\n", *p );
+	
+	free( p );  /* 領域解放 */
+	
+	return 0;
+}
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+main()
+{
+  int *p, p1, p2, p3;
+
+	/* int１００個分の領域を確保する */
+	p = malloc(sizeof(int) * 100);
+	if(p==NULL) exit(1);
+  
+	printf( \
+		"確保した領域の先頭 %d 100番目の先頭 %d\n", \
+		p, p + 99);
+
+	p1 = p;
+	p2 = p + 99;
+	p3 = p2 - p1 +sizeof(int);
+	printf( \
+		"確保した領域のサイズは %d int の %d個分です\n", \
+		p3 , p3/sizeof(int));
+	
+	
+	free(p);
+}
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+main()
+{
+	int *p;
+	int *q;
+	int i = 100;
+	
+	/*
+	int100個分のメモリ領域を確保
+	*/
+	p = malloc(sizeof(int) * i);
+	
+	if (p == NULL){
+		printf("int%d個分のメモリ領域の確保ができませんでした\n", i);
+		exit(1);/*エラー終了*/
+	}
+	q = p;
+
+	for (i = 0; i &lt; 100; i++){
+		printf("代入時i = %d\n",i);
+		*q = i;
+		q++;
+	}
+	q--;/*forを抜ける際、１つqが余分に増加した分を戻す*/
+	for (i = 0; i < 100; i++){
+		printf("%d番目の*qの値は%d\n",i ,*(q + (i - 99)));
+	}
+	
+
+	free(p);/*
+			free関数はmalloc関数が渡したアドレスを
+			受け取るので、pは弄らないでとっておく。
+			*/
+}
+変数であることと定数である事を除けば、ポインタも配列名と
+同じように、p[0],p[1]と添え字でインデックスを使用できる。
+
+malloc関数で確保したメモリをヒープと呼ぶことがある。
+ヒープに確保された配列を動的配列という。
+
+ヒープ：長期的に使用される大きなサイズのメモリ領域；
+
+■malloc関数で動的配列を実現する	
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+int main()
+{
+	int i;
+	int *heap;
+	heap = (int *)malloc(sizeof(int) * 10);
+	if (heap == NULL) exit(0);
+
+	for (i = 0;i < 10;i++) {
+		heap[i] = i;
+	}
+	printf("%d\n",heap[5]);
+
+	free(heap);
+
+	return 0;
+}
+
+
+<h3>memcpy関数</h3>
+
+配列をコピーする
+
+#include <stdio.h>
+#include <memory.h> /* for memcpy() */
+
+
+int main(void)
+{
+	int array[] = {1, 2, 3, 4};
+	int array2[4], i;		
+
+	memcpy(array2, array, sizeof(array));
+	
+	for (i = 0; i < sizeof(array) / sizeof(array[0]); i++){
+		
+		printf("array2[%d] は %d\n", i, array2[i]);
+
+	}
+	
+
+	return 0;
+}
+
+結果：
+array2[0] は 1
+array2[1] は 2
+array2[2] は 3
+array2[3] は 4
+
+
+
+
+<a name = "p" id="p">p</a>
+<h3>perror関数</h3>
+
+エラーメッセージを表示する
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+main()
+{
+  FILE *fp;
+  
+  if ((fp=fopen("c:\\", "w")) == NULL) {
+    perror("ファイルが開けません");
+/*
+ファイルが開けません: No such file or directory
+*/
+    exit(1);
+  }
+  
+  fclose(fp);
+}
+
+<h3>pow関数</h3>
+
+math.h 要参照
+累乗をdouble型で戻す。int型に記憶させると間違う。
+
+printf("%dの%d乗 = <b>%f</b>\n",5,2,pow(5,2));
+
+
+
+<h3>printf関数</h3>
+
+stdio.h要参照
+文字列を表示する。
+
+printf("%s", str);
+
+"%s"は文字列を表示させる場合省略できるが、
+文字列の中に"%"がある場合変換指定子と解釈され
+誤動作するので、"%s"を指定する。
+
+<h3>puts関数</h3>
+
+stdio.h要参照
+
+puts("文字列");
+printfより低機能で、最後に改行が入る。
+空白も読み込む。
+
+#include &lt;stdio.h&gt;
+
+int main(void)
+{
+	char str[256];
+	
+	gets(str);
+	puts(str);
+	
+	return 0;
+}
+
+
+<h3>putchar関数</h3>
+
+printf("%c", c)とほぼ同じ。
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+main()
+{
+
+	FILE *fp;
+	int	c;
+	char filename[101]; 
+
+	printf("100文字以内の開くファイル名を指定してください\n:");
+
+	if (scanf("%s", filename) != 1) {
+		scanf("%*s");
+		
+		perror("scanfできません");
+		exit(1);
+	}
+
+
+	if ((fp = fopen(filename, "r")) == NULL) {
+		perror("ファイルが開けません");
+		exit(1);
+	}
+
+	while ((c = fgetc(fp)) != EOF) {
+		/*
+		printf("%c", c);
+		putchar関数はprintfより効率がよい（らしい）
+		*/
+		<b>putchar(c);</b>
+		
+	}
+
+	fclose(fp);
+}
+
+<a name = "q" id="q">q</a>
+<h3>qsort関数</h3>
+stdlib.h要参照
+
+qsort(base, nel, width, compar)
+base:並び換えるデータの先頭のアドレス
+nel:要素数
+width:要素一つ分のバイト数
+compar:比較用の関数(へのポインター)（並び換えのロジックにより入れ替えて使う)
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;/* for qsort */
+#include &lt;string.h&gt;/* for strcomp */
+
+#define MAX_LINES 3 /* 最大行数 */
+#define LINE_SIZE 5 /* ３行３文字(+ '\n' + '\0')の行列 */
+char line[3][LINE_SIZE];/* データ格納領域 */
+
+int mycmp(const char *a, const char *b)
+{
+	return (strcmp(b, a)); /* a b の順を逆にしてある　*/
+}
+
+int main()
+{
+	char s3[] = "GHI";
+	char s2[] = "DEF";
+	char s1[] = "ABC";
+	int i;
+		
+	strcpy(line[0], s1);
+	strcpy(line[1], s2);
+	strcpy(line[2], s3);
+
+	qsort(line, 3, sizeof(char) * LINE_SIZE, strcmp);
+
+	/* 降順に並び変えたいときは strcmp を細工して、mycmpを用意する
+
+	qsort(line, 3, sizeof(char) * LINE_SIZE, mycmp);
+
+	*/
+
+	for (i = 0; i < MAX_LINES; i++)
+		printf("%s\n",line[i]);
+
+	/*
+	ABC
+	DEF
+	GHI
+	*/
+
+	return (0);
+
+}
+
+
+
+
+
+
+<a name ="r" id="r">r</a>
+<h3>rand関数</h3>
+
+stdlib.h要参照
+
+擬似乱数を返す。
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+int GetRandom(int min, int max);
+
+int main(void)
+{
+	int i, min = 1, max = 6, saikoro;
+	
+	/* 10回乱数を表示する */
+	for (i = 0;i < 10;i++) {
+		printf("%d\n",rand());
+	}
+		
+	/* RAND_MAXは乱数の最大値を返す定数 */
+	printf("乱数のMAX%d：\n", RAND_MAX);
+
+	/* 指定した範囲の乱数を返す 
+	   以下の式は範囲を指定する乱数取得の
+	   「公式」とされる。
+	*/
+
+	
+	/*
+		10回乱数が発生するが、10回同じパターンの繰り返しになる
+		この問題を解決するには srand()関数を使う。
+	*/
+	for (i = 0; i < 10; i++) {
+		
+		printf("サイコロ :%d\n", GetRandom(1, 6));
+	}
+
+	return 0;
+}
+
+int GetRandom(int min, int max)
+{
+	int saikoro;
+
+	saikoro = min + (int)(rand() * (max - min + 1.0) / (1.0 + RAND_MAX));
+
+	return saikoro;
+
+}
+
+<h3>realloc(リアロック)関数</h3>
+
+stdlib.h要参照
+
+mallocで確保した領域を中身を維持したまま
+サイズを変更する。
+多様するとフラグメンテーションが起こる。
+
+
+新しいポインタ変数 = realloc(現在のポインタ, 確保するバイトサイズ);
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+int main(void)
+{
+　　int *heap;
+　　heap = (int *)malloc(sizeof(int) * 10);
+
+	/* 要素数を１０から１００ッ個に変更 */
+　　heap = (int *)realloc(heap,sizeof(int) * 100);
+
+　　free(heap);
+　　return 0;
+}
+<a name ="s" id="s">s</a>
+<h3>scanf関数</h3>
+
+入力された数値をキーボードの
+入力を待って表示する。引数には変数のアドレスを渡す。
+
+
+文字列を読ませる場合は
+ポインターのサイズ以上入力されると暴走するので
+char i[33];
+scanf("%32s", &i);/* 終端文字が入るので１文字すくなくしている */
+
+とすると、32文字以上の入力は切り捨てられるので安全。
+
+#include &lt;stdio.h&gt;
+
+main()
+{
+  int i;
+  
+  scanf("%d", &i);
+  printf("入力された数値は、%dです。\n", i);
+}
+#include &lt;stdio.h&gt;
+
+main()
+{
+  float f[3];
+  
+  printf("実数を3つ入力してください。\n");
+  scanf("%f%f%f", &f[0],&f[1],&f[2]);
+  printf("%f, %f, %f\n", f[0],f[1],f[2]);
+}
+
+#include &lt;stdio.h&gt;
+int main(void)
+{
+	double i;
+	
+	/* double型の場合は<b>%lf</b>指定子である必要がある */
+	scanf_s("%lf", &i, sizeof(double));
+
+	printf("入力した数値は%fです\n", i);
+
+	return 0;
+	
+}
+
+■scanf関数は数値でなければ解釈しない
+#include <stdio.h>
+
+main()
+{
+/* 文字で宣言した変数はは文字として解釈する。
+  char c;
+  ▼ ここで'a'を入力
+  scanf("%c", &c);　⇒　'a'
+  printf("%d", c);　⇒　97
+
+*/
+/* 初期化されていないcの値が返る。
+	int c;
+	▼ ここで'a'を入力
+	scanf("%c", &c);
+	printf("%d %c", c);　⇒例として、　-858993567 　が返った。
+	%cを置くことで、入力バファにある'a'は
+	破棄はされている。
+
+*/
+	int c = 0;
+	/* ここで'a'を入力
+	0で初期化しているので、'a'の
+	入力は無視され、c は 0 のまま。
+	scanfは%dで文字を受け取らない
+	ので、入力バファには'a'が
+	残り続ける。
+	
+	正しく実行できたscanfは 1 を返すので、
+	int chk;
+	chk = scanf("%d, &c);
+	if (chk != 1) scanf("%c", &c);
+
+	とすりゃいいのだが、'a'ではなく'aaa'
+	だとこれでも駄目。以下のように書くと
+	文字列配列を作らずに文字列を
+	受け取り入力バッファから破棄すること
+	が出来る。
+	int chk;
+	chk = scanf("%d, &c);
+	if (chk != 1) scanf("%*s");
+	
+	*/
+
+	scanf("%d", &c);
+	printf("「%d」「%c」\n", c, c);　⇒　「0」「」←ASCCIの 0 に対応する文字が入っている。
+
+}
+
+/* 複数の数値も扱える */
+#include &lt;stdio.h&gt;
+int main(void)
+{
+	double i, h;
+
+	scanf_s("%lf%lf", &i, &h, sizeof(double), sizeof(double));
+
+	printf("入力した数値は%f %fです\n", i, h);
+
+	return 0;
+	
+}
+
+scanf_s(%lf-%lf …とすると、「-」が区切り文字になる。
+入力する際も「-」で区切って入力しなけばならなくなる。
+
+<h3>scanf_s関数</h3>
+
+scanfのセキュリティ強化版。
+第3引数にサイズ（バイト数）を指定する。
+標準入力からポインターに値を書き込む関数。
+scanf("%d", ポインター);
+scanf_s("%d", ポインター);←%dはサイズが解っているので指定の必要無し。
+
+char str[77];
+scanf_s("%d", ポインター, 77);
+
+<h3>
+sin		サイン
+cos		コサイン
+tan		タンジェント
+asin	アークサイン
+acos	アークコサイン
+atan	アークタンジェント
+</h3>
+
+math.h要参照
+三角関数　角度の指定はラジアン値を使う。
+double型で戻る。
+小数なので誤差あります。
+
+ラジアン = (度 * 3.14159 / 180)
+ラジアンは弧と半径が等しくなる角度。
+
+#include &lt;stdio.h&gt;
+#include &lt;math.h&gt
+
+#define RADIAN(ARC) ((ARC) * 3.14159 / 180)
+/*
+身長160cmの人が5m離れた位置から木を見上げたときに、
+その角度が40度だった場合の木の高さを求める
+*/
+void main(void)
+{
+	double stature = 160;
+	double distance = 500;
+	double arc = 40;
+	double tree;
+	
+	tree = distance * tan(RADIAN(arc)) + stature;
+	printf("%fm\n",tree / 100);
+	
+	return;
+}
+
+<h3>sizeof<del>関数</del><ins>演算子</ins></h3>
+
+変数の使用するメモリ領域の大きさをバイト単位で返す。
+
+型のサイズは () で括り、sizeof(int) と書くが、
+変数のサイズは sizeof i と書く。関数に見えるが、
+演算子。
+
+#include &lt;stdio.h&gt;
+
+main()
+{
+	int i, *p;
+	printf("変数iのサイズは%d、変数pのサイズは%d\n", sizeof(i), sizeof(p));
+}
+
+<h3>sprintf関数</h3>
+
+printf関数と同じ使い方。
+第一引数に結果を記憶する配列を指定する。
+文字列を連結させるのに最適な関数。
+
+#include &lt;stdio.h&gt;
+
+int main(void)
+{
+	char str[16];
+	char str1[12] = "DRAGON";
+	char str2[] = "QUEST";
+	int i = 3;
+	sprintf(str,"%s%s%d\n",str1,str2,i);
+	printf(str);
+	return 0;
+}
+
+結果：DRAGONQUEST3
+
+<h3>sqrt関数</h3>
+
+math.h要参照
+
+平方根をdoubleで戻す。int型に記憶させると間違う。
+
+平方根 = sqrt(数値);
+
+少数点６位までの四捨五入なので誤差でます。
+
+<h3>sscanf関数</h3>
+
+文字列から数値を取り出す。
+scanf関数と同じような問題があり
+(入力した値のチェックが困難)
+fgets関数とatoi/atoif関数で代用するのが
+無難。
+
+<h3>strcomp関数</h3>
+：&lt;string.h&gt;参照
+strcomp(a,b) 文字列a と 文字列b が等しければ 0 が返る。
+
+<h3>strcpy関数</h3>
+
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;/*for strcpy */
+/*ポインターのコピーとは違い、
+ポインター変数自体のアドレスはそのままで
+ポインタが示すアドレスの値そのものを
+コピーして書き換える、という違いがある*/
+
+文字列の代入としても使われる。
+
+main()
+{
+	char s[] = "ABC", s2[4];
+
+	strcpy(s2, s); /* コピー先, コピー元 */
+
+	printf(s2); /* ABC が返る */
+	
+}
+
+<h3>strcpy_s関数</h3>
+
+メモリー領域サイズを指定した文字列のコピー
+
+	char strsex[5];
+
+	strcpy_s(strsex, sizeof(strsex), "男性");
+
+<h3>srand関数</h3>
+
+stdlib.h と time.h を参照用
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+int main(void)
+{
+	int i, min = 1, max = 6, saikoro;
+
+	 /*
+	   乱数の初期化 
+	   最初に一回初期化すればよい。
+	   ループの度に初期化するのは無意味であり
+	   速度低下を招く。
+	 */
+	srand((unsigned int)time(NULL));
+	
+	/* 10回乱数を表示する */
+	for (i = 0;i < 10;i++) {
+		printf("%d\n",rand());
+	}
+		
+	/* RAND_MAXは乱数の最大値を返す定数 */
+	printf("乱数のMAX%d：\n", RAND_MAX);
+
+	/* 指定した範囲の乱数を返す 
+	   以下の式は範囲を指定する乱数取得の
+	   「公式」とされる。
+	*/
+
+	
+	for (i = 0; i < 10; i++){
+		saikoro = min + (int)(rand() * (max - min + 1.0) / (1.0 + RAND_MAX));
+		printf("%dから%dまでの乱数を返す ⇒ %d\n", min, max, saikoro);
+	}
+
+
+	return 0;
+}
+
+
+
+
+<h3>strdup関数</h3>
+
+/*
+	strdup()関数は標準ライブラリー関数には無い。多くの処理系で採用されているが、
+	どの場合もあるとは保証できない。以下に定義する関数と等価。
+	VisualStudioの場合は string.h に含まれている。
+
+	strdup() 必要なだけのエリアを確保し、そこに文字列を複写
+		char *p; 元の文字列
+		return value:
+			非NULL：新しい文字列のアドレス（あとでfreeすること）
+			NULL:	エラー
+*/
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt
+char *strdup(const char *p)
+{
+	char *r;
+
+	if ((r = malloc(strlen(p) + 1)) == NULL) /* +1 for '\0' */
+		return (NULL);
+	strcpy(r, p);
+	return (r);
+}
+
+main()
+{
+	char *c = "ABC", *c1;
+	
+	if ((c1 =strdup(c)) != NULL)
+		printf("%s\n", c1);
+	free(c1);
+}
+
+
+<h3>strcat関数</h3>
+
+文字列を連結して返す
+#include &lt;stdio.h&lg;
+#include &lt;string.h&gt;　/* for strcpy strcat */
+
+main()
+{
+	char *s ="ABC";
+	char *s2 ="DEF";
+	
+	char s3[8]; /* 8文字分のメモリを確保 */
+	/* s3 で　"ABC" と "DEF" を連結する */
+
+	/*
+	配列名に代入はできないので以下は誤り
+
+	s3 = strcpy(s, s2);
+
+	*/
+	
+	strcpy(s3, s);/* 先ず s3 に s をコピー */
+	strcat(s3, s2);/* s3 と s2 を連結する 
+				   strcat関数の実引数は２個。
+				   ３つの文字列を連結することは
+				   出来ない。
+				   */
+
+	printf(s3);
+	
+}
+
+<h3>strcmp関数</h3>
+
+文字列の比較
+この関数を使わない場合は１文字ずつ比較するしかない。
+str1 == str2 とは書けない。
+
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+main()
+{
+    char s[100];
+
+    printf("文字を入力してください：");
+    scanf("%s", s);
+
+/* ↓は "TOSHIO"と書かれた先頭のアドレスと"TOSHIO"を比較しているので常にFALSEになる　
+	if (s == "TOSHIO"){ 
+	strcmp(文字列の先頭のアドレス1,文字列の先頭のアドレス2)
+	両者が同じなら 0 を返す。
+*/
+
+	if(strcmp(s, "TOSHIO") == 0){
+        printf("「俊夫」が入力されました。\n");
+    }
+    else{
+        printf("「%s」が入力されました。\n",s);
+    }
+}
+
+<h3>strlen関数</h3>
+
+#include &lt;string.h &gt;
+'\0'を除く文字列長を返す。
+
+/* 引数にポインタを渡す */
+printf("文字数は%dです。\n", strlen("ABC"));
+
+「文字数は 3 です。」
+
+
+	char s[] = "abcdef\0ghijklmn\0";
+
+	printf("sの文字数 = %d\n", strlen(s));
+	/*
+	sの文字数 = 6 
+	strlen は"\0"が現れるまでの文字数を返す
+	*/
+
+<h3>strstr関数</h3>
+
+string.h要参照
+
+char *strstr(const char *cs, const char *ct);
+
+文字列csのなかから文字列ctを探し、見つかれば
+最初に現れる位置へのポインターを、
+見つからなければNULLを返す。
+
+
+<h3>strncpy関数</h3>
+
+指定した文字数分だけをコピーする。
+string.h要参照
+
+strncpy(コピー先文字列配列名,コピー元文字列配列名,コピーする文字数);
+終端文字までコピーされるとは限らないので、
+戻り値に\0(EOS)を付けて使用する。
+
+<h3>strtoc関数</h3>
+
+string.h要参照
+
+文字列から指定した区切り文字で分割して取り出す。
+/* 始めの単語を取り出す */
+文字列アドレス値 = strtok(文字配列,"区切り文字");
+/* 次の単語を取り出す */
+
+単語が見つからない場合はNULLを返す。
+
+strtoc_s関数を代わりに使用する事が推奨されている。
+
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+void main()
+{
+	char str[] = "1_2_34_5_6_789_10_a_b_c", *ch;
+	int i;
+
+	ch = strtok(str, "_"); /* 区切り文字で分割 */
+	
+	printf("%s\n", ch);/* 最初の文字列単位を取り出す */
+	
+	for(i = 0; ch != NULL; i++) {
+
+		ch = strtok(NULL, "_"); /* 文字列単位２つ目以降
+								  毎に取り出す */
+
+		if(ch != NULL)	printf("%s\n", ch);
+	}
+/*
+▼実行結果
+2
+34
+5
+6
+789
+10
+a
+b
+c
+*/
+
+}
+
+
+<h2>関数でのポインタの活用例</h2>
+
+関数は1つの値しか返せないが、
+ポインターを渡すことで、複数の値を
+書き換えて利用できるというテクニック。
+#include &lt;stdio.h&gt;
+
+/*void getYMD(int, int, int, char *);*/
+void getYMD2(int *, int *, int *, char *);
+
+main()
+{
+
+	int y=0, m=0, d=0;
+/*	
+  getYMD(y, m, d, "誕生日");
+ こう書くと関数実行後もy m dに何の値ものこらないので
+ y m d ３つの値を取得する為にgetYMD2のようにポインタを渡す
+ と値を取得する事ができる
+  printf("%d %d %d\n",y, m, d);⇒y:0 m:0 d:0
+*/
+
+	getYMD2(&y, &m, &d, "誕生日");
+	printf("y は %d、m は %d、ｄ は %d\n", y, m, d); 
+}
+/*
+void getYMD(int year, int month, int day, char *msg)
+{
+	printf("%s の年月日を入力してください\n", msg);
+	printf("年:");
+	scanf("%d", &year);
+	printf("月:");
+	scanf("%d", &month);
+	printf("日:");
+	scanf("%d", &day);
+	printf("%s は %d 年 %d 月 %d 日です\n", msg, year, month, day);
+}
+*/
+void getYMD2(int *year, int *month, int *day, char *msg)
+{
+	printf("%s の年月日を入力してください\n", msg);
+	printf("年:");
+	scanf("%d", year);
+	printf("月:");
+	scanf("%d", month);
+	printf("日:");
+	scanf("%d", day);
+	printf("%s は %d 年 %d 月 %d 日です\n", msg, *year, *month, *day);
+}
+<h2>プロトタイプ宣言</h2>
+
+#include &lt;stdio.h&gt;
+/*プロトタイプ宣言
+プロトタイプ宣言しないとコンパイルする際、main関数中に不明なfooが
+登場するので警告が出る。foo関数をmainより上に記述すれば
+警告はでない。が、mainが一番上に無いと気持ち悪いので
+プロトタイプ宣言する。
+*/
+void foo(void);
+main()
+{
+	foo();
+
+}
+void foo(void)
+{
+	printf("foo!\n");
+}
+<h2>エスケープシーケンス</h2>
+
+<table border="1">
+<tr>
+<th>文字</th><th>意味</th>
+</tr>
+<tr>
+<td>\n</td><td>改行</td>
+</tr>
+<tr>
+<td>\r</td><td>復帰</td>
+</tr>
+<tr>
+<td>\f</td><td>改ページ</td>
+</tr>
+<tr>
+<td>\t</td><td>TAB文字</td>
+</tr>
+<tr>
+<td>\v</td><td>垂直TAB</td>
+</tr>
+<tr>
+<td>\b</td><td>BackSpace</td>
+</tr>
+<tr>
+<td>\a</td><td>ベル</td>
+</tr>
+<tr>
+<td>\\</td><td>バックスラッシュ</td>
+</tr>
+<tr>
+<td>\?</td><td>疑問符</td>
+</tr>
+<tr>
+<td>\'</td><td>単一引用符</td>
+</tr>
+<tr>
+<td>\"</td><td>二重引用符</td>
+</tr>
+<tr>
+<td>\###</td><td>８進数（3桁まで）</td>
+</tr>
+<tr>
+<td>\x##&lt;/td><td>１６進数（2桁まで）</td>
+</tr>
+</table>
+
+#include &lt;stdio.h&gt;
+
+main()
+{
+	printf("10進数のASCII %c、8進数のASCII %c、16進数のASCII %c\n",67, '\103', '\x43');
+}
+
+<h2><a name="ascii" id="ascii">ASCII表</a></h2>
+
+見方：横見出しと縦見出しが夫々１６進数値。
+例えば、'A'は文字コードが0x41(10進で65).
+
+<table border="1">
+<tbody>
+  <tr>
+    <td></td>
+    <td align="right">0</td>
+    <td align="right">1</td>
+    <td align="right">2</td>
+    <td align="right">3</td>
+    <td align="right">4</td>
+    <td align="right">5</td>
+    <td align="right">6</td>
+    <td align="right">7</td>
+    <td align="right">8</td>
+    <td align="right">9</td>
+    <td>A</td>
+    <td>B</td>
+    <td>C</td>
+    <td>D</td>
+    <td>E</td>
+    <td>F</td>
+  </tr>
+  <tr>
+    <td align="right">0</td>
+    <td></td>
+    <td></td>
+    <td>空白スペース</td>
+    <td align="right">0</td>
+    <td>@</td>
+    <td>P</td>
+    <td>`</td>
+    <td>p</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>ｰ</td>
+    <td>ﾀ</td>
+    <td>ﾐ</td>
+    <td></td>
+  <td></td>
+    </tr>
+  <tr>
+    <td align="right">1</td>
+    <td></td>
+    <td></td>
+    <td>!</td>
+    <td align="right">1</td>
+    <td>A</td>
+    <td>Q</td>
+    <td>a</td>
+    <td>q</td>
+    <td></td>
+    <td></td>
+    <td>｡</td>
+    <td>ｱ</td>
+    <td>ﾁ</td>
+    <td>ﾑ</td>
+    <td></td>
+  <td></td>
+    </tr>
+  <tr>
+    <td align="right">2</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&quot;</td>
+  	<td align="right">2</td>
+      <td>B</td>
+      <td>R</td>
+      <td>b</td>
+      <td>r</td>
+      <td></td>
+      <td></td>
+      <td>｢</td>
+      <td>ｲ</td>
+      <td>ﾂ</td>
+      <td>ﾒ</td>
+      <td></td>
+      <td></td>
+    </tr>
+  <tr>
+    <td align="right">3</td>
+    <td></td>
+    <td></td>
+    <td>#</td>
+    <td align="right">3</td>
+    <td>C</td>
+    <td>S</td>
+    <td>c</td>
+    <td>s</td>
+    <td></td>
+    <td></td>
+    <td>｣</td>
+    <td>ｳ</td>
+    <td>ﾃ</td>
+    <td>ﾓ</td>
+    <td></td>
+  <td></td>
+    </tr>
+  <tr>
+    <td align="right">4</td>
+    <td></td>
+    <td></td>
+    <td>$</td>
+    <td align="right">4</td>
+    <td>D</td>
+    <td>T</td>
+    <td>d</td>
+    <td>t</td>
+    <td></td>
+    <td></td>
+    <td>､</td>
+    <td>ｴ</td>
+    <td>ﾄ</td>
+    <td>ﾔ</td>
+    <td></td>
+  <td></td>
+    </tr>
+  <tr>
+    <td align="right">5</td>
+    <td></td>
+    <td></td>
+    <td>%</td>
+    <td align="right">5</td>
+    <td>E</td>
+    <td>U</td>
+    <td>e</td>
+    <td>u</td>
+    <td></td>
+    <td></td>
+    <td>･</td>
+    <td>ｵ</td>
+    <td>ﾅ</td>
+    <td>ﾕ</td>
+    <td></td>
+  <td></td>
+    </tr>
+  <tr>
+    <td align="right">6</td>
+    <td></td>
+    <td></td>
+    <td>&amp;</td>
+    <td align="right">6</td>
+    <td>F</td>
+    <td>V</td>
+    <td>f</td>
+    <td>v</td>
+    <td></td>
+    <td></td>
+    <td>ｦ</td>
+    <td>ｶ</td>
+    <td>ﾆ</td>
+    <td>ﾖ</td>
+    <td></td>
+  <td></td>
+    </tr>
+  <tr>
+    <td align="right">7</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td align="right">7</td>
+    <td>G</td>
+    <td>W</td>
+    <td>g</td>
+    <td>w</td>
+    <td></td>
+    <td></td>
+    <td>ｧ</td>
+    <td>ｷ</td>
+    <td>ﾇ</td>
+    <td>ﾗ</td>
+    <td></td>
+  <td></td>
+    </tr>
+  <tr>
+    <td align="right">8</td>
+    <td></td>
+    <td></td>
+    <td>(</td>
+    <td align="right">8</td>
+    <td>H</td>
+    <td>X</td>
+    <td>h</td>
+    <td>x</td>
+    <td></td>
+    <td></td>
+    <td>ｨ</td>
+    <td>ｸ</td>
+    <td>ﾈ</td>
+    <td>ﾘ</td>
+    <td></td>
+  <td></td>
+    </tr>
+  <tr>
+    <td align="right">9</td>
+    <td></td>
+    <td></td>
+    <td>)</td>
+    <td align="right">9</td>
+    <td>I</td>
+    <td>Y</td>
+    <td>i</td>
+    <td>y</td>
+    <td></td>
+    <td></td>
+    <td>ｩ</td>
+    <td>ｹ</td>
+    <td>ﾉ</td>
+    <td>ﾙ</td>
+    <td></td>
+  <td></td>
+    </tr>
+  <tr>
+    <td>A</td>
+    <td></td>
+    <td></td>
+    <td>*</td>
+    <td>:</td>
+    <td>J</td>
+    <td>Z</td>
+    <td>j</td>
+    <td>z</td>
+    <td></td>
+    <td></td>
+    <td>ｪ</td>
+    <td>ｺ</td>
+    <td>ﾊ</td>
+    <td>ﾚ</td>
+    <td></td>
+  <td></td>
+    </tr>
+  <tr>
+    <td>B</td>
+    <td></td>
+    <td></td>
+    <td>+</td>
+    <td>;</td>
+    <td>K</td>
+    <td>[</td>
+    <td>k</td>
+    <td>{</td>
+    <td></td>
+    <td></td>
+    <td>ｫ</td>
+    <td>ｻ</td>
+    <td>ﾋ</td>
+    <td>ﾛ</td>
+    <td></td>
+  <td></td>
+    </tr>
+  <tr>
+    <td>C</td>
+    <td></td>
+    <td></td>
+    <td>,</td>
+    <td>&lt;</td>
+    <td>L</td>
+    <td>\</td>
+    <td>l</td>
+    <td>|</td>
+    <td></td>
+    <td></td>
+    <td>ｬ</td>
+    <td>ｼ</td>
+    <td>ﾌ</td>
+    <td>ﾜ</td>
+    <td></td>
+  <td></td>
+    </tr>
+  <tr>
+    <td>D</td>
+    <td></td>
+    <td></td>
+    <td>-</td>
+    <td>=</td>
+    <td>M</td>
+    <td>]</td>
+    <td>m</td>
+    <td>}</td>
+    <td></td>
+    <td></td>
+    <td>ｭ</td>
+    <td>ｽ</td>
+    <td>ﾍ</td>
+    <td>ﾝ</td>
+    <td></td>
+  <td></td>
+    </tr>
+  <tr>
+    <td>E</td>
+    <td></td>
+    <td></td>
+    <td>.</td>
+    <td>&gt;</td>
+    <td>N</td>
+    <td>^</td>
+    <td>n</td>
+    <td>~</td>
+    <td></td>
+    <td></td>
+    <td>ｮ</td>
+    <td>ｾ</td>
+    <td>ﾎ</td>
+    <td>ﾞ</td>
+    <td></td>
+  <td></td>
+    </tr>
+  <tr>
+    <td>F</td>
+    <td></td>
+    <td></td>
+    <td>\</td>
+    <td>?</td>
+    <td>O</td>
+    <td>_</td>
+    <td>o</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>ｯ</td>
+    <td>ｿ</td>
+    <td>ﾏ</td>
+    <td>ﾟ</td>
+  <td></td>
+      <td></td>
+    </tr>
+</tbody>
+</table>
+
+
+<h2>Sample Program</h2>
+
+■うるう年の計算
+#include <stdio.h>
+/* 今月は何日まであるかをプログラムする */
+main()
+{
+	int y, m, d;
+
+	printf("年月を入力して下さい例)年：2009 月:9\n");
+
+	printf("年：");
+	scanf("%d", &y);
+	printf("月：");
+	scanf("%d", &m);
+
+	switch(m){
+		case 1:
+		case 3:
+		case 5:
+		case 7:
+		case 8:
+		case 10:
+		case 12:
+			d = 31;
+			break;
+		case 4:
+		case 6:
+		case 9:
+			d = 30;
+			break;
+		case 2:
+			/* 4の倍数年で100の倍数年でない年はうるう年、
+			ただし400の倍数年はうるう年。*/
+		if (y % 4 == 0 && y % 100 != 0 || y % 400 == 0){
+			d = 29;}			
+		else{
+			d = 28;
+		break;
+		default:
+			d = 0;
+		}
+	}
+	
+	if (d == 0){
+		printf("正しい月を入力して下さい\n");
+		return(1);/*パラメータエラー*/
+	}
+		
+	printf("%d 年 %d 月は　%d日までです\n", y, m, d);
+
+
+}
+
+■テキストファイルの読み込みと書き込み
+#include &lt;stdio.h&gt;
+/* data.txtを読み込んで、内容を変更して、書き込む */
+main()
+{
+  int op,i,j;
+  int a[100];
+  FILE *fp;
+  
+
+  for (i = 0; i < 100; i++) {
+	  a[i] = 0;
+  }
+
+  do {
+    printf("1.ファイル読込 2.ファイル書込 3.内容表示・変更 4.終了:");
+    scanf("%d",&op);
+    
+
+    switch (op) {
+    case 1:
+		if((fp = fopen("data.txt","r")) == NULL) {
+			perror("data.txt が存在しません");
+			exit(1);
+			}
+      for(i=0; i<100; i++)
+        fscanf(fp, "%d", &a[i]);
+      fclose(fp);
+      printf("読み込みました。\n");
+      break;
+    case 2:
+		if((fp = fopen("data.txt","w")) == NULL) {
+			perror("data.txt が存在しません");
+			exit(1);
+			}
+      for(i=0; i<100; i++)
+        fprintf(fp, "%d ",a[i]);/*　%dのあとに空白文字を置くことで、配列要素の区切りにしている */
+      fclose(fp);
+      printf("書き込みました。\n");
+      break;
+    case 3:
+      printf("何番のデータですか(0～99):");
+      scanf("%d",&i);
+      printf("a[%d] = %d\n", i, a[i]);
+      printf("データを書き換えますか(1:Yes/2:No):");
+      scanf("%d",&j);
+      if(j==1){
+        printf("a[%d] = ", i);
+        scanf("%d",&j);
+        a[i]=j;
+      }
+    }
+  } while (1<=op && op<=3);
+}
+
+#include &lt;stdio.h&gt;
+/* data.bmpを読み込んで、内容を変更して、書き込む 
+本プログラムは実行しても、動作はするが、見た目上変化は
+起きず、意味のあるプログラムではない。
+*/
+main()
+{
+  int op,i,j;
+  int a[100];
+  char blank = ' ';
+  FILE *fp;
+  
+
+  for (i = 0; i < 100; i++) {
+	  a[i] = 0;
+  }
+
+  do {
+    printf("1.ファイル読込 2.ファイル書込 3.内容表示・変更 4.終了:");
+    scanf("%d",&op);
+    
+
+    switch (op) {
+    case 1:
+
+		fp = fopen("data.bmp","rb");
+
+		if (fp == NULL) {
+			perror("data.bmp が存在しません");
+			exit(1);
+			}
+	  
+		for(i=0; i<100; i++) {
+			fread(a, sizeof(int), 1, fp);
+			printf("a[%d]=%d\n", i, a[i]);
+		}
+      fclose(fp);
+      printf("読み込みました。\n");
+      break;
+    case 2:
+		if((fp = fopen("data.bmp","ab")) == NULL) {
+			perror("data.bin が存在しません");
+			exit(1);
+			}
+		
+		for(i=0; i<100; i++){
+        fwrite(a, sizeof(int), 1, fp);
+	  /*　空白文字を置くことで、配列要素の区切りを作る */
+	 
+		fwrite(&blank, sizeof(int), 1, fp);
+		}
+      fclose(fp);
+      printf("書き込みました。\n");
+      break;
+    case 3:
+      printf("何番のデータですか(0～99):");
+      scanf("%d",&i);
+      printf("a[%d] = %d\n", i, a[i]);
+      printf("データを書き換えますか(1:Yes/2:No):");
+      
+	  while (scanf("%d",&j) != 1){
+		  scanf("%*s");
+		  printf("数値を入力して下さい(1:Yes/2:No)\n");
+	  }
+
+      if(j==1){
+        printf("a[%d] = ", i);
+        scanf("%d",&j);
+        a[i]=j;
+      }
+    }
+  } while (1<=op && op<=3);
+}
+
+■文字列を返す関数
+#include &lt;stdio.h&gt;
+ 
+/*文字列を返す関数*/
+
+/* ポインタを引数に指定し、
+指定したアドレスの内容を直接書き換えてしまうので、
+返り値自体は void で宣言 */
+
+void rstr(int len, char *str);
+
+void main(){
+	
+	char abc[20]; /* 20文字分の配列メモリーを確保 */	
+
+	rstr(20, abc);
+	printf("%s", abc);
+}
+
+void rstr(int len, char *str)
+{
+	int i;
+
+	for (i = 0; i < len - 1; i++)
+		str[i] = 'a' + i;	
+	str[i] = '\0';
+}
+
+■構造体と並び替えのサンプル
+
+#include &lt;stdio.h&gt;
+/*10人分の成績を降順に並べます*/
+/* result構造体 */
+struct result{
+	int score;		/*点数*/
+	char name[20];	/*名前20文字*/
+};
+
+#define SMPLECNT 10
+
+void show_all(struct result data[]);
+void input_data(struct result data[]);
+
+void main()
+{
+	int i, j, maxindex;
+	struct result taihi;	
+	struct result kekka[SMPLECNT];
+	
+	input_data(kekka);
+
+	printf("並び替え前\n");
+	
+	show_all(kekka);
+
+	for (i = 0; i < SMPLECNT - 1; i++) {
+
+		/* i番目から順に比較し最大レコードの Index を求める */
+
+		for (maxindex = i, j = i; j < SMPLECNT - 1; j++) {
+		
+			if (kekka[maxindex].score > kekka[j + 1].score) {
+				maxindex = maxindex;
+
+			}
+			else{
+				maxindex = j + 1;				
+			}				
+		}				
+
+		/* 最大レコードを i 番目に移動 */
+		
+		taihi = kekka[i];
+		kekka[i] = kekka[maxindex];
+		kekka[maxindex] = taihi;
+
+	}
+
+	printf("並び替え後\n");
+	
+	show_all(kekka);
+}
+void input_data(struct result data[])
+{
+	/* 10人分のデータ入力 */
+
+	int i;
+
+	printf("%d人分のデータを入力します\n", SMPLECNT);
+	for (i = 0; i < SMPLECNT; i++) {		
+		printf("名前%d人目:", i + 1);
+		scanf("%s", &data[i].name);
+		printf("成績%d人目:", i + 1);
+		scanf("%d", &data[i].score);
+	}
+
+}
+void show_all(struct result data[])
+{
+	/* 10人分のデータを表示 */
+	int i;
+
+	for (i = 0; i < SMPLECNT; i++) {
+		printf("成績：%d    \t名前：%s\n", data[i].score, data[i].name);
+
+	}
+}
+
+■exeファイルにドラッグしたファイルフルパスを表示させる。
+
+#include <stdio.h>
+
+int main(int argc,char *argv[])
+{
+	if (argc > 1) {
+		printf("%s\n",argv[1]);
+	}
+	/* 役割がよくわからない
+	出力バッファを強制出力する関数
+	fflush(stdin);
+	*/
+	getchar();
+	
+	return 0;
+}
+
+■CSVファイルの出力
+
+#include <stdio.h>
+#include <string.h>
+/* csvファイルの出力 */
+void main(void)
+{
+
+	FILE *fp;
+
+	char *csvtxt =	"番号,名前,テストの平均点\n"
+					"1,野比のび太,0\n"
+					"2,源静香,90\n"
+					"3,剛田武,40\n"
+					"4,骨川スネ夫,70\n";
+
+	fp = fopen("CSV.csv", "w");
+
+/*	fprintf(fp,"%s\n",csvtxt); */
+	
+/*	printf("strlen(csvtxt)=%d\n", strlen(csvtxt));*/
+
+	fwrite(csvtxt, strlen(csvtxt), 1, fp);
+
+	fclose(fp);
+}
+
+<h2>ビット演算による文字の入れ替え</h2>
+
+#define SWAP(a, b)	((a)^=(b), (b)^=(a), (a)^=(b))
+
+/* ^= はビット演算による排他的論理和.*/
+
+<table border="1">
+<tbody>
+  <tr>
+ 	<td colspan="4">排他的論理和↓</td>
+ 	<!--<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>-->
+     </tr>
+     <tr>
+	<td colspan="4">１＆１⇒０　１＆０⇒１　０＆０⇒０</td>
+	<!--<td>&nbsp;</td>
+	<td>&nbsp;</td>
+    	<td>&nbsp;</td>-->
+    </tr>
+    <tr>
+      <td>上から順に実行</td>
+      <td>びっとぱたーん</td>
+      <td>式の意味</td>
+      <td>説明</td>
+    </tr>
+    <tr>
+    <td>a</td>
+    <td align="right">10100011</td>
+    <td></td>
+  <td></td>
+    </tr>
+  <tr>
+    <td>b</td>
+    <td align="right">00000010</td>
+    <td></td>
+  <td></td>
+    </tr>
+  <tr>
+    <td>a^=b</td>
+    <td align="right">10100001</td>
+    <td>aはbとの排他的論理和</td>
+  <td></td>
+    </tr>
+  <tr>
+    <td>b^=a</td>
+    <td align="right">10100011</td>
+    <td>bはaとの排他的論理和</td>
+    <td>ｂがaになった！</td>
+  </tr>
+  <tr>
+    <td>a^=b</td>
+    <td align="right">00000010</td>
+    <td>aはbとの排他的論理和</td>
+    <td>aがｂになった！</td>
+  </tr>
+</tbody>
+</table>
+
+</pre>
+</div>
+</body>
+</html>

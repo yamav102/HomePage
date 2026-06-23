@@ -1,0 +1,16 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=Content-Type content="text/html; charset=shift_jis">
+<SCRIPT type=text/javascript>
+function aa(){
+var myaler=f1.input1.value;
+
+alert(myaler);
+return false;
+}
+</SCRIPT>
+
+<FORM id=f1>
+<META content="MSHTML 6.00.2800.1170" name=GENERATOR></HEAD>
+<BODY><INPUT id=input1 size=25>入力文字列を <INPUT onclick=aa() type=submit value=アラート表示></FORM>buttonを使用するとボタンにフォーカスがあたらない。submitを使うとボタンにフォーカスはあたるが同じページに移動してしまう。onsubmit="retrun 
+aa()"を指定してフォーカスをあてつつページが移動しないようにする。 </BODY></HTML>

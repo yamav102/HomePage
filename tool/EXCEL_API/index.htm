@@ -1,0 +1,121 @@
+<html lang="Ja">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html401/strict.dtd">
+<meta http-equiv="Content-Type" content="text/html,charset=shift_jis">
+<meta name="description" content="Win32API">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta name="robots" content="noindex,nofollow">
+
+<link rel="stylesheet" type="text/css" href="./vb.css">
+<title>■Win32API_INDEX</title>
+<style type="text/css">
+<!--
+	th{text-align:left}
+	ul{line-height:1.5em}
+	caption{font-size:180%;background-color:lightgreen;}
+	a:hover{background-color:#aff;}
+	
+-->
+</style>
+<body>
+<div class="content">
+
+<h1>■Win32API_INDEX</h1>
+<ul>
+<li><a href="./apiMemo.htm">■Win32APIメモ-関数の書き方/使い方-</a></li>
+<li><a href="./APIsample.htm">■Win32APIサンプル</a></li>
+<li><a href="./APIsample2.htm">■Win32APIサンプル_2</a></li>
+<li><a href="./APIsample3.htm">■Win32APIサンプル_3</a></li>
+<li><a href="./APIsample4.htm">■Win32APIサンプル_4</a></li>
+<li><a href="./APIsample5.htm">■Win32APIサンプル_5</a></li>
+<li><a href="./APIsample6.htm">■Win32APIサンプル_6</a></li>
+<li><a href="./APIsample7.htm">■Win32APIサンプル_7</a></li>
+<li><a href="./api.htm">■未整理</a></li>
+</ul>
+<table border="1">
+<caption>INDEX</caption>
+<tr><th>アプリケーションの重複起動を回避する</th><td>クラス名またはキャプションからウィンドウハンドルを取得する関数</td><td><a href='APIsample.htm#FindWindow'>FindWindow </a></td><td><a href='APIsample.htm#FindWindow_Sample'>電卓の重複起動を回避する</a></td></tr>
+<tr><th>Shell 関数で起動したアプリケーションが終了するまで待機する</th><td>オープンしているオブジェクトハンドルをクローズする関数</td><td><a href='APIsample.htm#CloseHandle'>CloseHandle </a></td><td><a href='APIsample.htm#GetExitCodeProcess_Sample'>メモ帳が終了するまでプログラムの実行を停止する</a></td></tr>
+<tr><th>待機関数で待機する</th><td>新しいプロセスとそのプライマリスレッドを作成する関数</td><td><a href='APIsample.htm#CreateProcess'>CreateProcess </a></td><td><a href='APIsample.htm#WaitForSingleObject_Sample'>待機時間を指定してアプリケーションが終了するまで待機する</a></td></tr>
+<tr><th></th><td></td><td><a href='APIsample.htm#CreateProcess'>CreateProcess </a></td><td><a href='APIsample.htm#WaitForSingleObject_Sample2'>待機時間を指定しないでアプリケーションが終了するまで待機する</a></td></tr>
+<tr><th>メッセージキューを介さずにメッセージを送る</th><td>メッセージキューを介さずにメッセージを送る関数</td><td><a href='APIsample.htm#SendMessage'>SendMessage </a></td><td><a href='APIsample.htm#SendMessage_Sample'>＇メモ帳を終了させる</a></td></tr>
+<tr><th></th><td></td><td><a href='APIsample.htm#SendMessage'>SendMessage </a></td><td><a href='APIsample.htm#SendMessage_Sample2'>＇全てのメモ帳を閉じる</a></td></tr>
+<tr><th>アプリケーションを起動してユーザーが入力できる状態になるまで待機する</th><td>入力を待っている状態になるまで待機する関数</td><td><a href='APIsample.htm#WaitForInputIdle'>WaitForInputIdle </a></td><td><a href='APIsample.htm#WaitForInputIdle_Sample'>重たいアプリケーション（ここではＷｏｒｄ）を開き、入力状態になるまで待機します</a></td></tr>
+<tr><th>表示ウインドウのキャプション、クラスを表示する</th><td>ウィンドウのクラス名を取得する関数</td><td><a href='APIsample.htm#GetClassName'>GetClassName </a></td><td><a href='APIsample.htm#GetClassName_sample'>表示されているウィンドウのキャプションとクラス名の一覧を作成します。</a></td></tr>
+<tr><th>ウィンドウの表示位置とサイズを指定してアプリケーションを起動する</th><td></td><td><a href='APIsample.htm#GetClassName'>GetClassName </a></td><td><a href='APIsample.htm#CreateProcess_Sample'>メモ帳を指定した座標とサイズで起動します。</a></td></tr>
+<tr><th>ウィンドウを前面に表示する</th><td>指定されたウィンドウをZオーダーのトップ位置に移動しアクティブにする関数</td><td><a href='APIsample.htm#SetForegroundWindow'>SetForegroundWindow</a></td><td><a href='APIsample.htm#SetForegroundWindow_Sample'>メモ帳を最前面に表示します</a></td></tr>
+<tr><th>拡張子に関連付けられたプログラムを実行する</th><td>拡張子に関連付けられたプログラムを実行する関数</td><td><a href='APIsample2.htm#ShellExecute'>ShellExecute </a></td><td><a href='APIsample2.htm#ShellExecute_Sample'>パスを指定してテキストファイルを開く</a></td></tr>
+<tr><th></th><td></td><td><a href='APIsample2.htm#ShellExecute'>ShellExecute </a></td><td><a href='APIsample2.htm#ShellExecute_Sample2'>拡張子に関連付けられたプログラムでファイルを印刷する</a></td></tr>
+<tr><th></th><td></td><td><a href='APIsample2.htm#ShellExecute'>ShellExecute </a></td><td><a href='APIsample2.htm#ShellExecute_Sample3'>フォルダを指定してエクスプローラを起動する</a></td></tr>
+<tr><th>[ファイルのプロパティ]ダイアログボックスを開く</th><td></td><td><a href='APIsample2.htm#ShellExecuteEx'>ShellExecuteEx </a></td><td><a href='APIsample2.htm#ShellExecuteEx_Sample'>［ファイルのプロパティ］ダイアログボックスを開く</a></td></tr>
+<tr><th>フロッピーディスクをフォーマットするダイアログを表示させる</th><td>指定されたドライブの種類を調べる関数</td><td><a href='APIsample2.htm#GetDriveType'>GetDriveType </a></td><td><a href='APIsample2.htm#SHFormatDrive_Sample'>フロッピディスクをフォーマットするダイアログを表示させる</a></td></tr>
+<tr><th>［Windowsの終了］ダイアログボックスを表示する</th><td>メッセージキューにメッセージをポストする関数</td><td><a href='APIsample2.htm#PostMessage'>PostMessage </a></td><td><a href='APIsample2.htm#PostMessage_Sample'>［Ｗｉｎｄｏｗｓの終了］ダイアログボックスを表示する</a></td></tr>
+<tr><th>システムをログオフ／シャットダウン／再起動する</th><td>システムをログオフ／シャットダウン／再起動する関数</td><td><a href='APIsample2.htm#ExitWindowsEx'>ExitWindowsEx </a></td><td><a href='APIsample2.htm#ExitWindowsEx_Sample'>［Ｗｉｎｄｏｗｓの終了］ダイアログボックスを表示する</a></td></tr>
+<tr><th>フォルダ選択用のディレクトリツリーを表示する</th><td>OLEアロケータによって確保したメモリブロックを開放する関数</td><td><a href='APIsample2.htm#CoTaskMemFree'>CoTaskMemFree </a></td><td><a href='APIsample2.htm#SHBrowseForFolder_Sample'>フォルダ選択用のディレクトリツリーを表示する</a></td></tr>
+<tr><th>ファイル/フォルダの操作</th><td>ファイル操作(コピー、移動、削除）を行う関数</td><td><a href='APIsample2.htm#SHFileOperation'>SHFileOperation </a></td><td><a href='APIsample2.htm#SHFileOperation_Sample'>フォルダ単位でファイルをコピーする</a></td></tr>
+<tr><th></th><td></td><td><a href='APIsample2.htm#SHFileOperation'>SHFileOperation </a></td><td><a href='APIsample2.htm#SHFileOperation_Sample2'>同名のファイルが存在したら別名でコピーする</a></td></tr>
+<tr><th></th><td></td><td><a href='APIsample2.htm#SHFileOperation'>SHFileOperation </a></td><td><a href='APIsample2.htm#SHFileOperation_Sample3'>複数ファイルを複数のコピー先を指定してコピーする</a></td></tr>
+<tr><th></th><td></td><td><a href='APIsample2.htm#SHFileOperation'>SHFileOperation </a></td><td><a href='APIsample2.htm#SHFileOperation_Sample4'>ファイルをごみ箱に移動する</a></td></tr>
+<tr><th></th><td></td><td><a href='APIsample2.htm#SHFileOperation'>SHFileOperation </a></td><td><a href='APIsample2.htm#SHFileOperation_Sample5'>ファイルを移動する</a></td></tr>
+<tr><th></th><td></td><td><a href='APIsample2.htm#SHFileOperation'>SHFileOperation </a></td><td><a href='APIsample2.htm#SHFileOperation_Sample6'>ファイル名を変更する</a></td></tr>
+<tr><th>テンポラリファイルを作成する</th><td>テンポラリファイルのファイル名もしくは実際にテンポラリファイルを作成する関数</td><td><a href='APIsample3.htm#GetTempFileName'>GetTempFileName </a></td><td><a href='APIsample3.htm#GetTempFileName_Sample'>テンポラリファイルを作成する</a></td></tr>
+<tr><th>ファイルを検索する</th><td>指定されたファイルを検索する関数</td><td><a href='APIsample3.htm#SearchPath'>SearchPath </a></td><td><a href='APIsample3.htm#SearchPath_Sample'>ファイルを検索する</a></td></tr>
+<tr><th>拡張子に関連付けられたプログラム名を取得する</th><td>指定された拡張子に関連付けられているプログラム名とハンドルを取得する関数</td><td><a href='APIsample3.htm#FindExecutable'>FindExecutable </a></td><td><a href='APIsample3.htm#FindExecutable_Sample'>拡張子に関連付けられたプログラム名を取得する</a></td></tr>
+<tr><th>特別なディレクトリのパス名を取得する</th><td>Windowsシステムディレクトリのパス名を取得する関数</td><td><a href='APIsample3.htm#GetSystemDirectory'>GetSystemDirectory </a></td><td><a href='APIsample3.htm#GetSystemDirectory_Saple'>Ｗｉｎｄｏｗｓシステムディレクトリのパス名を取得する</a></td></tr>
+<tr><th></th><td>Windowsディレクトリのパス名を取得する関数</td><td><a href='APIsample3.htm#GetWindowsDirectory'>GetWindowsDirectory </a></td><td><a href='APIsample3.htm#GetWindowsDirectory_Saple'>Ｗｉｎｄｏｗｓディレクトリのパス名を取得する</a></td></tr>
+<tr><th>テンポラリファイル用のディレクトリのパス名を取得する</th><td>テンポラリファイル用のディレクトリのパス名を取得する関数</td><td><a href='APIsample3.htm#GetTempPath'>GetTempPath </a></td><td><a href='APIsample3.htm#GetTempPath_Sample'>テンポラリファイル用のディレクトリのパス名を取得する</a></td></tr>
+<tr><th>特殊フォルダのパスを取得する</th><td> 特殊フォルダの位置を取得する関数</td><td><a href='APIsample3.htm#SHGetSpecialFolderLocation'>SHGetSpecialFolderLocation </a></td><td><a href='APIsample3.htm#SHGetSpecialFolderLocation_Sample'>テンポラリファイル用のディレクトリのパス名を取得する</a></td></tr>
+<tr><th>ドライブの種類を判別する</th><td>指定されたドライブの種類を調べる関数</td><td><a href='APIsample3.htm#GetDriveType'>GetDriveType </a></td><td><a href='APIsample3.htm#GetDriveType_Sample'>ドライブの種類を判別する</a></td></tr>
+<tr><th>エラー処理</th><td>エラー番号をメッセージに変換する関数</td><td><a href='APIsample3.htm#FormatMessage'>FormatMessage </a></td><td><a href='APIsample3.htm#GetFileAttributes_Sample2'>ファイルの属性を取得する（エラー処理　その２）</a></td></tr>
+<tr><th></th><td>ファイルやディレクトリの属性を返す関数</td><td><a href='APIsample3.htm#GetFileAttributes'>GetFileAttributes </a></td><td><a href='APIsample3.htm#GetFileAttributes_Sample'>ファイルの属性を取得する（エラー処理　その１）</a></td></tr>
+<tr><th>ディスクの空き容量を取得する</th><td>ディスクに関する情報(空き容量など)を取得する関数</td><td><a href='APIsample4.htm#GetDiskFreeSpaceEx'>GetDiskFreeSpaceEx </a></td><td><a href='APIsample4.htm#GetDiskFreeSpaceEx_Sample'>ディスクの空き容量と総容量を取得する（２ＧＢ超）</a></td></tr>
+<tr><th>ボリューム名を取得／設定する</th><td></td><td><a href='APIsample4.htm#GetVolumeInformation'>GetVolumeInformation </a></td><td><a href='APIsample4.htm#GetVolumeInformation_Sample'>ボリューム名を取得する</a></td></tr>
+<tr><th>ボリュームラベルを設定する</th><td>ボリュームラベルを設定する関数</td><td><a href='APIsample4.htm#SetVolumeLabel'>SetVolumeLabel </a></td><td><a href='APIsample4.htm#SetVolumeLabel_Sample'>ボリューム名を取得する</a></td></tr>
+<tr><th></th><td></td><td><a href='APIsample4.htm#SetVolumeLabel'>SetVolumeLabel </a></td><td><a href='APIsample4.htm#SetVolumeLabel_Sample2'>ボリュームラベルを削除する</a></td></tr>
+<tr><th>Windowsのバージョン情報を取得する</th><td>Windowsのバージョン情報を取得する関数</td><td><a href='APIsample4.htm#GetVersionEx'>GetVersionEx </a></td><td><a href='APIsample4.htm#GetVersionEx_Sample'>Ｗｉｎｄｏｗｓのバージョン情報を取得する</a></td></tr>
+<tr><th>コンピュータ名を取得／設定する</th><td>コンピューター名を取得する関数</td><td><a href='APIsample4.htm#GetComputerName'>GetComputerName </a></td><td><a href='APIsample4.htm#GetComputerName_Sample'>コンピュータ名を取得する</a></td></tr>
+<tr><th></th><td>コンピューター名を設定する関数</td><td><a href='APIsample4.htm#SetComputerName'>SetComputerName </a></td><td><a href='APIsample4.htm#SetComputerName_Sample'>コンピューター名を設定します</a></td></tr>
+<tr><th>ユーザー名を取得する</th><td>ユーザー名を取得する関数</td><td><a href='APIsample4.htm#GetUserName'>GetUserName </a></td><td><a href='APIsample4.htm#GetUserName_Sample'>ユーザー名を取得する</a></td></tr>
+<tr><th>CPU の数と種類を取得する</th><td>システムに関する情報(プロセッサの種類など)を取得する関数</td><td><a href='APIsample4.htm#GetSystemInfo'>GetSystemInfo</a></td><td><a href='APIsample4.htm#GetSystemInfo_Sample'>ＣＰＵの数と種類を取得する</a></td></tr>
+<tr><th>画面の解像度を取得する</th><td>システムの設定や画面のデザインを構成する要素のサイズ(システムメトリック)の値を取得する関数</td><td><a href='APIsample4.htm#GetSystemMetrics'>GetSystemMetrics </a></td><td><a href='APIsample4.htm#GetSystemMetrics_Sample'>画面の解像度を取得する</a></td></tr>
+<tr><th>スクリーンセーバー実行までの待ち時間を取得する</th><td>システムに関するパラメータを取得、設定する関数</td><td><a href='APIsample5.htm#SystemParametersInfo'>SystemParametersInfo </a></td><td><a href='APIsample5.htm#SystemParametersInfo_Sample'>スクリーンセーバー実行までの待ち時間を取得する</a></td></tr>
+<tr><th>グラフィックスモードを変更する</th><td>ディスプレイの設定を変更する関数</td><td><a href='APIsample5.htm#ChangeDisplaySettings'>ChangeDisplaySettings </a></td><td><a href='APIsample5.htm#ChangeDisplaySettings_Sample'>グラフィックスモードを変更する</a></td></tr>
+<tr><th>コントロールメニューを無効／ 有効にする</th><td>ウィンドウのメニューバーを再描画する関数</td><td><a href='APIsample6.htm#DrawMenuBar'>DrawMenuBar </a></td><td><a href='APIsample6.htm#SetWindowLong_Sample'>コントロールメニューを無効にする</a></td></tr>
+<tr><th></th><td></td><td><a href='APIsample6.htm#DrawMenuBar'>DrawMenuBar </a></td><td><a href='APIsample6.htm#SetWindowLong_Sample2'>コントロールメニューを無効にする</a></td></tr>
+<tr><th>ユーザーフォームから［×］ボタンを削除する</th><td>メニューからメニュー項目を削除する関数</td><td><a href='APIsample6.htm#DeleteMenu'>DeleteMenu </a></td><td><a href='APIsample6.htm#UserForm_Initialize1'>ユーザーフォームに最小化・最大化ボタンを付加し、リサイズを可能にする</a></td></tr>
+<tr><th></th><td></td><td><a href='APIsample6.htm#DeleteMenu'>DeleteMenu </a></td><td><a href='APIsample6.htm#UserForm_Initializemukou'>ユーザーフォームの閉じるボタンを無効にする</a></td></tr>
+<tr><th></th><td></td><td><a href='APIsample6.htm#DeleteMenu'>DeleteMenu </a></td><td><a href='APIsample6.htm#UserForm_Initialize1'>ユーザーフォームに最小化・最大化ボタンを付加し、リサイズを可能にする</a></td></tr>
+
+<tr><th></th><td>ウィンドウのメニューバーを再描画する関数</td><td><a href='APIsample6.htm#DrawMenuBar'>DrawMenuBar </a></td><td><a href='APIsample6.htm#UserForm_Initialize3'>ユーザーフォームの閉じるボタンを非表示にする</a></td></tr>
+
+<tr><th>レジストリ・INI ファイルの操作</th><td>メニューからメニュー項目を削除する関数</td><td><a href='APIsample6.htm#DeleteMenu'>EXCEL_VBA</a></td><td><a href='APIsample6.htm#VBA_DeleteSetting'>●レジストリデータを削除する</a></td></tr>
+<tr><th></th><td></td><td><a href='APIsample6.htm#DeleteMenu'>EXCEL_VBA</a></td><td><a href='APIsample6.htm#VBA_GetAllSettings'>●レジストリＭｙＡｐｐ\Ｓｔａｒｔｕｐ内の全てのデータを取得する</a></td></tr>
+<tr><th></th><td></td><td><a href='APIsample6.htm#DeleteMenu'>EXCEL_VBA</a></td><td><a href='APIsample6.htm#VBA_GetSetting_Sample'>●レジストリデータの取得</a></td></tr>
+<tr><th></th><td></td><td><a href='APIsample6.htm#DeleteMenu'>EXCEL_VBA</a></td><td><a href='APIsample6.htm#VBA_SaveSetting_Sample'>●レジストリへの登録</a></td></tr>
+<tr><th></th><td>レジストリキーを閉じる関数</td><td><a href='APIsample6.htm#RegCloseKey'>RegCloseKey </a></td><td><a href='APIsample6.htm#RegCreateKeyEx_Sample'>レジストリキーを作成する</a></td></tr>
+<tr><th></th><td>レジストリキーとそのサブキー削除する関数</td><td><a href='APIsample6.htm#RegDeleteKey'>RegDeleteKey </a></td><td><a href='APIsample6.htm#RegDeleteKey_Sample'>レジストリキーを削除する（その１）</a></td></tr>
+<tr><th></th><td>レジストリキーの値を削除する関数</td><td><a href='APIsample6.htm#RegDeleteValue'>RegDeleteValue </a></td><td><a href='APIsample6.htm#RegDeleteValue_Sample'>レジストリキーの値を削除する</a></td></tr>
+<tr><th></th><td>レジストリキーのサブキーを列挙する</td><td><a href='APIsample6.htm#RegEnumKeyEx'>RegEnumKeyEx </a></td><td><a href='APIsample6.htm#RegEnumKeyEx_Sample'>レジストリから、サブキーを列挙する</a></td></tr>
+<tr><th></th><td>レジストリキーを開く関数</td><td><a href='APIsample6.htm#RegOpenKeyEx'>RegOpenKeyEx </a></td><td><a href='APIsample6.htm#RegDeleteKey_Sample2'>レジストリキーを削除する（その２）</a></td></tr>
+<tr><th></th><td>レジストリキーの値を取得する関数</td><td><a href='APIsample6.htm#RegQueryValueEx'>RegQueryValueEx </a></td><td><a href='APIsample6.htm#RegQueryValueEx_Sample'>レジストリキーの値を取得する</a></td></tr>
+<tr><th></th><td>レジストリキーの値フィールドにデータを格納する関数</td><td><a href='APIsample6.htm#RegSetValueEx'>RegSetValueEx </a></td><td><a href='APIsample6.htm#RegSetValueEx_Sample'>レジストリキーに値を保存する</a></td></tr>
+
+<tr><th>INI ファイルの操作</th><td>INIファイルの文字列を整数として取得する関数</td><td><a href='APIsample7.htm#GetPrivateProfileInt'>GetPrivateProfileInt </a></td><td><a href='APIsample7.htm#GetPrivateProfileInt_Sample'>ＩＮＩファイルの文字列を整数として取得する</a></td></tr>
+<tr><th></th><td>INIファイルの指定したセクション内のすべてのキーと値を取得する関数</td><td><a href='APIsample7.htm#GetPrivateProfileSection'>GetPrivateProfileSection </a></td><td><a href='APIsample7.htm#GetPrivateProfileSection_Sample'>ＩＮＩファイルの指定したセクション内のすべてのキーと値を取得する</a></td></tr>
+<tr><th></th><td>INIファイルの文字列を取得する関数</td><td><a href='APIsample7.htm#GetPrivateProfileString'>GetPrivateProfileString </a></td><td><a href='APIsample7.htm#GetPrivateProfileString_Sample'>ＩＮＩファイルの文字列を取得する</a></td></tr>
+<tr><th></th><td>INIファイルの指定したセクション内のすべてのキーと値を変更する関数</td><td><a href='APIsample7.htm#WritePrivateProfileSection'>WritePrivateProfileSection </a></td><td><a href='APIsample7.htm#WritePrivateProfileSection_Sample'>ＩＮＩファイルの指定したセクション内のすべてのキーと値を変更する</a></td></tr>
+<tr><th></th><td>INIファイルの文字列を変更する関数</td><td><a href='APIsample7.htm#WritePrivateProfileString'>WritePrivateProfileString </a></td><td><a href='APIsample7.htm#WritePrivateProfileString_Sample'>ＩＮＩファイルの文字列を変更する</a></td></tr>
+<tr><th>その他の操作</th><td>Windows起動からの経過時間をミリ秒単位で取得する関数</td><td><a href='APIsample7.htm#GetTickCount'>GetTickCount </a></td><td><a href='APIsample7.htm#GetTickCount_Sample'>コードの実行速度を計測する。ＶＢＡのｔｉｍｅｒ関数でもできます。</a></td></tr>
+<tr><th></th><td></td><td><a href='APIsample7.htm#GetTickCount'>GetTickCount </a></td><td><a href='APIsample7.htm#GetTickCount_Sample2'>Ｗｉｎｄｏｗｓを起動してから経過した時間（分）を取得</a></td></tr>
+<tr><th></th><td>Wave音を鳴らす関数</td><td><a href='APIsample7.htm#PlaySound'>PlaySound </a></td><td><a href='APIsample7.htm#PlaySound_Sample'>Wave音を鳴らす</a></td></tr>
+<tr><th></th><td></td><td><a href='APIsample7.htm#PlaySound'>PlaySound </a></td><td><a href='APIsample7.htm#PlaySound_Sample2'>Ｗａｖｅ　音を止める</a></td></tr>
+<tr><th></th><td>キャレット(カーソル)の点滅速度を設定する関数</td><td><a href='APIsample7.htm#SetCaretBlinkTime'>SetCaretBlinkTime </a></td><td><a href='APIsample7.htm#SetCaretBlinkTime_Sample'>キャレット(カーソル)の点滅速度を設定する</a></td></tr>
+
+
+<tr><th></th><td>カレントプロセスのカレントディレクトリを変更する関数</td><td><a href='APIsample7.htm#SetCurrentDirectory'>SetCurrentDirectory </a></td><td><a href='APIsample7.htm#SetCurrentDirectory_Sample'>ネットワーク接続されたパソコンのフォルダをカレントディレクトリにする</a></td></tr>
+<tr><th></th><td>指定された時間だけ中断する関数(VBAのWaitメッソドは秒単位)</td><td><a href='APIsample7.htm#Sleep'>Sleep</a></td><td><a href='APIsample7.htm#Sleep_Sample'>ミリ秒単位でコードの実行を中断する（ＶＢＡのＷａｉｔメッソドは秒単位）</a></td></tr>
+</table>
+<hr>
+<div><a href="http://homepage3.nifty.com/homepage_yamaV102/">&gt;home</a></div>
+</div>
+</body>
+</html>

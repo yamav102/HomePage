@@ -1,0 +1,227 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="ja" xmlns:t="urn:schemas-microsoft-com:time">
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<META http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="Content-Script-Type" content="text/javascript; charset=Shift_JIS">
+<META name="GENERATOR" content="IBM WebSphere Studio Homepage Builder Version 6.5.0.0 for Windows">
+<meta content="text/css" name="Content-Style-Type">
+<meta content="xatsushi&#64;tbb.t-com.ne.jp" name="Reply-to">
+<meta name="robots" content="NONE">
+<meta content="yamaV1.02β" name="Author">
+<meta http-equiv="page-exit" content="revealtrans(duration=1,transiton=23)">
+<meta http-equiv="site-enter" content="revealtrans(duration=1,transition=23)">
+<meta http-equiv="site-exit" content="revealtrans(duration=1,transition=23)">
+<meta http-equiv="page-enter" content="revvealtrans(duration=1,transition=23)">
+<script type="text/Java Script"><!--
+if (self == top) {
+   location.href = "../index.htm";
+}
+//--></script>
+<style type="text/css">
+<!--
+
+@import url(../a06.css);
+.time{
+behavior: url(#default#time2);
+}
+A{
+color : green;
+text-decoration : underline;
+border-style : none none none none;
+}
+A:VISITED{
+color : navy;
+text-decoration : none;
+border-style : none none none none;
+}
+A:HOVER{
+color : fuchsia;
+text-decoration : none;
+font-style : normal;
+font-weight : bold;
+border-style : none none none none;
+background-color : white;
+}
+A:LINK{
+color : teal;
+}
+-->
+</style>
+<?import namespace="t" implementation="#default#time2">
+<!-- この下は、説明のように直してから<HEAD>～</HEAD>の中に書きます。--><script type="text/JavaScript">
+<!--
+///////////////////////////////////////////////////
+// お遊び No.3.1 Produced by「CLUB とむやん君」
+// URL http://www2s.biglobe.ne.jp/~club_tom/
+// 上の2行は著作権表示ですので消さないで下さい
+///////////////////////////////////////////////////
+
+///////////////////////////////////////////////////
+// 画像の開始位置＆移動間隔＆移動スピード＆
+// 移動するまでの停止範囲＆止まった時のマウスからの位置＆
+// クリックすると画像の動きを止めるかどうかを書いて下さい。
+var dxOa31=100,dyOa31=100;   // 開始位置(dxOa31：x座標、dyOa31：y座標)
+var hOa31=10;                // 移動間隔
+var mouseSpeedOa31=20;       // 移動スピード(単位：1/1000秒)
+var h2Oa31=100;              // 停止範囲(hOa31より小さくしないで下さい。)
+var spDxOa31=10,spDyOa31=-5; // 止まった時のマウスからの位置
+                             // (spDxOa31：x座標、spDyOa31：y座標)
+var moveStopOa31=true;       // 画像の停止の有無です。
+                             // (true：有り、false：無し)
+///////////////////////////////////////////////////
+
+var mxOa31=dxOa31,myOa31=dyOa31,moveFlagOa31=true,moveStopFlagOa31=false;
+
+// イベントキャプチャーを設定する部分です。
+if (document.all || document.getElementById || document.layers) {
+	if (document.layers) document.captureEvents(Event.MOUSEMOVE);
+	document.onmousemove=mouseMoveEvOa31;
+	if (moveStopOa31) {
+		if (document.layers) document.captureEvents(Event.MOUSEDOWN);
+		document.onmousedown=mouseMoveStopOa31;
+	}
+}
+
+// イベントキャプチャーのマウス位置関数の部分です。
+function mouseMoveEvOa31(e) {
+	if (window.opera) {
+		mxOa31=e.clientX;
+		myOa31=e.clientY;
+	}
+	else if (document.all) {
+		mxOa31=document.body.scrollLeft+event.clientX;
+		myOa31=document.body.scrollTop+event.clientY;
+	}
+	else if (document.getElementById || document.layers) {
+		mxOa31=e.pageX;
+		myOa31=e.pageY;
+	}
+}
+
+// イベントキャプチャーのStop関数の部分です。
+function mouseMoveStopOa31() {
+	moveStopFlagOa31=!moveStopFlagOa31;
+}
+
+// 指定した場所に画像を移動させる部分です。
+function setPoOa31(name,x,y) {
+	if (document.all) {
+		document.all(name).style.pixelLeft=x+spDxOa31;
+		document.all(name).style.pixelTop=y+spDyOa31;
+	}
+	else if (document.getElementById) {
+		document.getElementById(name).style.left=x+spDxOa31;
+		document.getElementById(name).style.top=y+spDyOa31;
+	}
+	else if (document.layers) document.layers[name].moveTo(x+spDxOa31,y+spDyOa31);
+}
+
+// 移動距離からxy座標を算出する部分です。
+function getXYOa31(x1,y1,x2,y2,l,dl,flag) {
+	var x,y;
+	if (l==0) {
+		if (flag==true) return x1;
+		if (flag==false) return y1;
+	}
+	else {
+		x=dl/l*(x2-x1)+x1;
+		if (flag==true) return x;
+		if (flag==false) {
+			if (x1-x2==0) {
+				if (y1<y2) return y1+dl;
+				else return y1-dl;
+			} else return (y1-y2)/(x1-x2)*x+y1-(y1-y2)/(x1-x2)*x1;
+		}
+	}
+}
+
+// メイン関数の部分です。
+function mouseMoveOa31() {
+	if (document.all || document.getElementById || document.layers) {
+		if (!moveStopFlagOa31) {
+			var xx,l;
+			l=Math.abs(Math.sqrt(Math.pow((mxOa31-dxOa31),2)+Math.pow((myOa31-dyOa31),2)));
+			if (l<hOa31 && moveFlagOa31) {
+				dxOa31=mxOa31,dyOa31=myOa31;
+				setPoOa31("imgOa31",dxOa31,dyOa31);
+				moveFlagOa31=false;
+			}
+			else if (l>h2Oa31 || l<=h2Oa31 && moveFlagOa31) {
+				xx=getXYOa31(dxOa31,dyOa31,mxOa31,myOa31,l,hOa31,true);
+				dyOa31=getXYOa31(dxOa31,dyOa31,mxOa31,myOa31,l,hOa31,false);
+				dxOa31=xx;
+				setPoOa31("imgOa31",dxOa31,dyOa31);
+				moveFlagOa31=true;
+			}
+		}
+		setTimeout("mouseMoveOa31()",mouseSpeedOa31);
+	}
+}
+// End -->
+
+
+function _HpbJumpURLinNewWindow(url) 
+{
+  if (url != '')
+  {
+    window.open(url, '_blank');
+  }
+}
+//-->
+</script>
+<title>http://www2.tba.t-com.ne.jp/yamazaki/の参照ページ</title>
+<?import namespace="t" implementation="#default#time2">
+</head>
+<body><span id="imgOa31" style="position:absolute; left:100px; top:100px; width:37px; height:25px; clip:rect(0px 37px 25px 0px); z-index:1"><img src="../gazou/ani-nekome2.gif" width="37" height="25" alt="猫"></span> <!-- この下は、画像の移動をスタートしている部分です。
+	そのまま書いて下さい。--><script type="text/JavaScript">
+<!--
+mouseMoveOa31();
+// End -->
+</script>
+<h1><span id="daishou" style="font-family :'Lucida Handwriting','ＭＳ ゴシック',fantasy;color : #f39;">link</span></h1>
+<t:animatecolor targetelement="daishou" attributename="color" begin="0" dur="5" from="skyblue" to="fuchsia" autoreberse="true" repeatcount="indefinite" />
+<ul>
+<li id="bbslink1" class="kajyou"><a href="http://pzxa85.hp.infoseek.co.jp/www/www.htm" target="_blank" class="kajyou">とほほWWW入門</a>
+<li class="kajyou"><a href="http://www.htmq.com/index.htm" target="_blank">htmlクイックレファレンス</a>
+<li class="kajyou"><a href="http://www.shoshinsha.com/pukiwiki/pukiwiki.php?FrontPage" target="_blank">PukiWkikiホームページ作りのＦＡＱ</a>
+<li class="kajyou"><a href="http://homepage1.nifty.com/MADIA/vb/VBKANREN.htm" target="_blank">API 技術関連 - VBでのWin32APIのサンプル</a></li>
+<li class="kajyou"><a href="http://www.h3.dion.ne.jp/~sakatsu/Breakthrough_P-Ctrl_Arrays.htm" target="_blank">擬似からの脱却</a>
+<li class="kajyou"><a href="http://members.tripod.co.jp/cssbug/" target="_blank">cssバグリスト</a>
+<li class="kajyou"><a href="http://www.iroiro.org/index.shtml" target="_blank">いろいろ入門</a>
+<li class="kajyou"><a href="http://www.kent-web.com/www/" target="_blank">kent　自宅　サーバー</a>
+<li class="kajyou"><a href="http://www.rfs.jp/sitebuilder/perl/" target="_blank">perl&amp;cgi完全講座</a>
+<li class="kajyou"><a href="http://www.mikeneko.ne.jp/~lab/" target="_blank">ミケネコ研究所</a>
+<li class="kajyou"><a href="http://www.kent-web.com/www/" target="_blank">自宅サーバー計画</a>
+<li class="kajyou"><a href="http://tmhiko.hp.infoseek.co.jp/nekomimi_com/PC_tips/DOS_tips/main.html" target="_blank">猫耳通信社（MS-DOS講座）</a>
+<li class="kajyou"><a href="http://www.usagi-js.com/index.htm" target="_blank">うさのJavaScript講座</a>
+<li class="kajyou"><a href="http://www.tg.rim.or.jp/~hexane/ach/ptxh/" target="_blank" class="kajyou">xhtmlのページ</a>
+<li class="kajyou"><a href="http://www.mahoutsukaino.com/" target="_blank">MSaccessを使いこなす為に</a>
+<li class="kajyou"><a href="http://www.accessclub.jp/" target="_blank">ACCESS CLUB</a>
+<li class="kajyou"><a href="http://www.ken3.org/vba/" target="_blank">三流君　ＶＢＡで楽しくプログラミング</a>
+<li class="kajyou"><a href="http://www2.moug.net/cgi-bin/technic.cgi?acvba+IT0601" target="_blank">ACCESS VBA即効テクニック集</a>
+<li class="kajyou"><a href="http://www.moug.net/skillup/index.htm" target="_blank">モーグスキルアップ講座</a>
+<li class="kajyou"><a href="http://www.asahi-net.or.jp/~ef2o-inue/index.html" target="_blank">エクセルでお仕事</a>
+<li class="kajyou"><a href="http://www.h4.dion.ne.jp/~asaip/index.htm" target="_blank">OUTLOOK・POWERPOINT VBA<br clear="">
+～あさのいっぷく～</a>
+<li class="kajyou"><a href="http://www.fureai.or.jp/~tato/DHTML/simple/contents.htm" target="_blank">D-HTML</a>
+<li class="kajyou"><a href="http://www.55555.to/ext/index.htm" target="_blank" class="kajyou">拡張子博物館</a>
+<li class="kajyou"><a href="http://www.parkcity.ne.jp/~chaichan/src/htmlmain.htm" target="_blank">ストリクトなhtml講座</a>
+<li class="kajyou"><a href="http://www.asahi-net.or.jp/~sd5a-ucd/rec-html401j/cover.html.ja.sjis" target="_blank">W3C　html　要素・属性索引</a>
+<li class="kajyou"><a href="http://www6.plala.or.jp/go_west/nextcss/" target="_blank">CSS Dencitie</a>
+<li class="kajyou"><a href="http://homepage2.nifty.com/winfaq/" target="_blank" class="kajyou">windowsFAQ</a>
+<li class="kajyou"><a href="http://nobumasa-web.hp.infoseek.co.jp/faq/windows/index.html" target="_blank">windowsFAQ集</a>
+<li class="kajyou"><a href="http://yougo.ascii24.com/gh/" target="_blank">アスキーデジタル用語辞典</a>
+<li class="kajyou"><a href="http://e-words.jp/" target="_blank">e-word</a>
+<li class="kajyou"><a href="http://ja.wikipedia.org/wiki/%E3%83%A1%E3%82%A4%E3%83%B3%E3%83%9A%E3%83%BC%E3%82%B8" target="_blank">百科事典Wikipedia</a>
+<li class="kajyou"><a href="http://homepage1.nifty.com/tanipage/index.htm" target="_blank">Fivaのページ</a>
+</ul>
+<script type="text/javascript">
+<!--
+var chdt=new Date(document.lastModified);
+var naviN=window.navigator.appName,yn;
+(naviN=="Microsoft Internet Explorer")?yn=chdt.getYear():yn=1900+chdt.getYear();
+document.write(yn+"年"+(chdt.getMonth()+1)+"月"+chdt.getDate()+"日 "+chdt.getHours()+"時"+chdt.getMinutes()+"分 更新");
+--></script><br>
+</body>
+</html>

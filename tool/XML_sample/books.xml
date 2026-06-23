@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="Shift_JIS" standalone="yes" ?>
+
+<ym:books xmlns:ym="urn:books" title="Web関連書籍一覧">
+
+	<owner address="CQW15204@nifty.com">
+		Yoshihiro.Yamada</owner>
+	<book isbn="ISBN4-7980-0137-6">
+		<name>今日から使えるASP3.0サンプル集</name>
+		<author>Yoshihiro.Yamada</author>
+		<logo>asp3.jpg</logo>
+		<category>ASP</category>
+		<url>http://member.nifty.ne.jp/Y-Yamada/asp3/</url>
+		<price>2800</price>
+		<publish>昭和システム</publish>
+		<pDate>2001-06-22</pDate>
+		<memo>
+		Windows2.0/NT4.0/98/95で使えるサーバーサイド技術
+		<keyword>ActiveServerPages</keyword>3.0。潤沢
+		に用意された追加コンポーネントやAccess、SQL Serverに代表
+		されるデータベースとの連携により、強力なWebアプリケーションの
+		構築を可能とします。
+		</memo>
+	</book>
+	<book isbn="ISBN4-7980-0095-7">
+		<name>今日から使えるXMLサンプル集</name>
+        <author>Nami Kakeya</author>
+		<logo>xml.jpg</logo>		
+		<category>XML</category>
+		<url>http://member.nifty.ne.jp/Y-Yamada/xml/</url>
+		<price>2800</price>
+		<publish>昭和システム</publish>
+		<pDate>2000-03-21</pDate>
+		<memo>
+		<keyword>XML、XSLT、DOM、XML Schema</keyword>
+		など、XMLに関する最新情報を実用サンプル、実		
+		システムでの活用事例をまじえ、お届けします。最新W3C標準
+		仕様を徹底網羅した詳細リファレンス、最新事情を語るコラム
+		も必見。
+		</memo>
+	</book>
+	<book isbn="ISBN4-7973-1400-1">
+		<name>標準ASPテクニカルリファレンス</name>
+		<author>Kouichi Usui</author>
+		<logo />
+		<category>ASP</category>
+		<price>4000</price>
+		<publish>ハードバンク</publish>
+		<pDate>2000-10-18</pDate>
+		<memo>
+		最新OS<keyword>Windows2000+IIS5.0</keyword>
+		に対応し、Windows環境におけるWebアプリケーションの
+		極限を追求。バージョン3.0に進化し、ますます強力な
+		ASPを詳細なリファレンスをベースに、サンプル集顔負けの123
+		サンプルと共に。
+		</memo>
+	</book>
+	<book isbn="ISBN4-8796-6936-9">
+		<name>Webアプリケーション構築技法</name>
+		<author>Akiko Yamamoto</author>
+		<logo>webware.jpg</logo>		
+		<category>ASP</category>
+        <url>http://member.nifty.ne.jp/Y-Yamada//webware/</url>
+		<price>3200</price>
+		<publish>頌栄社</publish>
+		<pDate>1999-10-24</pDate>
+		<memo>
+		IE5.x+IIS4/5で動作するwebベースのグループウェアを
+		<ref addr="http://member.nifty.ne.jp/Y-Yamada/webware/dl.html">
+		無料ダウンロード提供中</ref>。
+		スケジュール管理、施設予約、ファイル共有、メール受送信、電子
+		会議室、検索エンジン、不在ボードなど、豊富な機能が簡単な設定
+		だけで動作します。
+		</memo>
+	</book>
+</ym:books>

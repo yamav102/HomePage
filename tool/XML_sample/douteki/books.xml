@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="Shift_JIS" standalone="yes" ?>
+<?xml-stylesheet type="text/xsl" href="./books.xsl" ?>
+
+
+<books title="web関連書籍一覧">
+	<owner address="CQW15204@nifty.com">
+		Yoshihiro.Yamada</owner>
+	<book isbn="ISBN4-7980-0137-6">
+		<name>今日から使えるASP3.0サンプル集</name>
+		<author>Yoshihiro.Yamada</author>
+		<category>ASP</category>
+		<url>http://member.nifty.ne.jp/Y-Yamada/asp3/</url>
+		<price>2800</price>
+		<publish>昭和システム</publish>
+		<pDate>2001-06-22</pDate>
+	</book>
+	<book isbn="ISBN4-7980-0095-7">
+		<name>今日から使えるXMLサンプル集</name>
+		<author>Nami Kakeya</author>
+		<category>XML</category>
+		<url>http://member.nifty.ne.jp/Y-Yamada/xml/</url>
+		<price>2800</price>
+		<publish>昭和システム</publish>
+		<pDate>2000-03-21</pDate>
+	</book>
+	<book isbn="ISBN4-7973-1400-1">
+		<name>標準ASPテクニカルリファレンス</name>
+		<author>Kouichi Usui</author>
+		<category>ASP</category>
+		<price>4000</price>
+		<publish>ハードバンク</publish>
+		<pDate>2000-10-18</pDate>
+	</book>
+	<book isbn="ISBN4-87966-936-9">
+		<name>Webアプリケーション構築技法</name>
+		<author>Akiko Yamamoto</author>
+		<url>http://member.nifty.ne.jp/Y-Yamada//webware/</url>
+		<category>ASP</category>
+		<price>3200</price>
+		<publish>頌栄社</publish>
+		<pDate>1999-10-24</pDate>
+	</book>
+</books>

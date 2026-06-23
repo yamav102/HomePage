@@ -1,0 +1,67 @@
+﻿/* leftside1.css */
+html{
+	background-color:darkslategray;//gray;
+}
+body{
+	margin:10px 10px 10px 10px;
+	padding-left:1em;
+	padding-right:.5em;
+	padding-top:1em;
+	width:900px;
+	border:solid 2px steelblue;
+	background-color:whitesmoke; 
+}
+table{
+	width:880px;
+}
+table *{
+	border:solid 3px gray;
+	padding:7px;
+}
+table code,table a{
+	border:none;
+}
+td.static{
+	background-color:oldlace;
+}
+table.bn *{
+	border:none;
+}h5{
+	font-size:100%;
+}
+caption{
+	font-weight:bold;
+	font-family:'メイリオ';
+	background-color:ivory;
+}
+pre{
+	background-color:royalblue;
+	width:880px;
+	font-family:monospace;
+	font-size:115%;
+	color:lemonchiffon;
+	line-height:140%;
+//	padding-bottom:.7em;
+
+}dt{
+	line-height:5em;
+}p,li{
+
+	font-size:110%;
+	line-height:140%;
+	
+}p{
+	width:880px;
+	text-indent:1em;
+}li{
+	width:880px;
+}blockquote{
+	border:dotted 2px brown;
+	padding:0.7em;
+}blockquote pre{
+	width:70%;
+	margin-left:1em;
+}blockquote p{
+	width:650px;
+	padding-left:1em;
+}

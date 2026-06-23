@@ -1,0 +1,767 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" id="sixapart-standard">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	
+	
+	
+	<link rel="stylesheet" href="http://yamav102.cocolog-nifty.com/blog/styles.css" type="text/css" />
+		<link rel="alternate" type="application/atom+xml" title="「yamaV1.02βのブログ」のブログ記事 (Atom)" href="http://yamav102.cocolog-nifty.com/blog/atom.xml" />
+	<link rel="alternate" type="application/rss+xml" title="「yamaV1.02βのブログ」のブログ記事 (RSS 1.0)" href="http://yamav102.cocolog-nifty.com/blog/index.rdf" />
+	<link rel="alternate" type="application/rss+xml" title="「yamaV1.02βのブログ」のブログ記事 (RSS 2.0)" href="http://yamav102.cocolog-nifty.com/blog/rss.xml" />
+	
+	<link rel="alternate" media="handheld" href="http://app.m-cocolog.jp/t/typecast/661745/555928/79474381" />
+	<script type="text/javascript" src="/.shared-cocolog/js/flash_check.js"></script>
+    <script type="text/javascript" src="http://yamav102.cocolog-nifty.com/blog/.config.js"></script>
+	<link rel="stylesheet" href="/.shared-cocolog/js/multibox/multibox/multibox.css" type="text/css" media="all" />
+<script type="text/javascript" src="/.shared-cocolog/js/multibox/_common/js/mootools.js"></script>
+<script type="text/javascript" src="/.shared-cocolog/js/multibox/multibox/overlay.js"></script>
+<script type="text/javascript" src="/.shared-cocolog/js/multibox/multibox/multibox.js"></script>
+
+	
+
+
+	
+
+	<title>中断モードでは入力できません とか: yamaV1.02βのブログ</title>
+	<link rel="start" href="http://yamav102.cocolog-nifty.com/blog/" title="Home" />
+	<link rel="prev" href="http://yamav102.cocolog-nifty.com/blog/2014/03/recordsetcount-.html?no_prefetch=1" title="ACCESS VBA レコードセットの件数を数える" />
+	
+	<!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/"
+         xmlns:dc="http://purl.org/dc/elements/1.1/">
+<rdf:Description
+    rdf:about="http://yamav102.cocolog-nifty.com/blog/2014/04/post-02c9.html"
+    trackback:ping="http://app.cocolog-nifty.com/t/trackback/555928/59500343"
+    dc:title="中断モードでは入力できません とか"
+    dc:identifier="http://yamav102.cocolog-nifty.com/blog/2014/04/post-02c9.html"
+    dc:description="中断モードでは入力できません　とか ステップ実行は、VBAのコードが何をしている..."
+    dc:creator="yamav102"
+    dc:date="2014-04-20T17:07:43+09:00" />
+</rdf:RDF>
+-->
+
+</head>
+
+<body class="layout-two-column-left">
+<script type="text/javascript">
+<!--
+var _uah = _uah ||{};
+_uah['id'] = '7991711';
+_uah['h'] = '55942054';
+_uah['oem_id'] = '3';
+_uah['url'] = 'http://yamav102.cocolog-nifty.com/blog/2014/04/post-02c9.html';
+(function() {
+var ua = document.createElement('scri'+'pt');
+ua.type = 'text/javascript';
+ua.async = true;
+ua.src = ('https:' == document.location.protocol ? 'https://bs' : 'http://ua') + '.nakanohito.jp/ua/ua.js';
+var s = document.getElementsByTagName('scri'+'pt')[0];
+s.parentNode.insertBefore(ua, s);
+})();
+//-->
+</script>
+<noscript>
+<img src='http://ua.nakanohito.jp/ua/?from=uamb&amp;id=7991711&amp;mode=default&amp;h=55942054&amp;rand=noscript&amp;guid=ON&amp;url=http%3A%2F%2Fyamav102.cocolog-nifty.com%2Fblog%2F2014%2F04%2Fpost-02c9.html&amp;eflg=1' alt='' width='1' height='1' border='0' />
+</noscript>
+
+
+
+
+<script type="text/javascript" src="http://analytics.cocolog-nifty.com/ax.js"></script>
+
+	
+	<div id="container">
+		<div id="container-inner" class="pkg">
+			
+			<!-- banner -->
+<div id="banner">
+	<div id="banner-inner" class="pkg">
+		
+		<h1 id="banner-header"><a href="http://yamav102.cocolog-nifty.com/blog/" accesskey="1">yamaV1.02βのブログ</a></h1>
+		<h2 id="banner-description"> </h2>
+		<div id="banner-inner-bottom"></div>
+	</div>
+</div>
+
+
+
+			<div id="pagebody">
+				<div id="pagebody-inner" class="pkg">
+					<div id="alpha">
+						<div id="alpha-inner" class="pkg">
+							<!-- sidebar -->
+
+
+<div class="module-widget module" id="widget-cocolog_Access_Page">
+	<div class="module-content">
+    	<script type="text/javascript" src="http://analytics.cocolog-nifty.com/blogparts_aclist.js"></script>
+	</div>
+</div>
+<div id="recent-entries" class="module-archives module">
+<div class="module-inner">
+<h2 class="module-header">最近の記事</h2>
+<div class="module-top"></div>
+<div class="module-content module-body">
+<ul class="module-list">
+<li class="module-list-item"><a href="http://yamav102.cocolog-nifty.com/blog/2014/04/post-02c9.html">中断モードでは入力できません とか</a></li>
+<li class="module-list-item"><a href="http://yamav102.cocolog-nifty.com/blog/2014/03/recordsetcount-.html">ACCESS VBA レコードセットの件数を数える</a></li>
+<li class="module-list-item"><a href="http://yamav102.cocolog-nifty.com/blog/2014/03/post-f81b.html">茜色の想い 歌詞</a></li>
+<li class="module-list-item"><a href="http://yamav102.cocolog-nifty.com/blog/2014/01/post-1733.html">楕円の軌跡を描く</a></li>
+<li class="module-list-item"><a href="http://yamav102.cocolog-nifty.com/blog/2013/12/post-bf02.html">加法定理の証明</a></li>
+<li class="module-list-item"><a href="http://yamav102.cocolog-nifty.com/blog/2013/11/post-54d2.html">ポコポン探検隊の歌</a></li>
+<li class="module-list-item"><a href="http://yamav102.cocolog-nifty.com/blog/2013/11/how-can-this-be.html">How Can This Be True?</a></li>
+<li class="module-list-item"><a href="http://yamav102.cocolog-nifty.com/blog/2013/09/vbscript-option.html">VBScript の Option Explicit はトラップされてしまう件</a></li>
+<li class="module-list-item"><a href="http://yamav102.cocolog-nifty.com/blog/2013/07/vba-friend-inst.html">VBA Friend というスコープと クラスの Instancing プロパティの PublicNotCreatable</a></li>
+<li class="module-list-item"><a href="http://yamav102.cocolog-nifty.com/blog/2013/06/post-adfb.html">VBA オブジェクト ブラウザとコード ウィンドウで使用されるアイコン</a></li>
+
+</ul>
+</div>
+<div class="module-bottom"></div>
+<div class="module-inner-bottom"></div>
+</div>
+</div>
+
+<div id="photo" class="module-photo module">
+<div class="module-content">
+<img src="http://yamav102.cocolog-nifty.com/selfimg.gif" width="150" height="124" alt="フォト" />
+</div>
+</div>
+
+
+<script type="text/javascript">var user_start_date = "";</script>
+<script type="text/javascript" src="http://updates.cocolog-nifty.com/sidebar/nifty/top.js"></script>
+<div style="border-top: 1px dashed; overflow: visible !important; padding-top: 10px; padding-bottom: 10px; display: block !important; position: static !important;" class="free"><a href="http://www.nifty.com/">@nifty</a>が提供する<br/><a href="http://www.cocolog-nifty.com/">無料ブログはココログ</a>！</div>
+<script type="text/javascript" src="http://updates.cocolog-nifty.com/sidebar/nifty/middle.js"></script>
+<div style="overflow: visible !important; text-align: center; display: block !important; position: static !important;" class="cocolog-banner">
+<a title="無料ブログはココログ" href="http://www.cocolog-nifty.com/"><img style="border: 0px none;" alt="無料ブログはココログ" src="http://updates.cocolog-nifty.com/images/nifty/logo_userpage.gif"/></a>
+<script type="text/javascript" src="http://updates.cocolog-nifty.com/sidebar/nifty/bottom.js"></script>
+</div>
+<div class="module-qrcode module">
+        <div class="module-inner">
+	<h2 class="module-header">携帯URL</h2>
+	<div class="module-top"></div>
+	<div class="module-content module-body">
+		<img alt="ケータイ用アドレス" src="http://yamav102.cocolog-nifty.com/blog/qrcode.png" /><br />
+<a href="mailto:?subject=cocolog&amp;body=http://app.m-cocolog.jp/t/typecast%3Fblog_id%3D661745%26user_id%3D555928">携帯にURLを送る</a>
+        </div>
+	<div class="module-bottom"></div>
+	<div class="module-inner-bottom"></div>
+	</div>
+</div>
+<div id="archive-datebased" class="module-archives module">
+<div class="module-inner">
+<h2 class="module-header"><a href="http://yamav102.cocolog-nifty.com/blog/archives.html">バックナンバー</a></h2>
+<div class="module-top"></div>
+<div class="module-content module-body">
+<ul class="module-list">
+<li class="module-list-item"><a href="http://yamav102.cocolog-nifty.com/blog/2014/04/index.html">2014年4月</a></li>
+<li class="module-list-item"><a href="http://yamav102.cocolog-nifty.com/blog/2014/03/index.html">2014年3月</a></li>
+<li class="module-list-item"><a href="http://yamav102.cocolog-nifty.com/blog/2014/01/index.html">2014年1月</a></li>
+<li class="module-list-item"><a href="http://yamav102.cocolog-nifty.com/blog/2013/12/index.html">2013年12月</a></li>
+<li class="module-list-item"><a href="http://yamav102.cocolog-nifty.com/blog/2013/11/index.html">2013年11月</a></li>
+<li class="module-list-item"><a href="http://yamav102.cocolog-nifty.com/blog/2013/09/index.html">2013年9月</a></li>
+<li class="module-list-item"><a href="http://yamav102.cocolog-nifty.com/blog/2013/07/index.html">2013年7月</a></li>
+<li class="module-list-item"><a href="http://yamav102.cocolog-nifty.com/blog/2013/06/index.html">2013年6月</a></li>
+<li class="module-list-item"><a href="http://yamav102.cocolog-nifty.com/blog/2013/03/index.html">2013年3月</a></li>
+<li class="module-list-item"><a href="http://yamav102.cocolog-nifty.com/blog/2012/12/index.html">2012年12月</a></li>
+
+</ul>
+</div>
+<div class="module-bottom"></div>
+<div class="module-inner-bottom"></div>
+</div>
+</div>
+
+<div id="subscribe" class="module-subscribe module">
+<div class="module-content link-note">
+<a onclick="window.open(this.href, 'blogroll', 'width=500,height=600,scrollbars=yes'); return false;" href="http://app.cocolog-nifty.com/t/app/lists?__mode=quickpost&amp;is_qp=1&amp;type=1&amp;qp_href=http://yamav102.cocolog-nifty.com/blog/">このブログをマイリストに追加</a>
+</div>
+</div>
+<div id="syndicate" class="module-syndicate module">
+<div class="module-content link-note">
+<a href="http://yamav102.cocolog-nifty.com/blog/index.rdf">RSSを表示する</a>
+</div>
+</div>
+<div id="archive-category" class="module-categories module">
+<div class="module-inner">
+<h2 class="module-header"><a href="http://yamav102.cocolog-nifty.com/blog/archives.html">カテゴリー</a></h2>
+<div class="module-top"></div>
+<div class="module-content module-body">
+<ul class="module-list">
+<li class="module-list-item">
+  <a href="http://yamav102.cocolog-nifty.com/blog/access_vba/index.html">ACCESS_VBA</a>
+  
+</li>
+
+
+<li class="module-list-item">
+  <a href="http://yamav102.cocolog-nifty.com/blog/excel_vba/index.html">Excel VBA</a>
+  
+</li>
+
+
+<li class="module-list-item">
+  <a href="http://yamav102.cocolog-nifty.com/blog/vba/index.html">VBA</a>
+  
+</li>
+
+
+<li class="module-list-item">
+  <a href="http://yamav102.cocolog-nifty.com/blog/vbscript/index.html">VBScript</a>
+  
+</li>
+
+
+<li class="module-list-item">
+  <a href="http://yamav102.cocolog-nifty.com/blog/cat21932236/index.html">おすすめサイト</a>
+  
+</li>
+
+
+<li class="module-list-item">
+  <a href="http://yamav102.cocolog-nifty.com/blog/cat21932244/index.html">パソコン・インターネット</a>
+  
+</li>
+
+
+<li class="module-list-item">
+  <a href="http://yamav102.cocolog-nifty.com/blog/cat23310251/index.html">数学</a>
+  
+</li>
+
+
+<li class="module-list-item">
+  <a href="http://yamav102.cocolog-nifty.com/blog/cat21932257/index.html">経済・政治・国際</a>
+  
+</li>
+
+
+
+</ul>
+</div>
+<div class="module-bottom"></div>
+<div class="module-inner-bottom"></div>
+</div>
+</div>
+
+
+
+
+
+
+							<div id="alpha-inner-bottom"></div>
+						</div>
+					</div>
+					<div id="beta">
+						<div id="beta-inner" class="pkg">
+							<!-- content nav -->
+<p class="content-nav">
+	<a href="http://yamav102.cocolog-nifty.com/blog/2014/03/recordsetcount-.html">&laquo; ACCESS VBA レコードセットの件数を数える</a> |
+	<a href="http://yamav102.cocolog-nifty.com/blog/">トップページ</a>
+	
+</p>
+
+
+<!-- entry -->
+	<h2 class="date-header">2014年4月20日 (日)</h2>
+
+
+<div class="entry" id="entry-79474381">
+
+<div class="entry-inner">
+	
+	<div class="entry-content">
+	<div class="entry-content-inner">
+		<div class="entry-body">
+			<link href="http://homepage3.nifty.com/homepage_yamaV102/highlight.js/styles/vs.css" rel="stylesheet" />
+<p><script type="text/javascript" src="http://homepage3.nifty.com/homepage_yamaV102/highlight.js/highlight.pack.js"></script><script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+</p>
+
+<div class="myArea">
+<h1>
+中断モードでは入力できません　とか
+</h1>
+<p>
+ステップ実行は、VBAのコードが何をしているのか、
+挙動を確認する事が出来て、デバッグを進める上でとても頼もしい機能です。
+</p>
+<p>
+しかし「中断モードでは入力できません」と言われて、
+ステップ実行が出来なくなる状況に陥る事があります。
+この状況に陥ると、どの部分でエラーが発生しているのかを
+特定する事が困難になり、コードをロジックで読み解いていくしか方法が無く、
+込み入った長いコードであれば、絶望的な気分にさせられたりします。 </p>
+
+<p><img border="0" src="http://yamav102.cocolog-nifty.com/photos/uncategorized/2014/04/20/discontinuation1.png" title="Discontinuation" alt="中断モードでは入力できません" />
+
+
+</p>
+<p>
+この状況が発生する条件には、様々な場合があるのかも知れません。
+私が知っているのは、 OLEObjects がワークシートに存在する場合です。
+OLEObjects というのは旧称で、
+今は <a target="_blank" title="ActiveXとは - 意味/解説/説明/定義 ： IT用語辞典" href="http://e-words.jp/w/ActiveX.html">
+ActiveX</a> コントロール と呼ぶようです。
+でも、VBAでのコーディングでは OLEObjects と指定するのです。
+</p>
+<p>
+Webページをワークシートに貼り付けたら、意図せずに一緒にActiveXコントロールも
+張り付いてしまって、このトラブルに巻き込まれた事があります。
+自らワークシートにActiveXコントールを挿入して、何かのツールを作る場合にも
+このトラブルに巻き込まれる事も普通に考えられます。 </p>
+
+<p><img border="0" src="http://yamav102.cocolog-nifty.com/photos/uncategorized/2014/04/20/activex1.png" title="ActivexControls" alt="Activexコントロールの挿入" />
+
+
+</p>
+<h2>
+再現コード
+</h2>
+<p>
+どういう条件が揃うと、この状況に陥るのかはいろいろあるのだと思います。
+ワークシートにActiveXコントロールのチェックボックスを
+挿入するコードを書いたら再現できました。
+</p>
+
+<div id="code0">
+<pre><code>
+Option Explicit
+'標準モジュール
+
+Sub 中断モードでは入力できませんの再現()
+
+&nbsp; &nbsp; Dim ole As OLEObject
+&nbsp; &nbsp; Dim chkbx As MSForms.CheckBox
+&nbsp; &nbsp; 
+&nbsp; &nbsp; Const cnChkBxName1 As String = &quot;テスト&quot;
+&nbsp; &nbsp; 
+&nbsp; &nbsp; Dim ole2 As OLEObject
+&nbsp; &nbsp; Dim tgtWS As Worksheet
+&nbsp; &nbsp; 
+&nbsp; &nbsp; Set ole = _
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; Sheet1.OLEObjects.Add( _
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;ClassType:=&quot;Forms.CheckBox.1&quot;, _
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;Left:=10, Top:=10)
+&nbsp; &nbsp; 
+&nbsp; &nbsp; 
+&nbsp; &nbsp; Set chkbx = ole.Object
+&nbsp; &nbsp; 
+&nbsp; &nbsp; With chkbx
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; .AutoSize = True
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; .Caption = cnChkBxName1
+&nbsp; &nbsp; End With
+&nbsp; &nbsp; 
+&nbsp; &nbsp; ole.Copy
+&nbsp; &nbsp; 
+&nbsp; &nbsp; Set tgtWS = Worksheets.Add(After:=Sheet1)
+&nbsp; &nbsp; 
+&nbsp; &nbsp; With tgtWS
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; .Paste
+&nbsp; &nbsp; End With
+&nbsp; &nbsp; 
+
+&nbsp; &nbsp; ole.Delete
+&nbsp; &nbsp; 
+&nbsp; &nbsp; Set ole2 = tgtWS.OLEObjects(1)
+&nbsp; &nbsp; 
+&nbsp; &nbsp; With ole2
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; .Left = 10
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; .Top = 10
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; .Activate
+&nbsp; &nbsp; End With
+&nbsp; &nbsp; 
+&nbsp; &nbsp; ole2.Activate
+&nbsp; &nbsp; 
+End Sub
+</code>
+</pre>
+</div>
+<p>
+このコードは、シート１にチェックボックスを
+挿入し、挿入したチェックボックスのコピーを
+作成したシート２に張り付けて、
+シート１に挿入したチェックボックスは削除する、
+という事をしています。問題なく動作はします。
+
+しかし、ステップ実行させようとすると
+ole を Set している行で「中断モードでは入力できません」
+と表示され、「続行」するか「終了」するかしか選択肢がなくなります。
+この後に続くコード中でエラーが発生していたとしても、エラーの表示はされたとしても、
+エラー箇所でコードが中断もされずに、エラー箇所を特定する事が困難な状況に陥ります。
+</p>
+<p>
+私が知っている回避方法は、OLEObject の存在するワークシートを別ブックに
+追い出してから操作する事です。「プロジェクトの管理はブック単位で行われるので」これで
+うまい事行くのだ、と moug 掲示板の KESUNA さんに教わりました。
+当時の掲示板でのやりとりを保存してあった HDD が壊れてしまい、何を説明されたのか
+、私にはうまく説明する事が出来ないのですが、だいたいそんな説明でした。
+（１０年以上前の事です。(* ￣)遠い目…　… ）
+</p>
+<div id="code0">
+<pre><code>
+Option Explicit
+'標準モジュール
+Public gOleWS As Worksheet
+Public gOleWS2 As Worksheet
+
+Sub 中断モードでは入力できませんの回避コード()
+
+&nbsp; &nbsp; Dim ole1 As OLEObject
+&nbsp; &nbsp; Dim ole2 As OLEObject
+&nbsp; &nbsp; Dim chkbx As MSForms.CheckBox
+&nbsp; &nbsp; Const cnName As String = &quot;テスト&quot;
+&nbsp; &nbsp; 
+&nbsp; &nbsp; Dim WB As Workbook
+&nbsp; &nbsp; 
+&nbsp; &nbsp; Set WB = Workbooks.Add
+&nbsp; &nbsp; Set gOleWS = WB.Sheets(1)
+&nbsp; &nbsp; Set gOleWS2 = WB.Sheets(2)
+&nbsp; &nbsp; 
+&nbsp; &nbsp; '別ブックに貼り付けるOLEObjectであれば
+&nbsp; &nbsp; 'ステップ実行出来る（中断モードで入力できる）
+&nbsp; &nbsp; Set ole1 = _
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; gOleWS.OLEObjects.Add( _
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;ClassType:=&quot;Forms.CheckBox.1&quot;, _
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;Left:=10, Top:=10)
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
+&nbsp; &nbsp; Set chkbx = ole1.Object
+&nbsp; &nbsp; 
+&nbsp; &nbsp; With chkbx
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; .Caption = cnName
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; .AutoSize = True
+&nbsp; &nbsp; End With
+&nbsp; &nbsp; 
+&nbsp; &nbsp; ole1.Copy
+&nbsp; &nbsp; 
+&nbsp; &nbsp; With gOleWS2
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; .Paste
+&nbsp; &nbsp; End With
+&nbsp; &nbsp; 
+&nbsp; &nbsp; Set ole2 = gOleWS2.OLEObjects(1)
+&nbsp; &nbsp; 
+&nbsp; &nbsp; With ole2
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; .Left = 10
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; .Top = 10
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; .Activate
+&nbsp; &nbsp; End With
+&nbsp; &nbsp; 
+&nbsp; &nbsp; gOleWS2.Copy After:=ThisWorkbook.Worksheets(1)
+&nbsp; &nbsp; 
+&nbsp; &nbsp; WB.Close saveChanges:=False
+&nbsp; &nbsp; 
+End Sub
+</code>
+</pre>
+</div>
+<p>
+結果は全く同じになります。こっちの書き方は全行ステップさせても
+問題が起きません。どこかでエラーが発生していれば、その場所で
+止まってくれまし、何が起きているのか一行一行観察していく事もできます。
+</p>
+<h2>
+ワークシートにある OLEObject の操作
+</h2>
+<p>
+ところで、ActiveXコントロールのメソッドなりプロパティなりの操作は、
+ OLEObject に対する操作と、MSFormsのコントロールに対する操作を、
+それぞれ 別に指定する、という事が判っていないと、
+混乱してコーディングの手が止まってしまいます。 
+</p>
+<p>
+ヘルプには、
+</p>
+<div id="code0">
+<code>&nbsp;</code><pre><code>ActiveSheet.OLEObjects(&quot;CheckBox1&quot;).Object.Value = 1
+</code>
+</pre>
+</div>
+<p>
+こんなサンプルコードが載っています。
+OLEObjects(&quot;CheckBox1&quot;).Object の<em>Object</em> とは、 
+MSForms.CheckBox の事なのです。
+単に CheckBox と書くと、フォームコントロールの CheckBox をの事になります。
+この違いは理解しておく必要があります。 
+TypeName ではどちらも&nbsp; 'CheckBox' を返すので見分けがつきません。 
+フォームコントロールのコントロールは、Excelライブラリのコントロールで、
+ActiveX コントロールの コントロールは MSForms ライブラリのコントロールです。
+</p>
+<p>
+要するに、こういう事なのです。 
+</p>
+<div id="code0">
+<pre><code>'シートモジュール
+Sub sample()
+
+&nbsp; &nbsp; Dim olb As OLEObject
+&nbsp; &nbsp; Dim chbx As MSForms.CheckBox
+&nbsp; &nbsp; Set olb = _
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; Me.OLEObjects.Add(ClassType:=&quot;Forms.CheckBox.1&quot;)
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 
+&nbsp; &nbsp; 'OLEObjectに対してのプロパティの操作
+&nbsp; &nbsp; With olb
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; .Left = Range(&quot;b1&quot;).Left + 5
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; .Top = Range(&quot;b1&quot;).Top
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; '設定の保存シート
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; .LinkedCell = Sheet2.Name &amp; &quot;!a1&quot;
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; .Name = &quot;sample1&quot;
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; .ShapeRange.Fill.Transparency = 1# '透明度：透明
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; Set chbx = .Object
+&nbsp; &nbsp; End With
+&nbsp; &nbsp; 
+&nbsp; &nbsp; 'MSForms.CheckBoxに対してのプロパティの操作
+&nbsp; &nbsp; With chbx
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; .Caption = &quot;sample&quot;
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; .Font.Size = 12
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; .ForeColor = RGB(255, 100, 150)
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; .BackStyle = fmBackStyleTransparent
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 
+&nbsp; &nbsp; End With
+&nbsp; &nbsp; 
+End Sub
+</code>
+</pre>
+</div>
+<p>
+コントロールの操作は、これで判ったとしても、別ブックに追い出したワークシートに
+あるコントロールの操作は、自ブックのシートにあるコントロールを操作するようにはいきません。
+</p>
+<p>
+自ブックのシートにあるコントロールは、
+</p>
+<div id="code0">
+<code>
+<pre>Sheet1.chkBx1.Value = True
+</pre>
+</code>
+</div>
+<p>
+と書けば素直に参照できるのですが、
+別ブックにあるシートの変数である gWS を使って、
+</p>
+<div id="code0">
+<code>
+<pre>gWS.chkBx.Value = True
+</pre>
+</code>
+</div>
+<p>
+と、書いても、「メソッドまたはデータ メンバが見つかりません。」という
+エラーになります。入力候補表示の中にも chkBx は出てきてくれません。
+</p>
+<p>
+ちょっと不便ではありますが、
+</p>
+<div id="code0">
+<code>
+<pre>&nbsp; &nbsp; Set chkBx = gWS.OLEObjects(&quot;chkBx&quot;).Object
+&nbsp; &nbsp; chkBx.Value = True
+</pre></code>
+</div>
+<p>
+とか、
+</p>
+<div id="code0">
+<pre><code>&nbsp; &nbsp; Set chkbx = CallByName(gWS, &quot;chkBx&quot;, VbGet)
+&nbsp; &nbsp; chkbx.Value = True</code></pre>
+</div>
+<p>
+とか、書いて凌げます。gWS との紐付けがなくなってしまっている事には
+変りなく、沢山のコントロールがあると混乱しそうです。
+構造体でも作ってまとめておくと、扱いやすいかもです。
+</p>
+<div id="code0">
+<code>
+<pre>Option Explicit
+'標準モジュール
+Public gWS As Worksheet
+
+Private Type typWScontrol
+&nbsp; &nbsp; chkBx As MSForms.CheckBox
+&nbsp; &nbsp; chkBx2 As MSForms.CheckBox
+End Type
+
+Sub sample()
+
+&nbsp; &nbsp; 'Sheet1にはchkBx と chkBx2 という名前の
+&nbsp; &nbsp; 'oleコントロールがある。
+&nbsp; &nbsp; Sheet1.Copy
+&nbsp; &nbsp; Set gWS = ActiveSheet
+&nbsp; &nbsp; 
+&nbsp; &nbsp; Dim wsCtrls As typWScontrol
+&nbsp; &nbsp; 
+&nbsp; &nbsp; Set wsCtrls.chkBx = gWS.OLEObjects(&quot;chkBx1&quot;).Object
+&nbsp; &nbsp; Set wsCtrls.chkBx2 = gWS.OLEObjects(&quot;chkBx2&quot;).Object
+&nbsp; &nbsp; 
+&nbsp; &nbsp; 'wsCtrls. と打てば、ペロンと入力候補が表示されて
+&nbsp; &nbsp; '扱いやすくなる。
+&nbsp; &nbsp; wsCtrls.chkBx.Value = True
+
+End Sub</pre>
+</code>
+</div>
+</div>
+
+<p><code><code>&nbsp;</code></code></p>
+
+<p><code><code>以上</code></code></p>
+
+<p><code><code>&nbsp;</code></code></p>
+
+<p></p>
+		</div>
+					<a id="more"></a>
+			<div class="entry-more">
+				
+			</div>
+		
+		<div class="entry-content-inner-bottom"></div>
+	</div>
+	</div>
+	<div class="entry-footer">
+		
+		<!-- post footer links -->
+
+
+	</div>
+<div class="entry-inner-bottom"></div>
+</div>
+
+<!-- content nav -->
+<p class="content-nav">
+	<a href="http://yamav102.cocolog-nifty.com/blog/2014/03/recordsetcount-.html">&laquo; ACCESS VBA レコードセットの件数を数える</a> |
+	<a href="http://yamav102.cocolog-nifty.com/blog/">トップページ</a>
+	
+</p>
+
+
+
+
+<script type="text/javascript" src="http://analytics.cocolog-nifty.com/entry_ax.js"></script>
+
+	<a id="comments"></a>
+	<div class="comments">
+		<h3 class="comments-header">コメント</h3>
+		<div class="comments-content">
+			<!-- comment list -->
+
+
+		</div>
+	</div>
+
+	<!-- comment form -->
+	<script type="text/javascript" src="/.shared-cocolog/js/comments.js"></script>
+	<script type="text/javascript">hostName = '.cocolog-nifty.com';</script>
+	
+	<form id="comment-form"
+		method="post" action="http://app.cocolog-nifty.com/t/comments">
+		<input type="hidden" name="entry_id" value="79474381" />
+		<input type="hidden" name="user_id" value="555928" />
+		
+		<div class="comments-open">
+			<h2 class="comments-open-header">コメントを書く</h2>
+			<div class="comments-open-content">
+				
+				
+				
+				
+									<div id="comments-open-data">
+						<p id="comments-open-author">
+							<label for="comment-author">名前：</label>
+							<input id="comment-author" name="author" size="30" />
+						</p>
+						<p id="comments-open-email">
+							<label for="comment-email">メールアドレス：</label>
+                                                        <span class="comment-form-note" style="display:inline">(ウェブ上には掲載しません)</span><br />
+							<input id="comment-email" name="email" size="30" />
+						</p>
+						<p id="comments-open-url">
+							<label for="comment-url">アドレス(URL):</label>
+							<input id="comment-url" name="url" size="30" />
+						</p>
+						<p id="comments-open-bake-cookie">
+							<label for="comment-bake-cookie"><input type="checkbox"
+								id="comment-bake-cookie" name="bakecookie" value="1" />
+								この情報を登録する</label>
+						</p>
+					</div>
+				
+
+	<p id="comments-open-text">
+
+
+					<label for="comment-text">内容：<script type="text/javascript">StaticURI = '/.shared-cocolog/';</script>
+<script type="text/javascript" src="/.shared-cocolog/js/emoticon.js"></script>
+<script type="text/javascript">Emoticon.Pallet.captionText = 'シフトキー＋クリックで連続入力';</script>
+<a id="emoticon-pallet-button" href="javascript:void(0)" onclick="Emoticon.Pallet.open(document.getElementById('comment-text'), this.firstChild);" title="絵文字を挿入"><img src="/.shared-cocolog/images/ed_emoticon_userblog.gif" alt="絵文字を挿入" style="border:0 none; padding:2px;" /></a>
+<script type="text/javascript">StaticURI = '/.shared-cocolog/';</script>
+<script type="text/javascript" src="/.shared-cocolog/js/facemark.js"></script>
+<script type="text/javascript">
+Facemark.Pallet.captionText = Facemark.is_mac ? 'alt（option）キー＋クリックで連続入力'
+                                              : 'コントロールキー＋クリックで連続入力';
+</script>
+<a id="facemark-pallet-button" href="javascript:void(0)" onclick="Facemark.Pallet.open(document.getElementById('comment-text'), this.firstChild);" title="顔文字の挿入"><img src="/.shared-cocolog/images/ed_facemark_userblog.gif" alt="顔文字の挿入" style="border:0 none; padding:2px;" /></a>
+</label>
+					<textarea id="comment-text" name="text" rows="10" cols="30"></textarea>
+				</p>
+			</div>
+
+	<div id="comments-open-footer" class="comments-open-footer">
+
+
+				<input type="submit" name="preview" id="comment-preview" value="&nbsp;確認&nbsp;" />
+				<input type="submit" name="post" id="comment-post" value="&nbsp;送信&nbsp;" />
+			</div>
+		</div>
+	</form>
+	
+	
+
+
+
+
+
+	<div class="trackbacks">
+		<a id="trackback"></a>
+		<h3 class="trackbacks-header">トラックバック</h3>
+		<div class="trackbacks-info">
+			<p>この記事のトラックバックURL:<br />http://app.cocolog-nifty.com/t/trackback/555928/59500343</p>
+			<p>この記事へのトラックバック一覧です： <a href="http://yamav102.cocolog-nifty.com/blog/2014/04/post-02c9.html">中断モードでは入力できません とか</a>:</p>
+		</div>
+		<div class="trackbacks-content">
+			
+		</div>
+	</div>
+
+
+<!-- content nav -->
+<p class="content-nav">
+	<a href="http://yamav102.cocolog-nifty.com/blog/2014/03/recordsetcount-.html">&laquo; ACCESS VBA レコードセットの件数を数える</a> |
+	<a href="http://yamav102.cocolog-nifty.com/blog/">トップページ</a>
+	
+</p>
+
+
+
+
+</div>
+
+							<div id="beta-inner-bottom"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div id="container-inner-bottom"></div>
+		</div>
+	</div>
+	    <script type="text/javascript" src="/.shared-cocolog/js/web/onload.js"></script>
+
+
+
+</body>
+</html>
+
+

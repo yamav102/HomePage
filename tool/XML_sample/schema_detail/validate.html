@@ -1,0 +1,37 @@
+﻿<html>
+    <head>
+        <title>
+            XML文書の検証
+        </title>
+        <script type="text/javascript">
+            <!--
+	//MSXML2.xmlSchemaCache.4.0の使用は　msxml4.msi のインストールが必要
+             var objScm = new ActiveXObject("MSXML2.xmlSchemaCache.4.0");
+             objScm.add("urn:books","books.xsd");
+
+	var objDoc=new ActiveXObject("MSXML2.DOMDocument.4.0");
+
+	objDoc.async=false;
+	objDoc.schemas=objScm;
+
+            objDoc.load("books.xml");
+
+            var objErr = objDoc.parseError;
+
+            if (objErr.errorCode != 0) {
+                var Str = objErr.errorCode + "\r\n";
+                Str += objErr.line + " 行 " + objErr.srcText + "\r\n";
+                Str += objErr.reason;
+                window.alert(Str);
+            } else {
+                window.alert("XML文書はスキーマに従っています");
+            }
+            
+            //-->
+        </script>
+    </head>
+    <body>
+        <h1>XML SchemaでXML文書の構文チェック</h1>
+    </body>
+    
+</html>

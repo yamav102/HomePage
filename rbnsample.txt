@@ -1,0 +1,134 @@
+◆fuga.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- utf-8 で保存しないと動きません -->
+
+-<customUI onLoad="ThisWorkbook.RbnOnload" xmlns="http://schemas.microsoft.com/office/2009/07/customui">
+
+
+-<ribbon startFromScratch="true">
+
+
+-<tabs>
+
+
+-<tab label="TestTab" id="tabid">
+
+
+-<group label="OptionGroup" id="hogegrp">
+
+<toggleButton label="tgl1" id="tgl1" getPressed="ThisWorkbook.getPressed" onAction="ThisWorkbook.onAction" size="large"/>
+
+<toggleButton label="tgl2" id="tgl2" getPressed="ThisWorkbook.getPressed" onAction="ThisWorkbook.onAction" size="large"/>
+
+<toggleButton label="tgl3" id="tgl3" getPressed="ThisWorkbook.getPressed" onAction="ThisWorkbook.onAction" size="large"/>
+
+</group>
+
+</tab>
+
+</tabs>
+
+</ribbon>
+
+</customUI>
+
+◆.rels
+<?xml version="1.0" encoding="UTF-8" standalone="true"?>
+
+-<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+
+<Relationship Target="docProps/app.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" Id="rId3"/>
+
+<Relationship Target="hogeUI/fuga.xml" Type="http://schemas.microsoft.com/office/2007/relationships/ui/extensibility" Id="hogeId"/>
+
+<Relationship Target="docProps/core.xml" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Id="rId2"/>
+
+<Relationship Target="xl/workbook.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Id="rId1"/>
+
+<Relationship Target="docProps/custom.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/custom-properties" Id="rId4"/>
+
+</Relationships>
+
+◆ ThisWorkbook
+Option Explicit
+'ThisWorkbookモジュール
+
+
+Private mRbn As IRibbonUI
+Private otgl1 As IRibbonControl
+Private otgl2 As IRibbonControl
+Private otgl3 As IRibbonControl
+
+Private mtgl1val As Boolean
+Private mtgl2val As Boolean
+Private mtgl3val As Boolean
+
+'excel起動時に一回だけ実行される
+Private Sub RbnOnLoad(ribbon As IRibbonUI)
+    Set mRbn = ribbon
+    
+    '初期値
+    mtgl1val = True
+    mtgl2val = False
+    mtgl3val = False
+    
+    ribbon.ActivateTab ("tabid")
+End Sub
+
+'tbl1,2,3 がクリックされたときにのみ実行される
+Private Sub OnAction(control As IRibbonControl, pressed As Boolean)
+    
+    Select Case control.ID
+        Case "tgl1"
+            If pressed Then
+                mtgl1val = pressed
+                mtgl2val = False
+                mtgl3val = False
+            End If
+        Case "tgl2"
+            If pressed Then
+                mtgl1val = False
+                mtgl2val = pressed
+                mtgl3val = False
+            End If
+        Case "tgl3"
+            If pressed Then
+                mtgl1val = False
+                mtgl2val = False
+                mtgl3val = pressed
+            End If
+    End Select
+    
+    Call tglsRefresh
+    
+End Sub
+
+'Excel起動時に一回実行される。他、invalidateメソッドで強制的に実行される。
+Private Sub GetPressed(control As IRibbonControl, ByRef returnValue)
+    Select Case control.ID
+        Case "tgl1"
+            Set otgl1 = control
+            returnValue = mtgl1val
+                
+        Case "tgl2"
+            Set otgl2 = control
+            returnValue = mtgl2val
+
+        Case "tgl3"
+            Set otgl3 = control
+            returnValue = mtgl3val
+            
+    End Select
+End Sub
+
+'OptionGroup のトグルボタンを初期化してGetPressedを強制実行
+Private Sub tglsRefresh()
+    With mRbn
+        .InvalidateControl otgl1.ID
+        .InvalidateControl otgl2.ID
+        .InvalidateControl otgl3.ID
+    End With
+End Sub
+

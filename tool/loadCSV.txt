@@ -1,0 +1,279 @@
+
+Odyssey Communications
+moug.net
+スキルアップ・問題解決なら、モーグにおまかせ！
+利用規約 はじめての方へ ヘルプ メルマガ
+
+    Q&A
+    即効テクニック
+    モーグ学習室
+    VBA広場
+    モグタンのおすすめ
+
+HOME > 即効テクニック > Excel VBA > ファイル操作関連のテクニック > LFコードで改行したファイルを読み込む
+LFコードで改行したファイルを読み込む｜Excel VBA
+ファイル操作関連のテクニック
+LFコードで改行したファイルを読み込む
+(Excel 2000/2002/2003/2007/2010)
+■CSVファイルを読み込む
+
+次のようなCSVファイルがあるとします。
+
+----　Staff.csv　--------------------------
+社員番号,氏名,入社年度,部署名
+W2870,丸の内花子,2009,経理部
+M2079,東京太郎,2005,営業一部
+-------------------------------------------
+
+このCSVファイルを読み込むには、次のようにします。
+
+Sub Sample1()
+    Dim buf  As String, tmp As Variant, i As Long
+    
+    Open "C:\Data\Staff.csv" For Input As #1
+        Do Until EOF(1)
+            i = i + 1
+            Line Input #1, buf
+            tmp = Split(buf, ",")
+            Cells(i, 1).Resize(1, UBound(tmp) + 1).Value = tmp
+        Loop
+    Close #1
+End Sub
+
+まずCSVファイルを開きます。
+そして、Line Inputステートメントでデータを1行ずつ読み込み、カンマで区切ってセルに出力します。
+この処理を1行目から最終行まで繰り返します。
+Line InputステートメントでCSVファイルを読み込む方法については「CSVファイルを読み込む」をご覧ください。
+
+Windowsで作られたファイルの場合、通常はこれで問題ないでしょう。
+しかしこの方法では、同じ形のCSVファイルでも思った通りに読めないことがあります。
+なぜなら、Line InputステートメントはUnix/Linux系のサーバーなどで良く使われるLF（ラインフィールド）コードのみで改行されたデータを1行ずつ読めない、という弱点があるからです。
+
+CR＋LFやCRコードで改行したファイルなら1行ずつ読み込むことができますが、LFのみで改行したファイルの場合、すべて1行目に読み込まれてしまうのです。
+データ数が多く、ワークシートの列数をオーバーすると「アプリケーション定義またはオブジェクト定義のエラー」の実行時エラーが発生することになります。
+■LF（ラインフィールド）コードで改行したCSVファイルを読み込む
+
+では、LFで改行したCSVファイルを読むにはどうしたらよいでしょうか。
+Line Inputステートメントで読むとファイルの末尾（EOF）まで読み込まれます。
+そこで、末尾まで読み込んだデータを、いったんLFで区切って1行ずつのデータとし、それをさらにカンマで区切ればよいでしょう。
+
+Sub Sample2()  
+    Dim buf As String
+    Dim tmp As Variant, tmp2 As Variant
+    Dim i As Long
+    
+    Open "C:\Data\Staff.csv" For Input As #1
+        Line Input #1, buf
+    Close #1
+        
+    tmp = Split(buf, vbLf)
+    For i = 0 To UBound(tmp) - 1    '---(1)
+        tmp2 = Split(tmp(i), ",")
+        Cells(i + 1, 1).Resize(1, UBound(tmp2) + 1).Value = tmp2
+    Next i
+End Sub
+
+配列tmpの最後の要素は空になるため、(1)ではUBound(tmp)から1引いた値までループ処理を行います。最終行が改行されていない場合は、Forループの上限をUBound(tmp）としてください。
+
+すべてのデータを一括して読み込むなら、Getステートメントを使う方法もあります。 Getステートメントで読み込むには、ファイルをバイナリモードで開きます。
+
+Sub Sample3()
+    Dim buf() As Byte
+    Dim tmp As Variant, tmp2 As Variant
+    Dim i As Long
+    
+    Open "C:\Data\Staff.csv" For Binary As #1
+        ReDim buf(1 To LOF(1))  '---(1)
+        Get #1, , buf           '---(2)
+    Close #1
+    
+    tmp = Split(StrConv(buf, vbUnicode), vbLf) '---(3)
+    For i = 0 To UBound(tmp) - 1
+        tmp2 = Split(tmp(i), ",")
+        Cells(i + 1, 1).Resize(1, UBound(tmp2) + 1).Value = tmp2
+    Next i
+End Sub
+
+(1)では、開いたファイルのバイト数をLOF関数で調べ、データを受け取るバイト型配列bufの領域をそのバイト数分、確保します。
+(2)のGetステートメントでbufにバイナリデータとして読み込み、(3)のStrConv関数でUnicodeに変換、LFで区切って配列に格納します。
+その後は、Sample2と同じです。
+
+InputB関数を使う方法でも同様の処理になります。
+
+    Open "C:\Data\Staff.csv" For Input As #1
+        buf = StrConv(InputB(LOF(1), #1), vbUnicode)
+    Close #1
+    tmp = Split(buf, vbLf)
+
+Getステートメントで読み込むとき、変数bufをString型で受けることもあります。
+このときも、変数bufの領域をあらかじめ確保しておく必要があります。
+開いたファイルのサイズを取得するのにLOF関数を使用しましたが、開く前にファイルサイズを取得するにはFileLen関数を使用します。
+
+    buf = Space(FileLen("C:\Data\Staff.csv"))
+    Open "C:\Data\Staff.csv" For Binary As #1
+        Get #1, , buf
+    Close #1
+        tmp = Split(buf, vbLf)
+
+このFileLen関数はファイルの「バイト数」を返します。
+一方、Space関数は、その数を「文字数」として領域を確保することになるため、
+全角文字が含まれていると、bufの領域にあまりができることになります。
+
+たとえば、読み込むファイルのデータが「モーグ」という全角3文字だった場合、
+ShiftJISコードで作成されたテキストファイルのサイズは6バイトになるので、
+FileLen関数は 6 を返します。
+Unicodeは半角/全角ともすべて2バイトなので、Space(6) は半角スペース6文字分、
+つまり12バイト分の領域を変数bufに確保することになります。
+ここに「モーグ」の6バイトのデータを入れると、後ろに6バイト分のあまりができるわけです。
+
+そのため、あらかじめ文字数がわかっている場合や、バイト数と文字数が同じ場合などを除き、 Getステートメントで読み込むときは、Byte型変数で受け取るようにしてください。
+■データ内にLFコードを含む場合
+
+Webフォームに入力されたデータなどでは、1件のデータがLFコードで改行され、さらに1つの項目内にLFコードで区切られたデータを含む場合があります。
+このようなデータを読むにはどうしたらよいでしょうか。
+
+読み込む項目の数やデータ型があらかじめわかっている場合は、Inputステートメントを使うと便利です。
+
+Sub Sample4()
+    Dim buf(3) As String
+    Dim i As Long
+
+    Open "C:\Data\test.csv" For Input As #1
+        Do Until EOF(1)
+            Input #1, buf(0), buf(1), buf(2), buf(3)
+            i = i + 1
+            Cells(i, 1).Resize(1, 4).Value = buf
+        Loop
+    Close #1
+End Sub
+
+項目数がわからない場合は、Sample3を応用します。
+Sample5は、次のようなデータをワークシートに読み込みます。
+データ項目に含まれたLFは、セル内の改行としてそのままセルに出力します。
+
+
+----　Campaign.csv　------------------------------------------------------------
+"丸の内花子","A賞","hanako@abc.com","毎月楽しく読んでいます。●
+VBAの勉強を始めた頃にこのコラムに出会いました。●
+基礎から順に、実用化のプロセスに沿って説明されていてとても勉強になってます。"●
+"東京太郎","B賞","taro@xyz.jp","自分を星くんと重ね合わせて読んでいます。●
+VBAだけでなくVBAの必要性,便利さ,他の言語と比べての優位性もわかりやすいです。●
+ストーリーがあるのも,楽しく読めるポイントです。"●
+--------------------------------------------------------------------------------
+●印がLFコード
+
+末尾が「"」＋LFなら行末、LFのみならデータ項目内の改行とみなし、各行を「"vbLf"」で区切ります。また、各項目は「","」で区切ります。
+ファイル内の項目数が変わる場合や、句点に「,」を使用している場合、行ごとに項目数が異なる場合にも読み込むことができます。
+
+Sub Sample5()
+    Dim b_buf() As Byte, s_buf As String
+    Dim tmp As Variant, tmp2 As Variant
+    Dim fname As Variant
+    Dim i As Long
+
+    fname = Application.GetOpenFilename("(*.csv),*.csv")
+    If VarType(fname) = vbBoolean Then Exit Sub
+
+    Open fname For Binary As #1
+        ReDim b_buf(1 To LOF(1))
+        Get #1, 1, b_buf
+    Close #1
+        
+    '読み込んだデータをUnicodeに変換
+    s_buf = StrConv(b_buf, vbUnicode)
+    
+    '先頭の「"」を取り除く
+    s_buf = Mid(s_buf, 2)
+
+    '最後のデータの「"」以降を取り除く
+    s_buf = Left(s_buf, InStrRev(s_buf, """") - 1)
+    
+    '「"LF"」で1行ずつのデータに区切り、配列に入れる
+    tmp = Split(s_buf, """" & vbLf & """")
+    
+    '「","」で区切り、シートに書き出す
+    For i = 0 To UBound(tmp)
+        tmp2 = Split(tmp(i), """,""")
+        Cells(i + 1, 1).Resize(1, UBound(tmp2) + 1).Value = tmp2
+    Next i
+End Sub
+
+●補足●
+
+ファイルを読むにはいろいろな方法がありますが、一般にバイナリモードで開きGetステートメントで読み込むSample3の方法が一番高速です。
+
+上のSample2とSamle3を元に、セルへの書き出しに時間がかかる、
+
+Cells(i + 1, 1).Resize(1, UBound(tmp2) + 1).Value = tmp2
+
+の行をコメントアウトしたコードで
+(1) Line Inputステートメント　　(2)Getステートメント　　(3)InputB関数
+の3通りの方法を比較してみると、約10Mバイト のLFで改行されたCSVファイルの場合で
+(1)25.5秒　(2)0.4秒　(3)0.5秒　くらいの差があります。
+
+（※ 実行環境：Windows7 Home Premium SP1/Intel Core i3 3.2GHz (64bit)/ Excel 2010）
+
+ただし、(2)や(3)の方法はメモリ上にデータをすべて読み込んだうえで、StrConv関数により文字コードを変換をするため、ある一定以上のファイルサイズになると処理速度が一気に低下したり、「メモリ不足」の実行時エラーが発生することがあります。
+サイズの大きなCSVファイルを読み込む際は、注意してください。
+
+関連リンク
+
+CSVファイルを読み込む
+CSVファイルの行数を取得する
+LOGIN
+ようこそ yamaV1.02βさん 	
+
+会員情報変更
+Excel/Accessで業務改善
+
+検索
+
+Q&A  （詳細検索） サイト内
+モーグ人気コンテンツ　ベスト３！
+
+1位
+    「VBAエキスパート」資格対策に役立つ
+    即効テクニック Excel VBA 
+2位
+    VBA達人への道も一歩から
+    Excel VBA ビギナーズ 
+3位
+    社会人必見！覚えて仕事でトクをする
+    仕事に役立つExcel関数 
+
+お知らせ
+
+利用者の皆様にお知らせです。
+
+    5/28 即効テクニック、更新しました
+    5/21 即効テクニック、更新しました
+    5/15 フリーソフト更新しました
+    5/7 即効テクニック、更新しました
+
+一覧
+
+    数式のまま　貼り付け
+    ログインボタンの押し方がわかしません。
+    Rightを使ってセルを削除したいのですが。
+    あるフォームの値を別のフォームに集計　表示させたいのですが
+    Shapeのサイズを変更後ダイアログを表示させずにWorkbookを閉じたい
+    windows7で再インストールしたいがエラー
+    EXCEL-2003のわたしから、EXCEL-2007へ渡してフムが開きません。
+    勤続年数または生年月日の平均
+    合計が一致しないとエラーを出す方法
+    データベースソフトの基本と選び方について
+
+オデッセイ コミュニケーションズ運営の資格試験
+
+マイクロソフト オフィス スペシャリスト公式サイト
+
+VBA エキスパート公式サイト
+
+IC3公式サイト
+
+アドビ認定アソシエイト
+
+運営会社 - お問い合せ - 広告掲載 - プライバシーポリシー - サイトマップ
+All rights reserved by Odyssey Communications Inc.
+Microsoft、Windows、およびMicrosoft Officeは Microsoft Corporationの米国及びその他の国における登録商標です。
+また、その他システム名、プログラム名などは、一般に各社の登録商標です。

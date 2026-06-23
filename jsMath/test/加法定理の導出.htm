@@ -1,0 +1,377 @@
+﻿<!DOCTYPE html>
+<!--
+<SCRIPT SRC="http://homepage3.nifty.com/homepage_yamaV102/jsMath-3.6e/easy/load.js"></SCRIPT>
+<SCRIPT SRC="http://homepage3.nifty.com/homepage_yamaV102/jsMath-3.6e/jsMath.js"></SCRIPT>
+-->
+<div class="myArea">
+
+<SCRIPT SRC="../easy/load.js"></SCRIPT>
+<SCRIPT SRC="../jsMath.js"></SCRIPT>
+
+<noscript>
+このページの閲覧はJavaScriptが有効である必要があります。
+</noscript>
+
+<p>
+このページの数式の表示には<a href="http://www.math.union.edu/~dpvc/jsMath/download/jsMath-fonts.html" target="_blank">
+<dfn>TeX</dfn>フォントのインストール</a>が必要です。
+数式の表示に時間がかかる場合があるかも知れません。
+</p>
+<!--
+<p>
+jsMathの使い方（のようなもの）の覚書
+</p>
+-->
+<h1>
+加法定理の証明
+</h1>
+
+<div style="text-align:left;padding-left:2em;">
+<a href="#sinp"><span class="math">
+\sin(\alpha+\beta)=\sin\alpha\cos\beta+\cos\alpha\sin\beta</span></a></div>
+<div style="text-align:left;padding-left:2em;">
+<a href="#sinm"><span class="math">
+\sin(\alpha-\beta)=\sin\alpha\cos\beta-\cos\alpha\sin\beta</span></a></div>
+
+<div style="text-align:left;padding-left:2em;">
+<a href="#cosp"><span class="math">
+\cos(\alpha+\beta)=\cos\alpha\cos\beta-\sin\alpha\sin\beta</span></a></div>
+<div style="text-align:left;padding-left:2em;">
+<a href="#cosm"><span class="math">
+\cos(\alpha-\beta)=\cos\alpha\cos\beta+\sin\alpha\sin\beta</span></a></div>
+<div style="text-align:left;padding-left:2em;">
+<a href="#tanp"><span class="math">
+\tan(\alpha+\beta)={\tan\alpha+\tan\beta \over 1- \tan\alpha\tan\beta}</span></a>
+</div>
+<div style="text-align:left;padding-left:2em;">
+<a href="#tanm"><span class="math">
+\tan(\alpha-\beta)={\tan\alpha-\tan\beta \over 1+ \tan\alpha\tan\beta}</span></a>
+</div>
+<div style="text-align:left;padding-left:2em;padding-top:.5em;">
+＜証明の補足＞
+</div>
+<div style="text-align:left;padding-left:3em;">
+<a href="#sceqone"><span class="math">\sin^2\theta+\cos^2\theta=1</span></a>
+である証明
+</div>
+<div style="text-align:left;padding-left:3em;">
+<a href="#yogen">余弦定理</a>
+の証明
+</div>
+<div style="text-align:left;padding-left:3em;">
+<a href="#cmeqcp"><span class="math">\cos(-\beta)=\cos(\beta)
+、\sin(-\beta)=-\sin(\beta)</span></a>　である図説
+</div>
+<div style="text-align:left;padding-left:3em;">
+<a href="#coseqsin"><span class="math">\cos90^\circ-\theta=\sin\theta</span></a>　である証明
+</div>
+<h2 id="cosm">
+<span  class="math">\cos(\alpha-\beta)=\cos\alpha\cos\beta+\sin\alpha\sin\beta</span>　の導出
+</h2>
+<p>
+単位円上の任意の点 <span class="math">P(\cos\alpha,\sin\alpha)</span>
+、<span class="math">Q(\cos\beta,\sin\beta)</span>について、
+</p>
+<p>三平方の定理から、</p>
+<div class="math" style="text-align:left;text-indent:2em;">
+PQ^2=(\cos\alpha-\cos\beta)^2+(\sin\alpha-\sin\beta)^2
+</div>
+<div style="text-align:left;text-indent:6.3em;">
+<span class="math" style="padding-right:0.5em;">=</span><span style="background-color:#CFC;">
+<span class="math">\cos^2\alpha</span></span><span class="math">-2\cos\alpha\cos\beta+</span></span>
+<span style="background-color:#FFC;"><span class="math">\cos^2\beta</span></span>
+<span class="math">+</span><span style="background-color:#CFC;"><span class="math">\sin^2\alpha</span></span>
+<span class="math">-2\sin\alpha\sin\beta+</span><span style="background-color:#FFC;"><span class="math">\sin^2\beta</span></span>
+</div>
+<p>
+<a href="#sceqone"><span class="math">\sin^2\theta+\cos^2\theta=1</span></a>　なので、
+</p>
+<div style="text-align:left;text-indent:6.3em;">
+<span class="math" style="padding-right:0.5em;">=2-2\cos\alpha\cos\beta-2\sin\alpha\sin\beta</span>
+<span style="padding-left:2em;">…①</span>
+</div>
+<p>
+また、<a href="#yogen">余弦定理</a>から、
+</p>
+<div class="math" style="text-align:left;text-indent:2em;">
+PQ^2=1^2+1^2-2\cos(\alpha-\beta)
+</div>
+<div style="text-align:left;text-indent:6.3em;">
+<span class="math" style="padding-right:0.5em;">=2-2\cos(\alpha-\beta)</span>
+<span style="padding-left:9.3em;">…②</span>
+</div>
+<p>
+① = ② なので、
+</p>
+<div class="math" style="text-align:left;text-indent:2em;">
+2-2\cos\alpha\cos\beta-2\sin\alpha\sin\beta=2-2\cos(\alpha-\beta)
+</div>
+<p>
+式を整理して、
+</p>
+<div class="math" style="text-align:left;text-indent:2em;">
+\cos(\alpha-\beta)=\cos\alpha\cos\beta+\sin\alpha\sin\beta
+</div>
+<p>
+を導出できる。1/6 証明完了。
+</p>
+<h2 id="cosp">
+<span class="math">\cos(\alpha+\beta)=\cos\alpha\cos\beta-\sin\alpha\sin\beta</span>　の導出
+</h2>
+<div class="math" style="text-align:left;text-indent:2em;">
+\cos(\alpha-\beta)=\cos\alpha\cos\beta+\sin\alpha\sin\beta
+</div>
+<p>
+の、<span class="math">\beta</span>　を　<span class="math">(-\beta)</span>　に置き換える。
+</p>
+<div class="math" style="text-align:left;text-indent:2em;">
+\cos(\alpha-(-\beta))=\cos\alpha\cos(-\beta)+\sin\alpha\sin(-\beta)
+</div>
+<p>
+<a href="#cmeqcp"><span class="math">\cos(-\beta)=\cos(\beta)、
+\sin(-\beta)=-\sin(\beta)</span></a> なので、公式、
+</p>
+<div class="math" style="text-align:left;text-indent:2em;">
+\cos(\alpha+\beta)=\cos\alpha\cos\beta-\sin\alpha\sin\beta
+</div>
+<p>
+を導出できる。2/6 証明完了。
+</p>
+<h2 id="sinp">
+<span class="math">\sin(\alpha+\beta)=\sin\alpha\cos\beta+\cos\alpha\sin\beta</span>　の導出
+</h2>
+<p>
+<span class="math">\cos(\alpha-\beta)=\cos\alpha\cos\beta+\sin\alpha\sin\beta</span> の、
+<span class="math">\alpha</span>　を、<span class="math">(90^\circ-\alpha)</span>　に置き換える。
+</p>
+<div class="math" style="text-align:left;text-indent:2em;">
+\cos((90^\circ-\alpha)-\beta)=\cos(90^\circ-\alpha)\cos\beta+\sin(90^\circ-\alpha)\sin\beta
+</div>
+<p>
+<a href="#coseqsin"><span class="math">\cos90^\circ-\theta=\sin\theta</span></a> なので、公式、
+</p>
+<p>
+左辺、
+</p>
+<div class="math" style="text-align:left;text-indent:2em;">
+\cos((90^\circ-\alpha)-\beta)=\cos(90^\circ-(\alpha+\beta)
+</div>
+<div class="math" style="text-align:left;text-indent:7em;">
+=\sin(\alpha+\beta)
+</div>
+<p>
+また、<a href="#sineqcos"><span class="math">\sin90^\circ-\theta=\cos\theta</span></a> なので、公式、
+</p>
+<p>
+右辺、
+</p>
+<div class="math" style="text-align:left;text-indent:2em;">
+\cos(90^\circ-\alpha)\cos\beta+\sin(90^\circ-\alpha)\sin\beta=\sin\alpha\cos\beta+\cos\alpha\sin\beta
+</div>
+<p>
+右辺 = 左辺で、
+</p>
+<div class="math" style="text-align:left;text-indent:2em;">
+\sin(\alpha+\beta)=\sin\alpha\cos\beta+\cos\alpha\sin\beta
+</div>
+<p>
+を導出できる。3/6 証明完了。
+</p>
+<h2 id="sinm">
+<span class="math">\sin(\alpha-\beta)=\sin\alpha\cos\beta-\cos\alpha\sin\beta</span>　の導出
+</h2>
+<p>
+<span class="math">\sin(\alpha+\beta)=\sin\alpha\cos\beta+\cos\alpha\sin\beta</span>
+ の、<span class="math">\beta</span>　を　<span class="math">(-\beta)</span>　に置き換える。
+</p>
+<div style="text-align:left;text-indent:6.3em;">
+<span class="math">\sin(\alpha+(-\beta))=\sin\alpha\cos(-\beta)+\cos\alpha\sin(-\beta)</span>
+</div>
+<p>
+<a href="#smeqsm"><span class="math">\sin(-\beta)=-\sin(\beta)</span></a>、
+<a href="#cmeqcp"><span class="math">\cos(-\beta)=\cos(\beta)</span></a>　なので、公式、
+</p>
+<div class="math" style="text-align:left;text-indent:2em;">
+\sin(\alpha-\beta)=\sin\alpha\cos\beta-\cos\alpha\sin\beta
+</div>
+<p>
+を導出できる。4/6 証明完了。
+</p>
+
+<h2 id="tanp">
+<span class="math">\tan(\alpha+\beta)=\frac{\tan\alpha+\tan\beta}{1-\tan\alpha\tan\beta}</span>　の導出
+</h2>
+<div style="text-align:left;text-indent:2em;"><span class="math">
+\tan(\alpha+\beta)=\frac{\sin(\alpha+\beta)}{\cos(\alpha+\beta)}
+</span>　より、
+</div>
+<div style="text-align:left;text-indent:2em;"><span class="math">
+\tan(\alpha+\beta)=\frac{\sin\alpha\cos\beta+\cos\alpha\sin\beta}{\cos\alpha\cos\beta-\sin\alpha\sin\beta}
+</span>
+</div>
+<p>
+分子・分母を　<span class="math">\cos\alpha\cos\beta</span>　で割る。
+</p>
+<div class="math" style="text-align:left;text-indent:2em;">
+\tan(\alpha+\beta)=\frac{\frac{\sin\alpha\cos\beta}{\cos\alpha\cos\beta}+\frac{\cos\alpha\sin\beta}{\cos\alpha\cos\beta}}
+{\frac{\cos\alpha\cos\beta}{\cos\alpha\cos\beta}-\frac{\sin\alpha\sin\beta}{\cos\alpha\cos\beta}}
+</div>
+<p>
+式を整理して、公式、
+</p>
+<div class="math" style="text-align:left;text-indent:2em;">
+\tan(\alpha+\beta)={\tan\alpha+\tan\beta \over 1- \tan\alpha\tan\beta}
+</div>
+<p>
+を導出できる。5/6 証明完了。
+</p>
+<h2 id="tanm">
+<span  class="math">\tan(\alpha-\beta)=\frac{\tan\alpha-\tan\beta}{1+\tan\alpha\tan\beta}</span>　の導出
+</h2>
+<div style="text-align:left;text-indent:2em;"><span class="math">
+\tan(\alpha-\beta)=\frac{\sin(\alpha-\beta)}{\cos(\alpha-\beta)}
+</span>　より、
+</div>
+<div style="text-align:left;text-indent:2em;"><span class="math">
+\tan(\alpha-\beta)=\frac{\sin\alpha\cos\beta-\cos\alpha\sin\beta}{\cos\alpha\cos\beta+\sin\alpha\sin\beta}
+</span>
+</div>
+<p>
+分子・分母を　<span class="math">\cos\alpha\cos\beta</span>　で割る。
+</p>
+<div class="math" style="text-align:left;text-indent:2em;">
+\tan(\alpha-\beta)=\frac{\frac{\sin\alpha\cos\beta}{\cos\alpha\cos\beta}-\frac{\cos\alpha\sin\beta}{\cos\alpha\cos\beta}}
+{\frac{\cos\alpha\cos\beta}{\cos\alpha\cos\beta}+\frac{\sin\alpha\sin\beta}{\cos\alpha\cos\beta}}
+</div>
+<p>
+式を整理して、公式、
+</p>
+<div class="math" style="text-align:left;text-indent:2em;">
+\tan(\alpha-\beta)={\tan\alpha-\tan\beta \over 1+\tan\alpha\tan\beta}
+</div>
+<p>
+を導出できる。6/6証明完了。
+</p>
+</div>
+<hr>
+<h2>
+＜証明の補足＞
+</h2>
+<h3 id="sceqone">
+<span class="math">\sin^2\theta+\cos^2\theta=1</span>　の証明
+</h3>
+<p>
+直角三角形ABCにおいて、
+</p>
+<div class="math" style="text-align:left;text-indent:2em;">
+\sin\theta=\frac{a}{b}
+</div>
+<div class="math" style="text-align:left;text-indent:2em;">
+\cos\theta=\frac{c}{b}
+</div>
+<p style="text-align:left;text-indent:2em;">∴</p>
+<div class="math" style="text-align:left;text-indent:2em;">
+<span class="math">\sin^2\theta+\cos^2\theta=\frac{a^2}{b^2}+\frac{c^2}{b^2}</span>
+</div>
+<div class="math" style="text-align:left;text-indent:9em;">
+=\frac{a^2+c^2}{b^2}
+</div>
+<p>
+三平方の定理 より、
+</p>
+<div style="text-align:left;text-indent:2em;">
+<span class="math">\sin^2\theta+\cos^2\theta=1</span> を導く事が出来る。（証明おわり）
+</div>
+<h3 id="yogen">余弦定理の証明</h3>
+<p>
+三平方の定理では直角三角形の三角比を求める事が出来るが、
+余弦定理を使うと、三角形一般の２辺と、その２辺に挟まれる角度から残る一辺の長さが求まる。
+</p>
+<p>
+△ABCにおいて以下の関係式が成り立つ。
+</p>
+<div class="math" style="text-align:left;text-indent:2em;">
+a^2=b^2+c^2-2bc\cdot\cos A
+</div>
+<div class="math" style="text-align:left;text-indent:2em;">
+b^2=a^2+c^2-2ac\cdot\cos B
+</div>
+<div class="math" style="text-align:left;text-indent:2em;">
+c^2=a^2+b^2-2ab\cdot\cos C
+</div>
+<p>∠Aの角度と∠Aを挟む辺 b、cの長さが判っている場合の証明</p>
+<p>
+△ABCについて、
+</p>
+<div class="math" style="text-align:left;text-indent:2em;">
+<span class="math">
+a^2=b^2\cdot\sin^2 A+(c-b\cdot\cos A)^2
+</span>
+</div>
+<div class="math" style="text-align:left;text-indent:2.7em;">
+<span class="math">
+=b^2\cdot\sin^2 A+c^2-2\cdot c\cdot b\cos A+b^2\cos^2 A
+</span>
+</div>
+<div class="math" style="text-align:left;text-indent:2.7em;">
+<span class="math">
+=b^2(\sin^2 A+\cos^2 A)+c^2-2cb\cdot\cos A
+</span>
+</div>
+<div class="math" style="text-align:left;text-indent:2.7em;">
+<span class="math">
+=b^2+c^2-2cb\cdot\cos A
+</span>
+</div>
+<p>
+∴ 以下の式は成り立つ。
+</p>
+<div class="math" style="text-align:left;text-indent:2em;">
+a^2=b^2+c^2-2bc\cdot\cos A</div>
+<p>
+∠b、∠cについても同じ事が言えるので、
+</p>
+<div class="math" style="text-align:left;text-indent:2em;">
+b^2=a^2+c^2-2ac\cdot\cos B
+</div>
+<div class="math" style="text-align:left;text-indent:2em;">
+c^2=a^2+b^2-2ab\cdot\cos C
+</div>
+<p>
+上記２つの式も成り立つ。（証明おわり）
+</p>
+<p>
+因みに、∠Aが90度の時 cosC = 0 になり、余弦定理の中に三平方の定理が現れる。
+</p>
+<h3 id="cmeqcp">
+<span class="math">\cos(-\beta)=\cos(\beta)
+、\sin(-\beta)=-\sin(\beta)</span>　である図説
+</h3>
+<h3 id="coseqsin">
+<span class="math">\cos90^\circ-\theta=\sin\theta</span>　の証明
+</h3>
+<p>
+図より、直角三角形ABCにおいて以下の関係式が成り立つ。
+</p>
+<div class="math" style="text-align:left;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\sin A=\frac{CB}{AC}=\cos C=\sin (90^\circ - C)
+</div>
+<div class="math" style="text-align:left;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\cos A=\frac{AB}{AC}=\sin C=\cos (90^\circ - C)
+</div>
+<div class="math" style="text-align:left;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\tan A=\frac{CB}{AB}=\frac{1}{\tan C}
+</div>
+<div class="math" style="text-align:left;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\tan C=\frac{AB}{CB}=\frac{1}{\tan A}
+</div>
+<p>
+<span class="math">
+\cos A=\frac{AB}{AC}=\sin C=\cos (90^\circ - C)
+</span> より、
+<span class="math">\cos90^\circ-\theta=\sin\theta</span>　式は
+成り立つ。（証明おわり）
+</p>
+<p>
+以上
+</p>

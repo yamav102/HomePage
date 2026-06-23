@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<META name="GENERATOR" content="IBM WebSphere Studio Homepage Builder Version 6.5.0.0 for Windows">
+<META http-equiv="Content-Style-Type" content="text/css">
+<TITLE>アンケートアンケートフォーム</TITLE>
+<style type="text/css">
+body {cursor:url(neko.cur);}
+</style>
+
+<style type="text/css">
+body {cursor:url(neko.cur);}
+</style>
+<LINK rel="stylesheet" href="a06.css" type="text/css">
+</HEAD>
+<BODY>
+<H3>アンケートフォーム</H3>
+<!-- CGI呼び出しプログラムURL ------------------------------------------>
+<FORM ACTION="http://www2.tba.t-com.ne.jp/cgi-bin/form.cgi" METHOD="POST"><!-- ↓ここからが任意の入力フォーム内容 -------------------------------->お名前　：　<INPUT TYPE="text" NAME="お名前" SIZE="25">
+<P>年　齢　：　<INPUT TYPE="text" NAME="年齢" SIZE="5">歳
+<P>ご住所　：　<INPUT TYPE="text" NAME="ご住所" SIZE="59">
+<P>電話番号：　<INPUT TYPE="text" NAME="電話番号" SIZE="20">
+<P>E-mail　：　<INPUT TYPE="text" NAME="email" SIZE="20">
+
+<P>ご職業：　 <SELECT NAME="職業">
+  <OPTION SELECTED VALUE="">未入力
+
+  <OPTION VALUE="会社員">会社員
+
+  <OPTION VALUE="公務員">公務員
+
+  <OPTION VALUE="教職員">教職員
+
+  <OPTION VALUE="医者">医者
+
+  <OPTION VALUE="その他">その他
+
+</SELECT><BR>
+<BR>ご意見欄：<BR>
+<TEXTAREA rows="4" cols="66" name="ご意見欄"></TEXTAREA>
+<P>性別：　
+<INPUT TYPE="radio" NAME="性別" VALUE="男" CHECKED="true">男
+<INPUT TYPE="radio" NAME="性別" VALUE="女">女
+
+<P>趣味：　
+<INPUT TYPE="checkbox" NAME="趣味" VALUE="音楽">音楽
+<INPUT TYPE="checkbox" NAME="趣味" VALUE="スポーツ">スポーツ
+<INPUT TYPE="checkbox" NAME="趣味" VALUE="映画">映画
+<INPUT TYPE="checkbox" NAME="趣味" VALUE="その他">その他
+
+<P><!-- ↑ここまでが任意の入力フォーム内容 --------------------------------><!-- ■送信先メールアドレス（HIDDEN項目） ------------------------------><!-- 下記は、送信先を「t-com@tnc.ne.jp」とする場合 --------------------><INPUT TYPE="HIDDEN" NAME="tomail" VALUE="xatsushi@tbb.t-com.ne.jp"><!-- ■メールの件名（HIDDEN項目）---------------------------------------><!-- 下記は、件名を「アンケート」とする場合 ----------------------------><INPUT TYPE="HIDDEN" NAME="tosubj" VALUE="アンケート"><!-- ■送信完了画面での戻り先ページ（URL）（HIDDEN項目）----------------><!-- 下記は、http://www.t-com.ne.jp/を指定する場合 ---------------------><INPUT TYPE="HIDDEN" NAME="tohtml" VALUE="http://www2.tba.t-com.ne.jp/yamazaki/"><!-- ■送信完了後に指定したURLを自動表示させたい場合記述（HIDDEN項目）--><!-- 送信完了後に自動表示させたいURLを前項のtohtmlで記述し、------------><!-- 下記のタグを記述する。---------------------------------------------><!-- tohtmlの指定がない場合や、下記のタグの記述がない場合は、-----------><!-- 通常の送信完了画面になります。-------------------------------------><INPUT TYPE="HIDDEN" NAME="toreturn" VALUE="ON" ><!-- ■必須項目の指定（HIDDEN項目） ------------------------------------><!-- 複数の項目を必須項目とする場合はカンマで区切る --------------------><!-- 下記は、NAMEがお名前とemailの項目を入力必須項目とする場合 ---------><INPUT TYPE="HIDDEN" NAME="tochk" VALUE="お名前,email"><!-- ■メールへの出力形式の選択 ---------------------------------------><!-- 項目名に"日時"を入れて出力する場合は「ALL」、----------------------><!-- 項目間に"改行"を入れて出力する場合は「CR」、 ----------------------><!-- 項目間に"タブ"を入れて出力する場合は「TAB」と記述する。 -----------><!-- 「CR」、「TAB」は必ず半角大文字で書いてください。 -----------------><!-- 特に指定しない場合は、"項目名＝入力値"で出力される。 --------------><!-- 下記は、"タブ"を入れて出力する場合 --------------------------------><INPUT TYPE="HIDDEN" NAME="todelim" VALUE="TAB"><!-- ■フォーム入力内容確認画面を表示させるかどうか（HIDDEN項目） ------><!-- 確認画面を表示させる場合には、「OFF」------------------------------><!-- 確認画面を表示さない場合には、「ON」-------------------------------><!-- 特に指定しない場合は、確認画面が表示されます。---------------------><INPUT TYPE="HIDDEN" NAME="tocgi" VALUE="OFF"><!-- ■送信完了画面で表示する文章（HIDDEN項目） ------------------------><!-- 特に指定しない場合は、「送信が完了しました」と表示される。---------><INPUT TYPE="HIDDEN" NAME="toendmsg" VALUE="ご協力ありがとうございました。"><!-- 送信ボタン --------------------------------------------------------><INPUT TYPE="submit" VALUE="送　信">
+
+<!-- リセットボタン ----------------------------------------------------><INPUT TYPE="reset" VALUE="リセット">
+
+</FORM>
+</BODY>
+</HTML>

@@ -1,0 +1,508 @@
+<!--<script src="http://yamav102.cocolog-nifty.com/jsMath/easy/load.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS"> 
+<script src="http://yamav102.cocolog-nifty.com/jsMath/jsMath.js"></script>-->
+<script src="../easy/load.js"></script>
+<script src="../jsMath.js"></script>
+<link rel="stylesheet" href="b.css" type="text/css">
+<style type="text/css">
+
+ .myArea .nomgn{
+   margin-bottom:0.5em;
+ }
+ .myArea .tpmgn{
+   margin-top:2em;   
+ }
+ .myArea .offset{
+   margin-left:3em;
+   height:1.5em;
+ }.myArea span .math{
+   padding-right:.7em;
+ }
+ div .fs110{
+   font-size:110%;
+ }
+ div{
+   border: solid 1px red;
+ }
+</style>
+
+<div class="myArea">
+
+<h2 id="tanm">
+   <div class="divleft2">
+      <div class="math">
+         \tan(\alpha－\beta)＝\frac{\tan\alpha－\tan\beta}{1＋\tan\alpha\tan\beta}&nbsp;の導出
+      </div>
+   </div>
+</h2>
+
+<div class="divleft2">
+   <div class="math">
+      \tan(\alpha－\beta)＝\frac{\sin(\alpha－\beta)}{\cos(\alpha－\beta)}&nbsp;より、
+   </div>
+</div>
+
+
+<div class="topM">
+   <div class="math">
+      \tan(\alpha－\beta)＝\frac{\sin\alpha\cos\beta－\cos\alpha\sin\beta}{\cos\alpha\cos\beta＋\sin\alpha\sin\beta}
+   </div>
+</div>
+<p>
+分子・分母を　<span class="math">\cos\alpha\cos\beta</span>　で割る。
+</p>
+<div class="math" style="text-align: left; text-indent: 2em;">
+\tan(\alpha-\beta)=\frac{\frac{\sin\alpha\cos\beta}{\cos\alpha\cos\beta}-\frac{\cos\alpha\sin\beta}{\cos\alpha\cos\beta}}
+{\frac{\cos\alpha\cos\beta}{\cos\alpha\cos\beta}+\frac{\sin\alpha\sin\beta}{\cos\alpha\cos\beta}}
+</div>
+<p>
+式を整理して、公式、
+</p>
+<div class="math" style="text-align: left; text-indent: 2em;">
+\tan(\alpha-\beta)={\tan\alpha-\tan\beta \over 1+\tan\alpha\tan\beta}
+</div>
+<p>
+を導出できる。
+</p>
+
+<hr />
+<div class="hstyle">
+<h2>
+＜証明の補足＞
+</h2>
+</div>
+<div class="hstyle">
+<h3 id="sceqone">
+<span class="math">\sin^2\theta+\cos^2\theta=1</span>　の証明
+</h3>
+</div>
+<p><img border="0" alt="直角三角形ＡＢＣ" title="Abc" src="http://yamav102.cocolog-nifty.com/photos/uncategorized/2013/12/03/abc.gif" />
+
+
+ <br />
+</p>
+
+<p>直角三角形ABCにおいて、
+</p>
+<div class="math" style="text-align: left; text-indent: 2em;">
+\sin\theta=\frac{a}{b}
+</div>
+<div class="math" style="text-align: left; text-indent: 2em;">
+\cos\theta=\frac{c}{b}
+</div>
+<p style="text-align: left; text-indent: 2em;">∴</p>
+<div class="math" style="text-align: left; text-indent: 2em;">
+<span class="math">\sin^2\theta+\cos^2\theta=\frac{a^2}{b^2}+\frac{c^2}{b^2}</span>
+</div>
+<div class="math" style="text-align: left; text-indent: 9em;">
+=\frac{a^2+c^2}{b^2}
+</div>
+<p>
+三平方の定理 より、
+</p>
+<div style="text-align: left; text-indent: 2em;">
+<span class="math">\sin^2\theta+\cos^2\theta=1</span> を導く事が出来る。（証明おわり）
+</div>
+<div class="hstyle">
+<h3 id="yogen">余弦定理の証明</h3></div>
+
+<p>三平方の定理では直角三角形の三角比を求める事が出来るが、
+余弦定理を使うと、三角形一般の２辺と、その２辺に挟まれる角度から残る一辺の長さが求まる。</p> △ABCにおいて以下の関係式が成り立つ。
+
+<div class="math" style="text-align: left; text-indent: 2em;">
+a^2=b^2+c^2-2bc\cdot\cos A
+</div>
+<div class="math" style="text-align: left; text-indent: 2em;">
+b^2=a^2+c^2-2ac\cdot\cos B
+</div>
+<div class="math" style="text-align: left; text-indent: 2em;">
+c^2=a^2+b^2-2ab\cdot\cos C
+</div>
+<p>∠Aの角度と∠Aを挟む辺 b、cの長さが判っている場合の証明</p>
+
+<p><img border="0" src="http://yamav102.cocolog-nifty.com/photos/uncategorized/2013/12/03/photo_2.gif" title="Photo_2" alt="Photo_2" /></p>
+<p>
+△ABCについて、
+</p>
+<div class="math" style="text-align: left; text-indent: 2em;">
+<span class="math">
+a^2=b^2\cdot\sin^2 A+(c-b\cdot\cos A)^2
+</span>
+</div>
+<div class="math" style="text-align: left; text-indent: 2.7em;">
+<span class="math">
+=b^2\cdot\sin^2 A+c^2-2\cdot c\cdot b\cos A+b^2\cos^2 A
+</span>
+</div>
+<div class="math" style="text-align: left; text-indent: 2.7em;">
+<span class="math">
+=b^2(\sin^2 A+\cos^2 A)+c^2-2cb\cdot\cos A
+</span>
+</div>
+<div class="math" style="text-align: left; text-indent: 2.7em;">
+<span class="math">
+=b^2+c^2-2cb\cdot\cos A
+</span>
+</div>
+<p>
+∴ 以下の式は成り立つ。
+</p>
+<div class="math" style="text-align: left; text-indent: 2em;">
+a^2=b^2+c^2-2bc\cdot\cos A</div>
+<p>
+∠b、∠cについても同じ事が言えるので、
+</p>
+<div class="math" style="text-align: left; text-indent: 2em;">
+b^2=a^2+c^2-2ac\cdot\cos B
+</div>
+<div class="math" style="text-align: left; text-indent: 2em;">
+c^2=a^2+b^2-2ab\cdot\cos C
+</div>
+<p>
+上記２つの式も成り立つ。（証明おわり）
+</p>
+<p>
+因みに、∠Aが90度の時 cosA = 0 になり、余弦定理の中に三平方の定理が現れる。 </p>
+
+<p><img border="0" src="http://yamav102.cocolog-nifty.com/photos/uncategorized/2013/12/03/photo_3.gif" title="Photo_3" alt="Photo_3" />
+
+
+</p>
+<div class="hstyle">
+<h3 id="cmeqcp">
+<span class="math">\cos(-\beta)=\cos(\beta)
+、\sin(-\beta)=-\sin(\beta)</span>　である事の図説
+</h3>
+</div>
+<div><img border="0" src="http://yamav102.cocolog-nifty.com/photos/uncategorized/2013/12/02/cossin_2.gif" title="Cossin_2" alt="Cossin_2" />
+
+
+ <br />
+</div>
+
+<div class="hstyle">
+<h3 id="coseqsin">
+<span class="math">\cos(90^\circ-\theta)=\sin\theta</span>　の証明
+</h3>
+</div>
+<p><img border="0" src="http://yamav102.cocolog-nifty.com/photos/uncategorized/2013/12/03/2.png" title="2" alt="2" />
+
+
+<br />
+</p>
+
+<p>図より、直角三角形ABCにおいて以下の関係式が成り立つ。
+</p>
+<div class="math" style="text-align: left;">
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; \sin A=\frac{CB}{AC}=\cos C=\sin (90^\circ - C)
+</div>
+<div class="math" style="text-align: left;">
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; \cos A=\frac{AB}{AC}=\sin C=\cos (90^\circ - C)
+</div>
+<div class="math" style="text-align: left;">
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; \tan A=\frac{CB}{AB}=\frac{1}{\tan C}
+</div>
+<div class="math" style="text-align: left;">
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; \tan C=\frac{AB}{CB}=\frac{1}{\tan A}
+</div>
+<p>
+<span class="math">
+\cos A=\frac{AB}{AC}=\sin C=\cos (90^\circ - C)
+</span> より、
+<span class="math">\cos(90^\circ-\theta)=\sin\theta</span>　式は
+成り立つ。
+</p>
+<p>（証明おわり）</p>
+<p style="margin-top: 2em;">
+以上
+</p>
+</div>
+<div>
+<p>
+参考：<a href="http://kimball.blog.so-net.ne.jp/2007-12-08-1" target="_blank">
+ｊｓＭａｔｈでＢＬＯＧに数式を入力できますぞぃ！！＼(^o^)／
+</a>
+</p>
+</div>
+
+
+<script type="text/javascript">
+/* 
+IE10のtop位置のズレをなんとかしたい 
+IE10で表示を崩さない為に、Shift-jisを使う事は有効。
+IE10で表示を崩さない為に、演算記号に全角文字を使う事は有効
+\^circ は使わずに、°を使うと崩れを回避できる場合がある
+*/
+
+   var offsetlist = document.getElementsByClassName('offset');
+   var offsetMlist = document.getElementsByClassName('offsetM');
+   var mathlist = document.getElementsByClassName('math');
+
+   /* IE とその他のブラウザで　行表示高さの崩れを調整する offset クラスの挙動 */
+   for(var i = 0; i < offsetlist.length; i++){
+      offsetlist.item(i).style.position='relative';
+
+      if(window.navigator.appName=='Microsoft Internet Explorer'){
+
+         for(var h = 0; h < mathlist.length; h++){
+            if(mathlist.item(h).parentNode.className=='offset'){
+               mathlist.item(h).style.top="1.2em";
+               mathlist.item(h).style.position="absolute";
+               mathlist.item(h).style.color="red";
+            }
+         }
+      }
+
+      else{
+
+         for(var h = 0; h < mathlist.length; h++){
+            if(mathlist.item(h).parentNode.className=='offset'){
+               mathlist.item(h).style.top=".6em";
+               mathlist.item(h).style.position="absolute";
+               //mathlist.item(h).style.color="red";
+            }
+         }
+      }
+   }
+   /* offset マイナス補正 math クラスの親ノードの親ノードにクラスを仕込む */
+   for(var i = 0; i < offsetMlist.length; i++){
+      offsetMlist.item(i).style.position='relative';
+
+      if(window.navigator.appName=='Microsoft Internet Explorer'){
+
+         for(var h = 0; h < mathlist.length; h++){
+            if(mathlist.item(h).parentNode.parentNode.className=='offsetM'){
+               mathlist.item(h).style.top="-0.8em";
+               mathlist.item(h).style.position="absolute";
+               mathlist.item(h).style.border="solid 1px green";
+//               mathlist.item(h).style.color="red";
+            }
+         }
+      }
+   }   
+   
+   /*
+     イベントリスナの登録関数
+   */
+
+   function addListener(elem, ev, listener){
+      // IE以外
+      if(elem.addEventListener){ 
+         elem.addEventListener(ev, listener, false);
+      }
+      // IE用
+      else if(elem.attachEvent){
+         elem.attachEvent('on' + ev, listener);
+      }
+      // リスナ未対応環境
+      else{
+         //throw new Error('イベントリスナに未対応です');
+      }
+   }
+
+   /*
+     親要素がアンカーならば、mathクラスのスタイルを上書きする
+     a:hover の代用としてイベントリスナを登録して背景色を変化させる
+   */
+
+   var tagAlist = document.getElementsByTagName("a"); 
+   for(var i = 0; i < tagAlist.length; i++){      
+      tagAlist.item(i).style.textDecoration='none';
+      tagAlist.item(i).style.color='blue';
+      //alert(tagAlist.item(i).innerHTML);
+      addListener(tagAlist.item(i), 'mouseover', function(){this.style.backgroundColor='#cf6';});
+      addListener(tagAlist.item(i), 'mouseout', function(){this.style.backgroundColor='transparent';});
+   }
+
+   /* 
+    div要素・span要素の mathクラスにインデントをつける。末尾の数字はインデントの文字数
+    対象の mathクラスの親要素に divleft#クラスを指定して囲んで使う
+    何故スクリプトによるＣＳＳなのか：ＣＳＳは jsMathが onload 上書きしてしまうので意味がない。
+    onload の後から更にスタイルを上書きしないと結果として反映されない。
+   */
+    // Div用前半～Span用は下の方に記述されています
+
+/* ****************
+       DIV用
+   **************** */
+
+   for(var i = 0; i < mathlist.length; i++){
+      if(mathlist.item(i).parentNode.className=='divleft2'){
+         mathlist.item(i).style.textAlign="left";
+         mathlist.item(i).style.textIndent="2em";
+         mathlist.item(i).style.color="red";
+//         mathlist.item(i).style.marginTop="-1em";
+
+      }
+   }
+
+   for(var i = 0; i < mathlist.length; i++){
+      if(mathlist.item(i).parentNode.className=='divleft3'){
+         mathlist.item(i).style.textAlign="left";
+         mathlist.item(i).style.textIndent="3em";
+         mathlist.item(i).style.color="fuchsia";
+//         mathlist.item(i).style.marginTop="-1em";
+      }
+   }
+   for(var i = 0; i < mathlist.length; i++){
+      if(mathlist.item(i).parentNode.className=='divleft4'){
+         mathlist.item(i).style.textAlign="left";
+         mathlist.item(i).style.textIndent="4em";
+//         mathlist.item(i).style.marginTop="-1em";
+      }
+   }
+
+
+   for(var i = 0; i < mathlist.length; i++){
+      if(mathlist.item(i).parentNode.className=='divleft6'){
+         mathlist.item(i).style.textAlign="left";
+         mathlist.item(i).style.textIndent="6em";
+         mathlist.item(i).style.marginTop="-1em";
+      }
+   }
+
+   for(var i = 0; i < mathlist.length; i++){
+      if(mathlist.item(i).parentNode.className=='divleft8'){
+         mathlist.item(i).style.textAlign="left";
+         mathlist.item(i).style.textIndent="8em";
+         mathlist.item(i).style.marginTop="-1em";
+      }
+   }
+/* ****************
+       SPAN用
+   **************** */
+
+   for(var i = 0; i < mathlist.length; i++){
+      if(mathlist.item(i).parentNode.className=='spanLeft2'){
+         mathlist.item(i).style.paddingLeft="2.5em";
+
+      }
+   }
+   for(var i = 0; i < mathlist.length; i++){
+      if(mathlist.item(i).parentNode.className=='spanLeft3'){
+         mathlist.item(i).style.paddingLeft="3em";
+
+      }
+   }
+   for(var i = 0; i < mathlist.length; i++){
+      if(mathlist.item(i).parentNode.className=='spanLeft4'){
+         mathlist.item(i).style.paddingLeft="4em";
+
+      }
+   }
+   for(var i = 0; i < mathlist.length; i++){
+      if(mathlist.item(i).parentNode.className=='spanLeft5'){
+         mathlist.item(i).style.paddingLeft="5em";
+
+      }
+   }
+   for(var i = 0; i < mathlist.length; i++){
+      if(mathlist.item(i).parentNode.className=='spanLeft6'){
+         mathlist.item(i).style.paddingLeft="6em";
+
+      }
+   }
+   for(var i = 0; i < mathlist.length; i++){
+      if(mathlist.item(i).parentNode.className=='spanLeft7'){
+         mathlist.item(i).style.paddingLeft="7em";
+
+      }
+   }
+   for(var i = 0; i < mathlist.length; i++){
+      if(mathlist.item(i).parentNode.className=='spanLeft8'){
+         mathlist.item(i).style.paddingLeft="8em";
+
+      }
+   }
+   for(var i = 0; i < mathlist.length; i++){
+      if(mathlist.item(i).parentNode.className=='spanLeft9'){
+         mathlist.item(i).style.paddingLeft="9em";
+
+      }
+   }
+   for(var i = 0; i < mathlist.length; i++){
+      if(mathlist.item(i).parentNode.className=='spanLeft10'){
+         mathlist.item(i).style.paddingLeft="10em";
+
+      }
+   }
+   for(var i = 0; i < mathlist.length; i++){
+      if(mathlist.item(i).parentNode.className=='spanLeft11'){
+         mathlist.item(i).style.paddingLeft="11em";
+
+      }
+   }
+   for(var i = 0; i < mathlist.length; i++){
+      if(mathlist.item(i).parentNode.className=='spanLeft12'){
+         mathlist.item(i).style.paddingLeft="12em";
+
+      }
+   }
+   for(var i = 0; i < mathlist.length; i++){
+      if(mathlist.item(i).parentNode.className=='spanLeft13'){
+         mathlist.item(i).style.paddingLeft="13em";
+
+      }
+   }
+   for(var i = 0; i < mathlist.length; i++){
+      if(mathlist.item(i).parentNode.className=='spanLeft14'){
+         mathlist.item(i).style.paddingLeft="14em";
+
+      }
+   }
+   for(var i = 0; i < mathlist.length; i++){
+      if(mathlist.item(i).parentNode.className=='spanLeft15'){
+         mathlist.item(i).style.paddingLeft="15em";
+
+      }
+   }
+   for(var i = 0; i < mathlist.length; i++){
+      if(mathlist.item(i).parentNode.className=='spanLeft16'){
+         mathlist.item(i).style.paddingLeft="16em";
+
+      }
+   }
+   for(var i = 0; i < mathlist.length; i++){
+      if(mathlist.item(i).parentNode.className=='spanLeft17'){
+         mathlist.item(i).style.paddingLeft="17em";
+
+      }
+   }
+   for(var i = 0; i < mathlist.length; i++){
+      if(mathlist.item(i).parentNode.className=='spanLeft18'){
+         mathlist.item(i).style.paddingLeft="18em";
+
+      }
+   }
+</script>
+
+
+
+<!--
+          var tmlist = document.getElementsByClassName('ietm');
+          for(var i = 0; i < tmlist.length; i++){
+            tmlist.item(i).style.marginTop='2.5em';
+
+          }
+          var tplist = document.getElementsByClassName('ietp');
+          for(var i = 0; i < tplist.length; i++){
+            tplist.item(i).style.paddingTop='-20px';
+
+          }
+          var ndlist = document.getElementsByClassName('iend');
+          for(var i = 0; i < ndlist.length; i++){
+            ndlist.item(i).style.textDecoration='none';
+
+          }
+
+          var tmlmlist = document.getElementsByClassName('ietmlm');
+          for(var i = 0; i < tmlmlist.length; i++){
+            tmlmlist.item(i).style.marginTop='2.5em';
+            tmlmlist.item(i).style.marginLeft='7em';
+          }
+
+      }
+
+</script>
+-->
+</p>

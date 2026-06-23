@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html401/strict.dtd">
+<html lang="Ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html,charset=shift_jis">
+	<meta name="keywords" content="障害者,ボランティア,神奈川県,横浜">
+	<meta name="description" content="神奈川県障害者支援施設「わいわいクラブ」のページ。作業内容を紹介しています。">
+	<meta http-equiv="Content-Style-Type" content="text/css">
+	<meta name="Reply-To" content="yycyyh&#64;ybb.ne.jp">
+	
+	<link rel="author" href="mailto:yycyyh&#64;ybb.ne.jp">
+	<link rel="home" href="http://www.geocities.jp/yycyyh/" title="わいわいくらぶ玄関">
+	<link rel="SHORTCUT ICON" href="./img/logo.ico">
+	<link rel="stylesheet" type="text/css" href="./waiwai.css">
+
+	
+	<title>わいわいクラブへようこそ</title>
+</head>
+
+<body>
+
+<div id="content">
+	
+	<h1>
+		<img src="./img/logo.gif" width="50" height="32" alt="■">
+		<span class="halfsize">地域作業所</span>　わいわいクラブ
+	</h1>
+
+
+<table id="toptbl" border="0">
+	<tr>
+		<td id="toptd">
+
+			<table id="toptbl2" border="0">
+				<tr>
+					<td id="toptd2">
+						<div id="jikan">
+							平成16年4月1日スタート<br>
+							メンバー16名で活動しています。<br>
+							活動時間:09:45～15:30		
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td align="right" valign="bottom">
+
+						<address>	
+							<table id="address" border="0">
+							<tr>
+							<th>Address</th><td>神奈川県横浜市泉区岡津町２１４７-４</td>
+							</tr>
+							<tr>
+							<th>Tel&Fax</th><td>045―811―8989</td>
+							</tr>
+							<tr>
+							<th>PHS</th><td>070-5550-1797</td>
+							</tr>
+							<tr>
+							<th>Email</th><td><a href="mailto:yycyyh&#64;ybb.ne.jp">yycyyh&#64;ybb.ne.jp</a></td>
+							</tr>
+							<tr>
+							<th>URL</th><td><a href="http://www.geocities.jp/yycyyh/">http://www.geocities.jp/yycyyh/</a></td>
+							</tr>
+							</table>
+						</address>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+
+	<h2 id="chiiki"><a href="http://www.shokonet.or.jp/shisakuren/sagyosyo.html">地域作業所とは</a></h2>
+
+	<blockquote cite="http://www.shokonet.or.jp/shisakuren/sagyosyo.html" id="chiiki2">
+		どんなに障害が重くても、本人の「願い」や「生きがい」を実現する場として、働く場・仲間と集う場・経験を広げる場として大きな役割を担っています。現在、市内に200箇所以上の作業所があり、4,000人をこす方々が日々通所し、職員の援助を受けながらさまざまな活動を展開しています。 				
+	</blockquote>
+	<p class="halfsize2">
+		…わいわいクラブはその中のひとつとして「社会の中で誇りを持って生きて行きたい」という夢を実現する為に、誰も代わることのできない一人ひとりの人生の為に、試行錯誤しながら歩んでいます。…
+	</p>
+
+	<div id="mokuji">
+		<div id="block1">
+			<h2>
+				<a href="./map.htm">地図と交通のご案内</a>
+			</h2>
+	
+			<h2>
+				<a href="./houshin.htm">運営方針</a>
+			</h2>
+
+			<h2>
+				<a href="./program.htm">定例プログラム</a>
+			</h2>
+			
+			<h2>
+				活動内容
+			</h2>
+				<ul>
+					<li><a href="./dayflow.htm">一日の流れ</a></li>
+					<li><a href="./mflow.htm">一月の流れの一例</a></li>
+					<li><a href="./yflow.htm">年間行事予定</a></li>
+					<li><a href="./sagyo.htm">作業内容</a></li>
+					<li><a href="./kouchin.htm">工賃支払い基準</a></li>
+					<li><a href="./seikatsu.htm">生活科目・地域交流・社会参加</a></li>
+					<li><a href="./tayori.htm">わいわい便り（2005年2月28日版）</a></li>
+				</ul>
+		</div>
+
+		<div id="block2">
+<!--
+			<h2><a href="./boshu.htm#hijokin">非常勤職員募集</a></h2>
+-->
+			<h2><a href="./boshu.htm">ボランティア募集</a></h2>
+
+			<h2>関連リンク</h2>
+				<ul>
+					<li><a href="http://www.smart-assist.com/dream-cross/">ドリームクロスプロジェクト（設立母体）</a></li>
+					<li><a href="http://www.yokohamashakyo.jp/siencenter/index.html">横浜市障害者支援センター</a></li>
+					<li><a href="http://www.shokonet.or.jp/shisakuren/">横浜市障害者地域作業所連絡会</a></li>	
+				</ul>
+		</div>
+
+
+
+		<div style="line-height:200%;">
+
+		<!-- ボーダーレイアウト調整用:ボーダーの高さが足りない場合、
+			・パーセント数値を上げる
+			・<br>の数を増やす
+			上記何れか、または両方の処置をとる
+	　　 -->
+			<br><br><br><br><br><br><br>
+		</div>
+
+	</div>
+
+
+	<hr class="clr">
+	<div id="cpy">Copyright(C)2009 地域作業所わいわいクラブ わいわい便り編集委員会ＨＰ管理班</div>
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,2003 @@
+<meta http-equiv="Content-Type" content="text/html; charset=shift_jis">
+<style type="text/css">
+	table{
+		width:93%;
+		border-collapse:collapse;
+	}table,th,td{
+		border:solid 1px;
+	}th,td{
+		padding:3px;
+	}th{
+		background-color:ddd;
+	}
+</style>
+<p><a href="./ado_ms/cursor.htm">カーソルとは</a></p>
+<pre>
+
+ＭＳヘルプはＳＱＬ，ＤＡＯ，ＡＤＯに関する記述を素直に検索できないのが
+非っ常に不満。
+
+以下の場所にあったりするので、直接ファイルを読もう。
+
+C:\Program Files\Common Files\Microsoft Shared\OFFICE11\1041　以下の
+
+DAO360.CHM
+ADO210.CHM
+JETSQL40.CHM
+
+<h2>udlファイルの作り方</h2>
+
+udlファイルはADOへの接続文字列の書き方が分からなくなった場合は
+重宝かもしれない。
+それ以外は、管理しなければならないファイルが一つ増えてしまうので
+デメリットにしか感じられないが、作り方は以下の通り。
+
+１．テキストファイルの拡張子を.udlにして開く
+
+２．
+こんな感じで開く↓
+
+<img src="./tool/ac_gazo/udl1.png" widht ="425" height="434">
+
+<img src="./tool/ac_gazo/udl2.png" widht ="425" height="434">
+
+で、画面のように設定したudlファイルをテキストファイルで開くと、
+'------------
+[oledb]
+; Everything after this line is an OLE DB initstring
+<strong>Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\Documents and Settings\やま\デスクトップ\test.mdb;</strong>Persist Security Info=False
+'------------
+
+↑となっていて、強調部分は ConnectionString そのもの。
+
+64ビット環境ではudlが表示するドライバは64ビット用が表示される。
+この中にJet は無い。
+
+「Microsoft OLE DB プロバイダー Jet および Microsoft Access ODBC ドライバーは 32 ビット バージョンでのみ使用可能」
+http://support.microsoft.com/kb/957570/ja
+
+Office10以降（？）の64ビット版が
+インストールされていれば 2007以降のDBエンジンであるACEが表示される（のだと思う）。
+32ビット用のodbcad.exe(Open Data Base Connectivity Administrator)は
+C:\Windows\SysWOW64 内にあるが、設定方法はよく判らない。
+
+2007以降の接続文字列は、
+string ConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=sample.accdb";
+
+テキストファイルへの接続であれば、テキストドライバを指定してもよい。
+     	With adoCon
+			.Open "Driver={Microsoft Text Driver (*.txt; *.csv)};" _
+			& "DefaultDir=" & strFldrName
+     	End With
+
+<strong>コネクションを開く時 .Modeプロパティを指定することで排他制御が可能</strong>
+<table border="1px" summary="MSDNより引用http://msdn.microsoft.com/ja-jp/library/cc389773.aspx"> 
+<tr valign="top"> <th>定数</th> <th>値</th> <th>説明</th> 
+</tr> <tr valign="top"> <td><b>adModeRead</b></td> <td>1</td> <td>読み取り専用の権限を表します。</td> 
+</tr> <tr valign="top"> <td><b>adModeReadWrite</b></td> <td>3</td> <td>読み取り/書き込み両方の権限を表します。
+</td> </tr> <tr valign="top"> <td><b>adModeRecursive</b>
+</td> <td>0x400000</td> <td>カレント <b>Record</b> のすべてのサブレコードに共有制限を割り当てるために、
+別の <i>*ShareDeny*</i> 値 (<b>adModeShareDenyNone</b>、
+<b>adModeShareDenyWrite</b>、または <b>adModeShareDenyRead</b>) 
+と組み合わせて使用します。<b>Record</b> に子がない場合は機能しません。
+<b>adModeShareDenyNone</b> だけに使うと実行時エラーになります。
+ただし、その他の値と結合すれば、<b>adModeShareDenyNone</b> 
+に使うことができます。たとえば、"<b>adModeRead</b>
+ Or <b>adModeShareDenyNone</b> Or <b>adModeRecursive</b>" は使用可能です。</td> 
+</tr> <tr valign="top"> <td><b>adModeShareDenyNone</b></td> <td>16</td> 
+<td>権限の種類に関係なく、ほかのユーザーにも接続を許可します。
+ほかのユーザーにも読み取り、書き込みの両方のアクセスを許可します。</td> 
+</tr> <tr valign="top"> <td><b>adModeShareDenyRead</b></td> <td>4</td> <td>読み取り権限によるほかのユーザーからの接続を禁止します。</td> 
+</tr> <tr valign="top"> <td><b>adModeShareDenyWrite</b></td> <td>8</td> <td>書き込み権限によるほかのユーザーからの接続を禁止します。</td> 
+</tr> <tr valign="top"> <td><b>adModeShareExclusive</b></td> <td>12</td> <td>ほかのユーザーの接続を禁止します。</td> 
+</tr> <tr valign="top"> <td><b>adModeUnknown</b></td> <td>0</td> <td>既定値です。権限が設定されていないか、設定が不明であることを表します。</td> 
+</tr> <tr valign="top"> <td><b>adModeWrite</b></td> <td>2</td> <td>書き込み専用の権限を表します。</td> 
+</tr> </table>
+
+<blockquote>
+<table cols="3" cellpadding="1" cellspacing="1" width="900">
+    <caption align="left"><b>■CursorTypeEnum値</b></caption>
+    <tbody>
+        <tr valign="top">
+            <th align="center" width="144">定数</th>
+            <th align="center">説明</th>
+        </tr>
+        <tr valign="top">
+            <td align="center" bgcolor="#ffffdd" width="144">adOpenDynamic<br>
+            （動的カーソル）</td>
+            <td>ほかのユーザーによる追加、変更、削除を確認できます。Recordset 内でのすべての動作を許可します。プロバイダがブックマークをサポートしている場合は、ブックマークを利用できます。</td>
+        </tr>
+        <tr valign="top">
+            <td align="center" bgcolor="#ffffdd" width="144">adOpenForwardOnly<br>
+            （前方専用カーソル）</td>
+            <td>ほかのユーザーによる追加、変更、削除は確認できません。レコードのスクロール方向が前方向に限定されていることを除き、静的カーソルと同じ働きをします。Recordset
+            のスクロールが 1 回だけで十分な場合は、これでパフォーマンスを向上できます。<font color="#ff0000">（既定値）</font></td>
+        </tr>
+        <tr valign="top">
+            <td align="center" bgcolor="#ffffdd" width="144">adOpenKeyset<br>
+            （キーセットカーソル）</td>
+            <td>動的カーソルと同様のはたらきをしますが、ほかのユーザーによるレコードの追加の確認、およびほかのユーザーが削除したレコードへのアクセスはできません。ほかのユーザーが変更したデータは表示できます。常にブックマークが使用できるため、Recordset
+            内でのあらゆる種類の移動が可能です。</td>
+        </tr>
+        <tr valign="top">
+            <td align="center" bgcolor="#ffffdd" width="144">adOpenStatic<br>
+            （静的カーソル）</td>
+            <td>データの検索またはレポートの作成に使用するための、レコード セットの静的コピーを提供します。常にブックマークが使用できるため、Recordset
+            内でのあらゆる種類の移動が可能です。ほかのユーザーによる追加、変更、削除は表示されません。</td>
+        </tr>
+    </tbody>
+</table>
+</blockquote>
+<blockquote>
+<table cols="3" cellpadding="1" cellspacing="1" width="898">
+    <caption align="left"><b>■LockTypeEnum値</b></caption>
+    <tbody>
+        <tr valign="top">
+            <th align="center">定数</th>
+            <th align="center">説明</th>
+        </tr>
+        <tr valign="top">
+            <td align="center" bgcolor="#ffffdd" nowrap="">adLockBatchOptimistic</td>
+            <td>共有的バッチ更新を示します。</td>
+        </tr>
+        <tr valign="top">
+            <td align="center" bgcolor="#ffffdd" nowrap="">adLockOptimistic</td>
+            <td>レコードごとに共有的ロックをします。Update メソッドを呼び出した場合にのみ、共有的ロックを使ってそのレコードをロックします。</td>
+        </tr>
+        <tr valign="top">
+            <td align="center" bgcolor="#ffffdd" nowrap="">adLockPessimistic</td>
+            <td>レコードごとに排他ロックを行ないます。レコードの編集を開始するとロックが始まります。UpdateメソッドかCancelUpdateメソッドを実行するまで、他のユーザーはこのレコードの読み取り、編集を行なうことができません。</td>
+        </tr>
+        <tr valign="top">
+            <td align="center" bgcolor="#ffffdd" nowrap="">adLockReadOnly</td>
+            <td>読み取り専用のレコードを示します。データの変更はできません。</td>
+        </tr>
+        <tr valign="top">
+            <td align="center" bgcolor="#ffffdd" nowrap="">adLockUnspecified</td>
+            <td>ロックタイプを指定しません。</td>
+        </tr>
+    </tbody>
+</table>
+</blockquote>
+<blockquote>
+<table cellpadding="1" cellspacing="1" width="729">
+    <caption align="left"><b>Cursor Type・Lock Typeの値の組合せによるレコードセットのタイプ</b></caption>
+    <tbody>
+        <tr>
+            <th width="162">レコードセットのタイプ</th>
+            <th width="113">CursorType</th>
+            <th width="104"><font color="#000000">LockType</font></th>
+            <th width="103">options</th>
+            <th width="169">備考</th>
+        </tr>
+        <tr>
+            <td align="center" width="162"><font size="-1">ダイナセット</font></td>
+            <td align="center" width="113"></td>
+            <td align="center" width="104"><font color="#000000" size="-1">adLockOptimistic</font></td>
+            <td align="center" width="103"></td>
+            <td width="169"><font size="-1">レコードの更新・追加・削除が可能で，編集結果は，レコードセットのもとになったテーブルに反映されます。</font></td>
+        </tr>
+        <tr>
+            <td align="center" width="162"><font size="-1">スナップショットタイプ</font></td>
+            <td align="center" width="113"><font size="-1">adOpenStatic</font></td>
+            <td align="center" width="104"><font size="-1">adLockReadOnly</font></td>
+            <td align="center" width="103"></td>
+            <td width="169"><font size="-1">レコードセットの内容を更新することは出来ません。</font></td>
+        </tr>
+        <tr>
+            <td align="center" width="162"><font size="-1">テーブルタイプ</font></td>
+            <td align="center" width="113"></td>
+            <td align="center" width="104"></td>
+            <td align="center" width="103"><font size="-1">adCmdTableDirect</font></td>
+            <td width="169"><font size="-1">レコードの更新・追加・削除が可能.。</font>seek<font size="-1">メソッドを利用した高速検索が可能</font>。</td>
+        </tr>
+        <tr>
+            <td align="center"><font size="-1">読み取り専用</font></td>
+            <td align="center" width="113"></td>
+            <td align="center" width="104"><font size="-1">adLockReadOnly</font></td>
+            <td align="center" width="103"></td>
+            <td width="169"><font size="-1">レコードセットは，VBで更新することはできません。検索や並べ替えなど，レコードを更新する必要がない場合に利用します。</font></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><font size="-1">adOpenKeyset</font></td>
+            <td><font size="-1">adLockOptimistic</font></td>
+            <td></td>
+            <td><font size="-1">通常使われる組合せ</font></td>
+        </tr>
+    </tbody>
+</table>
+</blockquote>
+
+Option Explicit
+
+Private Const cnCnString As String = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source="
+Private Const cnDbName As String = "testDB.accdb"
+Private Const cnTblName As String = "Ttest" 'ID, Value1, Value2
+
+'エクセルシートのテーブル内容を
+'accdb のテーブルに追加する
+Sub InsertIntoTest()
+    
+    '全レコード削除してから追加
+    Call tblInit
+    
+    Dim xlTblName As String
+    xlTblName = "[Sheet1$]"
+    
+    'accdbに接続
+    Dim cn As ADODB.Connection
+    Dim cmd As ADODB.Command
+    
+    Set cn = CreateObject("ADODB.Connection")
+    
+    With cn
+        .ConnectionString = cnCnString & ThisWorkbook.Path & "\" & cnDbName
+        .Mode = adModeShareExclusive '排他制御
+        .Open
+    End With
+    
+    Set cmd = CreateObject("adodb.command")
+    
+    
+    'エクセルのシートをテーブルとて取得するコネクション
+    Dim cnXl As ADODB.Connection
+    Dim rsXl As ADODB.Recordset
+    
+    Set cnXl = CreateObject("adodb.connection") 'New ADODB.Connection
+    Set rsXl = CreateObject("adodb.recordset") 'New ADODB.Recordset
+    
+    With cnXl
+        .ConnectionString = cnCnString & ThisWorkbook.FullName
+        .Properties("Extended Properties") = "Excel 12.0;HDR=YES"
+        .Open
+    End With
+    
+    With rsXl
+        .ActiveConnection = cnXl
+        .CursorType = adOpenForwardOnly
+        .LockType = adLockPessimistic
+        .Open "[Sheet1$]"
+    End With
+    
+    cn.BeginTrans
+    
+    'つってもループ以外の方法はないっぽい
+    Do Until rsXl.EOF
+        With cmd
+            .ActiveConnection = cn
+            '↓テーブルオブジェクトじゃないので結局ループで廻すより方法がないっぽい
+            '.CommandText = "insert into " & cnTblName & " select * from " & rsXl
+            .CommandText = "insert into " & cnTblName & " (ID, value1, value2) values(" & rsXl(0) & ",'" & rsXl(1) & "','" & rsXl(2) & "')"
+            .Execute
+            rsXl.MoveNext
+        End With
+    Loop
+    
+    cn.CommitTrans
+    
+    Set cmd = Nothing
+    cn.Close
+End Sub
+
+'テーブルの初期化
+Sub tblInit()
+    Dim cn As ADODB.Connection
+    Dim cmd As ADODB.Command
+    
+    Set cn = CreateObject("adodb.connection")
+    With cn
+        .ConnectionString = cnCnString & cnDbName
+        .Mode = adModeShareExclusive
+        .Open
+    End With
+    
+    Set cmd = CreateObject("adodb.Command")
+    With cmd
+        .ActiveConnection = cn
+        .CommandText = "QTtestClear" '削除クエリ
+        .Execute
+    End With
+End Sub
+
+'テーブルの初期化別解
+Sub tblInit()
+    Dim cn As ADODB.Connection
+    Dim rs As ADODB.Recordset
+    
+    Set cn = CreateObject("adodb.connection")
+    With cn
+        .ConnectionString = cnCnString & ThisWorkbook.Path & "\" & cnDbName
+        .Mode = adModeShareExclusive
+        .Open
+    End With
+    
+    Set rs = CreateObject("adodb.recordset")
+    With rs
+        .ActiveConnection = cn
+        'カーソルタイプを動的にする事で削除SQLを実行できる?
+        'カーソルタイプのディフォルトはadOpenForwardOnly
+        'Debug.Print .CursorType = adOpenForwardOnly 'true
+        'それでも出来てしまう。adOpenKeyset にすると他のユーザーが追加、変更、削除を確認できると言う事。
+        
+        'adOpenForwardOnly がパフォーマンスがいいらしい。
+        .CursorType = adOpenForwardOnly
+        
+        '他のユーザーによる編集の排他を担うのは LockType
+        .LockType = adLockPessimistic '排他
+        .Open "delete * from " & cnTblName
+    End With
+
+End Sub
+
+<h2>自データベースにADO接続するには</h2>
+
+Dim myCon As New ADODB.Connection
+Set myCon =  CurrentProject.Connection と、代入する
+
+
+<h2>Sub ADOデータベースへ接続テーブルの値を取り込む()</h2>
+    
+    Dim myCon As Object
+    Dim myRS As Object
+    
+    Set myCon = CreateObject("ADODB.Connection")
+    Set myRS = CreateObject("ADODB.Recordset")
+
+    With myCon
+        '.Open "file name=" & CreateObject("wscript.shell").specialfolders("desktop") & "\a.udl;"
+        .ConnectionString = _
+            "Provider=Microsoft.Jet.OLEDB.4.0;" & _
+            "Data Source=c:\my documents\access\家計簿.mdb"
+        .Open
+    End With
+    
+    myRS.Open "t_test", myCon
+    
+    Sheet1.[a1].CopyFromRecordset myRS
+
+    myRS.Close
+    myCon.Close
+    Set myRS = Nothing
+    Set myCon = Nothing
+    
+End Sub
+
+<h2>Sub renshu_2()</h2>
+
+    Dim myCon As ADODB.Connection
+    Dim myRS As ADODB.Recordset
+
+    Set myCon = New ADODB.Connection
+
+    With myCon
+        .ConnectionString = _
+            "provider=microsoft.jet.oledb.4.0;" & _
+            "data source=c:\windows\ﾃﾞｽｸﾄｯﾌﾟ\db1.mdb;"
+        .Open
+    End With
+
+    Set myRS = New ADODB.Recordset
+     
+    With myRS
+        .ActiveConnection = myCon
+        .Source = "tb1"
+        .Open
+    End With
+
+    Sheet1.Range("a1").CopyFromRecordset myRS
+
+    myRS.Close
+    myCon.Close
+    Set myCon = Nothing
+    Set myRS = Nothing
+
+End Sub
+
+<h2>Sub renshu()</h2>
+
+    Dim myCon As ADODB.Connection
+    Dim myRS As ADODB.Recordset
+    
+    Set myCon = New ADODB.Connection
+    Set myRS = New ADODB.Recordset
+    
+    
+    With myCon
+        .ConnectionString = _
+            "provider=microsoft.jet.oledb.4.0;" & _
+            "data source=c:\windows\ﾃﾞｽｸﾄｯﾌﾟ\db1.mdb;"
+        .Open
+    End With
+    
+    With myRS
+        .ActiveConnection = myCon
+        .Source = "クエリ2"
+        .Open
+    End With
+
+    Sheet1.Range("a1").CopyFromRecordset myRS
+
+    myRS.Close
+    myCon.Close
+    Set myCon = Nothing
+    Set myRS = Nothing
+    
+End Sub
+
+<h2>Sub renshu_5クエリデータをシートに取り込む()</h2>
+
+    Dim myCon As New ADODB.Connection
+    Dim myRS As New ADODB.Recordset
+    Dim mySQL As String
+    
+    mySQL = "select * from tbl1 where 販売数 > 1 and id > 8000;"
+
+    With myCon
+        .ConnectionString = _
+            "provider=microsoft.jet.oledb.4.0;" & _
+            "data source=c:\windows\ﾃﾞｽｸﾄｯﾌﾟ\db1.mdb;"
+        
+        .Open
+    End With
+
+    With myRS
+        .ActiveConnection = myCon
+        .Source = mySQL
+        .Open
+    End With
+
+    If MsgBox("シート１のデータが上書きされちゃいます", _
+        vbYesNo + vbDefaultButton2, _
+        ThisWorkbook.Name) = vbYes Then
+    
+        With Sheet1
+            .Cells.Clear
+            .Range("a1").CopyFromRecordset myRS
+        End With
+
+    End If
+
+    myRS.Close
+    myCon.Close
+    Set myCon = Nothing
+    Set myRS = Nothing
+
+End Sub
+
+<h2>Sub test_6テーブルを更新する()</h2>
+
+    Dim myCon As New ADODB.Connection
+    Dim myCmd As New ADODB.Command
+
+    With myCon
+        .ConnectionString = _
+            "provider=microsoft.jet.oledb.4.0;" & _
+            "data source=c:\windows\ﾃﾞｽｸﾄｯﾌﾟ\db1.mdb;"
+            .Open
+    End With
+    
+    With myCmd
+        .ActiveConnection = myCon
+        .CommandText = "update t_test set 販売数=0;"
+        .Execute
+    End With
+
+    myCon.Close
+    Set myCon = Nothing
+    Set myCmd = Nothing
+
+End Sub
+
+<h2>Sub test_7パラメータークエリの実行()</h2>
+
+    Dim myCon As New ADODB.Connection
+    Dim myCmd As New ADODB.Command
+    Dim myRS As New ADODB.Recordset
+    Dim strIpt As String
+    Dim i As Long
+    Dim fld As Field
+
+    With myCon
+        .ConnectionString = _
+        "provider=microsoft.jet.oledb.4.0;" & _
+        "data source=c:\windows\ﾃﾞｽｸﾄｯﾌﾟ\db1.mdb;"
+        .Open
+    End With
+	
+	'InputBox(prompt[, title] [, default] [, xpos] [, ypos] [, helpfile, context])
+    strIpt = InputBox("指定した販売数以上のレコードを表示します", "販売数", 10, 5000, 5000)
+
+    If IsNumeric(strIpt) Then
+
+        With myCmd
+            .ActiveConnection = myCon
+            .CommandText = "select tb1.* from tb1 where 販売数 >=" & strIpt & ";"
+        End With
+        
+        Set myRS = myCmd.Execute
+        'set myRs = myCmd.Execute (Parameters:=10)←パラメータクエリだった場合。
+        
+        With Sheet1
+
+            .Cells.Clear
+
+            For i = 0 To myRS.Fields.Count - 1
+                .Cells(1, i + 1).Value = myRS.Fields(i).Name
+            Next i
+
+            .[a2].CopyFromRecordset myRS
+
+        End With
+
+    Else
+        MsgBox "数値を入力してください", vbInformation, ThisWorkbook.Name
+    End If
+
+    myCon.Close
+    Set myCon = Nothing
+    Set myCmd = Nothing
+    Set myRS = Nothing
+    
+End Sub
+
+<h2>Sub テキストファイルの読み込み()</h2>
+
+    Dim myCon As New ADODB.Connection
+    Dim myRS As New ADODB.Recordset
+    Dim myFolder As String
+    Dim myTxt As String
+    
+    myFolder = ThisWorkbook.Path
+    myTxt = "data.csv"
+    
+    With myCon
+        .Provider = "Microsoft.Jet.OLEDB.4.0"
+        .Properties("Extended Properties") = "TEXT"
+        .Open myFolder
+    End With
+    
+    myRS.Open _
+        Source:=myTxt, _
+        ActiveConnection:=myCon, _
+        Options:=adClipString
+    Sheet1.Range("a1").CopyFromRecordset myRS
+    
+    MsgBox myTxt & " を読み込みました", vbInformation, ThisWorkbook.Name
+
+    myRS.Close
+    Set myRS = Nothing
+    myCon.Close
+    Set myCon = Nothing
+
+End Sub
+
+<h2>Sub テキストファイルのあるフォルダに接続する()</h2>
+
+    Dim myCon As New ADODB.Connection
+    Dim myFoloder As String
+    Dim myRS As New ADODB.Recordset
+    Dim conSTR As String
+    Dim myTxt As String
+
+    myFolder = ThisWorkbook.Path
+    myTxt = "data.csv"
+    
+    conSTR = _
+        "Provider=Microsoft.Jet.OLEDB.4.0;" & _
+        "Extended Properties=TEXT;" & _
+        "Data Source=" & myFolder
+    
+    myCon.Open conSTR
+
+    'myRS.Open
+    myRS.Open _
+        Source:=myTxt, _
+        ActiveConnection:=myCon, _
+        Options:=adClipString
+
+    Sheet1.Range("a1").CopyFromRecordset myRS
+    
+    MsgBox "テキストファイルのあるフォルダに接続しました"
+    
+    myCon.Close
+    Set myCon = Nothing
+            
+End Sub
+
+<h2>Sub テーブル操作()</h2>
+
+    Dim myCon As New ADODB.Connection
+    Dim myRS As New ADODB.Recordset
+    
+   'myCon.Open "File Name=" & ThisWorkbook.Path & "\adornshu.udl;"
+    With myCon
+        .ConnectionString = _
+            "Provider=Microsoft.Jet.OLEDB.4.0;" & _
+            "data source=C:\My Documents\ああああ\いいい\db1.mdb;"
+        .Open
+    End With
+    
+    myRS.Open "expack最終", myCon, adOpenDynamic, adLockPessimistic, adCmdTable
+    
+    MsgBox "テーブルを操作できる状態で接続しました", vbInformation, ThisWorkbook.Name
+
+    myRS.Close
+    Set myRS = Nothing
+    myCon.Close
+    Set myCon = Nothing
+
+End Sub
+
+<h2>Sub レコードの値を取り出す()</h2>
+
+    Dim myCon As New ADODB.Connection
+    Dim myRS As New ADODB.Recordset
+    Dim i  As Long
+    Dim times As Date, time1 As Date
+
+    time1 = Now()
+
+    With myCon
+        .ConnectionString = _
+            "provider=microsoft.jet.oledb.4.0;" & _
+            "data source=c:\my documents\あああ\あああ\db1.mdb;"
+        .Open
+    End With
+    
+    myRS.Open "expack最終", myCon ', adOpenDynamic, adLockPessimistic, adCmdTable
+
+    For i = 1 To Sheet2.Rows.Count
+
+        With Sheet2
+            .Cells(i, 1).Value = myRS!ID
+            .Cells(i, 2).Value = myRS!店舗名
+            .Cells(i, 3).Value = myRS!報告日
+            .Cells(i, 4).Value = myRS!販売数
+        End With
+
+        myRS.MoveNext
+
+    Next i
+
+    myRS.Close
+    Set myRS = Nothing
+    myCon.Close
+    Set myCon = Nothing
+
+    times = Now()
+    MsgBox Format$(times - time1, "hh:mm:ss")
+
+End Sub
+
+'Microsoft ActiveX Data Objects X.X Libraryに参照設定
+<h2>Sub テーブルからレコードを削除()</h2>
+
+    Dim myCon As New ADODB.Connection
+    Dim myRS As New ADODB.Recordset
+    
+    With myCon
+        .ConnectionString = _
+            "provider=microsoft.jet.oledb.4.0;" & _
+            "data source=" & ThisWorkbook.Path & _
+            "\db1.mdb;"
+        .Open
+    End With
+    
+    With myRS
+        .Open "table1", myCon, adOpenStatic, adLockPessimistic, adCmdTable
+        .Delete
+        .Close
+    End With
+    
+    Set myRS = Nothing
+    myCon.Close
+    Set myCon = Nothing
+    
+End Sub
+
+<h2>Sub 先頭レコード､最終レコードを判定する()</h2>
+
+     Dim myCon As New ADODB.Connection
+     Dim myRS As New ADODB.Recordset
+     Dim myIdx As Long
+
+     Const strDB As String = _
+        "c:\my documents\あああ\ｄｄｄｄ\db1.mdb"
+    
+     myIdx = InputBox("取り出したいレコードの位置を数字で入力")
+
+     With myCon
+        .ConnectionString = _
+            "provider=microsoft.jet.oledb.4.0;" & _
+            "data source=" & strDB & ";"
+        .Open
+     End With
+
+     With myRS
+        .Open "expack最終", myCon, adOpenStatic
+        .Move Val(myIdx) - 1, adBookmarkFirst
+     End With
+     
+     If myRS.EOF Or myRS.BOF Then
+        MsgBox "其の位置にレコードは存在しません", vbCritical, ThisWorkbook.Name
+     Else
+        MsgBox myRS!ID & vbNewLine & myRS!店舗名 & vbNewLine & myRS!販売数, vbInformation, ThisWorkbook.Name
+     End If
+
+End Sub
+
+<h2>Sub レコードの内容を変更する()</h2>
+
+    Dim myCon As New ADODB.Connection
+    Dim myRS As New ADODB.Recordset
+    
+    With myCon
+        .ConnectionString = _
+            "provider=microsoft.jet.oledb.4.0;" & _
+            "data source=" & ThisWorkbook.Path & "\adoRenshu.mdb;"
+        .Open
+    End With
+    
+    myRS.Open "data", myCon, adOpenDynamic, adLockOptimistic, adCmdTable
+    
+    'myRS!販売数 = 3
+    'myRS.Update
+    
+    myRS.Update _
+        Array("日付", "f1", "f2", "f3", "f4", "f5", "f6", "f7", "販売数"), _
+        Array(DateValue("2006/3/27"), "3", "3", "3", "3", "3", "3", "3", "3000")
+    
+    'myRS.CancelUpdate
+    MsgBox "更新しました"
+
+    myRS.Close
+    Set myRS = Nothing
+    myCon.Close
+    Set myCon = Nothing
+    
+End Sub
+
+<h2>Sub 新規レコードを追加する()</h2>
+
+    Dim myCon As New ADODB.Connection
+    Dim myRS As New ADODB.Recordset
+    
+    With myCon
+        .ConnectionString = _
+            "provider=microsoft.jet.oledb.4.0;" & _
+            "data source=" & ThisWorkbook.Path & "\adorenshu.mdb;"
+        .Open
+    End With
+    
+    myRS.Open "data", myCon, adOpenDynamic, adLockOptimistic, adCmdTable
+
+    myRS.AddNew _
+        Array("日付", "f1", "f2", "f3", "f4", "f5", "f6", "f7", "販売数"), _
+        Array(DateValue("2006/3/28"), "3", "3", "3", "3", "3", "3", "3", "30000")
+
+    MsgBox "追加しました"
+
+    myRS.Close
+    Set myRS = Nothing
+    myCon.Close
+    Set myCon = Nothing
+
+End Sub
+
+<h2>Sub レコードを削除する()</h2>
+
+    Dim myCon As New ADODB.Connection
+    Dim myRS As New ADODB.Recordset
+    
+    With myCon
+        .ConnectionString = _
+            "provider=microsoft.jet.oledb.4.0;" & _
+            "data source=" & ThisWorkbook.Path & "\adorenshu.mdb;"
+        .Open
+    End With
+
+    myRS.Open "Data", myCon, adOpenStatic, adLockPessimistic, adCmdTable
+        
+    With myRS
+        .Delete
+        .MoveNext
+        .Delete
+        .Close
+    End With
+
+    Set myRS = Nothing
+    myCon.Close
+    Set myCon = Nothing
+    
+    MsgBox "２レコード削除しました"
+
+End Sub
+
+<h2>Sub インデックスを使って検索を行う()</h2>
+
+    Dim myCon As New ADODB.Connection
+    Dim myRS As New ADODB.Recordset
+    
+    With myCon
+        .ConnectionString = _
+            "provider=microsoft.jet.oledb.4.0;" & _
+            "data source=" & ThisWorkbook.Path & "\adorenshu.mdb;"
+        .Open
+    End With
+    
+    myRS.Open "data", myCon, adOpenStatic, adLockReadOnly, adCmdTableDirect
+    myRS.Index = "id" 'Indexプロパティに「名」を指定
+    myRS.Seek 600
+
+    If myRS.EOF Then
+
+        MsgBox "見つかりませんでした"
+
+    Else
+ 
+       With Sheet1
+            .Cells.Clear
+            .Cells(1, 1).Value = myRS!為替番頭
+            .Cells(1, 2).Value = myRS!名
+            .Cells(1, 3).Value = myRS!日付
+            .Cells(1, 4).Value = myRS!販売数
+        End With
+
+        MsgBox "done"
+
+    End If
+
+    myRS.Close
+    Set myRS = Nothing
+    myCon.Close
+    Set myCon = Nothing
+
+End Sub
+    
+<h2>Sub 任意のフィールドの値を元に検索と削除()</h2>
+
+'Indexのないフィールドの検索にはFindを使用
+    Dim myCon As New ADODB.Connection
+    Dim myRS As New ADODB.Recordset
+
+    With myCon
+        .ConnectionString = _
+            "provider=microsoft.jet.oledb.4.0;" & _
+            "data source=" & ThisWorkbook.Path & "\adorenshu.mdb;"
+        .Open
+    End With
+    
+    myRS.Open "Data", myCon, adOpenForwardOnly, adLockPessimistic, accmdtable
+    
+    Do
+        myRS.Find "名 like '*宇*'"
+        If myRS.EOF Then
+            Exit Do
+        End If
+        myRS.Delete
+        myRS.MoveNext
+    Loop
+
+    MsgBox "done"
+
+    myRS.Close
+    Set myRS = Nothing
+    myCon.Close
+    Set myCon = Nothing
+
+End Sub
+
+<h2>Sub レコードセットにフィルタをかけて転記する()</h2>
+
+    Dim myCon As New ADODB.Connection
+    Dim myRS As New ADODB.Recordset
+
+    With myCon
+        .ConnectionString = _
+            "provider=microsoft.jet.oledb.4.0;" & _
+            "data source=" & ThisWorkbook.Path & "\adorenshu.mdb;"
+        .Open
+    End With
+
+    myRS.CursorLocation = adUseClient '件数をカウントできるように開く設定
+    myRS.Open "data", myCon, adOpenForwardOnly, adLockOptimistic, adCmdTable
+    
+    myRS.Filter = "店舗名 like '*下*' and 販売数 < 5"
+
+    With Sheet1
+        .Cells.Clear
+        .Range("a2").CopyFromRecordset myRS
+    End With
+
+    MsgBox myRS.RecordCount & " 件抽出しました"
+
+    myRS.Close
+    Set myRS = Nothing
+    myCon.Close
+    Set myCon = Nothing
+
+End Sub
+
+<h2>Sub レコードを並び替える()</h2>
+
+    Dim myCon As New ADODB.Connection
+    Dim myRS As New ADODB.Recordset
+    
+    With myCon
+        .ConnectionString = _
+            "provider=microsoft.jet.oledb.4.0;" & _
+            "data source=" & ThisWorkbook.Path & "\adorenshu.mdb;"
+        .Open
+    End With
+    
+    With myRS
+        .CursorLocation = adUseClient
+        .Open "data", myCon, adOpenForwardOnly, adLockOptimistic, adCmdTable
+        .Filter = "販売数 > 30 and 局種CD1 = 0"
+        .Sort = "販売数 desc,ID asc"
+    End With
+    
+    With Sheet1
+        .Cells.Clear
+        .[a2].CopyFromRecordset myRS
+    End With
+
+    MsgBox myRS.RecordCount & " 件抽出しました"
+
+    myRS.Close
+    Set myRS = Nothing
+    myCon.Close
+    Set myCon = Nothing
+    
+End Sub
+
+<h2>Sub フィールド名を取得()</h2>
+
+    Dim myCon  As New ADODB.Connection
+    Dim myRS As New ADODB.Recordset
+    Dim i As Long
+
+    With myCon
+        .ConnectionString = _
+            "provider=microsoft.jet.oledb.4.0;" & _
+            "data source=" & ThisWorkbook.Path & "\adorenshu.mdb;"
+        .Open
+    End With
+    
+    With myRS
+        .Open "data", myCon, adOpenForwardOnly, adLockReadOnly, adCmdTable        
+    End With
+    
+    With Sheet1
+
+        For i = 1 To myRS.Fields.Count
+
+            .Cells(1, i).Value = myRS.Fields(i - 1).Name
+            .Cells(2, i).Value = myRS.Fields(i - 1).Type 'データ型
+
+            Select Case .Cells(2, i).Value
+                Case 2
+                    .Cells(2, i).Value = "２バイトの符号付整数"
+                Case 3
+                    .Cells(2, i).Value = "４バイトの符号付整数"
+                Case 4
+                    .Cells(2, i).Value = "単精度浮動小数点値"
+                Case 5
+                    .Cells(2, i).Value = "倍精度浮動小数点値"
+                Case 6
+                    .Cells(2, i).Value = "通貨型"
+                Case 7
+                    .Cells(2, i).Value = "日付値"
+                Case 8
+                    .Cells(2, i).Value = "Nullで終了するUnicode文字列" '文字列のことらしい
+                Case 10
+                    .Cells(2, i).Value = "３２ビットエラーコード"
+                Case 11
+                    .Cells(2, i).Value = "ブール型"
+                Case 202
+                    .Cells(2, i).Value = "Nullで終了するUnicode文字列"
+                Case 0
+                    .Cells(2, i).Value = "値を指定していない状態"
+            End Select
+
+            '.Cells(3, i).Value = getDataType(myRS.Fields(i - 1).Type)'getDataType何だ？
+            'DataTypeEnumがらみ？？？
+        Next i
+
+        .Rows(2).Select
+
+        ActiveWindow.FreezePanes = True
+
+    End With
+
+    myRS.Close
+    Set myRS = Nothing
+    myCon.Close
+    Set myCon = Nothing
+
+End Sub
+
+<h2>Sub レコードの内容を二次元配列に格納する()</h2>
+
+    Dim myCon As New ADODB.Connection
+    Dim myRS As New ADODB.Recordset
+    Dim lngFldCnt As Long
+    Dim lngRecCnt As Long
+    Dim myArry()
+
+    With myCon
+        .ConnectionString = _
+            "provider=microsoft.jet.oledb.4.0;" & _
+            "data source=" & ThisWorkbook.Path & "\adorenshu.mdb;"
+        .Open
+    End With
+
+</pre>
+
+<table frame="box">
+	<caption>CusorLocationプロパティ</caption>
+	<tr>
+	<th>定数</th><th>値</th><th>説明</th>
+	</tr>
+	<tr>
+	<td>adUseClient</td><td>3</td><td>クライアント側カーソルを変更する。ドライバによって供給されるカーソルよりも多くのカーソル機能があるので、この設定を利用すれば、Sortプロパティなどより高度な機能が使用可能になる</td>
+	</tr>
+	<tr>
+	<td>adUseServer</td><td>2</td><td>データプロバイダカーソルまたはドライバによって供給されるカーソルを使用。規定値</td>
+	</tr>
+</table>
+<pre>
+
+    With myRS
+        .CursorLocation = adUseClient
+        .Open "data", myCon, adOpenForwardOnly, adLockReadOnly, adCmdTable
+        .Filter = "店舗名 = '水戸納豆'"
+    End With
+
+    lngFldCnt = myRS.Fields.Count
+    lngRecCnt = myRS.RecordCount
+
+    ReDim myArry(lngFldCnt - 1, lngRecCnt - 1)
+
+    myArry = myRS.GetRows
+
+    With Sheet1
+        .Cells.Clear
+        .Range(.Cells(1), .Cells(lngFldCnt, lngRecCnt)).Value = myArry
+    End With
+
+    MsgBox "done"
+
+    myRS.Close
+    Set myRS = Nothing
+    myCon.Close
+    Set myCon = Nothing
+
+End Sub
+
+<h2>Sub レコードをテキストとして出力()</h2>
+
+    Dim myCon As New ADODB.Connection
+    Dim myRS As New ADODB.Recordset
+    Dim myStr As String
+    Dim intFF As Integer
+
+    With myCon
+        .ConnectionString = _
+            "provider=microsoft.jet.oledb.4.0;" & _
+            "data source=" & ThisWorkbook.Path & "\adorenshu.mdb;"
+        .Open
+    End With
+    
+    myRS.Open "data", myCon, adOpenStatic, adLockReadOnly, adCmdTable
+    
+    '出力できるレコード数には限界がある;メモリに依存？
+    myStr = myRS.GetString(adClipString, 59000, ",", vbCrLf)
+
+    intFF = FreeFile()
+
+    Open ThisWorkbook.Path & "\RS.txt" For Output As #intFF
+        Print #intFF, myStr
+    Close #intFF
+
+    MsgBox ThisWorkbook.Path & "\RS.txt を作成しました"
+
+    myRS.Close
+    Set myRS = Nothing
+    myCon.Close
+    Set myCon = Nothing
+
+End Sub
+
+<h2>Sub エクセルからアクセス上のレコードをテキスト出力()</h2>
+'15万件のデータの出力テストずみ
+
+    Dim myCSV As String
+    Dim myAcs As Access.Application
+
+    Application.DisplayAlerts = False
+    '"別のプログラムで OLE の操作が完了するまで待機を続けます"
+    'というアラートが10万件レコードを読み込むと発生する事の抑止
+    'アラートの意味はわかんない
+
+    Let myCSV = ThisWorkbook.Path & "\data.csv"
+    Set myAcs = GetObject(ThisWorkbook.Path & "\adorenshu.mdb")
+
+    myAcs.Run "textout", myCSV
+    Set myAcs = Nothing
+
+    Application.DisplayAlerts = True
+
+    MsgBox myCSV & " を作成しました"
+
+    'アクセス側コード
+    'Function textout(ByRef myfilePth As String)
+    'DoCmd.TransferText acExportDelim, "Data エクスポート定義", "data", myfilePth
+
+    'End Function
+
+End Function
+
+<h2>Sub ブックマークを利用する()</h2>
+
+    Dim myCon As New ADODB.Connection
+    Dim myRS As New ADODB.Recordset
+    Dim myBookmark As Variant
+    
+    With myCon
+        .ConnectionString = _
+            "provider=microsoft.jet.oledb.4.0;" & _
+            "data source=" & ThisWorkbook.Path & "\adorenshu.mdb;"
+        .Open
+    End With
+    
+    myRS.Open "data", myCon, adOpenStatic, adLockReadOnly, adCmdTable
+    
+    '5番目のレコード移動（第2引数は”1レコード目から数えて5番目”という指定
+    myRS.Move 4, adBookmarkFirst
+    'カレントレコードをブックマークとして登録
+    myBookmark = myRS.Bookmark
+    '最終レコードへ移動
+    myRS.MoveLast
+    'ブックマークへ移動
+    myRS.Bookmark = myBookmark
+    
+    MsgBox myRS.GetString(adClipString, 1, ",")
+    
+    '複数のブックマーク
+    Dim myBookmarks(9) As Variant
+    Dim i As Long
+    
+    '2つおきにブックマーク
+    myRS.MoveFirst
+    For i = 0 To 9
+        myBookmarks(i) = myRS.Bookmark
+        Debug.Print myRS.GetString(adClipString, 1, ",")
+        myRS.Move 2
+    Next i
+    
+    'つけたブックマークでフィルタ
+    myRS.Filter = myBookmarks
+    Sheet1.[a2].CopyFromRecordset myRS
+     
+    MsgBox "1行おきに" & UBound(myBookmarks) & "件抽出しました"
+    myRS.Close
+    Set myRS = Nothing
+    myCon.Close
+    Set myCon = Nothing
+    
+End Sub
+
+<h2>Sub ページ単位で処理を行う()</h2>
+
+    Dim myCon As New ADODB.Connection
+    Dim myRS As New ADODB.Recordset
+    Dim i As Long
+
+    With myCon
+        .ConnectionString = _
+            "provider=microsoft.jet.oledb.4.0;" & _
+            "data source=" & ThisWorkbook.Path & "\adorenshu.mdb;"
+            
+        .Open
+    End With
+    
+    myRS.CursorLocation = adUseClient 'ソート可能状態に
+    
+    myRS.Open "data", myCon, adOpenStatic, adLockReadOnly
+    
+    myRS.Sort = "県CD asc"
+    
+    myRS.PageSize = 5 '5レコードごとにページ設定
+    MsgBox myRS.PageCount & " ページ分出力します"
+    
+    For i = 1 To myRS.PageCount
+        myRS.AbsolutePage = i
+        Debug.Print "○　" & i & "ページ目 ○"
+        Debug.Print myRS.GetString(adClipString, myRS.PageSize)
+    Next i
+
+    myRS.Close
+    Set myRS = Nothing
+    myCon.Close
+    Set myCon = Nothing
+
+End Sub
+
+<h2>Sub レコードセットをファイルに保存する()</h2>
+    
+    Dim myCon As New ADODB.Connection
+    Dim myRS As New ADODB.Recordset     
+
+   'ADOでは一時的に独立したファイルとしてレコードセットを
+   '保存できる。DBサーバーとの接続が切れている状態でも
+   'ローカルで作業をしてから、日を跨いでサーバーがわに反映
+   'させる事ができる
+   'レコードセットをファイルに保存する
+   '保存しておいたレコードセットの変更をサーバー側に反映
+   'と本プロシージャの３つをセットで使う
+
+    Dim myAdtg As String
+    'Dim fso As New Scripting.FileSystemObject
+    myAdtg = ThisWorkbook.Path & "\savedRS.adtg"
+    If Len(Dir(myAdtg, vbNormal)) > 0 Then
+        CreateObject("Scripting.FileSystemObject").GetFile(myAdtg).Delete
+        
+    End If
+    With myCon
+        .ConnectionString = _
+            "provider=microsoft.jet.oledb.4.0;" & _
+            "data source=" & ThisWorkbook.Path & "\adorenshu.mdb;"
+        .Open
+    End With
+    
+    With myRS
+        .CursorLocation = adUseClient
+        .Open "data", myCon, adOpenDynamic, adLockOptimistic
+        .Save myAdtg, adPersistADTG
+        .Close
+    End With
+
+    Set myRS = Nothing
+    myCon.Close
+    Set myCon = Nothing
+
+    MsgBox "done"
+
+End Sub
+
+<h2>Sub 保存しておいたレコードセットを開いて作業する()</h2>
+    Dim myRS As New ADODB.Recordset
+    Dim myAdtg As String
+    
+    myAdtg = ThisWorkbook.Path & "\savedRS.adtg"
+    
+    With myRS
+        .Open myAdtg
+        .MoveFirst
+        .Filter = "店舗名 = null"
+    End With
+
+    MsgBox myRS.RecordCount
+    
+    Do Until myRS.EOF
+        myRS!販売数 = 0
+        myRS.MoveNext
+    Loop
+    
+    With myRS
+        .MoveFirst '先頭レコードに移動しておく
+        .Update
+        .Save myAdtg, adPersistADTG
+        .Close
+    End With
+
+    Set myRS = Nothing
+
+    MsgBox "done"
+
+End Sub
+
+<h2>Sub 保存しておいたレコードセットの変更をサーバー側に反映()</h2>
+
+    Dim myCon As New ADODB.Connection
+    Dim myRS As New ADODB.Recordset
+    Dim strAdtg As String
+    
+    With myCon
+        .ConnectionString = _
+            "provider=microsoft.jet.oledb.4.0;" & _
+            "data source=" & ThisWorkbook.Path & "\adorenshu.mdb;"
+        .Open
+    End With
+    
+    strAdtg = ThisWorkbook.Path & "\savedRS.adtg"
+    
+    With myRS
+        .Open strAdtg '保存した奴を開く
+        .ActiveConnection = myCon
+    End With
+
+    myRS.UpdateBatch 'バッチ処理
+    
+    'myRS.Filter = "店舗名 = null"
+    'Debug.Print myRS.GetString(adClipString, 34, ",")
+
+    MsgBox "done"
+
+End Sub
+
+<h2>Sub test()</h2>
+
+    Dim myCon As New ADODB.Connection
+    Dim myRS As New ADODB.Recordset
+    
+    With myCon
+        .ConnectionString = _
+            "provider=microsoft.jet.oledb.4.0;" & _
+            "data source=" & dbPath & ";"
+        .Open
+    End With
+
+myRetry:
+
+    With myRS
+        .Open "data", myCon, _
+            adOpenKeyset, _
+            adLockPessimistic, _
+            adCmdTable
+        .AddNew
+        .Fields(1).Value = Sheet1.[b2].Value
+    End With
+
+    On Error GoTo test_ERR
+    
+    Err.Raise 514, , "test"
+    
+    myRS.Close
+    Set myRS = Nothing
+    myCon.Close
+    Set myCon = Nothing
+
+   Exit Sub
+    
+test_ERR:
+
+    With myRS
+        .Delete
+        .Close
+    End With
+
+    Resume myRetry
+    
+End Sub
+
+<h2>Sub エクセルに接続する()</h2>
+
+    Dim myCon As New ADODB.Connection
+    Dim myRS As New ADODB.Recordset
+    Dim strXlpth As String
+    Dim cnString As String
+    
+    strXlpth = ThisWorkbook.Path & "\Databook.xls"
+
+    cnString = _
+        "Provider=microsoft.jet.oledb.4.0;" & _
+        "Extended Properties = Excel 8.0;" & _
+        "Data Source=" & strXlpth
+
+    myCon.Open cnString
+    
+    '別の書き方
+    '＊ADOではパスワードの指定はできないので
+    'PWつきのブックはブックを開いてから接続するしかない。
+
+    With myCon
+        .Provider = "Microsoft.Jet.OLEDB.4.0"
+        .Properties("Extended Properties") = "Excel 8.0;HDR=NO"
+        .Open strXlPth
+    End With
+
+    'MsgBox strXlPth & " に接続しました"
+    
+    myRS.Open "[クエリ2$]", myCon, adOpenForwardOnly, adLockReadOnly, adCmdTable
+    'シート名       "[シート名$]"
+    'レンジ　       "[シート名$a1:j100]"
+    '名前範囲       "[名前]"
+
+    With Sheet1
+        .UsedRange.Clear
+        .[a2].CopyFromRecordset myRS
+    End With
+
+    MsgBox "done"
+
+    myRS.Close
+    Set myRS = Nothing
+    myCon.Close
+    Set myCon = Nothing
+    
+End Sub
+
+<h2>Sub フィルターしてエクセルデータを転記する()</h2>
+
+    Dim myCon As New ADODB.Connection
+    Dim myRS As New ADODB.Recordset
+    Dim strXlpth As String
+    Dim strCriAry(2) As String
+    Dim i As Integer
+    Dim J As Long
+    Dim WS As Worksheet
+    Dim strWS As String
+
+    strXlpth = _
+        ThisWorkbook.Path & "\databook.xls"
+
+    With myCon
+        .Provider = "microsoft.jet.oledb.4.0"
+        .Properties("extended properties") = "excel 8.0;"
+        .Open strXlpth
+    End With
+
+    myRS.Open "[クエリ2$]", myCon, adOpenForwardOnly, adLockReadOnly, adCmdTable
+
+    strCriAry(0) = "県CD=1"
+    strCriAry(1) = "販売数>130"
+    strCriAry(2) = "報告日> #2004/1/1#"
+    
+    For i = 0 To UBound(strCriAry)
+
+        myRS.Filter = strCriAry(i)
+        Set WS = ThisWorkbook.Worksheets.Add
+        strWS = CStr(i)
+
+        Do
+            On Error Resume Next
+
+            WS.Name = strWS
+
+            If Err.Number = 1004 Then
+                strWS = CStr(CInt(strWS) + 1)
+            ElseIf Err.Number > 0 Then
+                MsgBox Err.Number & " : " & Err.Description, vbCritical
+                Exit Sub
+            Else
+                Exit Do
+            End If
+
+            On Error GoTo 0
+
+        Loop
+
+       With WS
+
+          .[a2].CopyFromRecordset myRS
+
+          For J = 1 To myRS.Fields.Count
+            .Cells(J).Value = myRS.Fields(J - 1).Name
+          Next J
+
+       End With
+
+    Next
+
+    MsgBox "done"
+
+    myRS.Close
+    Set myRS = Nothing
+    myCon.Close
+    Set myCon = Nothing
+
+End Sub
+
+<h2>Sub SQLをつかってデータを抽出()</h2>
+
+    Dim myCon As New ADODB.Connection
+    Dim myRS As New ADODB.Recordset
+    Dim conString As String
+    Dim mySQL As String
+    Dim strTbl As String
+    
+    conString = _
+        "provider=microsoft.jet.oledb.4.0;" & _
+        "extended properties=excel 8.0;" & _
+        "data source=" & ThisWorkbook.Path & "\databook.xls"
+
+    myCon.Open conString
+    strTbl = "[クエリ2$]"
+    
+    mySQL = _
+        "select ID,店舗名,sum(販売数) as 販売数の合計 " & _
+        "from " & strTbl & " group by ID,店舗名;"
+    
+    myRS.Open mySQL, myCon, adOpenForwardOnly, adLockReadOnly, adCmdText
+    
+    With Sheet1
+        .UsedRange.Clear
+        .[a1:c1].Value = Array("ID", "店舗名", "販売数の合計")
+        .[a2].CopyFromRecordset myRS
+    End With
+    
+    MsgBox "done"
+    
+    myRS.Close
+    Set myRS = Nothing
+    myCon.Close
+    Set myCon = Nothing
+    
+End Sub
+
+<h2>Sub 新規レコードを追加()</h2>
+
+    Dim myCon As New ADODB.Connection
+    Dim myRS As New ADODB.Recordset
+    Dim strXl As String
+    Dim lngMax As Long
+    Dim myTbl As String
+
+    strXl = ThisWorkbook.Path & "\databook.xls"
+    myTbl = "[名前範囲]" '名前範囲は自動更新される
+
+    With myCon
+        .Provider = "microsoft.jet.oledb.4.0;"
+        .Properties("extended properties") = "excel 8.0"
+        .Open strXl
+    End With
+    
+    myRS.Open "select max(" & myTbl & ".id) as saidai from" & myTbl & ";", myCon
+    
+    lngMax = myRS.Fields(0).Value
+    
+    'MsgBox lngMax
+    myRS.Close
+
+    With myRS
+        .Open myTbl, myCon, adOpenStatic, adLockPessimistic
+        .AddNew
+    End With
+    
+    myRS!ID = lngMax + 1
+    myRS!店舗名 = "hoge"
+    myRS!報告日 = Date
+    
+    With myRS
+        .Update
+        .Close
+    End With
+    
+    Set myRS = Nothing
+    myCon.Close
+    Set myCon = Nothing
+    
+    MsgBox "done"
+     
+    Workbooks.Open strXl
+            
+End Sub
+
+Option Explicit
+'thisworkbook モジュール
+<h2>Sub 自ブックに接続() </h2>
+
+    Dim myCon As New ADODB.Connection
+    Dim myRS As New ADODB.Recordset
+
+	'2007以降バージョン
+    With myCon
+        .Provider = "Microsoft.ACE.OLEDB.12.0"
+        .Properties("extended properties") = "excel 12.0"
+        .Open ThisWorkbook.FullName
+    End With
+    
+    Dim sql As String
+    
+    sql = "select * from [sheet1$]"
+    
+    Set myRS = myCon.Execute(sql)
+    
+    Sheet2.[a2].CopyFromRecordset myRS
+    
+    myRS.Close
+    Set myRS = Nothing
+    myCon.Close
+    Set myCon = Nothing
+    
+    MsgBox "done"
+
+End Sub
+
+<h2>Sub vlookupもどき()</h2>
+
+    '自ブックの操作はできないがvlookupの6割程度の時間で処理できた65000レコード2フィールドで検証
+    Dim myCon As New ADODB.Connection
+    Dim myRS As New ADODB.Recordset
+    Dim tm As Single
+    Dim t1 As String, t2 As String, t3 As String, mySQL As String
+
+    Application.ScreenUpdating = False
+    tm = Timer
+
+    With myCon
+        .Provider = "microsoft.jet.oledb.4.0"
+        .Properties("extended properties") = "excel 8.0"
+        .Open CreateObject("wscript.shell").specialfolders("desktop") & "\aaa\adorenshu.xls"
+    End With
+
+    t1 = "[aaa$g1:g64870]"
+    t2 = "[aaa$a1:b18]"
+    t3 = "[aaa$d1:e18]"
+
+    mySQL = _
+        "select " & t1 & ".id, " & t2 & ".商品名, " & t3 & ".価格 from (" & t1 & _
+        " inner join " & t2 & " on " & t1 & ".id = " & t2 & ".id) " & _
+        " inner join " & t3 & " on " & t3 & ".id = " & t2 & ".id;"
+    
+    myRS.Open mySQL, myCon, adOpenForwardOnly, adLockReadOnly, adCmdText
+    
+    With Sheet1
+        .UsedRange.Clear
+        .[i2].CopyFromRecordset myRS
+    End With
+
+    myRS.Close
+    Set myRS = Nothing
+    myCon.Close
+    Set myCon = Nothing
+    Application.ScreenUpdating = True
+    MsgBox Timer - tm
+
+End Sub
+
+<h2>Sub テーブル作成_xl時はシート作成()</h2>
+
+    Dim myCon As New ADODB.Connection
+    Dim myCmd As String
+    Dim Databook As String
+    Dim reportBook As String
+    On Error GoTo err_handle
+    Databook = ThisWorkbook.Path & "\databook.xls"
+    
+    reportBook = ThisWorkbook.Path & "\rpt.xls"
+    
+    With myCon
+        .Provider = "microsoft.jet.oledb.4.0;"
+        .Properties("extended properties") = "excel 8.0;"
+        .Open Databook
+    End With
+    
+    myCmd = _
+        "select * into [excel 8.0;database=" & _
+        reportBook & "].[抽出結果] " & _
+        "from [クエリ2$] where 販売数 > 200;"
+
+    myCon.Execute myCmd
+a:
+    myCon.Close
+    Set myCon = Nothing
+    MsgBox "done"
+    Exit Sub
+
+err_handle:
+    MsgBox Err.Number & " : " & Err.Description, vbCritical
+    Resume a
+        
+End Sub
+
+<h2>Sub テーブル作成シート作成クエリ()</h2>
+
+    Dim myCon As New ADODB.Connection
+    Dim myCmd As String
+    Dim strTbl As String
+    Dim strNewTbl As String
+    
+    strTbl = "data"
+
+    strNewTbl = _
+        "[excel 8.0;database=" & _
+        ThisWorkbook.Path & "\rpt.xls].[作成されたシート]"
+        
+
+    With myCon
+        .Provider = "microsoft.jet.oledb.4.0;"
+        .ConnectionString = "data source=" & ThisWorkbook.Path & "\adorenshu.mdb;"
+        .Open
+    End With
+        
+    myCmd = _
+        "SELECT [" & strTbl & "].[店舗名] INTO " & _
+        strNewTbl & " " & _
+        "FROM Data " & _
+        "WHERE [" & strTbl & "].[店舗名] Like '%中%';"
+        'ワイルドカードに注目!
+
+    myCon.Execute myCmd
+    
+    myCon.Close
+    Set myCon = Nothing
+
+End Sub
+
+<h2>Sub シート名､名前付き範囲の一覧を転記()</h2>
+
+    Dim myCon As New ADODB.Connection
+    Dim myRS As New ADODB.Recordset
+    Dim strXl As String
+    Dim i As Long
+    Dim WS As Worksheet
+
+    strXl = _
+        ThisWorkbook.Path & "\databook.xls"
+
+    With myCon
+        .Provider = "microsoft.jet.oledb.4.0;"
+        .Properties("extended properties") = "excel 8.0;"
+        .Open strXl
+    End With
+    
+    Set myRS = myCon.OpenSchema(adSchemaTables)
+    Set WS = Worksheets.Add
+
+    On Error Resume Next
+        WS.Name = "テーブル一覧"
+    On Error GoTo 0
+    
+    For i = 1 To myRS.Fields.Count
+        WS.Cells(1, i).Value = myRS.Fields(i - 1).Name
+    Next i
+    
+    WS.Range("a2").CopyFromRecordset myRS
+    
+    myRS.Close
+    Set myRS = Nothing
+    myCon.Close
+    Set myCon = Nothing
+    
+    MsgBox "done"
+
+End Sub
+
+<h2>シート名、名前付き範囲の有無を判定する関数</h2>
+Function chkTable_name(myfile As String, myName As String) _
+    As Boolean
+
+    Dim myCon As New ADODB.Connection
+    Dim myRS As New ADODB.Recordset
+    
+    With myCon
+        .Provider = "microsoft.jet.oledb.4.0;"
+        .Properties("extended properties") = "excel 8.0"
+        .Open myfile
+    End With
+    
+    Set myRS = myCon.OpenSchema(adSchemaTables)
+    myRS.Filter = "TABLE_NAME = '" & myName & "'"
+    
+    If myRS.RecordCount > 0 Then
+        chkTable_name = False
+    Else
+        chkTable_name = True
+    End If
+    
+    myRS.Close
+    Set myRS = Nothing
+    myCon.Close
+    Set myCon = Nothing
+
+End Function
+
+<h2>Sub シート上のデータをmdbに追加()</h2>
+
+    Dim myCon As New ADODB.Connection
+    Dim myRS As New ADODB.Recordset
+    Dim strDB As String
+    Dim strTbl As String
+    Dim rngR As Range
+    Dim i As Long, j As Long
+    
+    strDB = ThisWorkbook.Path & "\adoRenshu.mdb"
+    'C:\WINDOWS\ﾃﾞｽｸﾄｯﾌﾟ\aaa\adoRenshu.mdb
+    strTbl = "data"
+    
+    Set rngR = ThisWorkbook.Worksheets("data").[a1].CurrentRegion
+    
+    With myCon
+        .Provider = "microsoft.jet.oledb.4.0;"
+        .Open strDB
+    End With
+    'アクセス側のレコードセットをmyRSに代入
+    With myRS
+        .Open strTbl, myCon, adOpenStatic, adLockPessimistic, adCmdTableDirect
+        .Index = "PrimaryKey"
+    End With
+        
+    For i = 2 To rngR.Rows.Count
+        myRS.Seek rngR(i, 1).Value 'キー列を検索
+        If myRS.EOF Then
+            myRS.AddNew
+                For j = 1 To rngR.Columns.Count
+                    myRS.Fields(rngR(1, j).Value).Value = rngR(i, j).Value
+                Next j
+                '値を入れていく
+        Else
+            'キー重複時は該当レコードの背景色を赤
+            rngR.Rows(i).Interior.ColorIndex = 45
+        End If
+    Next i
+    
+    myRS.Update
+    myRS.Close
+    Set myRS = Nothing
+    myCon.Close
+    Set myCon = Nothing
+
+End Sub
+
+Micorsoft ADO Ext.2.X for DDL and Securityに参照設定
+<h2>Sub MDB作成()</h2>
+
+    Dim strCon As String
+    Dim adxCat As New ADOX.Catalog
+    Dim strNewMdbPth As String
+    Dim i As Long
+    
+    strNewMdbPth = ThisWorkbook.Path & "\db.mdb"
+        
+    Do Until Len(Dir(strNewMdbPth)) = 0
+        strNewMdbPth = ThisWorkbook.Path & "\db(" & i & ").mdb"
+        i = i + 1
+    Loop
+        
+    strCon = _
+        "provider=microsoft.jet.oledb.4.0;" & _
+        "data source=" & strNewMdbPth
+
+    adxCat.Create strCon
+
+    Set adxCat = Nothing
+
+End Sub
+
+'Micorsoft ADO Ext.2.X for DDL and Securityに参照設定
+<h2>Sub テーブル作成(ByRef strDbPth As String)</h2>
+
+    Dim strCon As String
+    Dim adxCat As New ADOX.Catalog
+    Dim adxTbl As ADOX.Table
+    Dim adxIdx As ADOX.Index
+    
+    strCon = _
+        "provider=microsoft.jet.oledb.4.0;" & _
+        "data source=" & strDbPth
+        
+    adxCat.ActiveConnection = strCon
+    
+    Set adxTbl = New ADOX.Table
+    adxTbl.Name = "tb1"
+    
+    With adxTbl.Columns
+        .Append "id", adSmallInt
+        .Append "name", adVarWChar, 20
+        '.Append "aa",adVarChar←データ型エラーになるadVarCharは”文字列値”なぜエラーになるのか不明
+        .Append "price", adCurrency
+    End With
+    
+    Set adxIdx = New ADOX.Index
+
+    With adxIdx
+        .Name = "主キー"
+        .Columns.Append "id"
+        .PrimaryKey = True
+    End With
+    
+    adxTbl.Indexes.Append adxIdx
+    
+    adxCat.Tables.Append adxTbl
+    
+    Set adxIdx = Nothing
+    Set adxTbl = Nothing
+    Set adxCat = Nothing
+
+End Sub
+</pre>
+
+<table border="1">
+	<caption>DataTypeEnum列挙型の一部</caption>
+<tr>
+	<th>定数</th><th>値</th><th>説明</th>
+</tr>
+<tr>
+	<td>adSmallInt</td><td>2</td><td>２バイトの符号付整数</td>
+</tr>
+<tr>
+	<td>adinteger</td><td>3</td><td>４バイトの符号付整数</td>
+</tr>
+<tr>
+	<td>adSingle</td><td>4</td><td>単精度浮動小数点値</td>
+</tr>
+<tr>
+	<td>adDouble</td><td>5</td><td>倍精度浮動小数点値</td>
+</tr>
+<tr>
+	<td>adCurrency</td><td>6</td><td>通貨型</td>
+</tr>
+<tr>
+	<td>adDate</td><td>7</td><td>日付値</td>
+</tr>
+<tr>
+	<td>adBSTR</td><td>8</td><td>Nullで終了するUnicode文字列</td>
+</tr>
+<tr>
+	<td>adBoolean</td><td>11</td><td>ブール値</td>
+</tr>
+<tr>
+	<td>adVarWChar</td><td>202</td><td>Nullで終了するUnicode文字列</td>
+</tr>
+<tr>
+	<td>adEmpty</td><td>0</td><td>値を設定していない状態</td>
+</tr>
+<tr>
+	<td>adDecimal</td><td>14</td><td>固定精度およびスケールの正確な数値（デシマル値）</td>
+</tr>
+<tr>
+	<td>adBinary</td><td>128</td><td>バイナリ値</td>
+</tr>
+<tr>
+	<td>adChar</td><td>129</td><td>文字列値</td>
+</tr>
+<tr>
+	<td>adWChar</td><td>129</td><td>Nullで終了するUnicode文字列</td>
+</tr>
+<tr>
+	<td>adDBDate</td><td>133</td><td>日付値(yyyymmdd)</td>
+</tr>
+<tr>
+	<td>adDBTime</td><td>134</td><td>時刻値(hhmmss)</td>
+</tr>
+<tr>
+	<td>adVarChar</td><td>200</td><td>文字列値</td>
+</tr>
+<tr>
+	<td>adLongVarChar</td><td>200</td><td>長文字列の値</td>
+</tr>
+<tr>
+	<td>adLongVarWchar</td><td>203</td><td>Nullで終了するUnicode文字列</td>
+</tr>
+<tr>
+	<td>adLongVarBinary</td><td>205</td><td>長バイナリ値</td>
+</tr>
+</table>
+
+<pre>
+
+'Micorsoft ADO Ext.2.X for DDL and Securityに参照設定
+<h2>Sub MDBのテーブルを削除(ByRef strDbPth)</h2>
+
+    Dim strCon As String
+    Dim adxCat As New ADOX.Catalog
+    
+    strCon = _
+        "provider=microsoft.jet.oledb.4.0;" & _
+        "data source=" & strDbPth
+    
+    adxCat.ActiveConnection = strCon
+    
+    adxCat.Tables.Delete "tb1"
+    
+    Set adxCat = Nothing
+
+End Sub
+
+<h2>■オラクルに接続</h2>
+Private oraconn As New ADODB.Connection
+<h2>Private Sub Conn()</h2>
+
+    ' データベースに接続する
+    ConnectionString = "Provider=OraOLEDB.Oracle;Data Source=orcl;User ID=scott;Password=tiger;"
+    
+    oraconn.ConnectionString = ConnectionString
+    oraconn.Open
+
+End Sub
+
+</pre>

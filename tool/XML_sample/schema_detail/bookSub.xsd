@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="Shift_JIS" ?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:complexType name="ownerType" mixed="true">
+		<xsd:attribute name="address" type="xsd:string" use="required" />
+	</xsd:complexType>
+</xsd:schema>

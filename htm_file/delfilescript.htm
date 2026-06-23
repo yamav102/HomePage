@@ -1,0 +1,35 @@
+<head><title>ローカルファイルの削除</title>
+
+<script type="text/javascript"><!--
+function delfile(myfile){
+var flg=confirm(myfile+"\nを削除します?");
+if(flg==false){
+alert("キャンセルされました");
+return;}
+
+var objFileSys = new ActiveXObject("Scripting.FileSystemObject");
+if(!objFileSys.FileExists(myfile)){
+alert(myfile+"はありません");
+return;
+}
+var myfile= objFileSys.GetFile(myfile);
+var strmyfile=myfile.name
+with(objFileSys){
+	deletefile(myfile);
+	
+}
+alert(strmyfile+"\nを削除しました");
+objFileSys=null;
+
+}
+-->
+</script>
+</head>
+<body>
+<h1>ファイル削除</h1>
+<div>セキュリティ低でないと動作しません</div>
+<form name="frmSlct" method="get">
+<input type="file" name="file1" size="70">
+</form>
+<div><button onclick="delfile(document.frmSlct.file1.value);">ファイルを削除します</button></div>
+</body>

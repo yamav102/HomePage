@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="Shift_JIS" ?>
+<?xml-stylesheet type="text/xsl" href="music.xsl" ?>
+<music>
+	<musician name="クロード・ドビュッシー" category="印象派"
+	birth="1862-80-22" country="フランス"
+	imp_work="月の光" />
+
+	<musician name="ヨハン・セバスチャン・バッハ" category="バロック"
+	birth="1685-03-21" country="ドイツ"
+	imp_work="フーガ　ト長調" />
+
+	<musician name="ルートヴィヒ・ヴァン・ベートーベン" category="古典派"
+	birth="1770-12-16"
+	country="ドイツ" imp_work="交響曲第5番 運命" />
+
+	<musician name="モーリス・ラベル" category="近現代"
+	birth="1875-03-07" country="フランス"
+	imp_work="ボレロ" />
+</music>

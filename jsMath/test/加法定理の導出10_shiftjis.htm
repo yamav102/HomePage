@@ -1,0 +1,81 @@
+<script src="../easy/load.js"></script>
+<script src="../jsMath.js"></script>
+
+<div class="myArea">
+
+<div>
+   <a href="#sinp" class="spanLeft2">
+      <span class="math">
+         \sin(\alpha＋\beta)＝\sin\alpha\cos\beta＋\cos\alpha\sin\beta
+      </span>
+   </a>
+</div>
+
+<div style="text-align: left; padding-left: 2em;">
+   <a href="#sinm" style="text-decoration: none;">
+      <span class="math">
+         \sin(\alpha－\beta)＝\sin\alpha\cos\beta－\cos\alpha\sin\beta
+      </span>
+   </a>
+</div>
+
+
+</div>
+
+
+<script type="text/javascript">
+
+   var mathlist = document.getElementsByClassName('math');
+
+   for(var h = 0; h < mathlist.length; h++){
+     if(mathlist.item(h).parentNode.className=='offset'){
+        mathlist.item(h).style.top="2em";
+        mathlist.item(h).style.position="absolute";
+      }
+   }
+
+   /*
+     イベントリスナの登録関数
+   */
+
+   function addListener(elem, ev, listener){
+      // IE以外
+      if(elem.addEventListener){ 
+         elem.addEventListener(ev, listener, false);
+      }
+      // IE用
+      else if(elem.attachEvent){
+         elem.attachEvent('on' + ev, listener);
+      }
+      // リスナ未対応環境
+      else{
+         throw new Error('イベントリスナに未対応です');
+      }
+   }
+
+   /*
+     親要素がアンカーならば、mathクラスのスタイルを上書きする
+     a:hover の代用としてイベントリスナを登録して背景色を変化させる
+   */
+   var tagAlist = document.getElementsByTagName("a"); 
+   for(var i = 0; i < tagAlist.length; i++){
+      
+      tagAlist.item(i).style.textDecoration='none';
+      addListener(tagAlist.item(i), 'mouseover', function(){this.style.backgroundColor='red';});
+      addListener(tagAlist.item(i), 'mouseout', function(){this.style.backgroundColor='transparent';});
+   }
+   /* 
+    div要素の mathクラスにインデントをつける。末尾の数字はインデントの文字数
+    対象の mathクラスの親要素に divleft#クラスを指定して囲んで使う
+    何故スクリプトによるＣＳＳなのか：ＣＳＳは jsMathが onload 上書きしてしまうので意味がない。
+    onload の後から更にスタイルを上書きしないと結果として反映されない。
+   */
+
+   for(var i = 0; i < mathlist.length; i++){
+      if(mathlist.item(i).parentNode.className=='spanLeft2'){
+//         mathlist.item(i).style.textAlign="left";
+         mathlist.item(i).style.paddingLeft="2em";
+         alert('t');
+      }
+   }
+</script>

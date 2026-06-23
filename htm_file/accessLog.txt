@@ -1,0 +1,315 @@
+Option Compare Database
+Option Explicit
+'--------------------------------------------------------------
+'--<cls_savehistories>--
+'▼フォームにおける編集履歴と削除履歴を
+'自DB階層にCSV出力します。
+'UNICODE文字に対応しています。
+
+'▼CSVファイルのサイズが上限に達すると
+'フォームが開く時にメッセージボックスでお知らせします。
+
+'●フォームのイベントプロシージャに以下の３つのコードを書き込んで使います。
+'【Form_Openイベント】
+' instance.Init_AlarmFileSizeOver_Form_Open フォームオブジェクト
+    '通常、引数には Me を渡します。
+
+'【Form_BeforeUpdateイベント】
+' instance.WriteOut_Edit_Form_BeforeUpdate レコードキーの値の配列
+    '複数のレコードキーに対応する為、引数は配列で渡します。
+    '例):Array(Me.ID,Me.Field1)
+
+'【Form_Deleteイベント】
+' instance.WriteOut_Delete_Form_Delete
+    '引数はありません
+'--------------------------------------------------------------
+'インスタンス越しに実行されていればTRUE
+Private m_IsInstance As Boolean
+'履歴を記録するCSVファイルのフルパス
+Private m_historyFilePth As String
+'CSVファイルサイズ上限
+Private m_MaxFileByteSise As Long
+'編集履歴を取得するフォーム
+Private m_Form As Access.Form
+'FileSystemObject
+Private m_FSO As Object
+
+'コンストラクタ
+Private Sub Class_Initialize()
+    '標準モジュール上でも動作しうるが、
+    '例えば、サブフォームを複数持つフォームの全てに
+    '対応できない。個々のフォームでインスタンスを作成
+    'する必要がある。ので、その目印を立てておく。
+    m_IsInstance = True
+End Sub
+
+'初期設定
+'ファイルサイズが上限を超えた時にメッセージを表示する
+Public Sub Init_Form_Open(ByRef Fm As Access.Form)
+    Set m_FSO = VBA.CreateObject("Scripting.FileSystemObject")
+    Set m_Form = Fm
+    
+    '▼ファイルの保存先
+    m_historyFilePth = _
+        CurrentProject.Path & "\" & _
+        m_FSO.GetBaseName(CurrentDb.Name) & _
+        "History.csv"
+    
+    '▼CSVファイルが未作成の場合に作成。フィールド名を出力する
+    With m_FSO
+        If .FileExists(m_historyFilePth) = False Then
+           .CreateTextFile m_historyFilePth, OverWrite:=False, Unicode:=True
+            'ForAppending    8
+            'TristateTrue    -1  ファイルを Unicode ファイルとして開きます。
+            With m_FSO.GetFile(m_historyFilePth).OpenAsTextStream(IOMode:=8, Format:=-1)
+                .WriteLine "レコードKEY" & "," & _
+                    "フォーム名" & "," & _
+                    "コントロールの種類" & "," & _
+                    "コントロール名/フィールド名" & "," & _
+                    "編集前値" & "," & _
+                    "編集後値" & "," & _
+                    "編集日時" & "," & _
+                    "編集者ID"
+                .Close
+            End With
+        End If
+    End With 'm_FSO
+        
+    '▼CSVファイルサイズの上限
+    m_MaxFileByteSise = 100000000 '100メガbyte
+    If CurrentFileByteSize > m_MaxFileByteSise Then
+        MsgBox _
+            m_historyFilePth & _
+            " のファイルサイズが規定のサイズ" & Format$(m_MaxFileByteSise, "0,000,KB") & _
+            "を超えました。" & vbNewLine & _
+            "ファイルは削除すれば新規に作成されます。", vbInformation, GetAppTitle
+    End If
+End Sub
+
+'CSVファイル保存先を取得するプロパティ.設定は出来ない。
+Public Property Get HistoryFilePath() As String
+    f_InitCheck
+    HistoryFilePath = m_historyFilePth
+End Property
+
+'CSVファイルの上限サイズを取得するプロパティ.設定は出来ない。
+Public Property Get MaxFileByteSize() As Long
+    f_InitCheck
+    MaxFileByteSize = m_MaxFileByteSise
+End Property
+
+'CSV ファイルの現在のサイズを取得する.設定はできない。
+Public Property Get CurrentFileByteSize() As Long
+    f_InitCheck
+    CurrentFileByteSize = m_FSO.GetFile(m_historyFilePth).Size
+End Property
+
+'編集履歴
+Public Sub WriteOut_Edit_Form_BeforeUpdate(ByRef RecKeyArry As Variant)
+    Dim Rs As DAO.Recordset
+    Dim ctrl As Control
+    Dim ctrlType As String
+    Dim strKey As String
+    Dim recStr As String
+        
+    f_InitCheck
+        
+    'レコードキーが複数の場合もあり得る為、配列で受け取り、
+    '区切り文字列に変換したものを記録していく。
+    If IsArray(RecKeyArry) = False Then
+        Err.Raise vbObjectError + 65535, , "引数 RecKeyArry には配列を渡します"
+    End If
+    
+    On Error GoTo err_handle
+    strKey = Join(RecKeyArry, ";")
+    For Each ctrl In m_Form.Controls
+        ctrlType = TypeName(ctrl)
+        
+        With ctrl
+            '以下コントロールで編集された
+            '値のログを取る
+            If _
+                (ctrlType = "TextBox" Or _
+                ctrlType = "ComboBox" Or _
+                ctrlType = "ListBox" Or _
+                ctrlType = "CheckBox" Or _
+                ctrlType = "OptionGroup") And f_hasLockedProp_False(ctrl) Then
+                
+                If Nz(.Value, "Null") <> Nz(.OldValue, "Null") Then
+                    recStr = checkStr(strKey) & "," & _
+                            m_Form.Name & "," & _
+                            ctrlType & "," & _
+                            checkStr(.Name) & "," & _
+                            checkStr(Nz(.OldValue, "Null")) & "," & _
+                            checkStr(Nz(.Value, "Null")) & "," & _
+                            Format$(Now(), "yyyy/mm/dd hh:mm:ss") & "," & _
+                            checkStr(VBA.Environ$("UserName"))
+                    
+                    'ForAppending    8
+                    'TristateTrue    -1  ファイルを Unicode ファイルとして開きます。
+                    With m_FSO.GetFile(m_historyFilePth).OpenAsTextStream(IOMode:=8, Format:=-1)
+                        .WriteLine recStr
+                        .Close
+                    End With '.GetFile
+                End If
+            End If
+        End With 'ctrl
+    Next
+        
+end_handle:
+    Exit Sub
+err_handle:
+    MsgBox Err.Number & " : " & Err.Description, , GetAppTitle
+    Resume end_handle
+End Sub
+
+'削除履歴
+Public Sub WriteOut_Delete_Form_Delete()
+    Dim fld As Field
+    Dim Rs As DAO.Recordset
+    Dim recStr As String
+    
+    f_InitCheck
+    
+    On Error GoTo err_handle
+    Set Rs = m_Form.Recordset
+    For Each fld In Rs.Fields
+        With m_FSO.GetFile(m_historyFilePth).OpenAsTextStream(IOMode:=8, Format:=-1)
+    
+            recStr = "" & "," & _
+                m_Form.Name & "," & _
+                "" & "," & _
+                fld.Name & "," & _
+                checkStr(Nz(fld.Value, "")) & "," & _
+                "#Deleted" & "," & _
+                Format$(Now(), "yyyy/mm/dd hh:mm:ss") & "," & _
+                checkStr(VBA.Environ$("UserName"))
+                
+            .WriteLine recStr
+            .Close
+        End With 'm_FSO.GetFile
+    Next
+end_handle:
+    Exit Sub
+err_handle:
+    '3167:レコードは削除されています。
+    If Err.Number = 3167 Then
+        Rs.MoveNext
+        Resume
+    Else
+        MsgBox Err.Number & " : " & Err.Description, vbExclamation, GetAppTitle
+    End If
+End Sub
+
+'ツール⇒「起動時の設定」のアプリケーションタイトルを返す
+Private Function GetAppTitle() As String
+    On Error GoTo err_handle
+    GetAppTitle = CurrentDb.Properties("AppTitle")
+end_handle:
+    Exit Function
+err_handle:
+    'AppTitle プロパティは、値が入力されていない状態で
+    '取得しようとするとにエラーになります。
+    If Err.Number = 3270 Then
+        GetAppTitle = m_FSO.GetBaseName(CurrentDb.Name)
+        On Error GoTo 0
+    Else
+        MsgBox 65535, vbExclamation, "予期しないエラー"
+        Resume end_handle
+    End If
+End Function
+
+'CSV出力されるデータにカンマと改行は受け入れられないので
+'カンマか改行を含む値にはダブルクォーテーションで囲む
+Private Function checkStr(ByRef str As String) As String
+    If InStr(str, ",") > 0 Or InStr(str, vbCr) > 0 Then
+        checkStr = """" & str & """"
+    Else
+        checkStr = str
+    End If
+    
+End Function
+
+'コントロールが Locked プロパティを持ち、且つ値が False ならば True を返す
+Private Function f_hasLockedProp_False(ctrl) As Boolean
+    Dim bl As Boolean
+    On Error Resume Next
+    bl = ctrl.Locked
+    If Err.Number <> 0 Then
+        f_hasLockedProp_False = False
+    Else
+        If bl = False Then
+            f_hasLockedProp_False = True
+        Else
+            f_hasLockedProp_False = False
+        End If
+    End If
+End Function
+
+'インスタンスが作成され初期化が済んでいるかをチェック
+Private Function f_InitCheck() As Boolean
+    'エラーメッセージの定型文
+    Const cnErrString As String = _
+    " で、クラスはインスタンスを作成して使用します。" & _
+    "このモジュールはインスタンスを作成しなくても動作しますが、" & _
+    "複数のサブフォームを持つフォームの全てのフォーム上でメソッドを実行した場合" & _
+    "最後に開いたフォームの編集履歴しか出力されません。"
+    
+    'インスタンスによる実行でなければエラーを表示する
+    If m_IsInstance = False Then
+        Err.Raise 65532, , m_Form.Caption & cnErrString
+    End If
+    
+    '初期化されていない場合はエラー
+    If m_Form Is Nothing Then
+        Err.Raise _
+            vbObjectError + 65533, , _
+            "フォームのOpenイベントに Init_Form_Open を設定して下さい。"
+    End If
+
+    f_InitCheck = True
+    
+End Function
+
+'m_FSOオブジェクト変数の解放
+Private Sub Class_Terminate()
+    Set m_FSO = Nothing
+End Sub
+
+
+
+
+
+
+'--<フォームモジュール>--
+Option Explicit
+'インスタンスの生成
+Private inst_SaveHistory As New Cls_SaveHistories
+
+Private Sub Form_Open(Cancel As Integer)
+    '初期設定
+    inst_SaveHistory.Init_Form_Open Me
+End Sub
+
+Private Sub Form_BeforeUpdate(Cancel As Integer)
+    'レコードの編集履歴を出力します。
+    inst_SaveHistory.WriteOut_Edit_Form_BeforeUpdate Array(Me.ID)
+End Sub
+
+Private Sub Form_Delete(Cancel As Integer)
+    'レコードの削除履歴を出力します。
+    inst_SaveHistory.WriteOut_Delete_Form_Delete
+End Sub
+
+Private Sub Form_Click()
+    'プロパティの表示テスト
+    With inst_SaveHistory
+        MsgBox .HistoryFilePath & _
+            " の最大サイズの設定は " & _
+            Format$(.MaxFileByteSize, "0,000,KB") & " です。" _
+            & vbNewLine & _
+            "現在のファイルサイズは " _
+            & Format$(.CurrentFileByteSize, "0,000,KB") & _
+            " です。", vbInformation
+    End With
+End Sub

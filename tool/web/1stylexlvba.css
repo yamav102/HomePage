@@ -1,0 +1,30 @@
+BODY {
+	margin : 2em;
+	padding: 3em;
+	background-color:#311;
+
+}
+H1 {
+	background-color:black;
+	color:ddf;
+	padding:.2em;
+	text-align:left;
+}
+H2 {
+	color:966;
+}
+
+#contents {
+	/*width: 50%;*/
+	background-color:#fdd;
+	/*margin-right:auto;
+	margin-left: auto;*/
+	padding:3em;
+	border-style:solid;
+	border-width:0em 3em 0em 3em;
+	border-color:#966;
+}
+
+
+
+

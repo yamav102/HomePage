@@ -1,0 +1,1203 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:og="http://ogp.me/ns#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>ｊｓＭａｔｈでＢＬＯＧに数式を入力できますぞぃ！！＼(^o^)／：来夢望瑠_日々平凡：So-netブログ</title>
+<meta name="description" content="三日坊主でおわるかも、いや、終わるであろう読書、視聴日記。　貴方と世界の誰かとの間の６人のひとりになれますように。：－）" />
+<meta name="keywords" content="来夢望瑠_日々平凡 フォント over ブロック over Board union union ガイド フォント フォント union フォント フォント" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<!-- OGP -->
+<meta property="og:title" content="ｊｓＭａｔｈでＢＬＯＧに数式を入力できますぞぃ！！＼(^o^)／: 来夢望瑠_日々平凡">
+<meta property="og:type" content="blog">
+<meta property="og:url" content="http://kimball.blog.so-net.ne.jp/2007-12-08-1">
+<meta property="og:image" content="http://blog.so-net.ne.jp/_profile/_630/kimball/_m_kimball.png">
+<meta property="og:description" content=" ｊｓＭａｔｈでＢＬＯＧに数式を入力できますぞぃ！！＼(^o^)／    お詫び：事前の確認が不十分で、それなりに表示するのに必要な 　　　　　フォント導入作業について記述がもれました。すみませんでした。m(__)m    ..">
+<meta property="og:site_name" content="So-netブログ">
+<!-- /OGP -->
+<link rel="stylesheet" href="http://blog.so-net.ne.jp/_common/skins/blog_base.css" type="text/css" />
+<link rel="stylesheet" href="http://kimball.blog.so-net.ne.jp/styles-index.css?2008-02-2606:25:11" type="text/css" />
+<link rel="alternate" href="http://kimball.blog.so-net.ne.jp/index.rdf" type="application/rss+xml" title="RSS" />
+<link rel="alternate" type="application/atom+xml" title="Atom" href="http://kimball.blog.so-net.ne.jp/atom.xml" />
+<link rel="shortcut icon" href="http://blog.so-net.ne.jp/_common/favicon.ico" />
+<script id="myblog-js" type="text/javascript" language="JavaScript" src="http://blog.so-net.ne.jp/_js/myblog.js?page_name=article&blog_name=kimball&article_id=753278"></script>
+</head>
+<body><!-- Header -->
+<link rel="stylesheet" type="text/css" href="http://blog.so-net.ne.jp/_css_header/1/header.css" />
+<!-- Common Header -->
+<table cellpadding="0" cellspacing="0" width="100%" border="0" class="sbHeader">
+<tr>
+<th width="1%"><a href="http://www.so-net.ne.jp/"><img src="http://blog.so-net.ne.jp/_css_header/1/sonet_logo.gif" alt="So-net" width="67" height="25" border="0" /></a><a href="http://blog.so-net.ne.jp"><img src="http://blog.so-net.ne.jp/_css_header/1/blog_label.gif" alt="無料ブログ作成" /></a></th>
+<td>
+<span id="myblog-header-right-no-login">
+<ul class="sbMenuL">
+<li><a href="https://www.so-net.ne.jp/blog/_toh/regist/">ブログをはじめる</a></li>
+<li><a href="https://blog.so-net.ne.jp/blog/login_sso?t=t&amp;use_http_referer=1&amp;u=http%3A%2F%2Fkimball%2Eblog%2Eso%2Dnet%2Ene%2Ejp%2F" rel="nofollow">ログイン</a></li>
+<li class="headerPR"><a href="http://www.so-net.ne.jp/myhome/buy/manshion/?SmRcid=myhome_blog_headtxt" target="_blank" style="background: url(/_images/blog/_523/filestore/icon_osusume.gif) no-repeat 0 1px; padding-left:30px;">マンション・戸建ての購入を考えてるなら増税前に！So-net住宅情報</a></li></ul>
+</span>
+<span id="myblog-header-left-login" style="display:none;">
+<ul class="sbMenuL">
+<li><a href="#myblog-page-url">#myblog-nickname</a>&nbsp;さん</li>
+<li><a href="http://blog.so-net.ne.jp/MyPage/" rel="nofollow">管理ページ</a></li>
+<li><a href="https://blog.so-net.ne.jp/MyPage/blog/article/regist/input" rel="nofollow">新規作成</a></li>
+<li><a href="#myblog-page-url">自分のブログ</a></li>
+<li><a href="http://blog.so-net.ne.jp/_pages/logout?t=t&amp;use_http_referer=1&amp;u=http%3A%2F%2Fkimball%2Eblog%2Eso%2Dnet%2Ene%2Ejp%2F" rel="nofollow">ログアウト</a></li>
+</ul>
+</span>
+</td>
+<td class="sbMenuR">
+<span id="myblog-header-right">
+<form method="post" action="http://www.so-net.ne.jp/search/" name="searchForm" id="searchForm" onsubmit="searchForm_submit();return false;">
+<a href="javascript:void(0);" onclick="searchWin_open('searchMenu');" onmouseout="searchWin_close('searchMenu');" id="searchTarget"><img src="http://blog.so-net.ne.jp/_css_header/icn_search_sonetblog.gif" width="26" height="19" alt="検索選択" /></a><input type="text" name="query" class="blogSearchInput"  value="" id="blogSearchInput" /><input type="image" src="http://blog.so-net.ne.jp/_css_header/btn_search.gif" value="検索" class="blogSearchBtn" />
+<input type="hidden" name="type" value="blog" />
+<input type="hidden" name="charset" value="utf8" />
+<input type="hidden" name="from" value="blog" />
+<input type="hidden" name="site" value="sonet" />
+</form>
+</span>
+<div id="searchMenu" onmouseout="searchWin_close(this.id)" onmouseover="searchWin_open(this.id)" style="display:none; ">
+<ul><li class="product"><a href="javascript:void(0);" onclick="chSearch('web');"><img src="http://blog.so-net.ne.jp/_css_header/search_text_web.gif" alt="Web検索" onmouseover="this.src='http://blog.so-net.ne.jp/_css_header/search_text_web_ov.gif'" onmouseout="this.src='http://blog.so-net.ne.jp/_css_header/search_text_web.gif'" /></a></li><li class="vaio"><a href="javascript:void(0);" onclick="chSearch('blog');"><img src="http://blog.so-net.ne.jp/_css_header/search_text_blog.gif" alt="ブログ全体検索" onmouseover="this.src='http://blog.so-net.ne.jp/_css_header/search_text_blog_ov.gif'" onmouseout="this.src='http://blog.so-net.ne.jp/_css_header/search_text_blog.gif'" /></a></li><li class="software"><a href="javascript:void(0);" onclick="chSearch('sonetblog');"><img src="http://blog.so-net.ne.jp/_css_header/search_text_sonetblog.gif" alt="So-net blog検索" onmouseover="this.src='http://blog.so-net.ne.jp/_css_header/search_text_sonetblog_ov.gif'" onmouseout="this.src='http://blog.so-net.ne.jp/_css_header/search_text_sonetblog.gif'" /></a></li></ul>
+</div>
+</td>
+</tr>
+</table>
+<script id="search_word-js" type="text/javascript" language="JavaScript" src="http://blog.so-net.ne.jp/_contents/js/searchbox.js"></script>
+<!-- Header -->
+
+<div id="container">
+<script type="text/javascript" language="JavaScript" src="http://blog.so-net.ne.jp/_contents/js/ad_plugin.js"></script>
+<script type="text/javascript" language="JavaScript" src="http://blog.so-net.ne.jp/_common/images/mp3player.js"></script>
+<div id="banner">
+<h1><a href="http://kimball.blog.so-net.ne.jp/">来夢望瑠_日々平凡</a></h1>
+
+<p id="lead">三日坊主でおわるかも、いや、終わるであろう読書、視聴日記。　貴方と世界の誰かとの間の６人のひとりになれますように。：－）</p>
+
+
+
+</div>
+
+<div id="content">
+
+
+<div id="main">
+<!-- Content -->
+<div class="archive-title">
+<span class="archive-name">
+<span class="previousLink"><a href="http://kimball.blog.so-net.ne.jp/2007-12-08" title="想像してみてください！　ヒラリー・クリントンさんのくるみ割り人形を＼(^o^)／">想像してみてください！　ヒラリー・クリン..</a></span>｜<span class="nextLink"><a href="http://kimball.blog.so-net.ne.jp/2007-12-09" title="松井秀喜選手はどこへいっても輝いていてくれればいい！＼(^o^)／">松井秀喜選手はどこへいっても輝いていてく..</a></span></span>
+<span class="archive-links"><a href="http://kimball.blog.so-net.ne.jp/">ブログトップ</a></span>
+<br style="clear:both"/>
+</div>
+
+
+
+
+
+<div class="articles-top"></div>
+<div class="articles">
+<!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:Trackback="http://madskills.com/public/xml/rss/module/Trackback/"
+         xmlns:dc="http://purl.org/dc/elements/1.1/">
+<rdf:Description
+    rdf:about="http://kimball.blog.so-net.ne.jp/2007-12-08-1"
+    trackback:ping="http://blog.so-net.ne.jp/kimball/2007-12-08-1/trackback"
+    dc:title="ｊｓＭａｔｈでＢＬＯＧに数式を入力できますぞぃ！！＼(^o^)／"
+    dc:identifier="http://kimball.blog.so-net.ne.jp/2007-12-08-1"
+    dc:description=" ｊｓＭａｔｈでＢＬＯＧに数式を入力できますぞぃ！！＼(^o^)／    お詫び：事前の確認が不十分で、それなりに表示するのに必要な 　　　　　フォント導入作業について記述がもれました。すみませんでした。m(__)m    表示までに少し時間がかかるかもしれませんが、どないでしょ？ あなたのＰＣ／ＭＡＣの画面に数式があらわれたでしょうか？＼(^o^)／   どないだす？＼(^o^)／ 　まずは、行中に  \int {1\over x}\,dx = \ln(x)+C  つぎに行.."
+    dc:creator="Kimball"
+    dc:subject="PCやソフト関連"
+    dc:date="2007-12-08T13:01:25+09:00"
+/>
+</rdf:RDF>
+-->
+<h2 class="articles-title">ｊｓＭａｔｈでＢＬＯＧに数式を入力できますぞぃ！！＼(^o^)／　<a href="http://kimball.blog.so-net.ne.jp/archive/c15376801-1">[PCやソフト関連]</a><span id="myblog-article-edit-area" style="display:none;">&nbsp;<a href="https://blog.so-net.ne.jp/MyPage/blog/article/edit/input?reload_blog_id=2142&id=753278" rel="nofollow">[編集]</a></span></h2>
+
+<div class="articles-body">
+<p class="auto">
+<b>ｊｓＭａｔｈでＢＬＯＧに数式を入力できますぞぃ！！＼(^o^)／</b></p>
+
+<p class="auto">
+<font color=red>
+お詫び：事前の確認が不十分で、それなりに表示するのに必要な<br>
+　　　　　フォント導入作業について記述がもれました。すみませんでした。m(__)m </font></p>
+
+<p class="auto">
+表示までに少し時間がかかるかもしれませんが、どないでしょ？<br class="auto"/>
+あなたのＰＣ／ＭＡＣの画面に数式があらわれたでしょうか？＼(^o^)／</p>
+<!--
+<SCRIPT>
+        document.write('<SCRIPT SRC="http://www008.upp.so-net.ne.jp/kimball/jsMath/jsMath.js"><'+'/SCRIPT>');
+
+ </SCRIPT>
+-->
+<SCRIPT SRC="C:\Users\yama\Documents\HP\jsMath-3.6e/jsMath.js"></SCRIPT>
+<SCRIPT SRC="../easy/load.js"></SCRIPT>
+どないだす？＼(^o^)／ 　まずは、行中に
+ <font size=4><SPAN CLASS="math">\int {1\over x}\,dx = \ln(x)+C </SPAN></font><br><br>
+つぎに行列をブロック表示。<br>
+<font size=4>
+<DIV CLASS="math">
+A = \left\lgroup\matrix{a_{11}& \cdots& a_{1m}\cr
+                \vdots& \ddots& \vdots\cr
+                a_{n1}& \cdots& a_{nm}\cr}\right\rgroup
+</DIV></font><br><br>
+
+色もつけてみましょ。　<br><br>
+
+<font size=4 color=red><SPAN CLASS="math"> f\colon X\to Y</span><br><br>
+<span class="math"> x^2 \gt 5</span>  ほにゃらら <span class="math">1\over 1+x^2</span><br><br>
+<span CLASS="math">   
+ \left\lgroup\matrix{a& b\cr c& d}\right\rgroup 
+</span></font><br><br>
+-------------------------------<br>
+凡人おやじの導入･設定詳細については、しばらくおまちを！（工事中）<br><br>
+
+とりあえず、自力で「おれも！わたしも！！」という方はこちらをどうぞ！！＼(^o^)／<br><br>
+
+<b>jsMathの著者のための情報 　数式入力</b><br>
+<a href="http://math3.ifdef.jp/jsmath/authors/welcome.html" target="_blank" class="auto">http://math3.ifdef.jp/jsmath/authors/welcome.html</a><br>
+<b>jsMath: Web ページで数式を表示する一つの方法 </b><br>
+<a href="http://math3.ifdef.jp/jsmath/welcome.htm" target="_blank" class="auto">http://math3.ifdef.jp/jsmath/welcome.htm</a><br>
+<b>Adding jsMath to a BLOG or Bulletin-Board System</b><br>
+<a href="http://www.math.union.edu/~dpvc/jsMath/authors/BBS.html" target="_blank" class="auto">http://www.math.union.edu/~dpvc/jsMath/authors/BBS.html</a><br>
+<b>jsMath Sample Page</b><br>
+<a href="http://www.mai.liu.se/jsMath/test/sample.html" target="_blank" class="auto">http://www.mai.liu.se/jsMath/test/sample.html</a><br>
+<b>Configuring jsMath</b><br>
+<a href="http://www.math.union.edu/~dpvc/jsMath/authors/easy-config.html" target="_blank" class="auto">http://www.math.union.edu/~dpvc/jsMath/authors/easy-config.html</a><br><br>
+
+--- My Memo: その他参考サイトさん ------------<br>
+<b>(ギザ・おすすめ) LaTeX数式文法</b><br>
+<a href="http://laboratory.sub.jp/phy/92.html" target="_blank" class="auto">http://laboratory.sub.jp/phy/92.html</a><br>
+<b>ヘルプ:数式の書き方</b><br>
+<a href="http://meta.wikimedia.org/wiki/%E3%83%98%E3%83%AB%E3%83%97:%E6%95%B0%E5%BC%8F%E3%81%AE%E6%9B%B8%E3%81%8D%E6%96%B9" target="_blank" class="auto">http://meta.wikimedia.org/wiki/%E3%83%98%E3%83%AB%E3%83%97:%E6%95%B0%E5%BC%8F%E3%81%AE%E6%9B%B8%E3%81%8D%E6%96%B9</a><br>
+<b>[数式]行列　LaTex</b><br>
+<a href="http://utsukemononi.gozaru.jp/latex/datm012.html" target="_blank" class="auto">http://utsukemononi.gozaru.jp/latex/datm012.html</a><br>
+<b>LaTexガイド</b><br>
+<a href="http://utsukemononi.gozaru.jp/latex/index.html" target="_blank" class="auto">http://utsukemononi.gozaru.jp/latex/index.html</a><br>
+
+----------------------------------------<br>
+<font color=red>--- 追記 --------<br>
+PC/MACに「Texフォント」を導入してもらわないと特殊記号等は表示<br>
+されないようです！　確認とご連絡が遅れ申し訳ありませんでした。m(__)m<br>
+いま、おそらく、みなさまにはこのような画面がみえているかと。<br>
+<img src="/blog/_images/blog/_630/kimball/10560018.gif" /><br>
+こちらからフォントのダウンロードをしてください。<br>
+<a href="http://www.math.union.edu/~dpvc/jsMath/download/jsMath-fonts.html" target="_blank" class="auto">http://www.math.union.edu/~dpvc/jsMath/download/jsMath-fonts.html</a>
+<br>
+お好みの「濃さ」のフォントを「ひとつ」設定してください。<br>
+フォントが設定されると、以下のように表示されるはずです。<br>
+<img src="/blog/_images/blog/_630/kimball/10560218.gif" /><br>
+---------------------</font>
+
+<SCRIPT> window.onload = function () {jsMath.Process(document)} </SCRIPT><a name="more"></a>
+<br clear="all" />
+
+
+<script type="text/javascript" language="javascript" charset="utf-8">
+//<![CDATA[
+seesaa_bookmark_services = "twitter,mixicheck,hatena,facebook";
+seesaa_article_page_url = "http://kimball.blog.so-net.ne.jp/2007-12-08-1";
+seesaa_article_subject = "ｊｓＭａｔｈでＢＬＯＧに数式を入力できますぞぃ！！＼(^o^)／";
+seesaa_article_first = "1";
+seesaa_blog_url = "http://blog.so-net.ne.jp";
+//]]></script>
+<script type="text/javascript" language="JavaScript" charset="utf-8" src="http://blog.so-net.ne.jp/_js/bookmark.js"></script>
+
+</div>
+
+<div class="posted"><span class="postDate">2007-12-08 13:01&nbsp;</span>
+nice!(0)&nbsp;
+
+コメント(1)&nbsp;
+
+トラックバック(2)&nbsp;
+<br /><span class="postTheme">共通テーマ：</span><a href="http://blog.so-net.ne.jp/_contents/genre/0019/recent_articles/0001.html">パソコン・インターネット</a>
+</div>
+
+
+
+<div class="adView" style="width:100%; text-align:center;padding-bottom:5px;padding-top:5px; ">
+<script type="text/javascript"><!--
+seesaa_bg_color     = 'ffffff';
+seesaa_title_color  = '0090ff';
+seesaa_text_color   = '000000';
+seesaa_border_color = 'ffffff';
+seesaa_template_id  = '00002';
+seesaa_adcount      = '5';
+seesaa_bg_reverse_color = 'fff7d7';
+seesaa_icon         = '0';
+seesaa_hostsite_id  = '21';
+seesaa_site_id      = 'kimball:000207361918';
+seesaa_genre_id     = '19';
+seesaa_article_id   = '2007-12-08-1';
+seesaa_keyword_char = 'utf8';
+seesaa_keyword_list = '%E3%83%95%E3%82%A9%E3%83%B3%E3%83%88%20over%20%E3%83%96%E3%83%AD%E3%83%83%E3%82%AF%20over%20Board%20union%20union%20%E3%82%AC%E3%82%A4%E3%83%89%20%E3%83%95%E3%82%A9%E3%83%B3%E3%83%88%20%E3%83%95%E3%82%A9%E3%83%B3%E3%83%88%20union%20%E3%83%95%E3%82%A9%E3%83%B3%E3%83%88%20%E3%83%95%E3%82%A9%E3%83%B3%E3%83%88';
+//--></script>
+<script type="text/javascript" src="http://match.seesaa.jp/-/js/square_under_sonet.js"></script>
+
+</div>
+
+
+
+
+
+<div id="nice" class="entry">
+<div id="myblog-nice-error" style="display:none;">
+あなたは既にnice!を行っています。一定件数以上前のnice!は表示されませんのでご了承ください。
+</div>
+<h4 class="nice-title">nice! 0<a name="favorite"> </a></h4>
+
+<div id="myblog-nice-insert-area" style="display:none;"><input type="button" onClick="myblogExecNiceInsert('http://blog.so-net.ne.jp','753278','kimball',this);" value="nice!"></div>
+<span id="myblog-nice-delete-owner-area" style="display:none;"><input type="button" onClick="myblogExecNiceDeleteOwner('http://blog.so-net.ne.jp','753278','kimball',this);" class="link-del" value="nice! を外す"></span>
+<ul id="myblog-nice-list-area">
+</ul>
+<div class="sonet-asin-area"></div>
+<span id="myblog-nice-delete-area" style="display:none;"><input type="button" onClick="myblogExecNiceDelete('http://blog.so-net.ne.jp','753278','kimball',this);" class="link-del" value="チェックした nice! を消去"><input type="hidden" id="myblog-nice-delete-checked-params"></span>
+</div>
+<div id="comments" class="entry">
+<h4>コメント 1<a name="comments"> </a></h4>
+
+<div id="myblog-comment-list-area">
+<div class="each-comment">
+<a href="http://kimball.blog.so-net.ne.jp/">
+<img alt="Kimball" width="36" border="0" src="http://blog.so-net.ne.jp/_profile/_630/kimball/_s_kimball.png">
+</a>
+
+<p class="comments-body">
+＊＊＊テストです＊＊＊<br />&lt;SCRIPT&gt;<br />if (!window.jsMath) {<br />      document.write('&lt;SCRIPT SRC=&quot;<a href="http://www008.upp.so-net.ne.jp/kimball/jsMath/jsMath.js&quot;&gt;&lt;'+'/SCRIPT&gt;');" target="_blank" rel="nofollow">http://www008.upp.so-net.ne.jp/kimball/jsMath/jsMath.js&quot;&gt;&lt;'+'/SCRIPT&gt;');</a><br />}<br />&lt;/SCRIPT&gt;<br />    &lt;DIV CLASS=&quot;math&quot;&gt;<br />  A = \left\lgroup\matrix{a_{11}&amp; \cdots&amp; a_{1m}\cr<br />                \vdots&amp; \ddots&amp; \vdots\cr<br />                a_{n1}&amp; \cdots&amp; a_{nm}\cr}\right\rgroup.<br />    &lt;/DIV&gt;<br />    &lt;SCRIPT&gt; window.onload = function () {jsMath.Process(document)} &lt;/SCRIPT&gt;
+<br />
+<span class="caption">
+by 
+<a href="http://kimball.blog.so-net.ne.jp/" rel="nofollow">
+Kimball
+</a>
+(2007-12-08 18:07)&nbsp;
+<span id="myblog-comment-list-area-member-946179-2142" style="display:none;">
+<input type="checkbox" name="comment_id" onClick="myblogToggleCommentDelete(this)" value="946179">
+</span>
+</span>
+</p>
+</div>
+</div>
+</div>
+<span id="myblog-comment-delete-area" style="display:none;"><input type="button" onClick="myblogExecCommentDelete('http://blog.so-net.ne.jp','753278','kimball',this);" class="link-del" value="チェックしたコメントを消去"><input type="hidden" id="myblog-comment-delete-checked-params"></span>
+
+<div id="myblog-comment-area">
+<div id="comment-write" class="entry">
+<h4>コメントを書く<a name="commentblock"> </a></h4>
+
+<div id="myblog-comment-error" style="display:none;color:#e00000;">
+<div id="myblog-comment-error-1" style="display:none;">
+コメント投稿に失敗しました。
+</div>
+<div id="myblog-comment-error-2" style="display:none;">
+未入力の項目があります。
+</div>
+<div id="myblog-comment-error-3" style="display:none;">
+認証コードが一致しませんでした。
+</div>
+<div id="myblog-comment-error-4" style="display:none;">
+半角英数字のみのコメントは受け付けできません。
+</div>
+</div>
+
+<form action="http://blog.so-net.ne.jp/_pages/user/auth/comment/input" method="post">
+<dl>
+<dt id="myblog-comment-writer-dt">お名前：</dt>
+<dd id="myblog-comment-writer-dd"><input id="myblog-comment-writer" type="text" name="article_child__writer" maxlength="300" value="" class="comment-input" /></dd>
+<dt id="myblog-comment-homepage-dt">URL：</dt>
+<dd id="myblog-comment-homepage-dd"><input id="myblog-comment-homepage" type="text" name="article_child__homepage" maxlength="1000" value="" class="comment-input" /></dd>
+<dt>コメント：</dt>
+<dd><textarea id="myblog-comment-body" name="article_child__body" class="comment-input"></textarea></dd>
+</dl>
+
+<div id="myblog-comment-captcha-area">
+<dl>
+<dt>画像認証：</dt>
+<dd>
+下の画像に表示されている文字を入力してください。<br />
+<img src="/_images/blog/_630/kimball/image/seesaa_captcha_comment.gif?1384434920" />
+</dd>
+<dd>
+<input id="myblog-comment-captcha_comment" type="text" name="captcha_comment" value="" class="comment-input" /><br />
+</dd>
+</dl>
+</div>
+
+<dl>
+<dd>
+<input name="posted" type="submit" class="comment-button" value="送信" />
+</dd>
+</dl>
+<input type="hidden" name="article_child__article_id" value="753278" />
+<input type="hidden" name="article_id" value="753278" />
+<input type="hidden" name="blog_name" value="kimball" />
+</form>
+</div>
+</div>
+
+
+<div id="trackback-write" class="entry">
+<h4>トラックバック 2<a name="trackback"> </a></h4>
+
+<div class="each-trackback"><a href="http://kimball.blog.so-net.ne.jp/2009-09-01-1" target="_blank" rel="nofollow">Ｗｅｂページ・ブログで数式を！ jsMathもいいけど、WPMathPubもあるでヨ..＼(^o^)／（来夢望瑠_日々平凡&nbsp;2009-09-05 11:08）</a>
+<p class="trackback-body">Ｗｅｂページ・ブログで数式を！  jsMathもいいけど、WPMathPubもあるでヨ..＼(^o^)／  ご自分のWebページ・ブログになんとか数式入力・表示システムを 導入したいという方には、こちらのサイトさんがお勧めです！！  jsMath in Wordpress blogs h…[続く]</p>
+</div>
+<div class="each-trackback"><a href="http://kimball.blog.so-net.ne.jp/2008-08-31" target="_blank" rel="nofollow">お知らせ：jsMathのデフォルト運用をはじめました。＼(^o^)／（来夢望瑠_日々平凡&nbsp;2008-08-31 13:32）</a>
+<p class="trackback-body">愚ＢＬＯＧで数式表示を可能にするために、jsMathを導入しました。  以前、jsMath紹介記事を書いた時点では、 （'07/12月：So-netさんメンテナンス震災('08/2)前＼(^o^)／） jsMathを使用する記事のときにだけ、その記事中にjsMathを有効にするという j…[続く]</p>
+</div>
+<div class="trackback-url">
+この記事のトラックバックURL：<br />
+<form>
+<input type="text" name="" value="http://blog.so-net.ne.jp/kimball/2007-12-08-1/trackback" onclick="this.select()" />
+</form>
+</div>
+※言及リンクのないトラックバックは受信されません。<br />
+<div id="myblog-tb-regist-area" style="display:none">
+	<input type="button" value="この記事について書く(簡単トラックバック)" class="trackback-button" onClick="document.location.href='https://blog.so-net.ne.jp/MyPage/blog/article/regist/input?force_main_blog=1&ping_url=http://blog.so-net.ne.jp/kimball/2007-12-08-1/trackback&trackback_article_id=753278';"/>
+</div>	
+
+</div>
+
+
+
+</div>
+
+<div class="articles-bottom"></div>
+
+
+
+<div class="archive-bottom">
+<span class="archive-name">
+<span class="previousLink"><a href="http://kimball.blog.so-net.ne.jp/2007-12-08" title="想像してみてください！　ヒラリー・クリントンさんのくるみ割り人形を＼(^o^)／">想像してみてください！　ヒラリー・クリン..</a></span>｜<span class="nextLink"><a href="http://kimball.blog.so-net.ne.jp/2007-12-09" title="松井秀喜選手はどこへいっても輝いていてくれればいい！＼(^o^)／">松井秀喜選手はどこへいっても輝いていてく..</a></span></span>
+<span class="archive-links"><a href="http://kimball.blog.so-net.ne.jp/">ブログトップ</a></span>
+<br style="clear:both"/>
+</div>
+
+
+<!-- /Content -->
+
+
+
+</div>
+
+<div id="side-a">
+<div class="sidebar" id="profile">
+  <h3 class="sidebar-title"><a href="http://kimball.blog.so-net.ne.jp/">Kimball</a>&nbsp;さん</h3>
+  <div class="sidebar-body">
+        <dl>
+      <dt class="profile-img"><img alt="Kimballさんの画像" src="http://blog.so-net.ne.jp/_profile/_630/kimball/_m_kimball.png?2013-10-2020:36:11" border="0" width="72"></dt>
+      <dd class="profile-status">
+	<span class="nice">nice!</span>	2815 <br />
+	記事 2071
+	<br />テーマ <span class="blogthemeLink"><a href="http://blog.so-net.ne.jp/_contents/blog_theme/0001/">日記・雑感</a>
+	  </span>
+		<br />
+	<span class="profileLink"><a href="http://kimball.blog.so-net.ne.jp/_pages/user/profile/index">プロフィール</a></span>
+	<br />
+	<span id="blog-introduction-area-login" style="display:none;">
+	  <a href="" id="blog-introduction-button"
+	  onclick="blogIntroductionInProfile(this); return false;">ブログを紹介する</a><a href="http://blog-help.blog.so-net.ne.jp/introduction"><img border="0" alt="？" src="/_common/img/myblog/icon_help.gif" style="vertical-align: middle; margin-right: 3px;"></a>
+	  <p id="blog-introduction-msg-area"></p>
+	</span>
+	<span id="blog-introduction-area-no-login">
+	  <a href="" id="blog-introduction-button-no-login" onclick="blogIntroductionInProfileNoLogin(this); return false;">ブログを紹介する</a><a href="http://blog-help.blog.so-net.ne.jp/introduction"><img border="0" alt="？" src="/_common/img/myblog/icon_help.gif" style="vertical-align: middle; margin-right: 3px;"></a>
+	  <p id="blog-introduction-msg-area-no-login" style="display:none;" >
+            ログインすると自身のブログで本ブログを紹介できます
+	  </p>
+	</span>
+      </dd>
+    </dl>
+
+      </div>
+
+  <div class="sidebar-end"></div>
+</div>
+
+<div class="sidebar" id="search">
+<h3 class="sidebar-title">記事検索</h3>
+<div class="sidebar-body">
+<form action="http://kimball.blog.so-net.ne.jp/search/">
+Kimball さんの記事から<br />
+<input value="" name="keyword" type="text" class="search-tbox" />
+<input value="検索" type="submit" class="input-submit" class="search-button" />
+</form>
+</div>
+<div class="sidebar-end"></div>
+</div>
+
+<!-- Massage -->
+
+<div id="rssRegistBox" class="sidebar">
+  <span id="myblog-display-area-no-login">
+    <div id="rssRegist" style="margin-bottom:3px;">
+      <a href="https://lis.so-net.ne.jp/member/pc/blog/addMemberStep1.action?relayedValue=campaign_no=911:2142">ブログを作って読者登録</a>
+      </div>
+    <div style="font-size:x-small; text-align:center;">
+      <p style="margin-bottom:6px;">このブログの更新情報が届きます</p>
+      すでにブログをお持ちの方は[<a href="https://blog.so-net.ne.jp/MyPage/blog/user_rss/list?url=http://kimball.blog.so-net.ne.jp/index.rdf">こちら</a>]
+      </div>
+    </span>
+  <span id="myblog-display-area-login" style="display:none;">
+    <div id="rssRegist" style="margin-bottom:0;">
+      <a href="https://blog.so-net.ne.jp/MyPage/blog/user_rss/list?url=http://kimball.blog.so-net.ne.jp/index.rdf">読者になる(RSSに登録)</a>
+    </div>
+  </span>
+</div>
+
+
+<div id="calendar" class="sidebar">
+<h3 class="sidebar-title">カレンダー</h3>
+
+<div class="sidebar-body">
+
+<div class="calendar-date"><a href="http://kimball.blog.so-net.ne.jp/archive/201310-1" class="preMonth">&lt;&lt;</a>&nbsp;<a href="http://kimball.blog.so-net.ne.jp/archive/201311-1" class="thisMonth">2013年11月</a>&nbsp;&gt;&gt;</div>
+
+<table align="center">
+<tr class="day">
+<th class="sun">日</th>
+<th class="mon">月</th>
+<th class="tue">火</th>
+<th class="wed">水</th>
+<th class="thu">木</th>
+<th class="fri">金</th>
+<th class="sat">土</th>
+</tr>
+
+
+<tr>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>1</td>
+
+<td>2</td>
+
+</tr>
+
+<tr>
+
+<td>3</td>
+
+<td>4</td>
+
+<td>5</td>
+
+<td>6</td>
+
+<td>7</td>
+
+<td>8</td>
+
+<td>9</td>
+
+</tr>
+
+<tr>
+
+<td>10</td>
+
+<td>11</td>
+
+<td class="link"><a href="http://kimball.blog.so-net.ne.jp/archive/20131112">12</a></td>
+
+<td>13</td>
+
+<td>14</td>
+
+<td>15</td>
+
+<td>16</td>
+
+</tr>
+
+<tr>
+
+<td>17</td>
+
+<td>18</td>
+
+<td>19</td>
+
+<td>20</td>
+
+<td>21</td>
+
+<td>22</td>
+
+<td>23</td>
+
+</tr>
+
+<tr>
+
+<td>24</td>
+
+<td>25</td>
+
+<td>26</td>
+
+<td>27</td>
+
+<td>28</td>
+
+<td>29</td>
+
+<td>30</td>
+
+</tr>
+
+
+</table>
+
+</div>
+<div class="sidebar-end"></div>
+
+
+<a href="http://kimball.blog.so-net.ne.jp/archive/201310-1">2013_10月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201309-1">9月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201308-1">8月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201307-1">7月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201306-1">6月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201305-1">5月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201304-1">4月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201303-1">3月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201302-1">2月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201301-1">1月</a><br>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201212-1">2012_12月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201211-1">11月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201210-1">10月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201209-1">9月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201208-1">8月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201207-1">7月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201206-1">6月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201205-1">5月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201204-1">4月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201203-1">3月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201202-1">2月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201201-1">1月</a><br>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201112-1">2011_12月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201111-1">11月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201110-1">10月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201109-1">9月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201108-1">8月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201107-1">7月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201106-1">6月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201105-1">5月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201104-1">4月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201103-1">3月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201102-1">2月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201101-1">1月</a><br>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201012-1">2010_12月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201011-1">11月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201010-1">10月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201009-1">9月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201008-1">8月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201007-1">7月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201006-1">6月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201005-1">5月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201004-1">4月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201003-1">3月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201002-1">2月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/201001-1">1月</a><br>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200912-1">2009_12月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200911-1">11月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200910-1">10月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200909-1">9月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200908-1">8月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200907-1">7月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200906-1">6月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200905-1">5月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200904-1">4月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200903-1">3月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200902-1">2月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200901-1">1月</a><br>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200812-1">2008_12月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200811-1">11月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200810-1">10月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200809-1">9月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200808-1">8月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200807-1">7月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200806-1">6月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200805-1">5月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200804-1">4月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200803-1">3月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200802-1">2月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200801-1">1月</a><br>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200712-1">2007_12月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200711-1">11月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200710-1">10月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200709-1">9月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200708-1">8月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200707-1">7月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200706-1">6月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200705-1">5月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200704-1">4月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200703-1">3月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200702-1">2月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200701-1">1月</a><br>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200612-1">2006_12月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200711-1">11月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200610-1">10月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200609-1">9月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200608-1">8月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200607-1">7月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200606-1">6月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200605-1">5月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200604-1">4月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200603-1">3月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200602-1">2月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200601-1">1月</a><br>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200512-1">2005_12月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200511-1">11月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200510-1">10月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200509-1">9月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200508-1">8月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200507-1">7月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200506-1">6月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200505-1">5月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200504-1">4月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200503-1">3月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200502-1">2月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200501-1">1月</a><br>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200412-1">2004_12月</a>
+<a href="http://kimball.blog.so-net.ne.jp/archive/200411-1">11月</a>
+</div>
+
+
+<div class="sidebar">
+<h3 class="sidebar-title">別荘ブログなど</h3>
+<div class="sidebar-body custom-body">
+<a href="http://www008.upp.so-net.ne.jp/kimball/rensyu_am.htm
+" target="_blank"><b>ASCIIMathML練習場</b></a><br /><a href="http://skylark3.blog.so-net.ne.jp/
+" target="_blank"><b>NHK FM青春アドベンチャー</b></a><br /><a href="http://dauntless.blog.so-net.ne.jp/
+" target="_blank"><b>JWAVE Tokyo Remix族</b></a><br /><a href="http://medon.blog.so-net.ne.jp/
+" target="_blank"><b>JWAVE Jam the World [Fri]</b></a><br /><a href="http://boskone.blog.so-net.ne.jp/
+" target="_blank"><b>来夢望瑠_プロバビリティスペース</b></a><br /><a href="http://ameblo.jp/kimball/
+" target="_blank"><b>別荘BLOG:Ameblo</b></a><br /><br /><script type="text/javascript" src="http://widget.booklog.jp/blogparts/js/booklog_minishelf_4col.js?default" id="booklog_minishelf_4col"></script><br /><script type="text/javascript" src="http://api.booklog.jp/json/kimball?category=0&count=16&callback=booklog_minishelf_4col"></script><br /><br /><script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-2524930-2']);
+  _gaq.push(['_setDomainName', '.blog.so-net.ne.jp']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script><br /><br /><br /><STYLE>
+#meigensyu{width: 150px;margin:0;padding:0;}
+#meigensyu .title{background: #0a54a1;padding: 0px;font-size: 14px;height: 16px;font-weight: bold;text-align: center;}
+#meigensyu .title a {text-decoration: none;color: #FFFFFF;}
+#meigensyu .message{font-size: 12px;padding:2px 3px 3px 3px;color:#00cccc;font-weight:normal;background:#EEEEff;text-align: center;}
+#meigensyu .message a { text-decoration: none; color: #0a54a1;}
+</STYLE><br /><DIV id="meigensyu">
+<DIV class="title"><a href="http://www.meigensyu.com/" target="_blank">名言集.com</a></DIV>
+<DIV class="message"><SCRIPT TYPE="text/javascript" SRC="http://www.meigensyu.com/tools/blogparts/randmeigen1.js" charset="UTF-8">
+</SCRIPT>
+</DIV>
+</DIV><br />
+</div>
+<div class="sidebar-end"></div>
+</div>
+
+<script type="text/javascript" language="javascript" src="http://keisan.casio.jp/keisan/blogparts/calendar/calendar.php?pref=3"></script>
+<script type="text/javascript" language="javascript" src="http://inetcore.com/project/ipv4ec/ja-JP/wolf_c.js"></script>
+
+
+
+
+<div class="sidebar" id="latestEntry">
+<h3 class="sidebar-title">最新記事一覧</h3>
+<div class="sidebar-body">
+<ul>
+<li><a href="http://kimball.blog.so-net.ne.jp/2013-11-12">Desktop機ThinkCent..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2013-10-20">Windows XP: １０月アッ..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2013-09-07">なんと！　「追加申請」でファイル容..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2013-08-04">My愛機 IBM ThinkPad..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2013-06-09">ご縁があれば購入ツンドク・メモ(6..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2013-05-05">Lenovo Edge E530 ..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2013-02-16">ももクロ：お袋さん弁当忌避の高校生..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2013-01-05">２０１２年紅白歌合戦： Kimba..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2012-12-22">Kindle (PaperWhit..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2012-12-16">「脳研究の今」、ですとぉう？！　（..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2012-11-24">ああ！、Ｊ．Ｒ．ユーイング逝く....</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2012-11-23">ローカル？インターネット・ラジオの..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2012-08-11">AKB48 Team B 「初日」..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2012-08-05">アニメAKB0048(エイ・ケー・..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2012-07-27-1">日本じゃ「歴史的」、しかし他国じゃ..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2012-07-27">日本男子サッカー、スペイン破る！＼..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2012-06-16">iTunes CDインポート後にア..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2012-06-05">ラジオ番組の中でかかった曲を日時指..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2012-04-17-1">祇園暴走:　被害者に追い討ちをかけ..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2012-04-17">今日の動物ニュース：オヤジ・セレク..</a></li>
+</ul>
+</div>
+<div class="sidebar-end"></div>
+</div>
+
+<div class="sidebar" id="favoriteEntry">
+<h3 class="sidebar-title"><a href="http://kimball.blog.so-net.ne.jp/">Kimball</a> さんがnice!と思った記事</h3>
+<div class="sidebar-body">
+<ul>
+<li><a href="http://yohyo.blog.so-net.ne.jp/2013-10-02">9年</a></li>
+<li><a href="http://dr-superg.blog.so-net.ne.jp/2013-10-26-1">まだやってんの！？</a></li>
+<li><a href="http://dr-superg.blog.so-net.ne.jp/2013-10-26-7">久しぶりのチムタク</a></li>
+<li><a href="http://dr-superg.blog.so-net.ne.jp/2013-10-26-8">日本の酔っ払いを見て・・・</a></li>
+<li><a href="http://dr-superg.blog.so-net.ne.jp/2013-10-26-9">TEDプレゼンは、こころに届くか？</a></li>
+<li><a href="http://dr-superg.blog.so-net.ne.jp/2013-10-26-11">そろそろ、スキーです！</a></li>
+<li><a href="http://dr-superg.blog.so-net.ne.jp/2013-11-08">懲りない英会話産業・・・</a></li>
+<li><a href="http://trivijapan.blog.so-net.ne.jp/2013-09-24">半沢直樹</a></li>
+<li><a href="http://trivijapan.blog.so-net.ne.jp/2013-10-04">ジャイアン登場</a></li>
+<li><a href="http://trivijapan.blog.so-net.ne.jp/2013-10-12">変な使命感</a></li>
+<li><a href="http://trivijapan.blog.so-net.ne.jp/2013-10-15">寝ぼける</a></li>
+<li><a href="http://trivijapan.blog.so-net.ne.jp/2013-10-20">断捨離の人</a></li>
+<li><a href="http://trivijapan.blog.so-net.ne.jp/2013-10-26">素手であく</a></li>
+<li><a href="http://trivijapan.blog.so-net.ne.jp/2013-11-03">世界の車窓から　最終回</a></li>
+<li><a href="http://trivijapan.blog.so-net.ne.jp/2013-11-09">はごろもさんからお手紙ついた</a></li>
+<li><a href="http://pandora-box.blog.so-net.ne.jp/2013-09-21">呪わしい残暑の日に柄にもないスポー..</a></li>
+<li><a href="http://pandora-box.blog.so-net.ne.jp/2013-10-06">10月初めのつぶやき代用。</a></li>
+<li><a href="http://pandora-box.blog.so-net.ne.jp/2013-10-30">2013-10-30</a></li>
+<li><a href="http://lionchan.blog.so-net.ne.jp/2013-07-28-1">家庭菜園</a></li>
+<li><a href="http://lionchan.blog.so-net.ne.jp/2013-06-30-3">今週は暑くなりそうですね～</a></li>
+</ul>
+</div>
+<div class="sidebar-end"></div>
+</div>
+
+<div class="sidebar" id="favoredMember">
+<h3 class="sidebar-title"><a href="http://kimball.blog.so-net.ne.jp/">Kimball</a> さんの記事をnice!と思った人 (全229人)</h3>
+<div class="sidebar-body">
+<ul>
+<li><a href="http://kyoto-teftef.blog.so-net.ne.jp/">teftef</a></li>
+<li><a href="http://lionchan.blog.so-net.ne.jp/">たかれろ</a></li>
+<li><a href="http://yamelen.blog.so-net.ne.jp/">yam</a></li>
+<li><a href="http://izakaya-keiba.blog.so-net.ne.jp/">ちょいのり</a></li>
+<li><a href="http://kouryuu.blog.so-net.ne.jp/">降龍十八章</a></li>
+<li><a href="http://onemore01.blog.so-net.ne.jp/">onemore</a></li>
+<li><a href="http://yagumo-camera.blog.so-net.ne.jp/">shige</a></li>
+<li><a href="http://cyottohitokoto.blog.so-net.ne.jp/">あんぱんち〜</a></li>
+<li><a href="http://penn.blog.so-net.ne.jp/">花太郎</a></li>
+<li><a href="http://mizunoyutaka.blog.so-net.ne.jp/">yutakami</a></li>
+</ul>
+</div>
+<div class="sidebar-end"></div>
+</div>
+
+<div class="sidebar" id="commentedEntry">
+<h3 class="sidebar-title"><a href="http://kimball.blog.so-net.ne.jp/">Kimball</a> さんがコメントした記事</h3>
+<div class="sidebar-body">
+<ul>
+<li><a href="http://kouryuu.blog.so-net.ne.jp/2013-11-12-3">検索言語の設定</a></li>
+<li><a href="http://trivijapan.blog.so-net.ne.jp/2013-11-09">はごろもさんからお手紙ついた</a></li>
+<li><a href="http://skylark3.blog.so-net.ne.jp/2010-04-10">『黄金仮面』（全10回）</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2013-09-07">なんと！　「追加申請」でファイル容..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2009-07-12-2">無知オヤジ：カナダの元首”代理”が..</a></li>
+<li><a href="http://skylark3.blog.so-net.ne.jp/2009-03-20">NHK FM青春アドベンチャー：『..</a></li>
+<li><a href="http://skylark3.blog.so-net.ne.jp/2009-08-29">NHK FM青春アドベンチャー：『..</a></li>
+<li><a href="http://furitani.blog.so-net.ne.jp/2013-05-14">貴婦人と一角獣展</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2009-07-18-1">IE8の「&quot;使えない&q..</a></li>
+<li><a href="http://skylark3.blog.so-net.ne.jp/2013-03-20">(3/16) Tokyo FM  ..</a></li>
+<li><a href="http://skylark3.blog.so-net.ne.jp/2013-03-31">(3/23,30) Tokyo F..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2013-05-05">Lenovo Edge E530 ..</a></li>
+<li><a href="http://penn.blog.so-net.ne.jp/2013-05-09">クロロホルム</a></li>
+<li><a href="http://penn.blog.so-net.ne.jp/2013-05-11">ちょっと中休み</a></li>
+<li><a href="http://penn.blog.so-net.ne.jp/2013-05-19-1">明日の為に</a></li>
+<li><a href="http://penn.blog.so-net.ne.jp/2013-05-31">指示無し？有り？</a></li>
+<li><a href="http://dr-superg.blog.so-net.ne.jp/2013-04-06-17">来季の板を発注しました。</a></li>
+<li><a href="http://dr-superg.blog.so-net.ne.jp/2013-05-04-12">我が家のローズガーデンから　</a></li>
+<li><a href="http://dr-superg.blog.so-net.ne.jp/2013-05-04-5">懐メロを聴きながら沈むニッポン！</a></li>
+<li><a href="http://dr-superg.blog.so-net.ne.jp/2013-05-18-13">これが東京です</a></li>
+</ul>
+</div>
+<div class="sidebar-end"></div>
+</div>
+
+<div class="sidebar" id="category">
+<h3 class="sidebar-title">カテゴリー</h3>
+<div class="sidebar-body">
+
+<ul>
+
+
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376816-1">愚ＢＬＯＧについて</a>(19)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376790-1">オヤジのつぶやき</a>(219)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376792-1">本</a>(23)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376793-1">映画</a>(13)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376791-1">コレクション</a>(8)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376794-1">小さな出来事</a>(23)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376795-1">TVドラマ</a>(43)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376796-1">ラジオ番組</a>(194)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376797-1">人間って</a>(5)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376798-1">オヤジは膝パーン：－）</a>(30)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376799-1">マイ・ヒーロー</a>(233)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376800-1">ちょっといいこと</a>(84)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376801-1">PCやソフト関連</a>(188)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376802-1">人間って（悲哀編)</a>(31)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376803-1">ゴマメの暴言</a>(64)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376804-1">備忘録メモ</a>(23)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376805-1">視聴メモ</a>(24)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376806-1">TV番組</a>(71)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376807-1">読書</a>(15)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376808-1">ご参考まで</a>(286)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376809-1">芸能話題</a>(25)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376810-1">料理</a>(3)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376811-1">そやったんかー</a>(143)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376812-1">引用コレクション</a>(8)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376813-1">サイエンス記事</a>(164)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376814-1">技術記事</a>(16)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376815-1">音楽</a>(8)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376817-1">物理帝国臣民Ａの部屋</a>(65)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376818-1">語学精進</a>(16)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376819-1">スポーツ</a>(11)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15376820-1">演劇・演奏会</a>(12)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c15382159-1">園芸</a>(2)</li>
+
+<li><a href="http://kimball.blog.so-net.ne.jp/archive/c2301848521-1">健康</a>(1)</li>
+
+</ul>
+
+</div>
+<div class="sidebar-end"></div>
+</div>
+
+<div class="sidebar" id="latestComment">
+<h3 class="sidebar-title">最近のコメント</h3>
+<div class="sidebar-body">
+<ul>
+<li><a href="http://kimball.blog.so-net.ne.jp/2013-09-07">◆ 降龍十八章さん、
+了解。</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2013-09-07">業務連絡！
+また携帯をトイレに落..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2009-09-08">ようやくネットの構造が見えてきまし..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2009-07-12-2">◆通りすがりさん、
+ご指摘ありが..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2009-07-12-2">カナダの国家元首はカナダ国王で、現..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2009-06-16-1">160年で16000ブティックや1..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2009-07-18-1">◆月夜さん、
+ナイスありがとうご..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2013-05-05">◆花太郎さん、
+ナイス＆コメント..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2013-05-05">◆yutakamiさん、
+ナイス..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2013-05-05">コメント有難うございます。
+
+..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2009-06-16-1">160年で16000ブティックや1..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2007-12-28-2">今回この記事を読んで疑問に思ったこ..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2009-06-16-1">160年で16000ブティックや1..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2009-06-16-1">別のファッションの、そのユニークな..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2009-06-16-1">前衛と欠陥の体の大きさを調整するの..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2009-06-16-1">COACH（コーチ）のレザーハンド..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2009-06-16-1">LOEWEは一貫して、スペイン風に..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2009-06-16-1">LOEWEは一貫して、スペイン風に..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2009-06-16-1">ひらひら蝶、カラフルなストライプ、..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2009-06-16-1">時間の &quot;贈り物（ギフトの時間）、..</a></li>
+</ul>
+</div>
+<div class="sidebar-end"></div>
+</div>
+
+<div class="sidebar" id="trackBack">
+<h3 class="sidebar-title">最近トラックバックされた記事</h3>
+<div class="sidebar-body">
+<ul>
+<li><a href="http://kimball.blog.so-net.ne.jp/2012-11-24">ああ！、Ｊ．Ｒ．ユーイング逝く....</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2012-06-05">ラジオ番組の中でかかった曲を日時指..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2012-04-13">目にとまったニュース</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2006-04-23">ＮＨＫ　ＦＭラジオ・ドラマをたまに..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2009-07-26">こりゃいいわ！　Windows「差..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2011-07-23">Windows XP/7用の「差分..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2007-10-24-2">Word of BLOG: 山田五..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2007-02-10">本日のセレンディピティ：「レンズマ..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2010-03-13">Firefox 3.6に更新したら..</a></li>
+<li><a href="http://kimball.blog.so-net.ne.jp/2010-11-03">また、Ｆｉｒｅfoxの更新でThi..</a></li>
+</ul>
+</div>
+<div class="sidebar-end"></div>
+</div>
+
+<div class="sidebar" id="subscribedRSS">
+<h3 class="sidebar-title">読んでいるブログ（RSS）</h3>
+<div class="sidebar-body">
+
+<ul>
+<li>
+<a target="_blank" href="http://rd.yahoo.co.jp/rss/l/blog/myblog/rss2/url/*http://blogs.yahoo.co.jp/otenki_bosai">気象・歳時・防災 コラム</a> 11/14<span class="new">NEW</span>
+</li>
+<li>
+<a target="_blank" href="http://makkurokurosk.blog.so-net.ne.jp/">まっくろクロスケ</a> 11/14<span class="new">NEW</span>
+</li>
+<li>
+<a target="_blank" href="http://nikitoki.blog.so-net.ne.jp/">トクダス</a> 11/14<span class="new">NEW</span>
+</li>
+<li>
+<a target="_blank" href="http://furitani.blog.so-net.ne.jp/">ぜいりしブログ</a> 11/14<span class="new">NEW</span>
+</li>
+<li>
+<a target="_blank" href="http://kouryuu.blog.so-net.ne.jp/">神鵰記エヴァンゲリヲン</a> 11/14<span class="new">NEW</span>
+</li>
+<li>
+<a target="_blank" href="http://cyottohitokoto.blog.so-net.ne.jp/">ちょっと、一言いいですか？</a> 11/14<span class="new">NEW</span>
+</li>
+<li>
+<a target="_blank" href="http://takemovies.blog.so-net.ne.jp/">映像によるコミュニケーション</a> 11/14<span class="new">NEW</span>
+</li>
+<li>
+<a target="_blank" href="http://yagumo-camera.blog.so-net.ne.jp/">カメラなやぐものつぶやき日記</a> 11/14<span class="new">NEW</span>
+</li>
+<li>
+<a target="_blank" href="http://thisisajin.blog.so-net.ne.jp/">Gene stir work</a> 11/14<span class="new">NEW</span>
+</li>
+<li>
+<a target="_blank" href="http://rd.yahoo.co.jp/rss/l/blog/myblog/rss2/url/*http://blogs.yahoo.co.jp/kim123hiro">台湾春秋</a> 11/14<span class="new">NEW</span>
+</li>
+<li>
+<a target="_blank" href="http://nukomofmof.blog.so-net.ne.jp/">電脳フィールドノート</a> 11/14<span class="new">NEW</span>
+</li>
+<li>
+<a target="_blank" href="http://blog.goo.ne.jp/elm511?fm=rss">Little Tree</a> 11/14<span class="new">NEW</span>
+</li>
+<li>
+<a target="_blank" href="http://lionchan.blog.so-net.ne.jp/">たかれろ　練習日記</a> 11/14<span class="new">NEW</span>
+</li>
+<li>
+<a target="_blank" href="http://alba-no-oheya.blog.so-net.ne.jp/">albaのお部屋『alba美容室』</a> 11/14<span class="new">NEW</span>
+</li>
+<li>
+<a target="_blank" href="http://tada-de-english.blog.so-net.ne.jp/">LMN研究所 @tada-de-English</a> 11/14<span class="new">NEW</span>
+</li>
+<li>
+<a target="_blank" href="http://yaplog.jp/madoka314/">小林まどか =Official Blog= Mado-Log</a> 11/14<span class="new">NEW</span>
+</li>
+<li>
+<a target="_blank" href="http://nobu-3.blog.so-net.ne.jp/">駄洒落が世界を救う?</a> 11/14<span class="new">NEW</span>
+</li>
+<li>
+<a target="_blank" href="http://teenaka.at.webry.info/">T_NAKAの阿房ブログ</a> 11/14<span class="new">NEW</span>
+</li>
+<li>
+<a target="_blank" href="http://dr-superg.blog.so-net.ne.jp/">早稲田大学鋳物研究所スキー部長の日記</a> 11/14<span class="new">NEW</span>
+</li>
+<li>
+<a target="_blank" href="http://kokemomo2.blog.so-net.ne.jp/">日々徒然</a> 11/14<span class="new">NEW</span>
+</li>
+</ul>
+
+</div>
+<div class="sidebar-end"></div>
+</div>
+
+<div class="sidebar">
+<h3 class="sidebar-title">Maukie! How adorable!!</h3>
+<div class="sidebar-body custom-body">
+<div align="center"><script language="javascript" type="text/javascript" src="http://bloggame.rash.jp/game8/js/r_maukie8.js" charset="Shift_JIS"></script></div>
+</div>
+<div class="sidebar-end"></div>
+</div>
+
+<div id="powered">
+<span id="myblog-poweredby-no-login"><a href="https://lis.so-net.ne.jp/member/pc/blog/addMemberStep1.action"><img src="http://blog.so-net.ne.jp/_css_header/img/btn_join.gif" border="0" alt="ブログを作る(無料)" style="margin:0;" /></a>
+<table border="0" cellpadding="0" cellspacing="0" class="common-link">
+<tr>
+<td>
+<ul>
+<li><a href="http://www.so-net.ne.jp/blog/about/">はじめてガイド</a></li>
+<li><a href="http://www.so-net.ne.jp/blog/about/moving.html">ブログお引越しガイド</a></li>
+<li><a href="http://blog.so-net.ne.jp/_contents/theme/">デザインテンプレートを見る</a></li>
+</ul>
+</td>
+</tr>
+</table>
+<a href="http://blog.so-net.ne.jp/"><img src="http://blog.so-net.ne.jp/_images/blog/_523/filestore/powered.gif" border="0" alt="powered by So-netブログ" /></a></span>
+<span id="myblog-poweredby-login" style="display:none;"><a href="http://blog.so-net.ne.jp/"><img src="http://blog.so-net.ne.jp/_images/blog/_523/filestore/powered.gif" border="0" alt="powered by So-netブログ" /></a></span>
+</div>
+
+<div class="sidebar">
+<h3 class="sidebar-title">トラック・ワード</h3>
+<div class="sidebar-body custom-body">
+<br /><div style="width:120px;margin:0;padding:0;line-height:1.4;text-align:center;overflow:hidden;" id="trackword_banner"><a href="http://www.trackword.biz/"><img src="http://www.trackword.biz/img/minilogov.gif" border="0" alt="SEO"></a><br><a href="http://my.trackword.net/u/kimball/1" id="trackword_loading"><img src="http://www.trackword.biz/img/loadinggr.gif" border="0" alt="loading"><br></a><a href="http://www.trackwords.jp/s/http%253A%252F%252Fkimball.blog.so-net.ne.jp%252F" style="font-size:12px;color:#828282;">来夢望瑠＿日々平凡</a></div><br /><script type="text/javascript">document.write(unescape("%3Cscript src='http://script.trackword.net/vertical.js#kimball' charset='utf-8' type='text/javascript'%3E%3C/script%3E"));</script><br />
+</div>
+<div class="sidebar-end"></div>
+</div>
+
+<div class="sidebar">
+<h3 class="sidebar-title">TrackFeed &amp; なかのひと</h3>
+<div class="sidebar-body custom-body">
+<a href="http://trackfeed.com/"><img name="trackfeed_banner" src="http://img.trackfeed.com/img/tfg.gif" alt="track feed" border="0" align="absmiddle" /></a><br /><nobr><a href="http://trackfeed.com/u/c96965651d3ff32e48d9797ad448cd52c3073461/%E6%9D%A5%E5%A4%A2%E6%9C%9B%E7%91%A0_%E6%97%A5%E3%80%85%E5%B9%B3%E5%87%A1/http%3A%2F%2Fkimball.blog.so-net.ne.jp%2F/5ca498e4">来夢望瑠_日々平凡</a></nobr><br /><script type="text/javascript">
+document.write(unescape("%3Cscript src='http://script.trackfeed.com/usr/9/3/c6ad8959.js' type='text/javascript'%3E%3C/script%3E"));
+</script><br /><br /><script LANGUAGE="Javascript">
+<!--
+var refer = document.referrer;
+document.write("<a href='http://nakanohito.jp/'>");
+document.write("<img src='http://nakanohito.jp/an/?u=182115&h=795414&w=128&guid=ON&t=&version=js&refer="+escape(parent.document.referrer)+"&url="+escape(parent.document.URL)+"' border='0' width='128' height='128' />");
+document.write("</a>");
+//-->
+</script><br /><noscript>
+<img src="http://nakanohito.jp/an/?u=182115&h=795414&w=128&guid=ON&t=" width="128" height="128" alt="" border="0" />
+</noscript><br /><br /><script language="JavaScript" src="http://www.phdcomics.com/previewfeed.php"> </script>
+</div>
+<div class="sidebar-end"></div>
+</div>
+
+<div class="sidebar">
+<h3 class="sidebar-title">My Twitters＼(^o^)／</h3>
+<div class="sidebar-body custom-body">
+<a href="http://twilog.org/pandora_dreamer" target="_blank"><b>Twilog_ツイログはこちら。</b></a><br /><br /><iframe     scrolling="no" frameborder="0" id="twitterWindIframe"     style="width:180px;height:600px; border:none;"     src="http://www.tweetswind.com/show?option=%7B%22isOnlyMe%22%3A%20%22false%22%2C%20%22twitterwind_frame_width%22%3A%20%22180%22%2C%20%22twitterwind_frame_height%22%3A%20%22600%22%2C%20%22twitterwind_frame_border%22%3A%20%22none%22%2C%20%22twitterwind_frame_border_color%22%3A%20%22C0DEED%22%2C%20%22twitterwind_base_font_size%22%3A%20%2212%22%2C%20%22twitterwind_logoimage%22%3A%20%22whiteonblue%22%2C%20%22twitterwind_username%22%3A%20%22on%22%2C%20%22twitterwind_username_bgcolor%22%3A%20%22FFFFFF%22%2C%20%22twitterwind_username_color%22%3A%20%22333333%22%2C%20%22twitterwind_username_follow%22%3A%20%22on%22%2C%20%22twitterwind_max_length%22%3A%20%2239%22%2C%20%22twitterwind_logo_bgcolor%22%3A%20%22FFFFFF%22%2C%20%22twitterwind_twit%22%3A%20%22on%22%2C%20%22twitterwind_twit_scroll_color%22%3A%20%22C0DEED%22%2C%20%22twitterwind_twit_scroll_bg_color%22%3A%20%22FFFFFF%22%2C%20%22twitterwind_twit_bgcolor%22%3A%20%22FFFFFF%22%2C%20%22twitterwind_twit_color%22%3A%20%22333333%22%2C%20%22twitterwind_twit_link_color%22%3A%20%220084B4%22%2C%20%22twitterwind_opacity%22%3A%20%22off%22%2C%20%22twitterwind_follower%22%3A%20%22inherit%22%2C%20%22twitterwind_follower_bgcolor%22%3A%20%22FFFFFF%22%2C%20%22usn%22%3A%20%22124562%22%7D"     > </iframe><br /><br /><div style="font-size:12px; text-align:right; width:180px"><a target="_blank" href="http://www.tweetswind.com">TweetsWind</a></div> <br />
+</div>
+<div class="sidebar-end"></div>
+</div>
+
+<div class="sidebar">
+<h3 class="sidebar-title">Boots on the BLOG! ＼（＾ｏ＾）／</h3>
+<div class="sidebar-body custom-body">
+<a href="http://s01.flagcounter.com/more/djJ"><img src="http://s01.flagcounter.com/count/djJ/bg=FFFFFF/txt=000000/border=CCCCCC/columns=2/maxflags=12/viewers=0/labels=0/pageviews=1/" alt="free counters" border="0"></a><br /><br />  <script type="text/javascript">document.write(unescape("%3Cscript")+" src='http://widget.zenback.jp/?base_uri=http%3A//kimball.blog.so-net.ne.jp/&nsid=91292052096037764%3A%3A91292075181508536&rand="+Math.ceil((new Date()*1)*Math.random())+"' type='text/javascript'"+unescape("%3E%3C/script%3E"));</script>
+</div>
+<div class="sidebar-end"></div>
+</div>
+
+<div class="sidebar" style="text-align:center">
+
+<script type="text/javascript"><!--
+seesaa_template_id  = '102';
+seesaa_adcount      = '2';
+seesaa_hostsite_id  = '14';
+seesaa_site_id      = 'kimball:000207361918';
+seesaa_bg_color     = 'ffffff';
+seesaa_title_color  = '2200cc';
+seesaa_text_color   = '333333';
+seesaa_border_color = 'ffffff';
+seesaa_link_color   = '008000';
+seesaa_bg_reverse_color = 'fff7d7';
+//--></script>
+<script type="text/javascript" src="http://match.seesaa.jp/-/js/square_sonet.js"></script>
+
+</div>
+<!--  風鈴表示ブログパーツ 2009.8.29 17:20 comment out
+<script type='text/javascript' src='http://parts.kuru2jam.com/js/SWFLayer.js'></script>
+<script type='text/javascript' src='http://parts.kuru2jam.com/js/wind_chime.js'></script>
+-->
+
+
+
+
+
+<div id="rssfeed">
+<img src="http://blog.so-net.ne.jp/_common/img/rssfeed_s.gif" alt="RSS" align="absmiddle" />
+<a href="http://kimball.blog.so-net.ne.jp/index.rdf">RSS1.0</a> |
+ <a href="http://kimball.blog.so-net.ne.jp/index.xml">RSS2.0</a>
+</div>
+
+</div>
+
+</div>
+</div>
+
+<span id="iphone-link" style="display:none; padding-top:3px;text-align:left;"><a href="javascript:document.cookie='force_pc=0; max-age=15768000; path=/'; document.location='/'">スマートフォン専用ページを表示</a></span>
+<script type="text/javaScript"><!--
+if ((0 <= navigator.userAgent.indexOf('iPhone')) || (0 <= navigator.userAgent.indexOf('Android'))) {
+document.getElementById('iphone-link').style.display = 'block'; 
+}
+//--></script>
+<script type="text/javascript" src="http://www.so-net.ne.jp/search/javascripts/research/research.js"></script>
+<script type="text/javascript">
+new ResearchBox({from:'blog_sarani'});
+</script>
+<script type="text/javascript" charset="UTF-8" src="http://blog.so-net.ne.jp/_common/js/select_search.js"></script>
+<script type="text/javascript">
+<!--
+new SelectedSearchBox({from: 'blog_select', linkTarget: '_blank'});
+// -->
+</script>
+<div id="footer">
+    <p class="footlink"><a href="http://blog-help.blog.so-net.ne.jp/">使い方</a> - <a href="http://faq.blog.so-net.ne.jp/">Q&amp;A</a></p>
+    <p class="copyright"><a href="http://www.so-net.ne.jp/">So-netトップ</a> - <a href="http://blog.so-net.ne.jp/" title="So-netブログ">ブログ</a> - <a href="http://www.k-words.jp/" title="So-net キーワード">キーワード</a> - <a href="http://www.so-net.ne.jp/point/" title="ソネットポイント">ソネットポイント</a></p>
+</div>
+
+
+
+
+<div id="viasearch-ad-area" class="viasearch-ad"></div>
+<script type="text/javascript"><!--
+seesaa_bg_color         = 'ffffff';
+seesaa_title_color      = '0090ff';
+seesaa_text_color       = '000000';
+seesaa_border_color     = 'ffffff';
+seesaa_template_id      = '00002';
+seesaa_adcount          = '2';
+seesaa_bg_reverse_color = 'fff7d7';
+seesaa_hostsite_id      = 135;
+seesaa_site_id          = '999999999997';
+//--></script>
+<script type="text/javascript" src="http://match.seesaa.jp/-/js/square_viasearch_sonet.js" charset="UTF-8"></script>
+
+<script type="text/javascript"><!--
+var adArea  = document.getElementById('viasearch-ad-area');
+var content = document.getElementById('main');
+if(content && adArea){
+  if(content.firstChild) {
+    content.insertBefore(adArea, content.firstChild);
+  }
+  else {
+    content.appendChild(adArea);
+  }
+}
+--></script>
+<div style="display:none;"></div>
+
+
+
+<script type="text/javascript">
+var name = "i-aad";
+var dc = document.cookie;
+var prefix = name + "=";
+var begin = dc.indexOf(prefix);
+if (begin != -1) {
+   var dom_obj = document.getElementById('ad-days-area');
+   dom_obj.style.display = "none";
+}
+</script>
+</body>
+</html>

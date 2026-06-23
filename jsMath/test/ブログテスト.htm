@@ -1,0 +1,285 @@
+﻿<!DOCTYPE html>
+<SCRIPT SRC="http://homepage3.nifty.com/homepage_yamaV102/jsMath-3.6e/easy/load.js"></SCRIPT><!-- firefox はこれだけで動作する -->
+<SCRIPT SRC="http://homepage3.nifty.com/homepage_yamaV102/jsMath-3.6e/jsMath.js"></SCRIPT><!-- IE10 で動かす為にはこっちも無いとダメっぽい　-->
+
+
+
+
+<p>\(3^2 + 5 \times \tan30 \sqrt{2}\)</p> \(3^2 + 5 \times \tan30 \sqrt{2}\)
+\(sin A =\)\(CB\over AC\)
+<p>
+\(sin A =\)\(CB\over AC\)
+</p>
+<p>
+ \(\int {1\over x}\,dx = \ln(x)+C\)
+
+</p>
+<div CLASS="math">\int {1\over x}\,dx = \ln(x)+C </div>
+<div CLASS="math">\sin A={CB\over AC}</div>
+
+<link rel="stylesheet" href="http://homepage3.nifty.com/homepage_yamaV102/highlight.js/styles/vs.css" />
+<p><script type="text/javascript" src="http://homepage3.nifty.com/homepage_yamaV102/highlight.js/highlight.pack.js"></script><script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+</p>
+
+<div class="myArea">
+<SCRIPT SRC="../easy/load.js"></SCRIPT>
+<h1>
+VBA Friend というスコープと クラスの Instancing プロパティの PublicNotCreatable
+</h1>
+<h2>
+Friend というスコープ
+</h2>
+<p>
+VBA の Friend というスコープは、全然特殊な物ではなくて、ごくごく普通に
+使われるようになる事が正解なのだと思います。
+</p>
+<p>
+Public は「本当に外部に公開して良いメソッド、或いは関数なのか」
+よくよく考えた末に使う。それだけでは何の役にもたたない下請け関数は、
+当然 Private で宣言します。
+</p>
+<p>
+VBAによるツールを使用するユーザーも「外部」。
+Public で宣言したメソッドや関数は <dfn>Alt+F8</dfn> のマクロ画面や、
+<dfn>ユーザー定義関数</dfn>として、ユーザーは実行できてしまうのだ、と言う
+事を考えたら、Public なんておいそれと使えません。
+</p>
+<p>
+ユーザーに直接利用させる目的で作る、「マクロ」や「関数」という場合も
+当然あります。その場合も、本当に使わせたい「マクロ」や「関数」だけがユーザーから
+見えるようになっていなければ、使い勝手が悪いです。スコープの宣言に Friend を使うだけで、「外部
+」であるユーザーから隠蔽できるのであれば、
+こんな良い物を使わないなんて勿体ないでしょう。
+</p>
+<table border="1" id="userscope">
+<caption>
+モジュール別：Publicで宣言されたプロシージャ・Function はユーザーからどこまで見える
+</caption>
+<tbody><tr>
+<th></th>
+<th>Thisworkbook</th>
+<th>Worksheet</th>
+<th>クラスモジュール</th>
+<th>標準モジュール</th>
+<th>フォームモジュール</th>
+</tr>
+<tr>
+<th>マクロの実行</th>
+<td style="background-color: lemonchiffon;">見える</td>
+<td style="background-color: lemonchiffon;">見える</td>
+<td style="background-color: lightgray;">隠蔽</td>
+<td style="background-color: lemonchiffon;">見える</td>
+<td style="background-color: lightgray;">隠蔽</td>
+</tr>
+<tr>
+<th>ユーザー定義関数</th>
+<td style="background-color: lightgray;">隠蔽</td>
+<td style="background-color: lightgray;">隠蔽</td>
+<td style="background-color: lightgray;">隠蔽</td>
+<td style="background-color: lemonchiffon;">見える</td>
+<td style="background-color: lightgray;">隠蔽</td>
+</tr>
+</tbody>
+</table>
+<p>
+とはいえ、Friend は標準モジュールでは使えません。
+フォームやシートモジュールに、そのフォームやシートに関係のないメソッドや
+関数を押し込んでしまう、というのも、出来てしまうのではありますが、
+何が何処に書かれているのか、分類してコーディングしないと混乱するのでやりません。
+</p>
+<p>
+となると クラスモジュールに書くしかありません。
+クラスを使った事が無い人は、「オブジェクト指向とは何か」などと構えなくてよいですから、
+標準モジュールだと思って使えば良いと思います。New キーワードでインスタンスを生成してから
+でないと書いたコードを実行出来ないところが使い勝手の異なるところですが、
+FileSystemObject とかがインスタンス生成しないと使えないのと同じなのですから、
+使い方は既に知っている事になります。
+プロパティは関数。メソッドはプロシージャと原理的に変りません。
+プロパティがピンとこないのであれば、モジュールレベル変数を扱う
+Functionプロシージャを書いておけばよいです。
+</p>
+<p>
+クラスモジュールに記述した関数やプロシージャは、 Public であっても
+ユーザーには公開されません。クラスモジュールで Public と Friend を使い分ける意義は、
+自プロジェクトの外部にあるプロジェクトを意識しないと出て来ません。
+</p>
+
+<hr />
+<p>
+エクセルVBA は自分で書いたコードを
+DLL として発行する事は出来ないけれど、
+自ブックをアドイン化する事はできます。
+アドインをアドインとして登録すると、エクセルアプリケーションに対して
+常駐する事になりますが、アドインファイルを DLL のように参照設定すると、
+参照設定したブック単位で使う事になり、参照設定したプロジェクト内の
+コードは Public で宣言したオブジェクト、またはプロシージャ、または関数だけが
+参照出来るようになります。ここで Friend を使う意義が出てきます。
+</p>
+
+<p>
+ある程度の時間「プログラムを書く」という作業に関わっていると、
+「自分ってば、またこの処理書いてる。以前造ったデバッグ済みの
+あのコードがここにあれば」という事が出てきたり出て来なかったり。
+そんな時、書き溜めたクラスの塊だけアドインファイルに造っておけば、
+開発もサクサクすすむ（筈です）。クラスを沢山造り過ぎると混乱してくるので、
+グループ分けしたくなる場合がある（らしい）。
+グループ毎にアドインファイルにしておく事も出来るので、
+これは<dfn>パッケージ</dfn>と同じ機能の実現なんではないか。
+（間違いを書いていたら叱って欲しい）。
+</p>
+<p>
+開発がサクサク進むとしても、引き渡す際にアドインファイルも
+一緒に渡さなくてはならなくなる、という問題は残ります。
+使用している DLL が無ければ動作しないというのは、数多あるアプリケーションと
+条件は変わらない筈なのですが、ちょっと照れてしまい自分には出来ません。
+しかし、十数個のアドインを参照設定して利用されているエクセルというものを、私は
+見た事があります。どの程度一般的に行われているのかは知らないけれど。
+</p>
+<p>
+自分なら、使ったクラスは、自ブックのクラスとしてコピペなりして、
+改めて動作テストする事にすると思うが、それでもメリットの方が大きいと思うのです。
+</p>
+<h2>クラスの Instancing プロパティの PublicNotCreatable</h2>
+<p>
+外部プロジェクトでクラスを利用するには、クラスの
+Instancing プロパティを PublicNotCreatable に
+しておかないと参照出来ません。そして、<strong>NotCreatable</strong>
+とあるように外部からインスタンスの生成が出来ない、ので、
+インスタンスを Get する為の関数を用意しておく必要があります。
+この関数はアドインファイルの <dfn>ThisWorkbook</dfn> モジュールに
+書いておけばユーザーから隠す事が出来ます。
+<del>
+に modPublicObjcts モジュールとかいう
+名前の標準モジュールを用意して書いておけばいいんじゃないか。
+標準モジュールに Public で書いても、ファイル自体がアドインなので
+ユーザーからは隠蔽されているのです。</del>以下に手順を書いてみます。
+</p>
+<p>
+アドインにするファイルに Class1 モジュールを用意します。
+</p>
+<div id="code0">
+<pre><code>
+Option Explicit
+'外部プロジェクトで利用するクラス：Class1モジュール
+
+'プロジェクト外にも公開するメソッド
+Public Sub classPMethod()
+&nbsp; &nbsp; MsgBox &quot;classPMethod&quot;
+End Sub
+
+'プロジェクト外には非公開だが、自プロジェクト内には公開するメソッド
+Friend Sub classFMethod()
+&nbsp; &nbsp; MsgBox &quot;classFMethod&quot;
+End Sub
+
+'コンストラクタ
+Private Sub Class_Initialize()
+&nbsp; &nbsp; MsgBox &quot;Initialize&quot;
+End Sub
+
+'デストラクタ
+Private Sub Class_Terminate()
+&nbsp; &nbsp; MsgBox &quot;Terminate&quot;
+End Sub
+</code>
+</pre>
+</div>
+<p>
+Instancing プロパティは PublicNotCreatable に設定します。 </p>
+
+<p><img border="0" alt="Notcreatable" title="Notcreatable" src="http://yamav102.cocolog-nifty.com/photos/uncategorized/2013/07/09/notcreatable.png" />
+
+
+<br />
+
+
+</p>
+<p>
+アドインにするファイルの <dfn>ThisWorkbook</dfn> モジュール に、
+Class1 のインスタンスを返す関数を Public で用意します。
+</p>
+<div id="code0">
+<pre><code>
+Option Explicit
+'プロジェクト外部に公開するオブジェクト達
+'ThisWorkbookモジュール
+
+Public Function obj1() As class1
+&nbsp; &nbsp; Set obj1 = New class1
+End Function
+</code>
+</pre>
+</div>
+<p>
+プロジェクトに名前を付ける。
+DLL の定義がどうなっているのかは調べていないが、Dynamic で
+Link な Library ではあるだろう。 </p>
+
+<p><img border="0" src="http://yamav102.cocolog-nifty.com/photos/uncategorized/2013/06/30/projectproperty.png" title="Projectproperty" alt="Projectproperty" /> </p>
+
+<p><img border="0" src="http://yamav102.cocolog-nifty.com/photos/uncategorized/2013/06/30/prjctname.png" title="Prjctname" alt="Prjctname" />
+
+
+</p>
+<p>
+ファイルをアドインとして保存して閉じる。
+</p>
+<p>
+アドインファイルを利用する新規ブック（新規プロジェクト）
+を作成し、アドインファイルを参照設定する。
+</p>
+
+<p> <img border="0" src="http://yamav102.cocolog-nifty.com/photos/uncategorized/2013/06/30/reference.png" title="Reference" alt="Reference" />
+
+
+</p>
+
+<p>
+Public で宣言したメソッドしか
+利用できない状態である事が確認できます。 </p>
+
+<p><img border="0" alt="Obj1" title="Obj1" src="http://yamav102.cocolog-nifty.com/photos/uncategorized/2013/07/09/obj1.png" />
+
+
+</p>
+
+<p>↓<br /> </p>
+
+<p><img border="0" alt="Intellisense" title="Intellisense" src="http://yamav102.cocolog-nifty.com/photos/uncategorized/2013/07/09/intellisense.png" />
+
+
+<br />
+
+
+</p>
+<p>
+<code>Set obj1 = New class1</code> で作成したオブジェクトを
+Get する構造に、「オブジェクトがメモリー常駐になるのでは？」
+と心配になる方は、コンストラクタである <dfn>Initialize</dfn> と
+デストラクタである <dfn>Terminate</dfn> のタイミングも確認して下さい。
+VB、VBA では New した時にインスタンスが生成されるのではなく、
+オブジェクトのメソッドなりプロパティを初めて利用するタイミングで、
+インスタンスが生成され、スコープを外れた時点で解放される様子が
+判ります。問題ないと考えていますが、どう？
+</p>
+<div style="margin: auto; text-align: center;"><img border="0" src="http://yamav102.cocolog-nifty.com/photos/uncategorized/2013/06/30/initialize.png" title="Initialize" alt="Initialize" /><br /><br />↓<br /><img border="0" src="http://yamav102.cocolog-nifty.com/photos/uncategorized/2013/06/30/classpmethod.png" title="Classpmethod" alt="Classpmethod" /><br /><br />↓<br /><img border="0" src="http://yamav102.cocolog-nifty.com/photos/uncategorized/2013/06/30/terminate.png" title="Terminate" alt="Terminate" />
+&nbsp; </div>
+
+<hr />
+
+<p>
+ただ思いつきを書いているだけで、実際に「私はこうやっています」
+という話ではありません。やってみようとは思っています。
+</p>
+<p>以上です</p>
+<div id="updatehistory">
+	<h2>Update history</h2>
+	<ul>
+		<li>2013/7/9:文章なおしました。アドインだから Public で宣言してもユーザーからは隠蔽されている、などと書いた部分は誤りです。標準モジュールではなく ThisWorkbookモジュールで宣言する事でユーザーから関数を隠す手順に書き換えてあります。&lt;(_ _)&gt;</li>
+
+
+		<li>2013/11/15:<a href="#userscope">モジュール別：Publicで宣言されたプロシージャ・Function はユーザーからどこまで見える</a> を追加しました。
+	</li>
+	</ul>
+</div>
+</div>

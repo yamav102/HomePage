@@ -1,0 +1,806 @@
+<html lang="Ja">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html401/strict.dtd">
+<meta http-equiv="Content-Type" content="text/html,charset=shift_jis">
+<!--        <meta http-equiv="Content-Type" 
+            content="text/html; charset=iso-2022-jp"> -->
+<meta name="description" content="Win32API">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta name="robots" content="noindex,nofollow">
+
+<link rel="stylesheet" type="text/css" href="./vb.css">
+<title>■Win32APIサンプル_4</title>
+
+<body>
+<div class="content">
+
+<h1>■Win32APIサンプル４</h1>
+
+<table id="hanrei">
+<tr>
+<td class="tdApi">API関数宣言</td>
+<td class="tdConst">定数宣言・構造体</td>
+<td class="tdProc">プロシージャのサンプル</td>
+</tr>
+</table>
+
+<h2>ディスクの空き容量を取得する</h2>
+<p>Win98以降の環境ではGetDiskFreeSpace関数は間違った値を返すので、
+GetDiskFreeSpaceEx関数を使用します。引数としてULARGE_INTEGER型
+が要求されますが、VBAでは対応する型がありません。そこで、32ビットづつ
+前半後半に分けた構造体 ULARG_INTEGER を宣言し、シフト演算するという
+テクニックを使用しています。</p>
+<pre class="codeApi"><span class="REM"><a name="GetDiskFreeSpaceEx"></a>
+'---------------------------------------------
+'ディスクに関する情報(空き容量など)を取得する関数
+'
+'戻り値     成功 = 0以外
+'           失敗 = 0
+'---------------------------------------------</span>
+Declare Function GetDiskFreeSpaceEx Lib "kernel32" _
+    Alias "GetDiskFreeSpaceExA" _
+    (ByVal lpDirectoryName As String, _
+    lpFreeBytesAvailableToCaller As ULARGE_INTEGER, _
+    lpTotalNumberOfBytes As ULARGE_INTEGER, _
+    lpTotalNumberOfFreeBytes As ULARGE_INTEGER) As Long
+
+<pre class="codeConst"><span class="REM">
+'64ビットの構造体</span>
+Type ULARGE_INTEGER
+    LowPart As Long
+    HighPart As Long
+End Type</pre></pre>
+
+<pre class="codeProc"><a name="GetDiskFreeSpaceEx_Sample"></a><span class="REM">
+'summary:ディスクの空き容量と総容量を取得する（2GB超）</span>
+Sub GetDiskFreeSpaceEx_Sample()
+    Dim strDirectoryName As String                      <span class="REM">'ディスクのルートディレクトリ</span>
+    Dim udtFreeBytesAvailableToCaller As ULARGE_INTEGER <span class="REM">'ディスクの空き容量</span>
+    Dim udtTotalNumberOfBytes As ULARGE_INTEGER         <span class="REM">'ディスクの総容量</span>
+    Dim udtTotalNumberOfFreeBytes As ULARGE_INTEGER     <span class="REM">'ディスクの空き容量</span>
+    
+    Dim rc As Long
+    
+    Dim vntLowPart1 As Variant                          <span class="REM">'空き容量</span>
+    Dim vntHighPart1 As Variant                         <span class="REM">'空き容量</span>
+    Dim vntTotal1 As Variant                            <span class="REM">'空き容量</span>
+
+    Dim vntLowPart2 As Variant                          <span class="REM">'総容量</span>
+    Dim vntHighPart2 As Variant                         <span class="REM">'総容量</span>
+    Dim vntTotal2 As Variant                            <span class="REM">'総容量</span>
+        
+    <span class="REM">'&lt;使用しているOSに応じて絶対パスを変更してください&gt;</span>
+    strDirectoryName = "C:\"
+    
+    rc = GetDiskFreeSpaceEx(strDirectoryName, _
+                            udtFreeBytesAvailableToCaller, _
+                            udtTotalNumberOfBytes, _
+                            udtTotalNumberOfFreeBytes)
+        
+    With udtTotalNumberOfFreeBytes
+        vntLowPart1 = CDec(.LowPart)
+        vntHighPart1 = CDec(.HighPart)
+    End With
+    
+    <span class="REM">'符号付き席数longの上限を超えた値は最上位ビットに
+    '1がたって負数で返ってくる為、2^32を加算して
+    '問題を回避する。</span>
+    If vntLowPart1 < 0 Then
+        vntLowPart1 = vntLowPart1 + 2 ^ 32
+    End If
+    
+    If vntHighPart1 < 0 Then
+        vntHighPart1 = vntHighPart1 + 2 ^ 32
+    End If
+    
+    <span class="REM">'空き容量のシフト演算</span>
+    vntTotal1 = (vntHighPart1 * 2 ^ 32) + vntLowPart1
+        
+    With udtTotalNumberOfBytes
+        vntLowPart2 = CDec(.LowPart)
+        vntHighPart2 = CDec(.HighPart)
+    End With
+    
+    If vntLowPart2 < 0 Then
+        vntLowPart2 = vntLowPart2 + 2 ^ 32
+    End If
+    
+    If vntHighPart2 < 0 Then
+        vntHighPart2 = vntHighPart2 + 2 ^ 32
+    End If
+    <span class="REM">'総容量のシフト演算</span>
+    vntTotal2 = (vntHighPart2 * 2 ^ 32) + vntLowPart2
+
+    MsgBox _
+        "空き容量: " & Format(vntTotal1, "#,### バイト") _
+        & Chr(13) & _
+        "総容量: " & Format(vntTotal2, "#,### バイト")
+        
+    Debug.Print "空き容量: " & Format(vntTotal1, "#,### バイト") & _
+    "   " & Format(vntTotal1 / 1024 / 1024 / 1024, "0.000 Gバイト")
+    Debug.Print "総容量: " & Format(vntTotal2, "#,### バイト") & _
+    "    " & Format(vntTotal2 / 1024 / 1024 / 1024, "0.000 Gバイト")
+    
+End Sub</pre>
+<h2>ボリューム名を取得／設定する</h2>
+<pre class="codeApi"><a name="GetVolumeInformation"></a><span class="REM">'----------------------------------------------------------------
+'ルートディレクトリのファイルシステムやボリュームの情報を取得する関数
+'
+'戻り値     成功 = 0以外
+'           失敗 = 0
+'----------------------------------------------------------------</span>
+Declare Function GetVolumeInformation Lib "kernel32" _
+    Alias "GetVolumeInformationA" _
+    (ByVal lpRootPathName As String, _
+    ByVal lpVolumeNameBuffer As String, _
+    ByVal nVolumeNameSize As Long, _
+    lpVolumeSerialNumber As Long, _
+    lpMaximumComponentLength As Long, _
+    lpFileSystemFlags As Long, _
+    ByVal lpFileSystemNameBuffer As String, _
+    ByVal nFileSystemNameSize As Long) As Long
+
+<pre class="codeConst">
+ Const MAX_PATH = 260
+    
+ Const FILE_CASE_SENSITIVE_SEARCH = &H1&
+ Const FILE_CASE_PRESERVED_NAMES = &H2&
+ Const FILE_UNICODE_ON_DISK = &H4&
+ Const FILE_PERSISTENT_ACLS = &H8&
+ Const FILE_FILE_COMPRESSION = &H10&
+ Const FILE_VOLUME_IS_COMPRESSED = &H8000&
+
+<span class="REM">'ファイル名の大文字、小文字の区別をサポートしている</span>
+ Const FS_CASE_SENSITIVE = FILE_CASE_SENSITIVE_SEARCH
+<span class="REM"> 'ディスクにファイル名を記録するときに大文字、小文字の違いを保存する</span>
+ Const FS_CASE_IS_PRESERVED = FILE_CASE_PRESERVED_NAMES
+<span class="REM"> 'Unicodeのファイル名をサポートする</span>
+ Const FS_UNICODE_STORED_ON_DISK = FILE_UNICODE_ON_DISK
+<span class="REM"> 'ACL（アクセスコントロールリスト）の保存と強制を行う（NTFSのファイルシステムがこれに相当）</span>
+ Const FS_PERSISTENT_ACLS = FILE_PERSISTENT_ACLS
+<span class="REM"> 'ファイルベースの圧縮をサポートする</span>
+ Const FS_FILE_COMPRESSION = FILE_FILE_COMPRESSION
+<span class="REM"> '指定されたボリュームは圧縮ボリュームである</span>
+ Const FS_VOL_IS_COMPRESSED = FILE_VOLUME_IS_COMPRESSED
+
+<span class="REM">'ディスクの使用量の割り当てをサポートする</span>
+ Const FILE_VOLUME_QUOTAS = &H20
+<span class="REM"> 'スパースファイルをサポートする</span>
+ Const FILE_SUPPORTS_SPARSE_FILES = &H40
+<span class="REM"> 'リパースポイントをサポートする</span>
+ Const FILE_SUPPORTS_REPARSE_POINTS = &H80
+<span class="REM"> 'リモートストレージをサポートする</span>
+ Const FILE_SUPPORTS_REMOTE_STORAGE = &H100
+<span class="REM"> 'オブジェクトIDをサポートする</span>
+ Const FILE_SUPPORTS_OBJECT_IDS = &H10000
+<span class="REM"> '暗号化ファイルシステム（EFS）をサポートする</span>
+ Const FILE_SUPPORTS_ENCRYPTION = &H20000</pre></pre>
+
+<pre class="codeProc"><span class="REM">'summary:ボリューム名を取得する</span><a name="GetVolumeInformation_Sample"></a>
+Sub GetVolumeInformation_Sample()
+    Dim strRootPathName As String                       <span class="REM">'ルートディレクトリ名</span>
+    Dim strVolumeNameBuffer As String * MAX_PATH        <span class="REM">'ボリューム名</span>
+    Dim lngVolumeNameSize As Long                       <span class="REM">'ボリューム名のバッファ(文字数)</span>
+    Dim lngVolumeSerialNumber As Long                   <span class="REM">'ボリュームのシリアル番号</span>
+    Dim lngMaximumComponentLength As Long               <span class="REM">'ファイル名構成要素の最大長</span>
+    Dim lngFileSystemFlags As Long                      <span class="REM">'ファイルシステムフラグ</span>
+    Dim strFileSystemNameBuffer As String * MAX_PATH    <span class="REM">'ファイルシステム名</span>
+    Dim lngFileSystemNameSize As Long                   <span class="REM">'ファイルシステム名のバッファ(文字数)</span>
+    Dim rc As Long
+    
+    <span class="REM">'ルートディレクトリを指定</span>
+    strRootPathName = "C:\"
+    
+    <span class="REM">'ボリューム名のバッファ(文字数)を指定</span>
+    lngVolumeNameSize = MAX_PATH
+    
+    <span class="REM">'ファイルシステム名のバッファ(文字数)を指定</span>
+    lngFileSystemNameSize = MAX_PATH
+    
+    <span class="REM">'ファイルシステムおよびボリュームに関する情報を取得</span>
+    rc = GetVolumeInformation(strRootPathName, _
+                            strVolumeNameBuffer, _
+                            lngVolumeNameSize, _
+                            lngVolumeSerialNumber, _
+                            lngMaximumComponentLength, _
+                            lngFileSystemFlags, _
+                            strFileSystemNameBuffer, _
+                            lngFileSystemNameSize)
+
+    <span class="REM">'ファイルシステムおよびボリュームに関する情報を表示</span>
+    MsgBox _
+    "ディスク: " & strRootPathName _
+    & Chr(13) & _
+    "ボリューム名: " & Left(strVolumeNameBuffer, _
+                    InStr(strVolumeNameBuffer, vbNullChar) - 1) _
+    & Chr(13) & _
+    "ボリュームシリアル番号: " & Hex(lngVolumeSerialNumber) _
+    & Chr(13) & _
+    "ファイル名の最大長: " & lngMaximumComponentLength _
+    & Chr(13) & _
+    "ファイルシステムフラグ: " & Hex(lngFileSystemFlags) _
+    & Chr(13) & _
+    "ファイルシステム名: " & Left(strFileSystemNameBuffer, _
+                        InStr(strFileSystemNameBuffer, vbNullChar) - 1)
+End Sub</pre>
+<h2>ボリュームラベルを設定する</h2><pre class="codeApi"><a name="SetVolumeLabel"></a><span class="REM">'-----------------------------
+'ボリュームラベルを設定する関数
+'第1 引数にNull を指定すると、カレントディレクトリのルートが対象となります。
+'戻り値     成功 = 0以外
+'           失敗 = 0
+'-----------------------------</span>
+Declare Function SetVolumeLabel Lib "kernel32" _
+    Alias "SetVolumeLabelA" _
+    (ByVal lpRootPathName As String, _
+    ByVal lpVolumeName As String) As Long</pre>
+
+<pre class="codeProc"><span class="REM">'ボリュームラベルを設定する</span><a name="SetVolumeLabel_Sample"></a>
+Sub SetVolumeLabel_Sample()
+    Dim strRootPathName As String   <span class="REM">'ルートディレクトリ名(NULLの時カレントディレクトリのルート)</span>
+    Dim strVolumeName As String     <span class="REM">'ボリューム名</span>
+    Dim rc As Long
+
+    Dim intRtn As Integer
+
+    intRtn = _
+        MsgBox("C:のボリューム名を""HOGE""に設定します", _
+        vbYesNo + vbQuestion + vbDefaultButton2)
+
+    If intRtn = vbNo Then Exit Sub
+        
+    <span class="REM">'ルートディレクトリを指定</span>
+    strRootPathName = "C:\"
+    
+    <span class="REM">'ボリューム名を指定</span>
+    strVolumeName = "HOGE"
+    
+    <span class="REM">'ボリューム名を設定</span>
+    rc = SetVolumeLabel(strRootPathName, _
+                        strVolumeName)
+End Sub</pre>
+<pre class="codeProc"><a name="SetVolumeLabel_Sample2"></a><span class="REM">'summary:ボリュームラベルを削除する</span>
+Sub SetVolumeLabel_Sample2()
+
+	<span class="REM">
+    'ルートディレクトリ名(NULLの時カレントディレクトリのルート)</span>
+    Dim strRootPathName As String   
+    Dim rc As Long
+
+    Dim intRtn As Integer
+
+    intRtn = _
+		MsgBox("Cドライブのボリュームラベルを削除しますか?", _
+		vbYesNo + vbQuestion + vbDefaultButton2)
+
+    If intRtn = vbNo Then Exit Sub
+                
+    <span class="REM">'ルートディレクトリを指定</span>
+    strRootPathName = "C:\"
+    
+    <span class="REM">'ボリューム名を削除</span>
+    rc = SetVolumeLabel(strRootPathName, _
+                        vbNullString)
+End Sub</pre>
+<h2>Windowsのバージョン情報を取得する</h2>
+<p>VBAでこの関数を使う必要はありません。?Application.OperatingSystem で Windows (32-bit) NT 5.01 まで取得できます。
+ここでは、ビット演算のサンプルとして掲載します。</p><p>
+ビット演算を行っているのは、<em>"ビルド番号: " & CStr(.dwBuildNumber And &HFFFF&)</em>この部分。
+Win32s on Windows 3.1か Windows95/98 の場合のみ３２ビットの返り値の下位１６ビットだけ取り出さないとビルド番号をにならない
+という事情によります。３２ビットの下位１６ビットを取り出すために、
+下位１６ビットが全て１であるFFFFと３２ビットの返り値をAND演算して上位１６ビットを 0 にするという処理をしています。
+</p><pre class="codeApi"><a name="GetVersionEx"></a><span class="REM">'--------------------------------------
+'Windowsのバージョン情報を取得する関数
+'
+'戻り値     成功 = 0以外
+'           失敗 = 0
+'--------------------------------------</span>
+Declare Function GetVersionEx Lib "kernel32" _
+    Alias "GetVersionExA" _
+    (lpVersionInformation As OSVERSIONINFO) As Long
+
+<pre class="codeConst">
+<span class="REM">'Windowsのバージョン情報を受け取る構造体</span>
+Type OSVERSIONINFO
+    dwOSVersionInfoSize As Long     <span class="REM">'構造体のバイト数</span>
+    dwMajorVersion As Long          <span class="REM">'メジャーバージョン番号</span>
+    dwMinorVersion As Long          <span class="REM">'マイナーバージョン番号</span>
+    dwBuildNumber As Long           <span class="REM">'ビルド番号</span>
+    dwPlatformId As Long            <span class="REM">'プラットフォームID</span>
+    szCSDVersion(127) As Byte       <span class="REM">'OSに関する付加情報</span>
+End Type
+
+ Const VER_PLATFORM_WIN32s = 0&           <span class="REM">'Win32s on Windows 3.1</span>
+ Const VER_PLATFORM_WIN32_WINDOWS = 1&    <span class="REM">'Windows95/98</span>
+ Const VER_PLATFORM_WIN32_NT = 2&         <span class="REM">'WindowsNT</span></pre></pre>
+
+<pre class="codeProc"><a name="GetVersionEx_Sample"></a><span class="REM">'summary:Windowsのバージョン情報を取得する</span>
+Sub GetVersionEx_Sample()
+    Dim udtOSVERSIONINFO As OSVERSIONINFO
+    Dim rc As Long
+    
+    <span class="REM">'Windowsのバージョン情報を受け取る構造体を初期化</span>
+    udtOSVERSIONINFO.dwOSVersionInfoSize = LenB(udtOSVERSIONINFO)
+    
+    <span class="REM">'Windowsのバージョン情報を取得</span>
+    rc = GetVersionEx(udtOSVERSIONINFO)
+    
+    With udtOSVERSIONINFO
+        MsgBox "バージョン番号: " & _
+            .dwMajorVersion & "." & .dwMinorVersion
+        
+        Select Case .dwPlatformId
+            Case VER_PLATFORM_WIN32s
+                    MsgBox "プラットフォームID: " & _
+                        "Win32s on Windows 3.1"
+                        
+            Case VER_PLATFORM_WIN32_WINDOWS
+                If .dwMinorVersion = 0 Then
+                    MsgBox _
+                    "プラットフォームID: " & "Windows95" _
+                    & vbCr & _
+                    "ビルド番号: " & CStr(.dwBuildNumber And &HFFFF&)
+                Else
+                    MsgBox _
+                    "プラットフォームID: " & "Windows98" _
+                    & vbCr & _
+                    "ビルド番号: " & CStr(.dwBuildNumber And &HFFFF&)
+                End If
+            
+            Case VER_PLATFORM_WIN32_NT
+                    MsgBox _
+                    "プラットフォームID: " & "Windows NT" _
+                    & vbCr & _
+                    "ビルド番号: " & CStr(.dwBuildNumber)
+        End Select
+    End With
+End Sub</pre>
+<h2>コンピュータ名を取得／設定する</h2>
+<p>コンピュータ名を取得するだけなら?environ("computername")で済みます。</p><pre class="codeApi"><a name="GetComputerName"></a><span class="REM">'--------------------------------------
+'コンピューター名を取得する関数
+'
+'戻り値     成功 = 0以外
+'           失敗 = 0
+'--------------------------------------</span>
+Declare Function GetComputerName Lib "kernel32" _
+    Alias "GetComputerNameA" _
+    (ByVal lpBuffer As String, _
+    nSize As Long) As Long
+
+<pre class="codeConst"><span class="REM">
+'コンピューター名の最大長</span>
+Public Const MAX_COMPUTERNAME_LENGTH = 15</pre></pre>
+
+<pre class="codeProc"><a name="GetComputerName_Sample"></a><span class="REM">'summary:コンピュータ名を取得する</span>
+Sub GetComputerName_Sample()
+    Const ComputerNameLength = MAX_COMPUTERNAME_LENGTH + 1
+    Dim strBuffer As String * ComputerNameLength
+    Dim lngSize As Long
+    Dim rc As Long
+    
+    <span class="REM">'コンピューター名の長さを設定</span>
+    lngSize = Len(strBuffer)
+    
+    <span class="REM">'コンピューター名を取得</span>
+    rc = GetComputerName(strBuffer, _
+                        lngSize)
+                        
+    <span class="REM">'コンピューター名を表示</span>
+    MsgBox "コンピューター名: " & _
+        Left(strBuffer, InStr(strBuffer, vbNullChar) - 1)
+End Sub</pre>
+<p>以下のサンプルはコンピュータ名を変更してしまいます。
+影響が無い事を確認できない場合は<em>実行しないでください。</em>
+</p>
+<pre class="codeApi"><a name="SetComputerName"></a><span class="REM">'コンピューター名を設定する関数
+'戻り値 成功 = 0 以外
+' 失敗 = 0</span>
+Declare Function SetComputerName Lib "kernel32" _
+Alias "SetComputerNameA" _
+(ByVal lpComputerName As String) As Long</pre>
+<pre class="codeProc"><span class="REM">'summary:コンピューター名を設定します</span><a name="SetComputerName_Sample"></a>
+Sub SetComputerName_Sample()
+  Dim strComputerName As String
+  Dim rc As Long
+
+  strComputerName = "HOGE"
+
+  If Len(strComputerName) > 15 Then
+    MsgBox "コンピューター名が長すぎます"
+    Exit Sub
+  End If
+  'コンピューター名を設定
+  rc = SetComputerName(strComputerName)
+End Sub</pre>
+<h2>ユーザー名を取得する</h2>
+<p>ユーザー名は ?environ("username")で取得できます。</p>
+<pre class="codeApi"><a name="GetUserName"></a>'--------------------------------------<span class="REM">
+'ユーザー名を取得する関数
+'
+'戻り値     成功 = 0以外
+'           失敗 = 0
+'--------------------------------------</span>
+Declare Function GetUserName Lib "advapi32.dll" _
+    Alias "GetUserNameA" _
+    (ByVal lpBuffer As String, _
+    nSize As Long) As Long
+
+<pre class="codeConst">
+'ユーザー名の最大長
+Public Const UNLEN = 256</pre></pre>
+
+<pre class="codeProc"><a name="GetUserName_Sample"></a><span class="REM">'ユーザー名を取得する</span>
+Sub GetUserName_Sample()
+    Const UserNameLength = UNLEN + 1
+    Dim strBuffer As String * UserNameLength
+    Dim lngSize As Long
+    Dim rc As Long
+    
+    <span class="REM">'ユーザー名の長さを設定</span>
+    lngSize = Len(strBuffer)
+    
+    <span class="REM">'ユーザー名を取得</span>
+    rc = GetUserName(strBuffer, _
+                    lngSize)
+                        
+    <span class="REM">'ユーザー名を表示</span>
+    MsgBox "ユーザー名: " & _
+        Left(strBuffer, InStr(strBuffer, vbNullChar) - 1)
+End Sub</pre>
+<h2>CPU の数と種類を取得する</h2>
+<pre class="codeApi"><a name="GetSystemInfo"></a><span class="REM">'-----------------------------------------------------
+'システムに関する情報(プロセッサの種類など)を取得する関数
+'
+'戻り値     なし
+'-----------------------------------------------------</span>
+Declare Sub GetSystemInfo Lib "kernel32" _
+    (lpSystemInfo As SYSTEM_INFO)
+
+<pre class="codeConst"><span class="REM">'システムに関する情報を格納する構造体</span>
+Type SYSTEM_INFO
+    dwOemID As Long                     <span class="REM">'Windows95/98では0</span>
+    dwPageSize As Long                  <span class="REM">'メモリページのサイズ</span>
+    lpMinimumApplicationAddress As Long <span class="REM">'利用可能な最下位アドレス</span>
+    lpMaximumApplicationAddress As Long <span class="REM">'利用可能な最上位アドレス</span>
+    dwActiveProcessorMask As Long       <span class="REM">'CPUを示すビットマスク</span>
+    dwNumberOrfProcessors As Long       <span class="REM">'CPUの数</span>
+    dwProcessorType As Long             <span class="REM">'CPUのタイプ</span>
+    dwAllocationGranularity As Long     <span class="REM">'アドレス領域の割り当て単位</span>
+    dwReserved As Long
+End Type
+
+<span class="REM">'CPUの種類</span>
+ Const PROCESSOR_INTEL_386 = 386&
+ Const PROCESSOR_INTEL_486 = 486&
+ Const PROCESSOR_INTEL_PENTIUM = 586&
+ Const PROCESSOR_ARCHITECTURE_UNKNOWN = &HFFFF&
+
+ Const PROCESSOR_ARCHITECTURE_INTEL = 0&
+ Const PROCESSOR_ARCHITECTURE_MIPS = 1&
+ Const PROCESSOR_ARCHITECTURE_ALPHA = 2&
+ Const PROCESSOR_ARCHITECTURE_PPC = 3&
+ Const PROCESSOR_ARCHITECTURE_SHX = 4&
+ Const PROCESSOR_ARCHITECTURE_ARM = 5&
+ Const PROCESSOR_ARCHITECTURE_IA64 = 6&
+ Const PROCESSOR_ARCHITECTURE_ALPHA64 = 7&
+
+ Const PROCESSOR_MIPS_R4000 = 4000&
+ Const PROCESSOR_ALPHA_21064 = 21064&
+ Const PROCESSOR_PPC_601 = 601&
+ Const PROCESSOR_PPC_603 = 603&
+ Const PROCESSOR_PPC_604 = 604&
+ Const PROCESSOR_PPC_620 = 620&</pre></pre>
+
+
+<pre class="codeProc"><a name="GetSystemInfo_Sample"></a><span class="REM">'summary:CPUの数と種類を取得する</span>
+Sub GetSystemInfo_Sample()
+    Dim udtSYSTEMINFO As SYSTEM_INFO
+
+    <span class="REM">'システム情報を取得</span>
+    GetSystemInfo udtSYSTEMINFO
+    
+    <span class="REM">'CPUの数と種類を表示</span>
+    With udtSYSTEMINFO
+        MsgBox "CPUの数: " & .dwNumberOrfProcessors
+        
+        Select Case .dwProcessorType
+            Case PROCESSOR_INTEL_386
+                MsgBox "CPUの種類: INTEL_386"
+            Case PROCESSOR_INTEL_486
+                MsgBox "CPUの種類: INTEL_486"
+            Case PROCESSOR_INTEL_PENTIUM
+                MsgBox "CPUの種類: INTEL_PENTIUM"
+            Case PROCESSOR_ARCHITECTURE_UNKNOWN
+                MsgBox "CPUの種類: 不明"
+            Case Else
+                MsgBox "CPUの種類: その他のCPU"
+        End Select
+    End With
+End Sub</pre>
+<h2>画面の解像度を取得する</h2>
+
+<pre class="codeApi"><a name="GetSystemMetrics"></a><span class="REM">'------------------------------------------------------------------------------------
+'システムの設定や画面のデザインを構成する要素のサイズ(システムメトリック)の値を取得する関数
+'
+'戻り値     成功 = 要求した値
+'           失敗 = 0
+'------------------------------------------------------------------------------------</span>
+Declare Function GetSystemMetrics Lib "user32" _
+    (ByVal nIndex As Long) As Long
+
+<pre class="codeConst">
+ Const SM_CXSCREEN = 0&
+ Const SM_CYSCREEN = 1&
+ Const SM_CXVSCROLL = 2&
+ Const SM_CYHSCROLL = 3&
+ Const SM_CYCAPTION = 4&
+ Const SM_CXBORDER = 5&
+ Const SM_CYBORDER = 6&
+ Const SM_CXDLGFRAME = 7&
+ Const SM_CYDLGFRAME = 8&
+ Const SM_CYVTHUMB = 9&
+ Const SM_CXHTHUMB = 10&
+ Const SM_CXICON = 11&
+ Const SM_CYICON = 12&
+ Const SM_CXCURSOR = 13&
+ Const SM_CYCURSOR = 14&
+ Const SM_CYMENU = 15&
+ Const SM_CXFULLSCREEN = 16&
+ Const SM_CYFULLSCREEN = 17&
+ Const SM_CYKANJIWINDOW = 18&
+ Const SM_MOUSEPRESENT = 19&
+ Const SM_CYVSCROLL = 20&
+ Const SM_CXHSCROLL = 21&
+ Const SM_DEBUG = 22&
+ Const SM_SWAPBUTTON = 23&
+ Const SM_RESERVED1 = 24&
+ Const SM_RESERVED2 = 25&
+ Const SM_RESERVED3 = 26&
+ Const SM_RESERVED4 = 27&
+ Const SM_CXMIN = 28&
+ Const SM_CYMIN = 29&
+ Const SM_CXSIZE = 30&
+ Const SM_CYSIZE = 31&
+ Const SM_CXFRAME = 32&
+ Const SM_CYFRAME = 33&
+ Const SM_CXMINTRACK = 34&
+ Const SM_CYMINTRACK = 35&
+ Const SM_CXDOUBLECLK = 36&
+ Const SM_CYDOUBLECLK = 37&
+ Const SM_CXICONSPACING = 38&
+ Const SM_CYICONSPACING = 39&
+ Const SM_MENUDROPALIGNMENT = 40&
+ Const SM_PENWINDOWS = 41&
+ Const SM_DBCSENABLED = 42&
+ Const SM_CMOUSEBUTTONS = 43&
+ Const SM_SHOWSOUNDS = 70&
+ Const SM_CMETRICS = 75&
+
+<span class="REM">'以下、Windows95/Windows98のみ使用可能な定数</span>
+ Const SM_CXFIXEDFRAME = SM_CXDLGFRAME
+ Const SM_CYFIXEDFRAME = SM_CYDLGFRAME
+ Const SM_CXSIZEFRAME = SM_CXFRAME
+ Const SM_CYSIZEFRAME = SM_CYFRAME
+ Const SM_SECURE = 44&
+ Const SM_CXEDGE = 45&
+ Const SM_CYEDGE = 46&
+ Const SM_CXMINSPACING = 47&
+ Const SM_CYMINSPACING = 48&
+ Const SM_CXSMICON = 49&
+ Const SM_CYSMICON = 50&
+ Const SM_CYSMCAPTION = 51&
+ Const SM_CXSMSIZE = 52&
+ Const SM_CYSMSIZE = 53&
+ Const SM_CXMENUSIZE = 54&
+ Const SM_CYMENUSIZE = 55&
+ Const SM_ARRANGE = 56&
+ Const SM_CXMINIMIZED = 57&
+ Const SM_CYMINIMIZED = 58&
+ Const SM_CXMAXTRACK = 59&
+ Const SM_CYMAXTRACK = 60&
+ Const SM_CXMAXIMIZED = 61&
+ Const SM_CYMAXIMIZED = 62&
+ Const SM_NETWORK = 63&
+ Const SM_CLEANBOOT = 67&
+ Const SM_CXDRAG = 68&
+ Const SM_CYDRAG = 69&
+ Const SM_CXMENUCHECK = 71&
+ Const SM_CYMENUCHECK = 72&
+ Const SM_SLOWMACHINE = 73&
+ Const SM_MIDEASTENABLED = 74&</pre></pre>
+
+<pre class="codeProc"><a name="GetSystemMetrics_Sample"></a><span class="REM">'summary:画面の解像度を取得する</span>
+Sub GetSystemMetrics_Sample()
+    Dim rc1 As Long, rc2 As Long
+    
+    rc1 = GetSystemMetrics(SM_CXSCREEN)
+    rc2 = GetSystemMetrics(SM_CYSCREEN)
+
+    MsgBox "画面の解像度: " & rc1 & " * " & rc2
+End Sub</pre>
+<table border="1"><caption>
+▼GetSystemMetrics 関数で取得できる情報</caption>
+<tr>
+<th>定数（値）</th><th>内容</th>
+</tr>
+<tr>
+<td>SM_ARRANGE(=56)</td><td>最小化ウィンドウの配置方法を示す値</td>
+</tr>
+<tr>
+<td>SM_CLEANBOOT(=67)</td><td>システムがどのように起動されたかを示す値<br>
+<ul>
+<li>0 通常のブート</li>
+<li>1 Safe モードでのブート</li>
+<li>2 ネットワークを使ったSafe モードでのブート</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td>SM_CMOUSEBUTTONS(=43)</td><td>マウスボタンの数</td>
+</tr>
+<tr>
+<td>SM_CXBORDER(=5)<br>SM_CYBORDER(=6)</td><td>非立体的なウィンドウの縁の幅と高さ</td>
+</tr>
+<tr>
+<td>SM_CXCURSOR(=13)<br>SM_CYCURSOR(=14)</td><td>マウスカーソルのサイズ</td>
+</tr>
+<tr>
+<td>SM_CXDLGFRAME(=7)<br>SM_CYDLGFRAME(=8)</td><td>SM_CXFIXEDFRAME、SM_CYFIXEDFRAME と同じ</td>
+</tr>
+<tr>
+<td>SM_CXDOUBLECLK(=36)<br>SM_CYDOUBLECLK(=37)</td><td>ダブルクリックの2 回目のクリック位置の許容範囲</td>
+</tr>
+<tr>
+<td>SM_CXDRAG(=68)<br>SM_CYDRAG(=69)</td><td>ドラッグ操作の開始とはみなされない範囲</td>
+<tr>
+<td>SM_CXEDGE(=45)<br>SM_CYEDGE(=46)</td><td>立体的なウィンドウの縁の幅と高さ</td>
+</tr>
+<tr>
+<td>SM_CXFIXEDFRAME(=7)<br>SM_CYFIXEDFRAME(=8)</td><td>タイトルバーを持ち、サイズが変更できないウィンドウの枠の幅と高さ</td>
+</tr>
+<tr>
+<td>SM_CXFRAME(=32)<br>SM_CYFRAME(=33)</td><td>SM_CXSIZEFRAME、SM_CYSIZEFRAME と同じ</td>
+</tr>
+<tr>
+<td>SM_CXFULLSCREEN(=16)<br>SM_CYFULLSCREEN(=17)</td><td>最大化されたウィンドウのクライアント領域のサイズ</td>
+</tr>
+<tr>
+<td>SM_CXHSCROLL(=21)<br>SM_CYHSCROLL(=3)</td><td>水平スクロールバーの矢印の幅かバーの高さ</td>
+<tr>
+<td>SM_CXHTHUMB(=10)<br>SM_CYVTHUMB(=9)</td><td>水平スクロールバーのつまみの幅<br>垂直スクロールバーのつまみの高さ</td>
+</tr>
+<tr>
+<td>SM_CXICON(=11)<br>SM_CYICON(=12)</td><td>アイコンのデフォルトのサイズ</td>
+</tr>
+<tr>
+<td>SM_CXICONSPACING(=38)<br>SM_CYICONSPACING(=39)</td><td>アイコンを整列するときのグリッドのサイズ</td>
+</tr>
+<tr>
+<td>SM_CXMAXIMIZED(=61)<br>SM_CYMAXIMIZED(=62)</td><td>最大化されたウィンドウのサイズ</td>
+</tr>
+<tr>
+<td>SM_CXMAXTRACK(=59)<br>SM_CYMAXTRACK(=60)</td><td>ウィンドウの最大トラッキングサイズ</td>
+</tr>
+<tr>
+<td>SM_CXMENUCHECK(=71)<br>SM_CYMENUCHECK(=72)</td><td>メニューのチェックマークのサイズ</td>
+<tr>
+<td>SM_CXMENUSIZE(=54)<br>SM_CYMENUSIZE(=55)</td><td>メニューバーに表示されるボタンのサイズ</td>
+<tr>
+<td>SM_CXMIN(=28)<br>SM_CYMIN(=29)</td><td>ウィンドウの最小サイズ</td>
+<tr>
+<td>SM_CXMINIMIZED(=57)<br>SM_CYMINIMIZED(=58)</td><td>最小化されたウィンドウのデフォルトのサイズ</td>
+<tr>
+<td>SM_CXMINSPACING(=47)<br>SM_CYMINSPACING(=48)</td><td>最小化されたウィンドウの配置に使われるグリッドのサイズ</td>
+<tr>
+<td>SM_CXMINTRACK(=34)<br>SM_CYMINTRACK(=35)</td><td>ウィンドウの最小トラッキングサイズ</td>
+</tr>
+<tr>
+<td>SM_CXSCREEN(=0)<br>SM_CYSCREEN(=1)</td><td>画面全体のサイズ</td>
+</tr>
+<tr>
+<td>SM_CXSIZE(=30)<br>SM_CYSIZE(=31)</td><td>ウィンドウのタイトルバー内のボタンのサイズ</td>
+</tr>
+<tr>
+<td>SM_CXSIZEFRAME(=32)<br>SM_CYSIZEFRAME(=33)</td><td>サイズが変更できるウィンドウの枠の幅と高さ</td>
+</tr>
+<tr>
+<td>SM_CXSMICON(=49)<br>SM_CYSMICON(=50)</td><td>小さいアイコンの推奨サイズ</td>
+</tr>
+<tr>
+<td>SM_CXSMSIZE(=52)<br>SM_CYSMSIZE(=53)</td><td>小さいタイトルバー内のボタンのサイズ</td>
+</tr>
+<tr>
+<td>SM_CXVSCROLL(=2)<br>SM_CYVSCROLL(=20)</td><td>垂直スクロールバーの矢印の高さかバーの幅</td>
+</tr>
+<tr>
+<td>SM_CYCAPTION(=4)</td><td>タイトルバーの高さ</td>
+</tr>
+<tr>
+<td>SM_CYKANJIWINDOW(=18)</td><td>画面下の漢字ウィンドウの高さ</td>
+</tr>
+<tr>
+<td>SM_CYMENU(=15)</td><td> 1 行分のメニューバーの高さ</td>
+</tr>
+<tr>
+<td>SM_CYSMCAPTION(=51)</td><td> 小さなタイトルバーの高さ</td>
+</tr>
+<tr>
+<td>SM_DBCSENABLED(=42)</td><td>USER.EXE がダブルバイト文字セット(DBCS)をサポートしているかを示す値<br>
+<ul>
+<li>サポートしているとき 0 以外</li>
+<li>サポートしていないとき 0</li>
+</ul></td>
+</tr>
+<tr>
+<td>SM_DEBUG(=22)</td><td>USER.EXE がデバッグバージョンかを示す値<br>
+<ul>
+<li>デバッグバージョンのとき 0 以外</li>
+<li>デバッグバージョンでないとき 0</li></td>
+</tr>
+<tr>
+<td>SM_MENUDROPALIGNMENT(=40)</td><td>メニューバーの項目に対して、ドロップダウンメニューが右寄せされるかを示す値<br>
+<ul>
+<li>右寄せされるとき 0 以外</li>
+<li>左寄せされるときは 0</li>
+</ul></td>
+</tr>
+<tr>
+<td>SM_MIDEASTENABLED(=74)</td><td>ヘブライ語やアラビア語が利用可能なシステムかを示す値<br>
+<ul>
+<li>利用できるとき TRUE</li>
+</ul></td>
+</tr>
+<tr>
+<td>SM_MOUSEPRESENT(=19)</td><td>マウスが接続されているかを示す値<br>
+<ul>
+<li>接続されているとき 0 以外</li>
+<li>接続されていないとき 0</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td>SM_NETWORK(=63)</td><td>ネットワークが存在するかを示す値<br>
+<ul>
+<li>存在するとき 最下位ビットが1</li>
+<li>存在しないとき 最下位ビットが0</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td>SM_PENWINDOWS(=41)</td><td>Window for Pen computing extensions がインストールされているかを示す値<br>
+<ul>
+<li>インストールされているとき 0 以外</li>
+<li>インストールされていないとき 0</li></td>
+</tr>
+<tr>
+<td>SM_SECURE(=44)</td><td>セキュリティが存在するかを示す値<br>
+<ul>
+<li>存在するとき TRUE</li>
+<li>存在しないとき FALSE</li>
+</ul></td>
+</tr>
+<tr>
+<td>SM_SHOWSOUNDS(=70)</td><td>ユーザー補助の「サウンド解説を使う」が有効になっているかを示す値<br>
+<ul>
+<li>有効になっているとき 0 以外</li>
+<li>無効になっているとき 0</li></td>
+</tr>
+<tr>
+<td>SM_SLOWMACHINE(=73)</td><td>コンピュータのプロセッサが遅いかを示す値<br>
+<ul>
+<li>遅いとき TRUE</li>
+<li>それ以外 FALSE</li>
+</ul></td>
+</tr>
+<tr>
+<td>SM_SWAPBUTTON(=23)</td><td>左右のマウスボタンの機能を交換しているかを示す値<br>
+<ul>
+<li>交換しているとき 0 以外</li>
+<li>交換していないとき 0</li>
+</ul></td>
+</tr>
+</table>
+
+<hr>
+<div><a href="./index.htm">&gt;INDEX</a></div>
+</div>
+</body>
+</html>

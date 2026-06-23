@@ -1,0 +1,543 @@
+<html lang="Ja">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html401/strict.dtd">
+<meta http-equiv="Content-Type" content="text/html,charset=shift_jis">
+<meta name="description" content="Win32API">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta name="robots" content="noindex,nofollow">
+
+<link rel="stylesheet" type="text/css" href="./vb.css">
+<title>■Win32APIサンプル_5</title>
+
+<body>
+<div class="content">
+
+<h1>■Win32APIサンプル５</h1>
+
+<table id="hanrei">
+<tr>
+<td class="tdApi">API関数宣言</td>
+<td class="tdConst">定数宣言・構造体</td>
+<td class="tdProc">プロシージャのサンプル</td>
+</tr>
+</table>
+<h2>スクリーンセーバー実行までの待ち時間を取得する</h2>
+<pre class="codeApi"><a name="SystemParametersInfo"></a><span class="REM">'-------------------------------------------
+'システムに関するパラメータを取得、設定する関数
+'
+'戻り値     成功 = 0以外
+'           失敗 = 0
+'-------------------------------------------</span>
+Declare Function SystemParametersInfo Lib "user32" _
+    Alias "SystemParametersInfoA" _
+    (ByVal uAction As Long, _
+    ByVal uParam As Long, _
+    lpvParam As Any, _
+    ByVal fuWinIni As Long) As Long
+
+<pre class="codeConst">
+ Const SPI_GETBEEP = 1&
+ Const SPI_SETBEEP = 2&
+ Const SPI_GETMOUSE = 3&
+ Const SPI_SETMOUSE = 4&
+ Const SPI_GETBORDER = 5&
+ Const SPI_SETBORDER = 6&
+ Const SPI_GETKEYBOARDSPEED = 10&
+ Const SPI_SETKEYBOARDSPEED = 11&
+ Const SPI_LANGDRIVER = 12&
+ Const SPI_ICONHORIZONTALSPACING = 13&
+ Const SPI_GETSCREENSAVETIMEOUT = 14&
+ Const SPI_SETSCREENSAVETIMEOUT = 15&
+ Const SPI_GETSCREENSAVEACTIVE = 16&
+ Const SPI_SETSCREENSAVEACTIVE = 17&
+ Const SPI_GETGRIDGRANULARITY = 18&
+ Const SPI_SETGRIDGRANULARITY = 19&
+ Const SPI_SETDESKWALLPAPER = 20&
+ Const SPI_SETDESKPATTERN = 21&
+ Const SPI_GETKEYBOARDDELAY = 22&
+ Const SPI_SETKEYBOARDDELAY = 23&
+ Const SPI_ICONVERTICALSPACING = 24&
+ Const SPI_GETICONTITLEWRAP = 25&
+ Const SPI_SETICONTITLEWRAP = 26&
+ Const SPI_GETMENUDROPALIGNMENT = 27&
+ Const SPI_SETMENUDROPALIGNMENT = 28&
+ Const SPI_SETDOUBLECLKWIDTH = 29&
+ Const SPI_SETDOUBLECLKHEIGHT = 30&
+ Const SPI_GETICONTITLELOGFONT = 31&
+ Const SPI_SETDOUBLECLICKTIME = 32&
+ Const SPI_SETMOUSEBUTTONSWAP = 33&
+ Const SPI_SETICONTITLELOGFONT = 34&
+ Const SPI_GETFASTTASKSWITCH = 35&
+ Const SPI_SETFASTTASKSWITCH = 36&
+ Const SPI_SETDRAGFULLWINDOWS = 37&
+ Const SPI_GETDRAGFULLWINDOWS = 38&
+ Const SPI_GETNONCLIENTMETRICS = 41&
+ Const SPI_SETNONCLIENTMETRICS = 42&
+ Const SPI_GETMINIMIZEDMETRICS = 43&
+ Const SPI_SETMINIMIZEDMETRICS = 44&
+ Const SPI_GETICONMETRICS = 45&
+ Const SPI_SETICONMETRICS = 46&
+ Const SPI_SETWORKAREA = 47&
+ Const SPI_GETWORKAREA = 48&
+ Const SPI_SETPENWINDOWS = 49&
+ Const SPI_GETFILTERKEYS = 50&
+ Const SPI_SETFILTERKEYS = 51&
+ Const SPI_GETTOGGLEKEYS = 52&
+ Const SPI_SETTOGGLEKEYS = 53&
+ Const SPI_GETMOUSEKEYS = 54&
+ Const SPI_SETMOUSEKEYS = 55&
+ Const SPI_GETSHOWSOUNDS = 56&
+ Const SPI_SETSHOWSOUNDS = 57&
+ Const SPI_GETSTICKYKEYS = 58&
+ Const SPI_SETSTICKYKEYS = 59&
+ Const SPI_GETACCESSTIMEOUT = 60&
+ Const SPI_SETACCESSTIMEOUT = 61&
+ Const SPI_GETSERIALKEYS = 62&
+ Const SPI_SETSERIALKEYS = 63&
+ Const SPI_GETSOUNDSENTRY = 64&
+ Const SPI_SETSOUNDSENTRY = 65&
+ Const SPI_GETHIGHCONTRAST = 66&
+ Const SPI_SETHIGHCONTRAST = 67&
+ Const SPI_GETKEYBOARDPREF = 68&
+ Const SPI_SETKEYBOARDPREF = 69&
+ Const SPI_GETSCREENREADER = 70&
+ Const SPI_SETSCREENREADER = 71&
+ Const SPI_GETANIMATION = 72&
+ Const SPI_SETANIMATION = 73&
+ Const SPI_GETFONTSMOOTHING = 74&
+ Const SPI_SETFONTSMOOTHING = 75&
+ Const SPI_SETDRAGWIDTH = 76&
+ Const SPI_SETDRAGHEIGHT = 77&
+ Const SPI_SETHANDHELD = 78&
+ Const SPI_GETLOWPOWERTIMEOUT = 79&
+ Const SPI_GETPOWEROFFTIMEOUT = 80&
+ Const SPI_SETLOWPOWERTIMEOUT = 81&
+ Const SPI_SETPOWEROFFTIMEOUT = 82&
+ Const SPI_GETLOWPOWERACTIVE = 83&
+ Const SPI_GETPOWEROFFACTIVE = 84&
+ Const SPI_SETLOWPOWERACTIVE = 85&
+ Const SPI_SETPOWEROFFACTIVE = 86&
+ Const SPI_SETCURSORS = 87&
+ Const SPI_SETICONS = 88&
+ Const SPI_GETDEFAULTINPUTLANG = 89&
+ Const SPI_SETDEFAULTINPUTLANG = 90&
+ Const SPI_SETLANGTOGGLE = 91&
+ Const SPI_GETWINDOWSEXTENSION = 92&
+ Const SPI_SETMOUSETRAILS = 93&
+ Const SPI_GETMOUSETRAILS = 94&
+ Const SPI_SCREENSAVERRUNNING = 97&
+ Const SPI_GETMOUSEHOVERWIDTH = 98&
+ Const SPI_SETMOUSEHOVERWIDTH = 99&
+ Const SPI_GETMOUSEHOVERHEIGHT = 100&
+ Const SPI_SETMOUSEHOVERHEIGHT = 101&
+ Const SPI_GETMOUSEHOVERTIME = 102&
+ Const SPI_SETMOUSEHOVERTIME = 103&
+ Const SPI_GETWHEELSCROLLLINES = 104&
+ Const SPI_SETWHEELSCROLLLINES = 105&
+
+ Const SPIF_UPDATEINIFILE = &H1&
+ Const SPIF_SENDWININICHANGE = &H2&
+
+ Const SPI_GETACTIVEWINDOWTRACKING = &H1000&
+ Const SPI_SETACTIVEWINDOWTRACKING = &H1001&</pre></pre>
+
+
+<pre class="codeProc"><a name="SystemParametersInfo_Sample"></a><span class="REM">'summary:スクリーンセーバー実行までの待ち時間を取得する</span>
+Sub SystemParametersInfo_Sample()
+    Dim lngParam As Long
+    Dim rc As Long
+    
+    <span class="REM">'スクリーンセーバーが有効か無効かを取得</span>
+    rc = SystemParametersInfo(SPI_GETSCREENSAVEACTIVE, _
+                                0&, _
+                                lngParam, _
+                                0&)
+                                
+    <span class="REM">'スクリーンセーバーが無効</span>
+    If lngParam = False Then
+        MsgBox "スクリーンセーバーは無効です"
+        Exit Sub
+    End If
+    
+    <span class="REM">'スクリーンセーバー実行までの待ち時間を取得</span>
+    rc = SystemParametersInfo(SPI_GETSCREENSAVETIMEOUT, _
+                                0&, _
+                                lngParam, _
+                                0&)
+    
+    MsgBox "スクリーンセーバー実行までの待ち時間: " & lngParam & " 秒"
+End Sub</pre>
+<table border="1">
+<caption>▼SystemParametersInfo 関数で取得できる情報</caption>
+<tr>
+<th>定数</th><th>値</th><th>内容</tr>
+</tr>
+<tr>
+<td>SPI_GETACCESSTIMEOUT</td><td>60</td><td>ユーザー補助を無効にするまでの待ち時間に関する情報を取得する。pvParam パラメータにはACCESSTIMEOUT構造体へのポインタを指定する。この構造体にユーザー補助を無効にするまでの待ち時間に関する情報が格納される。関数を呼び出す前にACCESSTIMEOUT 構造体のcbSize メンバに sizeof(ACCESSTIMEOUT)を入れておかなければならない。uiParam パラメータにはsizeof(ACCESSTIMEOUT)を指定する。</td>
+</tr>
+<tr>
+<td>SPI_GETACTIVEWINDOWTRACKING</td><td>&H1000</td><td>ウィンドウを最小化した場合などのアニメーション効果に関する情報を取得する。PvParam パラメータにはANIMATIONINFO 構造体へのポインタを指定する。この構造体にアニメーション効果に関する情報が格納される。関数を呼び出す前にANIMATIONINFO 構造体のcbSizeメンバに sizeof(ANIMATIONINFO)を入れておかなければならない。UiParam パラメータにはsizeof(ANIMATIONINFO)を指定する。</td>
+</tr>
+<tr>
+<td>SPI_GETBEEP</td><td>1</td><td>警告のビープ音がオンになっているかどうかを調べる。pvParam パラメータにはBOOL 型変数へのポインタを指定する。この変数にビープ音がオンになっているときはTRUE が、オフになっているときはFALSE が格納される。</td>
+</tr>
+<tr>
+<td>SPI_GETBORDER</td><td>5</td><td>ウィンドウのサイズ変更枠の幅を決める倍率値を取得する。pvParam パラメータには整数型変数へのポインタを指定する。この変数に倍率値が格納される。</td>
+</tr>
+<tr>
+<td>SPI_GETDEFAULTINPUTLANG</td><td>89</td><td>デフォルトの入力言語のキーボードレイアウトハンドルを取得する。pvParam パラメータには32 ビット変数へのポインタを指定する。この変数にキーボードレイアウトハンドルが格納される。uiParam パラメータは使われない。</td>
+</tr>
+<tr>
+<td>SPI_GETDRAGFULLWINDOWS</td><td>38</td><td>フルドラッグ(ウィンドウの内容を表示したままのドラッグ)が有効かどうかを調べる。pvParam パラメータにはBOOL 型変数へのポインタを指定する。この変数にフルドラッグが有効になっているときはTRUE が、無効になっているときはFALSE が格納される。</td>
+</tr>
+<tr>
+<td>SPI_GETFILTERKEYS</td><td>50</td><td>ユーザー補助のフィルターキーに関する情報を取得する。PvParam パラメータにはFILTERKEYS 構造体へのポインタを指定する。この構造体にフィルターキーに関する情報が格納される。関数を呼び出す前にFILTERKEYS 構造体のcbSize メンバにsizeof(FILTERKEYS)を入れておかなければならない。UiParam パラメータにはsizeof(FILTERKEYS)を指定する。</td>
+</tr>
+<tr>
+<td>SPI_GETFONTSMOOTHING</td><td>74</td><td>スクリーンフォントの縁をなめらかにする機能が有効になっているかどうかを調べる。pvParam パラメータにはBOOL 型変数へのポインタを指定する。この変数になめらかにする機能が有効になっているときは0 以外の値が、そうでないときは0 が格納される。</td>
+</tr>
+<tr>
+<td>SPI_GETGRIDGRANULARITY</td><td>18</td><td>デスクトップのサイズ変更格子の単位を取得する。pvParam パラメータには整数型変数へのポインタを指定する。この変数に単位が格納される。</td>
+</tr>
+<tr>
+<td>SPI_GETHIGHCONTRAST</td><td>66</td><td>Windows95/98 のみ : ユーザー補助のハイコントラスト機能に関する情報を取得する。pvParam パラメータにはHIGHCONTRAST 構造体へのポインタを指定する。この構造体にハイコントラスト機能に関する情報が格納される。関数を呼び出す前にHIGHCONTRAST 構造体のcbSize メンバにsizeof(HIGHCONTRAST)を入れておかなければならない。uiParam パラメータにはsizeof(HIGHCONTRAST)を指定する。</td>
+</tr>
+<tr>
+<td>SPI_GETICONMETRICS</td><td>45</td><td>アイコンの表示に関する情報を取得する。pvParam パラメータにはICONMETRICS 構造体へのポインタを指定する。この構造体にアイコンの表示に関する情報が格納される。関数を呼び出す前にICONMETRICS 構造体のcbSizeメンバにsizeof(ICONMETRICS)を入れておかなければならない。uiParam パラメータにはsizeof(ICONMETRICS)を指定する。</td>
+</tr>
+<tr>
+<td>SPI_GETICONTITLELOGFONT</td><td>31</td><td>アイコンのタイトルのフォント情報を取得する。pvParamパラメータにはLOGFONT 構造体へのポインタを指定する。この構造体にフォントの情報が格納される。UiParamパラメータにはsizeof(LOGFONT)を指定する。</td>
+</tr>
+<tr>
+<td>SPI_GETICONTITLEWRAP</td><td>25</td><td>アイコンタイトルの折り返しが有効になっているかどうかを調べる。PvParam パラメータにはBOOL 型変数へのポインタを指定する。この変数に折り返しが有効になっているときはTRUE が、そうでないときはFALSE が格納される。</td>
+</tr>
+<tr>
+<td>SPI_GETKEYBOARDDELAY</td><td>22</td><td>キーボードのプロパティにおける「表示までの待ち時間」を取得する。pvParam パラメータには整数型変数へのポインタを指定する。この変数に待ち時間を示す値が格納される。</td>
+</tr>
+<tr>
+<td>SPI_GETKEYBOARDPREF</td><td>68</td><td>ユーザー補助の「アプリケーションにキーボードのヘルプを追加する」が有効になっているかどうかを調べる。PvParam パラメータにはBOOL 型変数へのポインタを指定する。機能が有効になっているときはTRUE が、無効になっているときはFALSE が格納される。</td>
+</tr>
+<tr>
+<td>SPI_GETKEYBOARDSPEED</td><td>10</td><td>キーボードのプロパティにおける「表示の間隔」を取得する。PvParam パラメータにはDWORD 型変数へのポインタを指定する。この変数に表示の間隔を示す値が格納される。</td>
+</tr>
+<tr>
+<td>SPI_GETMENUDROPALIGN</td><td>27</td><td>メニューバーの項目に対してドロップダウンメニューが右MENT 寄せされるかどうかを示す値を取得する。pvParam パラメータにはBOOL 型変数へのポインタを指定する。この変数に右寄せされるときはTRUEが、そうでないときはFALSEが格納される。</td>
+</tr>
+<tr>
+<td>SPI_GETMINIMIZEDMETRI</td><td>CS43</td><td>最小化ウィンドウの配置方法に関する情報を取得する。PvParam パラメータには、MINIMIZEDMETRICS 構造体へのポインタを指定する。この構造体に配置方法に関する情報が格納される。関数を呼び出す前にMINIMIZEDMETRICS 構造体のcbSize メンバにsizeof(MINIMIZEDMETRICS)を入れておかなければならない。uiParam パラメータにはsizeof(MINIMIZEDMETRICS)を指定する。</td>
+</tr>
+<tr>
+<td>SPI_GETMOUSE</td><td>54</td><td>マウスカーソルの移動速度と移動速度に関するしきい値を取得する。pvParam パラメータには3 つの要素を持つ整数型配列へのポインタを指定する。この配列に情報が格納される。</td>
+</tr>
+<tr>
+<td>SPI_GETMOUSEHOVERHEIGHT</td><td>100</td><td>WindowsNT のみ : TrackMouseEvent 関数がWM_MOUSEHOVER メッセージを生成するためにマウスカーソルが滞在していなければならない範囲の高さを取得する。pvParam パラメータにはUINT 型変数へのポインタを指定する。この変数に高さが格納される。</td>
+</tr>
+<td>SPI_GETMOUSEHOVERTIME</td><td>102</td><td>WindowsNT のみ : TrackMouseEvent 関数がWM_MOUSEHOVER メッセージを生成するためにマウスカーソルが滞在していなければならない時間を取得する。pvParam パラメータにはUNIT 型変数へのポインタを指定する。この変数に時間がミリ秒単位で格納される。</td>
+</tr>
+<tr>
+<td>SPI_GETMOUSEHOVERWIDTH</td><td>98</td><td>WindowsNT のみ : TrackMouseEvent 関数がWM_MOUSEHOVER メッセージを生成するためにマウスカーソルが滞在していなければならない範囲の幅を取得する。pvParam パラメータにはUINT 型変数へのポインタを指定する。この変数に幅が格納される。</td>
+</tr>
+<tr>
+<td>SPI_GETMOUSEKEYS</tr><td>54</td><td>ユーザー補助のマウスキーに関する情報を取得する。pvParam パラメータにはMOUSEKEYS 構造体へのポインタを指定する。この構造体にマウスキーに関する情報が格納される。関数を呼び出す前にMOUSEKEYS 構造体のcbSize メンバにsizeof(MOUSEKEYS)を入れておかなければならない。uiParam パラメータにはsizeof(MOUSEKEYS)を指定する。</td>
+</tr>
+<tr>
+<td>SPI_GETMOUSETRAILS</td><td>94</td><td>Windows95/98 : マウスポインタの軌跡の表示に関する設定を取得する。pvParam パラメータにはINT 型変数へのポインタを指定する。この変数に軌跡が表示されないときは0 または1 が、軌跡が表示されるときは2 以上の値が格納される。2 以上の値は描画される軌跡の数を示す。uiParam パラメータは使われない。</td>
+</tr>
+<tr>
+<td>SPI_GETNONCLIENTMETRICS</td><td>41</td><td>非クライアント領域に関するメトリック値(メニューバーの高さなど) を取得する。pvParam パラメータにはONCLIENTMETRICS 構造体へのポインタを指定する。この構造体にメトリック値が格納される。関数を呼び出す前にNONCLIENTMETRICS 構造体のcbSize メンバにsizeof(NONCLIENTMETRICS)を入れておかなければならない。uiParam パラメータにはsizeof(NONCLIENTMETRICS)を指定する。</td>
+</tr>
+<tr>
+<td>SPI_GETSCREENREADER</td><td>70</td><td>Windows95/98 のみ : スクリーンレビューアユーティリティが実行されているかどうかを調べる。スクリーンレビューアユーティリティは、文字情報をスピーチシンセサイザや点字ディスプレイに送る。pvParam パラメータにはBOOL 型変数へのポインタを指定する。この変数にスクリーンレビューアユーティリティが実行されているときはTRUE が、そうでないときはFALSE が格納される。</td>
+</tr>
+<tr>
+<td>SPI_GETSCREENSAVEACTIVE</td><td>16</td><td>スクリーンセーバーが有効になっているかどうかを調べる。pvParam パラメータにはBOOL 型変数へのポインタを指定する。この変数にスクリーンセーバーが有効になっているときはTRUE が、そうでないときはFALSE が格納される。</td>
+</tr>
+<tr>
+<td>SPI_GETSCREENSAVETIMEOUT</td><td>14</td><td>スクリーンセーバーの実行までの待ち時間を取得する。pvParam パラメータには整数型変数へのポインタを指定する。この変数に待ち時間が秒単位で格納される。SPI_GETSERIALKEYS 62 Windows95/98 のみ : ユーザー補助のシリアルキーデバイスに関する情報を取得する。PvParam パラメータにはSERIALKEYS 構造体へのポインタを指定する。この構造体にシリアルキーデバイスに関する情報が格納される。関数を呼び出す前にSERIALKEYS構造体のcbSize メンバにsizeof(SERIALKEYS)を入れておかなければならない。UiParam パラメータにはsizeof(SERIALKEYS)を指定する。</td>
+</tr>
+<tr>
+<td>SPI_GETSHOWSOUNDS</td><td>56</td><td>ユーザー補助の「サウンド解説を使う」が有効になっているかどうかを調べる。pvParam パラメータにはBOOL 型変数へのポインタを指定する。この変数に機能が有効になっているときはTRUEが、無効になっているときはFALSEが格納される。</td>
+</tr>
+<tr>
+<td>SPI_GETSOUNDSENTRY</td><td>64</td><td>ユーザー補助のサウンド表示に関する情報を取得する。PvParam パラメータにはSOUNDSENTRY 構造体へのポインタを指定する。この構造体にサウンド表示に関する情報が格納される。関数を呼び出す前にSOUNDSENTRY 構造体のcbSize メンバにsizeof(SOUNDSENTRY)を入れておかなければならない。UiParam パラメータにはsizeof(SOUNDSENTRY)を指定する。</td>
+</tr>
+<tr>
+<td>SPI_GETSTICKYKEYS</td><td>58</td><td>ユーザー補助の固定キーに関する情報を取得する。PvParam パラメータにはSTICKYKEYS 構造体へのポインタを指定する。この構造体に固定キーに関する情報が格納される。関数を呼び出す前にSTICKYKEYS 構造体のcbSize メンバにsizeof(STICKYKEYS)を入れておかなければならない。UiParam パラメータにはsizeof(STICKYKEYS)を指定する。</td>
+</tr>
+<tr>
+<td>SPI_GETTOGGLEKEYS</td><td>52</td><td>ユーザー補助の切り替えキーに関する情報を取得する。PvParam パラメータにはTOGGLEKEYS 構造体へのポインタを指定する。この構造体に切り替えキーに関する情報が格納される。関数を呼び出す前にTOGGLEKEYS 構造体のcbSize メンバにsizeof(TOGGLEKEYS)を入れておかなければならない。UiParam パラメータにはsizeof(TOGGLEKEYS)を指定する。</td>
+</tr>
+<tr>
+<td>SPI_GETWHEELSCROLLLINES</td><td>104</td><td>WindowsNT のみ : マウスホイールの回転によってスクロールされる行数の推奨値を取得する。PvParam パラメータにはUINT 型変数へのポインタを指定する。この変数に行数が格納される。デフォルトの値は3。SPI_GETWORKAREA 48 作業領域のサイズを取得する。作業領域は画面全体からトレー(タスクバー)が占める領域を除いた部分。pvParam パラメータにはRECT 構造体へのポインタを指定する。この構造体に作業領域が格納される。</td>
+</tr>
+<tr>
+<td>SPI_ICONHORIZONTALSPACING</td><td>13</td><td>アイコンを整列するときに使われるグリッドの幅を設定する。uiParam パラメータに設定する幅を指定する。</td>
+</tr>
+<tr>
+<td>SPI_ICONVERTICALSPACING</td><td>24</td><td>アイコンを整列するときに使われるグリッドの高さを設定する。uiParam パラメータに設定する高さを指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETACCESSTIMEOUT</td><td>61</td><td>ユーザー補助を無効にするまでの待ち時間に関する情報を設定する。PvParam パラメータにはACCESSTIMEOUT構造体へのポインタを指定する。この構造体に構造体のサイズや待ち時間に関する情報を入れておく。UiParam パラメータにはsizeof(ACCESSTIMEOUT)を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETANIMATION</td><td>73</td><td>ウィンドウを最小化した場合などのアニメーション効果についての情報を設定する。pvParam パラメータにはANIMATIONINFO 構造体へのポインタを指定する。この構造体に構造体のサイズやアニメーション効果に関する情報を入れておく。UiParam パラメータにはsizeof(ANIMATIONINFO)を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETBEEP</td><td>2</td><td>警告のビープ音をオンまたはオフにする。uiParam パラメータにはビープ音をオンにするときはTRUE を、オフにするときはFALSE を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETBORDER</td><td>6</td><td>ウィンドウのサイズ変更枠の幅を決める倍率値を設定する。uiParam パラメータに設定する値を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETDEFAULTINPUTLANG</td><td>90</td><td>デフォルトの入力言語を設定する。uiParam パラメータは使用されない。pvParam パラメータには設定する入力言語のキーボードレイアウトハンドルが入った32 ビット変数を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETDESKPATTERN</td><td>21</td><td>デスクトップのパターンを設定する。WIN.INI ファイルのPattern エントリで指定した状態になる。</td>
+</tr>
+<tr>
+<td>SPI_SETDESKWALLPAPER</td><td>20</td><td>デスクトップの壁紙を設定する。pvParam パラメータにビットマップファイルのファイル名が入ったNULL で終わる文字列へのポインタを指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETDOUBLECLICKTIME</td><td>32</td><td>マウスのダブルクリック時間を設定する。UiParam パラメータに設定する時間をミリ秒単位で指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETDOUBLECLKHEIGHT</td><td>30</td><td>ダブルクリックの2 回目のクリック位置の許容範囲の高さを設定する。uiParam パラメータに設定する高さを指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETDOUBLECLKWIDT</td><td>29</td><td>ダブルクリックの2 回目のクリック位置の許容範囲の幅をH 設定する。uiParam パラメータに設定する幅を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETDRAGFULLWINDOWS</td><td>37</td><td>フルドラッグ(ウィンドウの内容を表示したままのドラッグ)を有効または無効にする。uiParam パラメータにフルドラッグを有効にするときはTRUE を、無効にするときはFALSE を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETDRAGHEIGHT</td><td>77</td><td>ドラッグ操作の開始とはみなされない範囲の高さを設定する。マウスボタンを押した後、この高さを越えてマウスを動かすとドラッグ操作が開始されたものとみなされる。uiParam パラメータに設定する高さを指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETDRAGWIDTH</td><td>76</td><td>ドラッグ操作の開始とはみなされない範囲の幅を設定する。マウスボタンを押した後、この幅を越えてマウスを動かすとドラッグ操作が開始されたものとみなされる。uiParam パラメータに設定する幅を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETFILTERKEYS</td><td>51</td><td>ユーザー補助のフィルターキーに関する情報を設定する。PvParam パラメータにはFILTERKEYS 構造体へのポインタを指定する。この構造体に構造体のサイズやフィルターキーに関する情報を入れておく。UiParam パラメータにはsizeof(FILTERKEYS)を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETFONTSMOOTHING</td><td>75</td><td>スクリーンフォントの縁をなめらかにする機能を設定する。UiParam パラメータにこの機能を利用するときはTRUE を、利用しないときはFALSE を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETGRIDGRANULARITY</td><td>19</td><td>デスクトップのサイズ変更格子の単位を設定する。uiParam パラメータに設定する単位を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETHIGHCONTRAST</td><td>67</td><td>Windows95/98 のみ : ユーザー補助のハイコントラスト機能に関する情報を設定する。pvParam パラメータにはHIGHCONTRAST 構造体へのポインタを指定する。この構造体に構造体のサイズやハイコントラスト機能に関する情報を入れておく。uiParam パラメータにはsizeof(HIGHCONTRAST)を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETICONMETRICS</td><td>46</td><td>アイコンの表示に関する情報を設定する。pvParam パラメータにはICONMETRICS 構造体へのポインタを指定する。この構造体に構造体のサイズやアイコンの表示に関する情報を入れておく。UiParam パラメータにはsizeof(ICONMETRICS)を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETICONTITLELOGFONT</td><td>34</td><td>アイコンタイトルのフォント情報を設定する。pvParam パラメータにはLOGFONT 構造体へのポインタを指定する。この構造体にフォントに関する情報を入れておく。UiParam パラメータにはsizeof(LOGFONT)を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETICONTITLEWRAP</td><td>26</td><td>アイコンタイトルの折り返しを有効または無効にする。uiParam パラメータには折り返しを有効にするときはTRUE を、無効にするときはFALSE を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETKEYBOARDDELAY</td><td>23</td><td>キーボードのプロパティおける「表示までの待ち時間」を設定する。uiParamパラメータに設定する時間を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETKEYBOARDPREF</td><td>69</td><td>Windows95/98 のみ : キーボードのプロパティおける「表示までの待ち時間」を設定する。uiParam パラメータに設定する時間を指定する。UiParam パラメータにキーボードのヘルプを追加するときはTRUE を、追加しないときはFALSE を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETKEYBOARDSPEED</td><td>11</td><td>キーボードのプロパティにおける「表示の間隔」を設定する。uiParam パラメータに設定する時間を指定する。SPI_SETLANGTOGGLE 91 キーボードのプロパティにおける「言語の切り替え」を設定する。uiParam パラメータとpvParam パラメータは使用されない。設定値はレジストリの\HKEY_CURRENT_USER\keyboard layout\toggle で指定する。［Alt］＋［Shift］キーに設定するときは1 を、［Ctrl］＋［Shift］キーに設定するときは2 を、設定しないときは 3 を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETLOWPOWERACTIVE</td><td>85</td><td>Windows95/98 のみ : 低電力スクリーンセーブモードを設定する。uiParam パラメータにアクティブにするときは1を非アクティブにするときは0 を指定する。pvParam パラメータにはNULL を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETLOWPOWERTIMEOUT</tr><td>81</tr><td>Windows95/98 のみ : 低電力スクリーンセーブモードのタイムアウト値を設定する。uiParam パラメータにタイムアウト値を秒単位で指定する。pvParam パラメータにはNULL を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETMENUDROPALIGNMENT</td><td>28</td><td>メニューバーの項目に対してドロップダウンメニューを右寄せするかどうかを設定する。uiParam パラメータに右寄せにするときはTRUE を、左寄せにするときはFALSE を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETMINIMIZEDMETRICS</td><td>44</td><td>最小化ウィンドウの配置方法に関する情報を設定する。PvParam パラメータにはMINIMIZEDMETRICS 構造体へのポインタを指定する。この構造体に構造体のサイズや配置方法に関する情報を入れておく。uiParam パラメータにはsizeof(MINIMIZEDMETRICS)を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETMOUSEM</td><td>55</td><td>マウスカーソルの移動速度と移動速度に関するしきい値を設定する。PvParam パラメータに3 つの要素を持つ整数型配列へのポインタを指定する。この配列に移動速度と移動速度に関するしきい値を入れておく。</td>
+</tr>
+<tr>
+<td>SPI_SETMOUSEBUTTONSWAP</td><td>33</td><td>左右のマウスボタンの機能を交換するかどうかを設定する。uiParam パラメータに交換するときはTRUE を、交換しないときはFALSE を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETMOUSEHOVERHEIGHT</td><td>101</td><td>WindowsNT のみ : TrackMouseEvent 関数がWM_MOUSEHOVER メッセージを生成するためにマウスカーソルが滞在していなければならない範囲の高さを設定する。uiParam パラメータに設定する高さを指定する。</td>
+<tr>
+<td>SPI_SETMOUSEHOVERTIME</td><td>103</td><td>WindowsNT のみ : TrackMouseEvent 関数がWM_MOUSEHOVER メッセージを生成するためにマウスカーソルが滞在していなければならない時間を設定する。uiParam パラメータに設定する時間をミリ秒単位で指定する。これはTrackMouseEvent 関数のdwHoverTimeパラメータでHOVER_DEFAULT を渡したときにだけ使用される。</td>
+</tr>
+<tr>
+<td>SPI_SETMOUSEHOVERWIDTH</td><td>99</td><td>WindowsNT のみ : TrackMouseEvent 関数がWM_MOUSEHOVER メッセージを生成するためにマウスカーソルが滞在していなければならない範囲の幅を設定する。uiParam パラメータに設定する幅を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETMOUSEKEYS</td><td>55</td><td>ユーザー補助のマウスキーに関する情報を設定する。pvParam パラメータにはMOUSEKEYS 構造体へのポインタを指定する。この構造体に構造体のサイズやマウスキーに関する情報を入れておく。UiParam パラメータにはsizeof(MOUSEKEYS)を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETMOUSETRAILS</td><td>93</td><td>Windows95/98 のみ : マウスポインタの軌跡の表示を設定する。uiParam パラメータに軌跡を表示しないときは0 または1 を、軌跡を表示するときは描画する軌跡の数を2 以上の整数で指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETNONCLIENTMETRICS</td><td>42</td><td>非クライアント領域に関するメトリック値を設定する。PvParam パラメータにはNONCLIENTMETRICS 構造体へのポインタを指定する。この構造体に構造体のサイズや設定するメトリック値を入れておく。uiParam パラメータにはsizeof(NONCLIENTMETRICS)を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETPENWINDOWS</td><td>49</td><td>Windows95/98 のみ : ペンウィンドウをロードまたはアンロードする。uiParam パラメータにはロードするときはTRUE を、アンロードするときはFALSE を指定する。pvParam パラメータにはNULL を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETPOWEROFFACTIVE</td><td>86</td><td>Windows95/98 のみ : スクリーンセーブモードの電源断を設定する。uiParam パラメータにはアクティブにするときは1 を、非アクティブにするときは0 を指定します。pvParam パラメータにはNULL を指定する。</td>
+</td>
+<tr>
+<td>SPI_SETPOWEROFFTIMEOUT</td><td>82</td><td>Windows95/98 のみ : スクリーンセーブモードの電源断のタイムアウト値を設定する。UiParam パラメータにタイムアウト値を秒単位で設定する。pvParam パラメータにはNULL を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETSCREENREADER</td><td>71</td><td>スクリーンレビューアユーティリティの実行状態を設定する。uiParam パラメータに実行するときはTRUE を、実行しないときはFALSE を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETSCREENSAVEACTIVE</td><td>17</td><td>スクリーンセーバーを有効または無効にする。UiParam パラメータに有効にするときはTRUE を、無効にするときはFALSE を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETSCREENSAVETIMEOUT</td><td>15</td><td>スクリーンセーバーの実行までの待ち時間を設定する。uiParam パラメータに設定する時間を秒単位で指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETSERIALKEYS</td><td>63</td><td>Windows95/98 のみ : ユーザー補助のシリアルキーデバイスに関する情報を設定する。pvParam パラメータにはSERIALKEYS 構造体へのポインタを指定する。この構造体に構造体のサイズや設定する情報を入れておく。UiParam パラメータにはsizeof(SERIALKEYS)を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETSHOWSOUNDS</td><td>57</td><td>ユーザー補助の「サウンド解説を使う」を有効または無効にする。UiParam パラメータに有効にするときはTRUEを、無効にするときはFALSE を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETSOUNDSENTRY</td><td>65</td><td>ユーザー補助のサウンド表示に関する情報を設定する。pvParam パラメータにはSOUNDSENTRY 構造体へのポインタを指定する。この構造体に構造体のサイズや設定する情報を入れておく。UiParam パラメータにはsizeof(SOUNDSENTRY)を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETSTICKYKEYS</td><td>59</td><td>ユーザー補助の固定キーに関する情報を設定する。PvParam パラメータにはSTICKYKEYS 構造体へのポインタを指定する。この構造体に構造体のサイズや設定する情報を入れておく。UiParam パラメータにはsizeof(STICKYKEYS) を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETTOGGLEKEYS</td><td>53</td><td>ユーザー補助の切り替えキーに関する情報を設定する。pvParam パラメータにはTOGGLEKEYS 構造体へのポインタを指定する。この構造体に構造体のサイズや設定する情報を入れておく。UiParam パラメータにはsizeof(TOGGLEKEYS)を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETWHEELSCROLLLINES</td><td>105</td><td>WindowsNT のみ : マウスホイールの回転によってスクロールされる行数の推奨値を設定する。uiParam パラメータに設定する行数を指定する。</td>
+</tr>
+<tr>
+<td>SPI_SETWORKAREA</td><td>47</td><td>作業領域のサイズを設定する。作業領域は画面全体からトレー(タスクバー)が占める領域を除いた部分。pvParam パラメータに設定する領域が入ったRECT構造体へのポインタを指定する。</td>
+</tr>
+</table>
+<h2>グラフィックスモードを変更する</h2>
+<p>以下のサンプルは、画面を８００＊６００　２５６色に設定します。
+ユーザー操作で色数を２５６に設定することは出来ません。</p>
+<pre class="codeApi"><a name="EnumDisplaySettings"></a><span class="REM">'--------------------------------------------------------
+'ディスプレイのグラフィックスモードに関する情報を取得する関数
+'
+'戻り値     成功 = 0以外
+'           失敗 = 0
+'--------------------------------------------------------</span>
+Declare Function EnumDisplaySettings Lib "user32" _
+    Alias "EnumDisplaySettingsA" _
+    (ByVal lpszDeviceName As String, _
+    ByVal dwModeNum As Long, _
+    lpDevMode As DEVMODE) As Long
+
+</pre>
+
+<pre class="codeApi"><a name="ChangeDisplaySettings"></a><span class="REM">'--------------------------------------------------------
+'ディスプレイの設定を変更する
+'
+'戻り値     成功 = 0
+'           失敗 = 0以外
+'--------------------------------------------------------</span>
+Declare Function ChangeDisplaySettings Lib "user32" _
+    Alias "ChangeDisplaySettingsA" _
+    (lpDevMode As DEVMODE, _
+    ByVal dwflags As Long) As Long
+
+<pre class="codeConst">
+ Const CCHDEVICENAME = 32&
+ Const CCHFORMNAME = 32&
+
+ Const DISP_CHANGE_SUCCESSFUL = 0&
+ Const DISP_CHANGE_RESTART = 1&
+
+Type DEVMODE
+    dmDeviceName As String * CCHDEVICENAME
+    dmSpecVersion As Integer
+    dmDriverVersion As Integer
+    dmSize As Integer
+    dmDriverExtra As Integer
+    dmFields As Long
+    dmOrientation As Integer
+    dmPaperSize As Integer
+    dmPaperLength As Integer
+    dmPaperWidth As Integer
+    dmScale As Integer
+    dmCopies As Integer
+    dmDefaultSource As Integer
+    dmPrintQuality As Integer
+    dmColor As Integer
+    dmDuplex As Integer
+    dmYResolution As Integer
+    dmTTOption As Integer
+    dmCollate As Integer
+    dmFormName As String * CCHFORMNAME
+    dmUnusedPadding As Integer
+    dmBitsPerPel As Long
+    dmPelsWidth As Long
+    dmPelsHeight As Long
+    dmDisplayFlags As Long
+    dmDisplayFrequency As Long
+End Type</pre></pre>
+
+
+<pre class="codeProc"><a name="ChangeDisplaySettings_Sample"></a><span class="REM">'summary:グラフィックスモードを変更する</span>
+Sub ChangeDisplaySettings_Sample()
+
+    Dim udtDevMode As DEVMODE
+    Dim lngBitsPerPel As Long
+    Dim lngPelsWidth As Long, lngPelsHeight As Long
+    Dim lngDevCnt As Long
+    Dim strMsg As String
+
+    Const lngDevCntMax As Long = 148            <span class="REM">'必要十分なデバイス数</span>
+
+    lngBitsPerPel = 256                         <span class="REM">'色数</span>
+    lngPelsWidth = 800                          <span class="REM">'横解像度</span>
+    lngPelsHeight = 600                         <span class="REM">'縦解像度</span>
+    lngBitsPerPel = Log(lngBitsPerPel) / Log(2) <span class="REM">'色数をビット数に変換</span>
+                                                <span class="REM">'色数をビット数で指定した場合は不要</span>
+    
+    For lngDevCnt = 0 To lngDevCntMax
+        If EnumDisplaySettings(vbNullString, _
+                                lngDevCnt, _
+                                udtDevMode) = 1 Then
+            With udtDevMode
+                If .dmBitsPerPel = lngBitsPerPel _
+                    And .dmPelsWidth = lngPelsWidth _
+                    And .dmPelsHeight = lngPelsHeight Then Exit For
+            End With
+        End If
+    Next
+
+    If lngDevCnt = lngDevCntMax + 1 Then
+        MsgBox "適切なデバイスが見つかりません", vbExclamation
+        Exit Sub
+    End If
+    
+    strMsg = "グラフィックスモードを" _
+        & vbCrLf & 2 ^ lngBitsPerPel & "色、解像度" _
+        & lngPelsWidth & "×" & lngPelsHeight _
+        & vbCrLf & "に変更しました。"
+    
+    Select Case ChangeDisplaySettings(udtDevMode, 0)
+        Case DISP_CHANGE_SUCCESSFUL
+            MsgBox strMsg, vbInformation
+        Case DISP_CHANGE_RESTART
+            MsgBox strMsg & vbCrLf _
+                & "新しいグラフィックスモードを有効にするには、" _
+                & vbCrLf & "コンピュータを再起動する必要があります。" _
+                , vbInformation
+        Case Else
+            MsgBox "グラフィックスモードを変更できませんでした。" _
+                , vbExclamation
+    End Select
+End Sub</pre>
+<hr>
+<div><a href="./index.htm">&gt;INDEX</a></div>
+</div>
+</body>
+</html>

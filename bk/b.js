@@ -1,0 +1,1 @@
+alert(browser_judge())

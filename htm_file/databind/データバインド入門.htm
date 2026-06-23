@@ -1,0 +1,1028 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0058)http://www.makoto3.net/document/databind/databind_all.html -->
+<HTML><HEAD><TITLE>データバインド入門</TITLE>
+<META http-equiv=Content-Type content="text/html; CHARSET=shift_jis">
+<STYLE type=text/css>.type1 {
+	FONT-SIZE: 10pt; MARGIN: 50px 120px; WIDTH: 100%; FONT-FAMILY: "ＭＳ Ｐゴシック"
+}
+.part {
+	PADDING-RIGHT: 5px; PADDING-LEFT: 5px; FONT-SIZE: 21pt; PADDING-BOTTOM: 5px; COLOR: black; PADDING-TOP: 5px; BACKGROUND-COLOR: silver; TEXT-ALIGN: center
+}
+.source {
+	WIDTH: 100%; FONT-FAMILY: courier; BACKGROUND-COLOR: #fffff0
+}
+.column {
+	BORDER-RIGHT: silver thin solid; PADDING-RIGHT: 20px; BORDER-TOP: silver thin solid; PADDING-LEFT: 20px; PADDING-BOTTOM: 20px; BORDER-LEFT: silver thin solid; PADDING-TOP: 20px; BORDER-BOTTOM: silver thin solid; FONT-FAMILY: "ＭＳ Ｐ明朝"
+}
+.explain {
+	BORDER-RIGHT: black thin solid; PADDING-RIGHT: 15px; BORDER-TOP: white thin solid; PADDING-LEFT: 15px; FONT-SIZE: 8pt; LEFT: 30px; VISIBILITY: hidden; PADDING-BOTTOM: 15px; BORDER-LEFT: white thin solid; WIDTH: 180px; COLOR: black; PADDING-TOP: 15px; BORDER-BOTTOM: black thin solid; POSITION: absolute; TOP: 0px; BACKGROUND-COLOR: silver
+}
+</STYLE>
+
+<META content="MSHTML 6.00.2800.1400" name=GENERATOR></HEAD>
+<BODY class=type1 vLink=#0000ff>
+<H2>データバインド入門</H2>
+<HR>
+
+<DIV style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">Table of contents</DIV><SMALL>
+<P><A 
+href="http://www.makoto3.net/document/databind/databind_all.html#PART1">PART1　データバインドの基本</A><BR>&nbsp;&nbsp;&nbsp; 
+<A 
+href="http://www.makoto3.net/document/databind/databind_all.html#■データバインドとは何か">■データバインドとは何か</A><BR>&nbsp;&nbsp;&nbsp; 
+<A 
+href="http://www.makoto3.net/document/databind/databind_all.html#■まずはシンプルな例から">■まずはシンプルな例から</A><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<A 
+href="http://www.makoto3.net/document/databind/databind_all.html#●データベースを可能にするおまじない">●データベースを可能にするおまじない</A><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<A 
+href="http://www.makoto3.net/document/databind/databind_all.html#●DATASRCとDATAFLD">●DATASRCとDATAFLD</A><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<A 
+href="http://www.makoto3.net/document/databind/databind_all.html#●用語解説を兼ねたまとめ">●用語解説を兼ねたまとめ</A><BR>&nbsp;&nbsp;&nbsp; 
+<A 
+href="http://www.makoto3.net/document/databind/databind_all.html#■表示するレコードを切り替える">■表示するレコードを切り替える</A><BR>&nbsp;&nbsp;&nbsp; 
+<A 
+href="http://www.makoto3.net/document/databind/databind_all.html#■recordsetオブジェクトのプロパティとメソッドのまとめ">■recordsetオブジェクトのプロパティとメソッドのまとめ</A></SMALL><BR><SMALL><A 
+href="http://www.makoto3.net/document/databind/databind_all.html#PART2">PART2　繰り返しテーブル</A> 
+<BR>&nbsp;&nbsp;&nbsp; <A 
+href="http://www.makoto3.net/document/databind/databind_all.html#■繰り返しテーブルを作る">■繰り返しテーブルを作る</A>&nbsp;&nbsp; 
+<BR>&nbsp;&nbsp;&nbsp; <A 
+href="http://www.makoto3.net/document/databind/databind_all.html#■繰り返しテーブルに見出しを付ける">■繰り返しテーブルに見出しを付ける</A><BR>&nbsp;&nbsp;&nbsp; 
+<A 
+href="http://www.makoto3.net/document/databind/databind_all.html#■一度に表示するレコード数を指定する">■一度に表示するレコード数を指定する</A></SMALL><BR><SMALL><A 
+href="http://www.makoto3.net/document/databind/databind_all.html#PART3">PART3　データコンシューマ</A><BR>&nbsp;&nbsp;&nbsp; 
+<A 
+href="http://www.makoto3.net/document/databind/databind_all.html#■データコンシューマいろいろ">■データコンシューマいろいろ</A><BR>&nbsp;&nbsp;&nbsp; 
+<A 
+href="http://www.makoto3.net/document/databind/databind_all.html#■データバインド拡張機能とデータコンシューマ">■データバインド拡張機能とデータコンシューマ</A></SMALL><BR><SMALL><A 
+href="http://www.makoto3.net/document/databind/databind_all.html#PART4">PART4　並び替えと絞込</A><BR>&nbsp;&nbsp;&nbsp; 
+<A 
+href="http://www.makoto3.net/document/databind/databind_all.html#■レコードの並び替え">■レコードの並び替え</A><BR>&nbsp;&nbsp;&nbsp; 
+<A 
+href="http://www.makoto3.net/document/databind/databind_all.html#■レコードの絞込">■レコードの絞込</A></SMALL><BR><SMALL><A 
+href="http://www.makoto3.net/document/databind/databind_all.html#PART5">PART5　補足情報</A><BR>&nbsp;&nbsp;&nbsp; 
+<A 
+href="http://www.makoto3.net/document/databind/databind_all.html#■Tabular Data Controlのプロパティ">■Tabular 
+Data Controlのプロパティ</A><BR>&nbsp;&nbsp;&nbsp; <A 
+href="http://www.makoto3.net/document/databind/databind_all.html#■ヘッダー行がない場合の処理">■ヘッダー行がない場合の処理</A></SMALL><BR><SMALL><A 
+href="http://www.makoto3.net/document/databind/databind_all.html#PART6">PART6　スクリプト作成に役立ついくつかの実験</A><BR>&nbsp;&nbsp;&nbsp; 
+<A 
+href="http://www.makoto3.net/document/databind/databind_all.html#■recordNumberプロパティは繰り返しテーブルの表示順">■recordNumberプロパティは繰り返しテーブルの表示順</A><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<A 
+href="http://www.makoto3.net/document/databind/databind_all.html#■｢並び替え｣｢カレントレコード｣｢recordNumberプロパティ｣の関係">●並び替え、カレントレコード、recordNumberプロパティの関係</A><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<A 
+href="http://www.makoto3.net/document/databind/databind_all.html#■｢絞込｣｢カレントレコード｣｢recordCountプロパティ｣｢recordNumberプロパティ｣の関係">●絞込、カレントレコード、recordCountプロパティ、recordNumberプロパティの関係</A><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<A 
+href="http://www.makoto3.net/document/databind/databind_all.html#■｢nextPage()メソッド｣｢previousPage()メソッド｣｢カレントレコード｣｢recordNumberプロパティ｣">●nextPage()メソッド、previousPage()メソッド、カレントレコード、recordNumberプロパティ、recordCountプロパティの関係</A></SMALL><BR><SMALL><A 
+href="http://www.makoto3.net/document/databind/databind_all.html#PART7">PART7　活用してみよう</A><BR>&nbsp;&nbsp;&nbsp; 
+<A 
+href="http://www.makoto3.net/document/databind/databind_all.html#■中古車データベースのデモ">■中古車データベースのデモ</A><BR>&nbsp;&nbsp;&nbsp; 
+<A 
+href="http://www.makoto3.net/document/databind/databind_all.html#■7桁郵便番号検索～東京編">■7桁郵便番号検索～東京編</A><BR>&nbsp;&nbsp;&nbsp; 
+<A 
+href="http://www.makoto3.net/document/databind/databind_all.html#■より高度なトピック">■より高度なトピック</A> 
+</P></SMALL>
+<HR>
+
+<P class=part><A name=PART1></A>PART1　データバインドの基本</P>
+<P>この記事では、InternetExplorer4.0(以下、IE4)のDynamicHTMLの機能の1つであるデータバインド(データ連結)の概要を紹介する。本来はDynamicHTMLの基本から始めるべきだが、ここでは割愛する。なぜかというと、それはちょっと面倒で骨が折れるから。で、どうして｢データバインドなのか｣というと、これがIE4のDynamicHTMLの中で、けっこう重要なポジションを占めるだろうと思ったからだ。同時に、個人的にも自分が得た知識をまとめておきたい気持ちがあったからなのだ。<BR><BR>読者に求められる知識は、HTML、JavaScript、DynamicHTML、スタイルシート(CSS1)の4つ。｢ああ、じゃ読んでも分からないや｣とココで読むのをやめてもいいが、そのすべてを理解している必要はない。そもそも、書いてる本人も、ぜんぶ分かっているわけじゃない。どれも、ちょっとだけなら分かります、という程度なら大丈夫だ(分からなかった調べよう)。<BR><BR>なお、｢データバインド｣はIE4のDynamicHTMLの中では、"難しい部類"というか、IE4のDynamicHTML関連本では後ろの方に出てくる内容、といったところ。だから、DynamicHTMLについてひととおり勉強してから取り組む内容、と思われがちだが、必ずしもそうとはかぎらない。先にデータバインドやっても、問題ないと思う。まぁ、本を書く立場の人間からすると、構成上＆商売上そうせざるをえないのは分かるけれども、それはそれとして、｢データバインド｣、なかなか面白い。DynamicHTMLを熟知しなくても、データバインドは十分利用できる、ということを強調したうえで、スタート。 
+</P>
+<H2><A name=■データバインドとは何か>■データバインドとは何か</A></H2>
+<P>｢データバインド｣とは何か？ と聞かれたら、ボクは｢Webページをデータベースソフトに変えるマジック｣と答える。と書いても、ナンノコッチャ？ 
+と思うのが普通なので、まずはそのマジックをお見せしたい。<BR><BR><A 
+href="http://202.33.42.125/~makoto3/DB001.html">このページ</A>は、データバインドを利用して作ったWebページだ。｢住所1｣｢住所2｣の入力欄に文字を入力し、&lt;検索&gt;ボタンをクリックすれば、入力した文字を条件とした絞込が実行される。たとえば、｢都道府県｣で｢東京都｣を選び、｢住所1｣に｢練馬区｣と入力して&lt;検索&gt;ボタンをクリックすれば、条件に合致するデータだけが絞り込まれて表示される。データベースソフトを使ったことのある方なら、何をやってるかは分かるだろう。｢都道府県｣を選択したときデータの読込に若干の時間がかかるが、一度読み込んだ都道府県のデータはキャッシュに入るため、2回目以降の読み込みは高速になる。<BR><BR>｢データバインド｣を使えば、Webページでこうした処理が可能になる。処理そのものに目新しさはないが、ポイントはこれがWebページで実現されていることだ。しかも、サーバ側ではCGI等を使った処理はいっさいしていない。すべてクライアント側(IE4)で処理が行われる。<BR><BR>では、もっとシンプルな例を使って、データバインドの具体例を紹介していこう。 
+</P>
+<H2><A name=■まずはシンプルな例から>■まずはシンプルな例から</A></H2>
+<P>｢データバインド｣では、HTMLファイルとテキスト形式のデータファイルの2つのファイルが重要な役割を演じる。まずは、その2つのファイル例を紹介しよう。 
+</P>
+<P>【<A 
+href="http://www.makoto3.net/document/databind/smp001.html">サンプル1</A>:smp001.html】</P>
+<P 
+class=source>&lt;HTML&gt;<BR>&lt;HEAD&gt;<BR>&lt;TITLE&gt;サンプル1&lt;/TITLE&gt;<BR>&lt;/HEAD&gt;<BR>&lt;BODY&gt; 
+&lt;P ALIGN=center&gt;<BR>&lt;SPAN ID="span1" DATASRC="#carData" 
+DATAFLD="name"&gt;&lt;/SPAN&gt;&lt;BR&gt;<BR>&lt;SPAN ID="span2" 
+DATASRC="#carData" DATAFLD="maker"&gt;&lt;/SPAN&gt;&lt;BR&gt;<BR>&lt;SPAN 
+ID="span3" DATASRC="#carData" 
+DATAFLD="color"&gt;&lt;/SPAN&gt;&lt;BR&gt;<BR>&lt;SPAN ID="span4" 
+DATASRC="#carData" DATAFLD="year"&gt;&lt;/SPAN&gt;&lt;BR&gt;<BR>&lt;SPAN 
+ID="span5" DATASRC="#carData" 
+DATAFLD="price"&gt;&lt;/SPAN&gt;<BR>&lt;/P&gt;<BR>&lt;!-- データソースオブジェクトの指定 
+--&gt;<BR>&lt;OBJECT ID=carData 
+CLASSID="clsid:333C7BC4-460F-11D0-BC04-0080C7055A83"&gt;<BR>&lt;PARAM 
+NAME="DataURL" VALUE="car.txt"&gt;<BR>&lt;PARAM NAME="UseHeader" 
+VALUE="true"&gt;<BR>&lt;/OBJECT&gt; <BR>&lt;/BODY&gt;<BR>&lt;/HTML&gt;</P>
+<P>【car.txt】</P>
+<P 
+class=source>name,maker,color,year:Int,price:Int<BR>アコード,ホンダ,白,92,800000<BR>マークⅡ,トヨタ,白,94,1500000<BR>カムリ,トヨタ,黒,90,550000<BR>サニー,ニッサン,シルバー,96,1200000<BR>MPV,マツダ,赤,91,1350000<BR>デミオ,マツダ,濃紺,95,1400000<BR>シビック,ホンダ,青,93,1100000<BR>シーマ,ニッサン,白,91,2100000<BR>ゴルフ,フォルクスワーゲン,シルバー,94,1700000<BR>シビック,ホンダ,シルバー,92,890000<BR>カローラ,トヨタ,白,92,550000<BR>アコード,ホンダ,濃紺,93,1200000<BR>ステップワゴン,ホンダ,赤,96,1300000<BR>ステップワゴン,ホンダ,白,97,1600000<BR>スカイライン,ニッサン,シルバー,97,2000000<BR>プリメーラ,ニッサン,白,93,650000<BR>ユーノスロードスター,マツダ,青,94,1250000<BR>カローラ,トヨタ,白,90,450000<BR>ゴルフ,フォルクスワーゲン,黒,97,2100000</P>
+<P><BR>以上の2つのファイルをサーバ上の同じディレクトリに置く。そして、ブラウザを使ってcar001.htmlを表示する(ローカルのハードディスクの同一フォルダに置いてcar001.htmlを読み込んでも同じ)。実際に上のサンプル1のリンクをクリックして表示してみよう。さて、ここでは何が起きているだろうか。表示されるデータは、次のとおり。 
+</P>
+<P>アコード<BR>ホンダ<BR>白<BR>92<BR>800000 </P>
+<P>つまり、car.txtの2行目のデータが表示されている。car.txtは、表計算ソフトやデータベースソフト等で作成できる単純なカンマ区切りのテキストファイルだ。データをカンマ(,)で区切り、1行が1件分(1レコード)に相当する。ある程度パソコンを使ったことのある方には、おなじみの形式だと思う。<BR><BR>これだけだと、レコードが1件表示されるだけで面白くもないのだが、"カンマ区切り形式のテキストファイルに書かれているレコードがHTMLファイル中に出力されている"という事実は、けっこうインパクトがある。ここで、2つのファイルの重要な記述を押さえておきたい。 
+</P>
+<P 
+class=column>COLUMN　テキストファイルの項目名<BR><BR>テキストファイルとして用意したcar.txtの1行目が次のようになっていることに注目してほしい。 
+<BR><BR>name,maker,color,year:Int,price:Int 
+<BR><BR>いわゆる項目名の指定だが、year:Int,price:Int 
+とちょっと変わった指定がある。これは、year項目とprice項目のデータが整数値であることを示している。いまはあまり気にする必要はないが、この指定は並び替えや絞込で重要な意味を持ってくる。詳細は後述する。</P>
+<H3><BR><A name=●データベースを可能にするおまじない>●データベースを可能にするおまじない</A></H3>
+<P>まずは、HTMLファイル(car001.html)の次の記述に注目してほしい。 </P>
+<P class=source>&lt;!-- データソースオブジェクトの指定 --&gt;<BR>&lt;OBJECT ID=carData 
+CLASSID="clsid:333C7BC4-460F-11D0-BC04-0080C7055A83"&gt;<BR>&lt;PARAM 
+NAME="DataURL" VALUE="car.txt"&gt;<BR>&lt;PARAM NAME="UseHeader" 
+VALUE="true"&gt;<BR>&lt;/OBJECT&gt; </P>
+<P>これは、いわば"おまじない"の部分だ。&lt;OBJECT&gt;の属性として、IDに｢carData｣、CLASSIDに｢clsid:333C7BC4-460F-11D0-BC04-0080C7055A83｣と指定している。特にCLASSIDについては、深く考える必要はない。このように記述するものと決まっている。重要なのは、IDに｢carData｣を指定していること。これによって、Webページに｢carData｣という名前のデータソースオブジェクトが生成される。ナンノコッチャ、だと思うが、あまり深く考えることはない。この部分に｢carData｣という名前をつけたと思えばいい。<BR><BR>次にパラメータの部分を1つずつ見てみよう。 
+</P>
+<P class=source>&lt;PARAM NAME="DataURL" VALUE="car.txt"&gt; </P>
+<P>これは、VALUE属性に｢car.txt｣を指定しているのがポイント。｢NAME="DataURL"｣は固定だ。｢car.txt｣としたことで、データファイルに｢car.txt｣を指定したことになる。 
+</P>
+<P class=source>&lt;PARAM NAME="UseHeader" VALUE="true"&gt; </P>
+<P>これは、指定したcar.txtの1行目がヘッダー行であるという指定だ。｢car.txt｣では、1行目が次のようになっている。 </P>
+<P class=source>name,maker,color,year:INT,price:INT </P>
+<P>これは、データベース用語で言えば項目名(フィールド名)にあたる。要するに、2行目以降にどんな種類のデータがあるかを示しているのだ。car.txtには、このヘッダー行があるので、VALUE属性を｢true｣にしている。ヘッダー行がなく、1行目からすぐにデータが書かれていれば、ここは｢false｣を指定する。<BR><BR>パラメータは、この他にもまだあるが、ここではこの程度に抑えておこう。 
+</P>
+<H3><A name=●DATASRCとDATAFLD>●DATASRCとDATAFLD</A></H3>
+<P>次に、データを表示する部分を見てみよう。次の記述に注目してほしい。 </P>
+<P class=source>&lt;SPAN ID="span1" DATASRC="#carData" 
+DATAFLD="name"&gt;&lt;/SPAN&gt; </P>
+<P>おなじみの&lt;SPAN&gt;タグに、DATASRCとDATAFLDという見慣れない属性が指定してある。DATASRCがデータソースオブジェクトの指定、DATAFLDが項目名の指定だ。<BR><BR>まず、DATASRCには｢#carData｣と指定してある。｢carData｣は、先ほど&lt;OBJECT&gt;タグで指定した名前だ。この名前の先頭に#を付けるのがルール。これで、この&lt;SPAN&gt;タグと｢carData｣という名前のデータソースオブジェクトが連結される。<BR><BR>｢DATAFLD｣には｢name｣と指定してある。これは、car.txtのヘッダー行にあった｢name｣項目のことだ。この指定によって、&lt;SPAN&gt;タグにcar.txtの｢name｣項目のデータが表示されることになる。<BR><BR>以降の行は、この繰り返しにすぎない。DATASRCに｢#carData｣と指定し、DATAFLDに｢maker｣｢color｣｢year｣｢price｣を指定している。これによって、5つのSPAN領域には、次のようなデータが表示されることになる。 
+</P>
+<P>span1　……　car.txtのname項目のデータ<BR>span2　……　car.txtのmaker項目のデータ<BR>span3　……　car.txtのcolor項目のデータ<BR>span4　……　car.txtのyear項目のデータ<BR>span5　……　car.txtのprice項目のデータ 
+</P>
+<H3><A name=●用語解説を兼ねたまとめ>●用語解説を兼ねたまとめ</A></H3>
+<P>以上のサンプルは、データバインドの例としては、あまりにシンプルすぎて素っ気ない。が、それだけに、これから紹介する内容を理解するうえで重要なポイントが、わかりやすいカタチで含まれている。ここでは、そのポイントをデータバインドで使われる用語解説のカタチで紹介しよう。この時点で解説するには、ちょっと早い内容も含まれているので、ある程度読み進んだら、再び立ち戻って用語を確認してみてほしい。 
+</P>
+<P><STRONG>◆データソース</STRONG><BR>先の例で言えばcar.txt、つまりWebページ中に表示される元データのことだ。カンマ区切りのテキスト形式が一般的だが、カンマ以外の区切り文字も使用できる(後述)。 
+</P>
+<P><STRONG>◆データソースオブジェクト</STRONG><BR>Data Source 
+Object。略して｢DSO｣とも記述される。先のサンプルで言えば、&lt;OBJECT&gt;～&lt;/OBJECT&gt;の記述によってWebページ中に生成されるデータソースのオブジェクトだ。といっても、｢オブジェクト｣か分かりにくい概念なので、ボクなりの解釈で書くと、"データソースの入れ物"がデータソースオブジェクトだ。先のサンプルを例にしよう。car.txtがあっても、そのままだとHTMLファイルで扱えない。そこで、HTMLファイル中にデータソースオブジェクトという"入れ物"を作るのである。そして、そこにcar.txtというデータソースを入れる。こんなイメージだ。 
+</P>
+<P><STRONG>◆データコンシューマ</STRONG><BR>データソースのデータを表示するHTML要素のことだ。&lt;SPAN&gt;&lt;DIV&gt;&lt;MARQUEE&gt;などのタグがデータコンシューマにあたる。データベースオブジェクト(入れ物)があって、そこにデータソース(中身)が指定されていれば、入れ物を通じて、中身を自由に取り出して表示できる。その表示する場所が&lt;SPAN&gt;&lt;DIV&gt;&lt;MARQUEE&gt;などのデータコンシューマというわけだ。コンシューマ(CONSUMER)は｢消費者｣の意味だから、次のようにたとえられるかもしれない。 
+</P>
+<P>データソース……商品<BR>データベースオブジェクト……店<BR>データコンシューマ……消費者 </P>
+<P>｢データソース｣という商品がある。この商品を扱う｢データソースオブジェクト｣という店がある。そして、消費者である｢データコンシューマ｣が、その店に商品を要求する。すると、消費者のもとに店から商品が届けられる。こんな感じだろうか。 
+</P>
+<P><STRONG>◆データバインド(データ連結)<BR></STRONG>データソースとデータコンシューマを結びつけることを言う。あるいは、データソースとデータコンシューマを結び付ける仕組み全体と言ってもいい。この記事で解説しているのも、その仕組みであるデータバインドだ。 
+</P>
+<P class=column>COLUMN　Tabular Data 
+Controlとは何か<BR><BR>じつは、データソースオブジェクト(DSO)は、ActiveXコントロールの1つで、Cなどのプログラミング言語で作成できる(らしい)。資料を読んだかぎりでは、データソースオブジェクトの仕様書みたいなものがあり、その仕様書に沿えば、オリジナルのデータソースオブジェクトを作成できるらしいのである。そして、IE4に最初から組み込まれているデータソースオブジェクトがTabular 
+Data 
+Control(TDC)なのだ。｢データベースオブジェクト｣が少し抽象的な概念、TDCがその具体的なActiveXコントロールというプログラム、ととらえればいいだろうか(｢DSO｣が｢ワープロ｣、｢TDC｣が｢Word｣や｢一太郎｣といった関係か？)。<BR><BR>先にデータソースオブジェクトを"データソースの入れ物"にたとえたが、このたとえに沿えば、IE4に備え付けの"データソースの入れ物"がTDCということになる。<BR><BR>あとで紹介するが、TDCにはいくつかのプロパティやメソッドが用意されていて、これらをスクリプトで操作することで、レコードの絞込や移動ができる。オリジナルのデータソースオブジェクトを作成できるということは、独自のプロパティやメソッドを持つデーソースオブジェクトを作成できるということだから、データの処理方法をプログラマが自由に設計できるということなのだろう。<BR><BR>ただし、それができるのは、もちろんプログラマに限られるだろうから、その能力のないボクのようなユーザーは、｢IE4に備え付けのデータベースオブジェクトがTDC｣という知識で十分かと思う。</P>
+<H2><A name=■表示するレコードを切り替える>■表示するレコードを切り替える</A></H2>
+<P>データバインドの基本と用語を押さえたうえで、次に進もう。今度は少し実用的なサンプルだ。 </P>
+<P>【<A 
+href="http://www.makoto3.net/document/databind/smp002.html">サンプル2</A>:smp002.html】</P>
+<P 
+class=source>&lt;HTML&gt;<BR>&lt;HEAD&gt;<BR>&lt;TITLE&gt;&lt;/TITLE&gt;<BR>&lt;/HEAD&gt;<BR>&lt;BODY&gt;<BR>&lt;P 
+ALIGN=center&gt;<BR>&lt;SPAN ID="span1" DATASRC="#carData" 
+DATAFLD="name"&gt;&lt;/SPAN&gt;&lt;BR&gt;<BR>&lt;SPAN ID="span2" 
+DATASRC="#carData" DATAFLD="maker"&gt;&lt;/SPAN&gt;&lt;BR&gt;<BR>&lt;SPAN 
+ID="span3" DATASRC="#carData" 
+DATAFLD="color"&gt;&lt;/SPAN&gt;&lt;BR&gt;<BR>&lt;SPAN ID="span4" 
+DATASRC="#carData" DATAFLD="year"&gt;&lt;/SPAN&gt;&lt;BR&gt;<BR>&lt;SPAN 
+ID="span5" DATASRC="#carData" 
+DATAFLD="price"&gt;&lt;/SPAN&gt;&lt;BR&gt;<BR>&lt;BUTTON 
+onclick="carData.recordset.MoveFirst()"&gt;|&amp;lt;-&lt;/BUTTON&gt;<BR>&lt;BUTTON 
+onclick="carData.recordset.MovePrevious()"&gt;&amp;lt;-&lt;/BUTTON&gt;<BR>&lt;BUTTON 
+onclick="carData.recordset.MoveNext()"&gt;-&amp;gt;&lt;/BUTTON&gt;<BR>&lt;BUTTON 
+onclick="carData.recordset.MoveLast()"&gt;-&amp;gt;|&lt;/BUTTON&gt;<BR>&lt;/P&gt; 
+<BR><BR>&lt;!-- データベース用オブジェクトの指定 --&gt;<BR>&lt;OBJECT ID=carData 
+CLASSID="clsid:333C7BC4-460F-11D0-BC04-0080C7055A83"&gt;<BR>&lt;PARAM 
+NAME="DataURL" VALUE="car.txt"&gt;<BR>&lt;PARAM NAME="UseHeader" 
+VALUE="true"&gt;<BR>&lt;/OBJECT&gt;<BR><BR>&lt;/BODY&gt;<BR>&lt;/HTML&gt;</P>
+<P><BR>もちろん、データソースはcar.txtのままにしてある。画面を見れば一目瞭然だと思うが、要するにレコードを切り替えるボタンを追加している。<BR><BR>先のサンプル1では、データソースであるcar.txtの先頭レコードだけが表示された。それに対し、サンプル2では、ボタンのクリックで表示するレコードを切り替えることができる。これを実現しているのが、4つのボタンのclickイベントで実行される4つのスクリプトだ。ボタンの記述は次のとおりだ。 
+</P>
+<P class=source>&lt;BUTTON 
+onclick="carData.recordset.MoveFirst()"&gt;|&amp;lt;-&lt;/BUTTON&gt;<BR>&lt;BUTTON 
+onclick="carData.recordset.MovePrevious()"&gt;&amp;lt;-&lt;/BUTTON&gt;<BR>&lt;BUTTON 
+onclick="carData.recordset.MoveNext()"&gt;-&amp;gt;&lt;/BUTTON&gt;<BR>&lt;BUTTON 
+onclick="carData.recordset.MoveLast()"&gt;-&amp;gt;|&lt;/BUTTON&gt; </P>
+<P>clickイベントやスクリプトの書き方、&amp;lt;、&amp;gtの記述については割愛するので、分からない方は調べてほしい。さて、スクリプト部分だけを抜き出そう。それぞれ、4つのボタンをクリックすると実行されるスクリプトだ。 
+</P>
+<P 
+class=source>carData.recordset.MoveFirst()<BR>carData.recordset.MovePrevious()<BR>carData.recordset.MoveNext()<BR>carData.recordset.MoveLast() 
+</P>
+<P>｢carData｣はデータソースオブジェクトのIDに指定した名前だ。データソースオブジェクトはrecordsetというオブジェクトを持っていて、このrecordsetを介して移動用のメソッドを利用できる。<BR><BR>JavaScriptを知っている方なら、window.document.write() 
+といった記述は見慣れているだろう。windowオブジェクトがdocumentオブジェクトを持っていて、documentオブジェクトにwrite()メソッドが用意されていて……となるわけだが、これと同じととらえていい。｢recordsetというオブジェクトはどんなオブジェクトなんだ？｣という疑問もあると思うが、まぁ、そういう仕様になっているので、深く考えてもしょうがない。<BR><BR>さて、recordsetオブジェクトのメソッドに目を移そう。各メソッドの機能は次のとおりだ。 
+</P>
+<P>MoveFirst()……先頭レコードをカレントレコードにする。<BR>MovePrevious()……1つ前のレコードをカレントレコードにする。。<BR>MoveNext()……1つ先のレコードをカレントレコードにする。<BR>MoveLast()……末尾レコードをカレントレコードにする。 
+</P>
+<P>メソッド名を見れば、その機能は自ずと分かるだろう。注意したいのは、｢カレントレコード｣だ。データソースオブジェクトでは、現在選択されているレコードのことを｢カレントレコード(現在レコード)｣と呼ぶ。上記の4つのメソッドは、カレントレコードを変更することによって、表示するレコードを切り替えているのである。サンプル1では先頭のレコードだけが表示されたが、初期状態では先頭のレコードがカレントレコードになるからだ。カレントレコードの位置は、次のスクリプトで調べることができる。 
+</P>
+<P class=source>carData.recordset.AbsolutePosition </P>
+<P>AbsolutePositionはrecordsetオブジェクトのプロパティで、カレントレコードを示す整数値だ。AbsolutePositionは1から始まる。<BR><BR>さて、サンプル2によってレコードを切り替えることができるようになったが、じつはこのサンプル2では、ボタンをクリックして先頭レコードより前、あるいは末尾レコードより後に切り替えようとするとエラーが起きる。これを防ぐには、AbsolutePositionプロパティを使って、サンプル3のように修正しなければならない。 
+</P>
+<P>【<A 
+href="http://www.makoto3.net/document/databind/smp003.html">サンプル3</A>:smp003.html】</P>
+<P 
+class=source>&lt;HTML&gt;<BR>&lt;HEAD&gt;<BR>&lt;TITLE&gt;&lt;/TITLE&gt;<BR>&lt;SCRIPT 
+LANGUAGE="JavaScript"&gt;<BR>function goFirst() {<BR>&nbsp;&nbsp;&nbsp; 
+carData.recordset.MoveFirst()<BR>}<BR><BR>function goPrevious() 
+{<BR>&nbsp;&nbsp;&nbsp; if(carData.recordset.AbsolutePosition != 1) 
+{<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+carData.recordset.MovePrevious()<BR>&nbsp;&nbsp;&nbsp; }<BR>}<BR><BR>function 
+goNext() {<BR>&nbsp;&nbsp;&nbsp; if(carData.recordset.AbsolutePosition != 
+carData.recordset.RecordCount) {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+carData.recordset.MoveNext()<BR>&nbsp;&nbsp;&nbsp; }<BR>}<BR><BR>function 
+goLast() {<BR>&nbsp;&nbsp;&nbsp; 
+carData.recordset.MoveLast()<BR>}<BR>&lt;/SCRIPT&gt;<BR>&lt;/HEAD&gt;<BR>&lt;BODY&gt;<BR>&lt;P 
+ALIGN=center&gt;<BR>&lt;SPAN DATASRC="#carData" 
+DATAFLD="name"&gt;&lt;/SPAN&gt;&lt;BR&gt;<BR>&lt;SPAN DATASRC="#carData" 
+DATAFLD="maker"&gt;&lt;/SPAN&gt;&lt;BR&gt;<BR>&lt;SPAN DATASRC="#carData" 
+DATAFLD="color"&gt;&lt;/SPAN&gt;&lt;BR&gt;<BR>&lt;SPAN DATASRC="#carData" 
+DATAFLD="year"&gt;&lt;/SPAN&gt;&lt;BR&gt;<BR>&lt;SPAN DATASRC="#carData" 
+DATAFLD="price"&gt;&lt;/SPAN&gt;&lt;BR&gt;<BR><BR>&lt;BUTTON 
+onclick="goFirst()"&gt;|&amp;lt;-&lt;/BUTTON&gt;<BR>&lt;BUTTON 
+onclick="goPrevious()"&gt;&amp;lt;-&lt;/BUTTON&gt;<BR>&lt;BUTTON 
+onclick="goNext()"&gt;-&amp;gt;&lt;/BUTTON&gt;<BR>&lt;BUTTON 
+onclick="goLast()"&gt;-&amp;gt;|&lt;/BUTTON&gt;<BR>&lt;/P&gt;<BR><BR>&lt;!-- 
+データベース用オブジェクトの指定 --&gt;<BR>&lt;OBJECT ID=carData 
+CLASSID="clsid:333C7BC4-460F-11D0-BC04-0080C7055A83"&gt;<BR>&lt;PARAM 
+NAME="DataURL" VALUE="car.txt"&gt;<BR>&lt;PARAM NAME="UseHeader" 
+VALUE="true"&gt;<BR>&lt;/OBJECT&gt;<BR><BR>&lt;/BODY&gt;<BR>&lt;/HTML&gt;</P>
+<P><BR>条件分岐によってスクリプトが若干長くなるので、ヘッダ部に関数として定義しているが、やっていることは先のサンプル2と同じだ。ポイントになるスクリプトは次の部分だ。 
+</P>
+<P class=source>function goPrevious() {<BR>&nbsp;&nbsp;&nbsp; 
+if(carData.recordset.AbsolutePosition != 1) 
+{<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+carData.recordset.MovePrevious()<BR>&nbsp;&nbsp;&nbsp; }<BR>}<BR>function 
+goNext() {<BR>&nbsp;&nbsp;&nbsp; if(carData.recordset.AbsolutePosition != 
+carData.recordset.RecordCount) {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+carData.recordset.MoveNext()<BR>&nbsp;&nbsp;&nbsp; }<BR>} </P>
+<P>goPrevious()は1つ前のレコードに移動する関数だが、AbsolutePositionが1でないときだけMovePrevious()メソッドを実行する。AbsolutePositionが1のとき、つまりカレントレコードが先頭レコードであるときは、MovePrevious()メソッドは実行されない。<BR><BR>goNext()は1つ先のレコードに移動する関数だ。この関数では、条件分岐の部分にRecordCountというプロパティを使っている。RecordCountは、レコードの総数を示すrecordsetオブジェクトのプロパティだ。レコードの総数は、次のスクリプトで調べることができる。 
+</P>
+<P class=source>carData.recordset.RecordCount </P>
+<P>AbsolutePositionプロパティとRecordCountプロパティが一致するのは、カレントレコードで末尾レコードであるときだから、そのときはMoveNext()メソッドを実行しない。<BR><BR>以上で、サンプル2で起きたエラーは防ぐことができる。サンプル2のエラーを防ぐ方法は他にもある。それが、次のサンプル4だ。</P>
+<P><BR>【<A 
+href="http://www.makoto3.net/document/databind/smp004.html">サンプル4</A>:smp004.html】</P>
+<P 
+class=source>&lt;HTML&gt;<BR>&lt;HEAD&gt;<BR>&lt;TITLE&gt;&lt;/TITLE&gt;<BR>&lt;SCRIPT 
+LANGUAGE="JavaScript"&gt;<BR>function goFirst() {<BR>&nbsp;&nbsp;&nbsp; 
+carData.recordset.MoveFirst()<BR>}<BR><BR>function goPrevious() 
+{<BR>&nbsp;&nbsp;&nbsp; carData.recordset.MovePrevious()<BR>&nbsp;&nbsp;&nbsp; 
+if(carData.recordset.BOF == true) 
+{<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+carData.recordset.MoveFirst()<BR>&nbsp;&nbsp;&nbsp; }<BR>}<BR><BR>function 
+goNext() {<BR>&nbsp;&nbsp;&nbsp; 
+carData.recordset.MoveNext()<BR>&nbsp;&nbsp;&nbsp; if(carData.recordset.EOF == 
+true) {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+carData.recordset.MoveLast()<BR>&nbsp;&nbsp;&nbsp; }<BR>}<BR><BR>function 
+goLast() {<BR>&nbsp;&nbsp;&nbsp; 
+carData.recordset.MoveLast()<BR>}<BR>&lt;/SCRIPT&gt;<BR><BR>&lt;/HEAD&gt;<BR>&lt;BODY&gt;<BR><BR>&lt;P 
+ALIGN=center&gt;<BR>&lt;SPAN DATASRC="#carData" 
+DATAFLD="name"&gt;&lt;/SPAN&gt;&lt;BR&gt;<BR>&lt;SPAN DATASRC="#carData" 
+DATAFLD="maker"&gt;&lt;/SPAN&gt;&lt;BR&gt;<BR>&lt;SPAN DATASRC="#carData" 
+DATAFLD="color"&gt;&lt;/SPAN&gt;&lt;BR&gt;<BR>&lt;SPAN DATASRC="#carData" 
+DATAFLD="year"&gt;&lt;/SPAN&gt;&lt;BR&gt;<BR>&lt;SPAN DATASRC="#carData" 
+DATAFLD="price"&gt;&lt;/SPAN&gt;&lt;BR&gt;<BR><BR>&lt;BUTTON 
+onclick="goFirst()"&gt;|&amp;lt;-&lt;/BUTTON&gt;<BR>&lt;BUTTON 
+onclick="goPrevious()"&gt;&amp;lt;-&lt;/BUTTON&gt;<BR>&lt;BUTTON 
+onclick="goNext()"&gt;-&amp;gt;&lt;/BUTTON&gt;<BR>&lt;BUTTON 
+onclick="goLast()"&gt;-&amp;gt;|&lt;/BUTTON&gt;<BR>&lt;/P&gt;<BR><BR>&lt;!-- 
+データベース用オブジェクトの指定 --&gt;<BR>&lt;OBJECT ID=carData 
+CLASSID="clsid:333C7BC4-460F-11D0-BC04-0080C7055A83"&gt;<BR>&lt;PARAM 
+NAME="DataURL" VALUE="car.txt"&gt;<BR>&lt;PARAM NAME="UseHeader" 
+VALUE="true"&gt;<BR>&lt;PARAM NAME="TextQualifier" 
+VALUE=""&gt;<BR>&lt;/OBJECT&gt;<BR><BR>&lt;/BODY&gt;<BR>&lt;/HTML&gt;</P>
+<P>先のサンプル3と異なるのは、goPrevious()とgoNext()の2つの関数だけだ。各関数の記述を抜き出してみよう。 </P>
+<P class=source>function goPrevious() {<BR>&nbsp;&nbsp;&nbsp; 
+carData.recordset.MovePrevious()<BR>&nbsp;&nbsp;&nbsp; if(carData.recordset.BOF 
+== true) {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+carData.recordset.MoveFirst()<BR>&nbsp;&nbsp;&nbsp; }<BR>}<BR><BR>function 
+goNext() {<BR>&nbsp;&nbsp;&nbsp; 
+carData.recordset.MoveNext()<BR>&nbsp;&nbsp;&nbsp; if(carData.recordset.EOF == 
+true) {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+carData.recordset.MoveLast()<BR>&nbsp;&nbsp;&nbsp; }<BR>} </P>
+<P>各関数では、条件分岐にrecordsetオブジェクトのBOFプロパティとEOFプロパティが使われている。どちらのプロパティも値はtrueかfalseのいずれかをとる。BOFプロパティは、カレントレコードが先頭レコードより前に移動したときtrueとなり、それ以外のときはfalseになる。EOFプロパティは、カレントレコードが末尾レコードより後に移動したときtrueになり、それ以外のときはfalseになる。BOFはBegin 
+Of File、EOFはEnd Of 
+Fileの略だ(たぶん)。<BR><BR>goPrevious()関数では、MoveNext()メソッドを実行したあと、BOFプロパティがtrueかどうか調べる。もしも先頭レコードがカレントレコードのときMoveNext()メソッドを実行すると、カレントレコードが先頭レコードの前になり、BOFプロパティがtrueになる。そしてそのときはMoveFirst()メソッドを実行して、カレントレコードを先頭レコードに戻す。goNext()関数も、考え方は同じだ。<BR><BR>以上、レコードを切り替える際のエラー防止手段を2パターン紹介したが、どちらを使っても問題はない。多くのプロパティを紹介したかったので、あえて2つ紹介したにすぎない。 
+</P>
+<H2><A 
+name=■recordsetオブジェクトのプロパティとメソッドのまとめ>■recordsetオブジェクトのプロパティとメソッドのまとめ</A></H2>
+<P>ここまでにいくつかのプロパティ、メソッドが登場したので、まとめておこう。いずれも、recordsetオブジェクトのプロパティ、メソッドだ。 </P>
+<P><STRONG>◆プロパティ<BR></STRONG>AbsolutePosition……カレントレコードの位置を示す整数値。1から始まる。<BR>RecordCount……レコードの総数<BR>BOF……カレントレコードが先頭レコードより前にあるかどうかを表す。あればtrue、なければfalseになる。<BR>EOF……カレントレコードが末尾レコードより後にあるかどうかを表す。あればtrue、なければfalseになる。 
+</P>
+<P><STRONG>◆メソッド<BR></STRONG>MoveFirst()……先頭レコードをカレントレコードにする。<BR>MovePrevious()……カレントレコードを1つ戻す。<BR>MoveNext()……カレントレコードを1つ進める。<BR>MoveLast()……末尾レコードをカレントレコードにする。<BR></P>
+<P class=part><A name=PART2></A>PART2　繰り返しテーブル </P>
+<H2><A name=■繰り返しテーブルを作る>■繰り返しテーブルを作る</A></H2>
+<P>ここまでに紹介したのは、データソースであるcar.txtのカレントレコードを表示することだ。つまり、Webページに表示されるレコードは1つだけ。それに対し、これから紹介する方法を使えば、すべてのレコードを表示できる。さっそくサンプルを紹介しよう。なお、データソースはcar.txtのままだ。 
+</P>
+<P>【<A 
+href="http://www.makoto3.net/document/databind/smp005.html">サンプル5</A>:smp005.html】</P>
+<P 
+class=source>&lt;HTML&gt;<BR>&lt;HEAD&gt;<BR>&lt;TITLE&gt;&lt;/TITLE&gt;<BR>&lt;/HEAD&gt;<BR>&lt;BODY&gt;<BR>&lt;TABLE 
+DATASRC="#carData" BORDER=1&gt;<BR>&lt;TR&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="name"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="maker"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="color"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="year"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="price"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;/TR&gt;<BR>&lt;/TABLE&gt;<BR>&lt;!-- 
+データベース用オブジェクトの指定 --&gt;<BR>&lt;OBJECT ID=carData 
+CLASSID="clsid:333C7BC4-460F-11D0-BC04-0080C7055A83"&gt;<BR>&lt;PARAM 
+NAME="DataURL" VALUE="car.txt"&gt;<BR>&lt;PARAM NAME="UseHeader" 
+VALUE="true"&gt;<BR>&lt;/OBJECT&gt;<BR>&lt;/BODY&gt;<BR>&lt;/HTML&gt;</P>
+<P>これをIE4に読み込むと、すべてのレコードが表形式で表示されているのが確認できるだろう。これが、｢繰り返しテーブル｣だ。テーブルの記述を見てみよう。 
+</P>
+<P class=source>&lt;TABLE DATASRC="#carData" 
+BORDER=1&gt;<BR>&lt;TR&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="name"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="maker"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="color"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="year"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="price"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;/TR&gt;<BR>&lt;/TABLE&gt; 
+</P>
+<P>1つの&lt;TR&gt;～&lt;/TR&gt;のあいだに&lt;TD&gt;～&lt;/TD&gt;が5つある。つまり、HTMLの常識からすると、このテーブルは1行×5列にしかならないはずだ。が、実際には、1行ではなく、car.txtに記述されているレコード数分の行数になっている。記述上は1行×5列なのに、それがレコードの数だけ繰り返して表示されているのである。<BR><BR>&lt;TABLE&gt;タグの属性に｢DATASRC="#carData"｣と指定してある。これによって、このテーブルでデータソースオブジェクト(IDがcarData)を扱うことを宣言する。そして、表示する項目名を&lt;TD&gt;～&lt;TD&gt;のあいだに&lt;SPAN&gt;タグを使って記述する。たとえばname項目のデータを表示するなら、&lt;TD&gt;～&lt;/TD&gt;のあいだに次のように書く。 
+</P>
+<P class=source>&lt;SPAN DATAFLD="name"&gt;&lt;/SPAN&gt; </P>
+<P>これによって、name項目のデータがレコードの数だけ繰り返し表示されることになる。他の項目も同様だ。<BR><BR>いかがだろうか。データソースのテキストファイルを用意しておけば、こんなに手軽に大きな表を作成できるのだ。しかも、この表はけっして静的ではない。並び替えや絞込を行って、表示するレコードをダイナミックに変化させることもできる。詳しくは後述するが、繰り返しテーブルは、表作成を簡素化すると同時に、ダイナミックな表を作る強力な機能なのだ。 
+</P>
+<H2><A name=■繰り返しテーブルに見出しを付ける>■繰り返しテーブルに見出しを付ける</A></H2>
+<P>先ほどの繰り返しテーブルには、見出しがない。｢車種｣｢メーカー｣……などの見出し行があれば、もっと見やすいはずだ。ということで、&lt;TABLE&gt;～&lt;/TABLE&gt;のあいだに、もう1つ&lt;TR&gt;～&lt;/TR&gt;を追加して修正したのが次のサンプルだ。結論から言うと、これではうまくいかない。 
+</P>
+<P>【<A 
+href="http://www.makoto3.net/document/databind/smp006.html">サンプル6</A>:smp006.html】</P>
+<P 
+class=source>&lt;HTML&gt;<BR>&lt;HEAD&gt;<BR>&lt;TITLE&gt;&lt;/TITLE&gt;<BR>&lt;/HEAD&gt;<BR>&lt;BODY&gt;<BR>&lt;TABLE 
+DATASRC="#carData" BORDER=1&gt;<BR>&lt;TR 
+BGCOLOR="silver"&gt;<BR>&lt;TD&gt;車名&lt;/TD&gt;<BR>&lt;TD&gt;メーカー&lt;/TD&gt;<BR>&lt;TD&gt;色&lt;/TD&gt;<BR>&lt;TD&gt;生産年&lt;/TD&gt;<BR>&lt;TD&gt;価格&lt;/TD&gt;<BR>&lt;/TR&gt;<BR><BR>&lt;TR&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="name"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="maker"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="color"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="year"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="price"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;/TR&gt;<BR><BR>&lt;/TABLE&gt;<BR>&lt;!-- 
+データベース用オブジェクトの指定 --&gt;<BR>&lt;OBJECT ID=carData 
+CLASSID="clsid:333C7BC4-460F-11D0-BC04-0080C7055A83"&gt;<BR>&lt;PARAM 
+NAME="DataURL" VALUE="car.txt"&gt;<BR>&lt;PARAM NAME="UseHeader" 
+VALUE="true"&gt;<BR>&lt;/OBJECT&gt;<BR>&lt;/BODY&gt;<BR>&lt;/HTML&gt;</P>
+<P>実際に見てもらえば分かるが、見出しは表示されているものの、見出しそのものも繰り返し表示されてしまう。エラーにはならないが、これでは、どう見ても煩雑すぎる。見出し行だけ繰り返さない工夫が必要だ。それが、次のサンプルだ。 
+</P>
+<P>【<A 
+href="http://www.makoto3.net/document/databind/smp007.html">サンプル7</A>:smp007.html】</P>
+<P 
+class=source>&lt;HTML&gt;<BR>&lt;HEAD&gt;<BR>&lt;TITLE&gt;&lt;/TITLE&gt;<BR>&lt;/HEAD&gt;<BR>&lt;BODY&gt;<BR>&lt;TABLE 
+DATASRC="#carData" BORDER=1&gt;<BR><BR>&lt;THEAD&gt;<BR>&lt;TR 
+BGCOLOR="silver"&gt;<BR>&lt;TD&gt;車名&lt;/TD&gt;<BR>&lt;TD&gt;メーカー&lt;/TD&gt;<BR>&lt;TD&gt;色&lt;/TD&gt;<BR>&lt;TD&gt;生産年&lt;/TD&gt;<BR>&lt;TD&gt;価格&lt;/TD&gt;<BR>&lt;/TR&gt;<BR>&lt;/THEAD&gt;<BR><BR>&lt;TBODY&gt;<BR>&lt;TR&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="name"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="maker"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="color"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="year"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="price"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;/TR&gt;<BR>&lt;/TBODY&gt;<BR><BR>&lt;/TABLE&gt;<BR>&lt;!-- 
+データベース用オブジェクトの指定 --&gt;<BR>&lt;OBJECT ID=carData 
+CLASSID="clsid:333C7BC4-460F-11D0-BC04-0080C7055A83"&gt;<BR>&lt;PARAM 
+NAME="DataURL" VALUE="car.txt"&gt;<BR>&lt;PARAM NAME="UseHeader" 
+VALUE="true"&gt;<BR>&lt;/OBJECT&gt;<BR>&lt;/BODY&gt;<BR>&lt;/HTML&gt;</P>
+<P>&lt;THEAD&gt;と&lt;TBODY&gt;がポイントだ。これはHTML4.0から採用されたタグで、&lt;THEAD&gt;で表のヘッダ、&lt;TBODY&gt;で表の本体を独立して記述できる。これなら、見出し行は繰り返されず、本体部分だけが繰り返される。 
+</P>
+<H2><A name=■一度に表示するレコード数を指定する>■一度に表示するレコード数を指定する</A></H2>
+<P>レコード数がそれほど多くなければ、繰り返しテーブルで全レコードを表示してもいいだろうが、レコード数が多いと、一度に表示するレコード数を制限し、切り替えられた方が便利だろう。一度に表示するレコード数は、&lt;TABLE&gt;タグにDATAPAGESIZEという属性を指定すれば制限できる。次が、そのサンプルだ。 
+</P>
+<P>【<A 
+href="http://www.makoto3.net/document/databind/smp008.html">サンプル8</A>:smp008.html】</P>
+<P 
+class=source>&lt;HTML&gt;<BR>&lt;HEAD&gt;<BR>&lt;TITLE&gt;&lt;/TITLE&gt;<BR>&lt;/HEAD&gt;<BR>&lt;BODY&gt;<BR>&lt;TABLE 
+DATASRC="#carData" BORDER=1 DATAPAGESIZE=5&gt;<BR><BR>&lt;THEAD&gt;<BR>&lt;TR 
+BGCOLOR="silver"&gt;<BR>&lt;TD&gt;車名&lt;/TD&gt;<BR>&lt;TD&gt;メーカー&lt;/TD&gt;<BR>&lt;TD&gt;色&lt;/TD&gt;<BR>&lt;TD&gt;生産年&lt;/TD&gt;<BR>&lt;TD&gt;価格&lt;/TD&gt;<BR>&lt;/TR&gt;<BR>&lt;/THEAD&gt;<BR><BR>&lt;TBODY&gt;<BR>&lt;TR&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="name"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="maker"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="color"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="year"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="price"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;/TR&gt;<BR>&lt;/TBODY&gt;<BR><BR>&lt;/TABLE&gt;<BR>&lt;!-- 
+データベース用オブジェクトの指定 --&gt;<BR>&lt;OBJECT ID=carData 
+CLASSID="clsid:333C7BC4-460F-11D0-BC04-0080C7055A83"&gt;<BR>&lt;PARAM 
+NAME="DataURL" VALUE="car.txt"&gt;<BR>&lt;PARAM NAME="UseHeader" 
+VALUE="true"&gt;<BR>&lt;/OBJECT&gt;<BR>&lt;/BODY&gt;<BR>&lt;/HTML&gt; </P>
+<P>&lt;TABLE&gt;タグの属性にDATAPAGESIZE=5と指定しているため、先頭から5レコード分しか表示されない。次に必要なのが、表示するレコードを切り替えることだ。これには、previousPage()とnextPage()というメソッドを使う。サンプルは次のとおり。 
+</P>
+<P>【<A 
+href="http://www.makoto3.net/document/databind/smp009.html">サンプル9</A>:smp009.html】</P>
+<P 
+class=source>&lt;HTML&gt;<BR>&lt;HEAD&gt;<BR>&lt;TITLE&gt;&lt;/TITLE&gt;<BR>&lt;/HEAD&gt;<BR>&lt;BODY&gt;<BR><BR>&lt;CENTER&gt;<BR>&lt;BUTTON 
+onclick="table1.previousPage()"&gt;BACK&lt;/BUTTON&gt;<BR>&lt;BUTTON 
+onclick="table1.nextPage()"&gt;NEXT&lt;/BUTTON&gt;<BR>&lt;TABLE ID="table1" 
+DATASRC="#carData" BORDER=1 DATAPAGESIZE=5&gt;<BR><BR>&lt;THEAD&gt;<BR>&lt;TR 
+BGCOLOR="silver"&gt;<BR>&lt;TD&gt;車名&lt;/TD&gt;<BR>&lt;TD&gt;メーカー&lt;/TD&gt;<BR>&lt;TD&gt;色&lt;/TD&gt;<BR>&lt;TD&gt;生産年&lt;/TD&gt;<BR>&lt;TD&gt;価格&lt;/TD&gt;<BR>&lt;/TR&gt;<BR>&lt;/THEAD&gt;<BR><BR>&lt;TBODY&gt;<BR>&lt;TR&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="name"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="maker"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="color"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="year"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="price"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;/TR&gt;<BR>&lt;/TBODY&gt;<BR><BR>&lt;/TABLE&gt;<BR><BR>&lt;/CENTER&gt;<BR><BR>&lt;!-- 
+データベース用オブジェクトの指定 --&gt;<BR>&lt;OBJECT ID=carData 
+CLASSID="clsid:333C7BC4-460F-11D0-BC04-0080C7055A83"&gt;<BR>&lt;PARAM 
+NAME="DataURL" VALUE="car.txt"&gt;<BR>&lt;PARAM NAME="UseHeader" 
+VALUE="true"&gt;<BR>&lt;/OBJECT&gt;<BR>&lt;/BODY&gt;<BR>&lt;/HTML&gt;</P>
+<P><BR>まず、&lt;TABLE&gt;タグでID="table1"として、table1を参照できるようにしている。そして、2つのボタンのclickイベントによって実行されるのが、次の2つのスクリプトだ。 
+</P>
+<P class=source>table1.previousPage()<BR>table1.nextPage() </P>
+<P>｢table1｣は、もちろんテーブルのIDだ。そして、previousPage()が次ページ、nextPage()が前ページに切り替えるメソッドだ。たとえば、DATAPAGESIZEが｢5｣で全レコード数が12個だとしよう。この場合、まず1～5のレコードが表示され、nextPage()メソッドを実行すると6～10が表示される。続けてnextPage()メソッドを実行すると、11～12の2件分のレコードが表示される。previousPage()メソッドは、この逆だ。<BR></P>
+<P class=part><A name=PART3></A>PART3　データコンシューマ </P>
+<H2><A name=■データコンシューマいろいろ>■データコンシューマいろいろ</A></H2>
+<P>ここまでに、&lt;SPAN&gt;タグを使ってカレントレコードを表示して切り替える例、&lt;TABLE&gt;タグによる繰り返しテーブルの例を紹介した。&lt;SPAN&gt;と&lt;TABLE&gt;は、データバインドの用語で言えば｢データコンシューマ｣である。データコンシューマは、他にもある。たとえば&lt;MARQUEE&gt;がそうだ。ここでは、&lt;MARQUEE&gt;を使ったデータバインドの例を紹介しよう。<BR><BR>まず、データソースとして次のテキストファイルを用意する。ファイル名はmessage0.txtとしておこう。 
+</P>
+<P>【message0.txt】</P>
+<P class=source>message<BR>Welcome to DynamicHTML 
+World!<BR>このページは井上健語によって制作されています<BR>出身地･･･四国。星座･･･獅子座</P>
+<P><BR>そして、次のようなHTMLファイルを用意する。 </P>
+<P>【<A 
+href="http://www.makoto3.net/document/databind/smp010.html">サンプル10</A>:smp010.html】</P>
+<P 
+class=source>&lt;HTML&gt;<BR>&lt;HEAD&gt;<BR>&lt;TITLE&gt;&lt;/TITLE&gt;<BR>&lt;SCRIPT 
+LANGUAGE="JavaScript"&gt;<BR>function goPrevious() {<BR>&nbsp;&nbsp;&nbsp; 
+if(msgData.recordset.AbsolutePosition != 1) 
+{<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+msgData.recordset.MovePrevious()<BR>&nbsp;&nbsp;&nbsp; }<BR>}<BR>function 
+goNext() {<BR>&nbsp;&nbsp;&nbsp; if(msgData.recordset.AbsolutePosition != 
+msgData.recordset.RecordCount) {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+msgData.recordset.MoveNext()<BR>&nbsp;&nbsp;&nbsp; 
+}<BR>}<BR>&lt;/SCRIPT&gt;<BR>&lt;/HEAD&gt;<BR>&lt;BODY&gt;<BR>&lt;BUTTON 
+onclick="goPrevious()"&gt;BACK&lt;/BUTTON&gt;<BR>&lt;BUTTON 
+onclick="goNext()"&gt;NEXT&lt;/BUTTON&gt;<BR>&lt;MARQUEE DATASRC="#msgData" 
+DATAFLD="message" DATAFORMATAS="text"&gt;&lt;/MARQUEE&gt;<BR>&lt;!-- 
+データベース用オブジェクトの指定 --&gt;<BR>&lt;OBJECT ID=msgData 
+CLASSID="clsid:333C7BC4-460F-11D0-BC04-0080C7055A83"&gt;<BR>&lt;PARAM 
+NAME="DataURL" VALUE="message0.txt"&gt;<BR>&lt;PARAM NAME="UseHeader" 
+VALUE="true"&gt;<BR>&lt;/OBJECT&gt;<BR>&lt;/BODY&gt;<BR>&lt;/HTML&gt; </P>
+<P>ページ中の｢BACK｣と｢NEXT｣のボタンをクリックすると、マーキー表示のメッセージが切り替わる。メッセージは、先のmessage0.txtに書いてあった文字列だ。<BR><BR>復習も兼ねて、両ファイルの記述を少し詳しく見てみよう。まず、テキストファイルでは、先頭行に｢message｣と書いてある。これは項目名だ。そして、以降の各行には、文字列を1行ごとにリターンで区切って入力してある。<BR><BR>次にHTMLファイルの&lt;OBJECT&gt;タグを見てみよう。IDは｢msgData｣とし、パラメータの指定が次のようになっている。 
+</P>
+<P class=source>&lt;PARAM NAME="DataURL" VALUE="message0.txt"&gt;<BR>&lt;PARAM 
+NAME="UseHeader" VALUE="true"&gt; </P>
+<P>1つ目のパラメータ指定でVALUEを｢message0.txt｣を指定し、データソースをmessage0.txtにしてある。message0.txtの先頭行は項目名なのでヘッダーありだ。だから、2つ目のパラメータのVALUEは｢true｣にしてある。<BR><BR>ヘッダー部で定義しているのは、レコードを切り替える2つの関数だ。MovePrevious()とMoveNext()の2つのメソッドを使って、以前に解説したエラーにならない処理をしてある。<BR><BR>以上は、これまでに紹介した内容だから、分かりにくい点はないだろう。若干新しい内容が含まれているのは、次の記述だ。 
+</P>
+<P class=source>&lt;MARQUEE DATASRC="#msgData" DATAFLD="message" 
+DATAFORMATAS="text"&gt;&lt;/MARQUEE&gt; </P>
+<P>DATASRCとDATAFLDについては、すでに紹介したとおりだ。DATASRCがデータソースオブジェクトのIDの指定、DATAFLDが表示する項目の指定だ。目新しいのは、これらが&lt;MARQUEE&gt;タグの属性として指定されていることとDATAFORMATASだ。まず、&lt;MARQUEE&gt;の属性にDATASRCとDATAFLDを指定できるのは、&lt;MARQUEE&gt;がデータコンシューマだから不自然ではない。要するに、&lt;SPAN&gt;や&lt;TABLE&gt;のように、&lt;MARQUEE&gt;もデータバインドで使えるタグ、ということだ。<BR><BR>DATAFORMATASは、DATASRCやDATAFLDと同様にデータバインド用の属性で、データソースのデータ形式を示している。このサンプルでは、DATAFORMATAS="text"として、データソース(message0.txt)のデータ形式がテキストであることを指定してある。これを、DATAFORMATAS="html"とすると、データソース中のデータがHTMの記述Lとして解釈されるようになる。<BR><BR>具体的な例で紹介しよう。まず、データソースのテキストファイルとして、次のようなファイルを用意する。ファイル名はmessage1.txtとしよう。 
+</P>
+<P>【message1.txt】</P>
+<P class=source>message<BR>&lt;SPAN 
+STYLE="color:red;font-size:20pt;font-family:Arial;"&gt;Welcome to DynamicHTML 
+World!&lt;/SPAN&gt;<BR>&lt;I&gt;このページは井上健語によって制作されています&lt;/I&gt;<BR>&lt;TABLE 
+BORDER=1&gt;&lt;TR&gt;&lt;TD&gt;出身地&lt;/TD&gt;&lt;TD&gt;四国&lt;/TD&gt;&lt;/TR&gt;&lt;TR&gt;&lt;TD&gt;星座&lt;/TD&gt;&lt;TD&gt;獅子座&lt;/TD&gt;&lt;/TR&gt;&lt;/TABLE&gt; 
+</P>
+<P>先ほどのテキストファイルと異なるのは、HTMLの記述が含まれていることだ。次に、HTMLファイルを次のように修正する。 </P>
+<P>【<A 
+href="http://www.makoto3.net/document/databind/smp011.html">サンプル11</A>:smp011.html】</P>
+<P 
+class=source>&lt;HTML&gt;<BR>&lt;HEAD&gt;<BR>&lt;TITLE&gt;&lt;/TITLE&gt;<BR>&lt;SCRIPT 
+LANGUAGE="JavaScript"&gt;<BR>function goPrevious() {<BR>&nbsp;&nbsp;&nbsp; 
+if(msgData.recordset.AbsolutePosition != 1) 
+{<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+msgData.recordset.MovePrevious()<BR>&nbsp;&nbsp;&nbsp; }<BR>}<BR>function 
+goNext() {<BR>&nbsp;&nbsp;&nbsp; if(msgData.recordset.AbsolutePosition != 
+msgData.recordset.RecordCount) {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+msgData.recordset.MoveNext()<BR>&nbsp;&nbsp;&nbsp; 
+}<BR>}<BR>&lt;/SCRIPT&gt;<BR>&lt;/HEAD&gt;<BR>&lt;BODY&gt;<BR>&lt;BUTTON 
+onclick="goPrevious()"&gt;BACK&lt;/BUTTON&gt;<BR>&lt;BUTTON 
+onclick="goNext()"&gt;NEXT&lt;/BUTTON&gt;<BR>&lt;MARQUEE DATASRC="#msgData" 
+DATAFLD="message" DATAFORMATAS="html"&gt;&lt;/MARQUEE&gt;<BR>&lt;!-- 
+データベース用オブジェクトの指定 --&gt;<BR>&lt;OBJECT ID=msgData 
+CLASSID="clsid:333C7BC4-460F-11D0-BC04-0080C7055A83"&gt;<BR>&lt;PARAM 
+NAME="DataURL" VALUE="message1.txt"&gt;<BR>&lt;PARAM NAME="UseHeader" 
+VALUE="true"&gt;<BR>&lt;/OBJECT&gt;<BR>&lt;/BODY&gt;<BR>&lt;/HTML&gt;</P>
+<P>先ほどのHTMLファイルと異なるのは2カ所だけだ。まず、&lt;MARQUEE&gt;タグのDATAFORMATASの指定が｢text｣ではなく｢html｣になっている。そして、データソースをmessage1.txtにしてある。これを読み込めば、マーキー表示の内容が、テキストファイル中のHTMLの記述にしたがっているのが分かるだろう。もしも、DATAFORMATASを｢text｣にしてあると、HTMLのタグがたんなる文字列として解釈され、そのまま表示されることになる。<BR><BR>なお、DATAFORMATASの初期値は｢text｣だ。このため、先ほどのサンプル10では、DATAFORMATASを省略しても問題はない。テキストファイル中にHTMLのタグを含め、それをHTMLのタグとして解釈させたいときに、DATAFORMATAS="html"と指定するのが一般的だろう。 
+</P>
+<H2><A name=■データバインド拡張機能とデータコンシューマ>■データバインド拡張機能とデータコンシューマ</A></H2>
+<P>これまでに、DATASRCやDATAFORMATASなどの属性を使ってきたが、これらはマイクロソフトがデータバインドを実現するためにHTMLを独自に拡張した機能だ。具体的には、次の4つが拡張された属性だ。 
+</P>
+<P>DATASRC<BR>DATAFLD<BR>DATAFORMATAS<BR>DATAPAGESIZE </P>
+<P>そして、データコンシューマであるタグでこうした属性を指定することによって、データバインドを実現しているのである。<BR><BR>データコンシューマとして利用できるタグは、<A 
+href="http://www.makoto3.net/document/databind/dataconsumer.html">別表</A>のとおりだ。これらのタグでは、必ずしも4つの属性すべてを指定できるわけではない。ここまでは、このうち、&lt;SPAN&gt;&lt;TABLE&gt;&lt;MARQUEE&gt;の各タグを使ったデータバインドの例を紹介したわけだが、表を見れば、データバインドの世界はまだまだ奥が深いことが想像できるだろう。なお、筆者は&lt;APPLET&gt;タグや&lt;INPUT&gt;タグを使ったデータバインドで何か可能になるかは確認していない。</P>
+<P class=part><A name=PART4></A>PART4　並び替えと絞込 </P>
+<P>いよいよ、データバインドの真骨頂と言うべき、レコードの並び替えと絞込を紹介しよう。並び替えも絞込も、カレントレコードだけを表示しても意味はないから、必然的に繰り返しテーブルを使うことになる。DATAPAGESIZEで一度に表示するレコード数を制限することもできるが、処理がややこしくなるので、ここではすべてのレコードを表示した繰り返しテーブルを前提にしよう。</P>
+<H2><A name=■レコードの並び替え>■レコードの並び替え</A></H2>
+<P>まず、並び替えからだ。次は、これまでに出てきた中古車データの繰り返しテーブルを、価格の昇順/降順で並び替えるサンプルだ。 </P>
+<P>【<A 
+href="http://www.makoto3.net/document/databind/smp012.html">サンプル12</A>:smp012.html】</P>
+<P 
+class=source>&lt;HTML&gt;<BR>&lt;HEAD&gt;<BR>&lt;TITLE&gt;&lt;/TITLE&gt;<BR>&lt;/HEAD&gt;<BR>&lt;BODY&gt;<BR><BR>&lt;BUTTON 
+onclick="carData.Sort='+price';carData.Reset();"&gt;価格昇順&lt;/BUTTON&gt;<BR>&lt;BUTTON 
+onclick="carData.Sort='-price';carData.Reset();"&gt;価格降順&lt;/BUTTON&gt;<BR>&lt;BUTTON 
+onclick="carData.Sort='';carData.Reset();"&gt;RESET&lt;/BUTTON&gt;<BR><BR>&lt;TABLE 
+DATASRC="#carData" BORDER=1 
+STYLE="font-size:9pt;"&gt;<BR>&lt;THEAD&gt;<BR>&lt;TR 
+BGCOLOR="silver"&gt;<BR>&lt;TD&gt;車名&lt;/TD&gt;<BR>&lt;TD&gt;メーカー&lt;/TD&gt;<BR>&lt;TD&gt;色&lt;/TD&gt;<BR>&lt;TD&gt;生産年&lt;/TD&gt;<BR>&lt;TD&gt;価格&lt;/TD&gt;<BR>&lt;/TR&gt;<BR>&lt;/THEAD&gt;<BR>&lt;TBODY&gt;<BR>&lt;TR&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="name"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="maker"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="color"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="year"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="price"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;/TR&gt;<BR>&lt;/TBODY&gt;<BR>&lt;/TABLE&gt;<BR><BR>&lt;!-- 
+データベース用オブジェクトの指定 --&gt;<BR>&lt;OBJECT ID=carData 
+CLASSID="clsid:333C7BC4-460F-11D0-BC04-0080C7055A83"&gt;<BR>&lt;PARAM 
+NAME="DataURL" VALUE="car.txt"&gt;<BR>&lt;PARAM NAME="UseHeader" 
+VALUE="true"&gt;<BR>&lt;/OBJECT&gt;<BR>&lt;/BODY&gt;<BR>&lt;/HTML&gt; </P>
+<P>&lt;価格昇順&gt;ボタンなら価格の安い方から高い方に並び替えられ、&lt;価格降順&gt;ならその逆になる。&lt;RESET&gt;ボタンをクリックすれば、初期状態、つまり並び替える前の状態に戻る。各ボタンで実行しているスクリプトを次に抜き出してみよう。いずれも、とてもシンプルだ(ソース中ではonclick=に続けて1行で書いてあるので、以下では複数行に分けている)。 
+</P>
+<P>&lt;価格昇順&gt;ボタン</P>
+<P class=source>carData.Sort="+price"<BR>carData.Reset() </P>
+<P>&lt;価格降順&gt;ボタン</P>
+<P class=source>carData.Sort="-price"<BR>carData.Reset() </P>
+<P>&lt;RESET&gt;ボタン</P>
+<P class=source>carData.Sort=""<BR>carData.Reset() </P>
+<P>carDataがデータソースオブジェクト、Sortがそのプロパティだ。そして、Sortプロパティには"+price"や"-price"を値として設定している。"+price"ならprice項目の昇順、"-price"ならprice項目の降順という条件が設定される。実際に並び替えるには、最後のReset()メソッドが必要だ。Reset()メソッドを実行することで、Sortプロパティに指定した条件でレコードが並び替えられる。<BR><BR>&lt;RESET&gt;ボタンで実行されるスクリプトでは、Sortプロパティに空文字("")を指定してReset()メソッドを実行している。Sortプロパティが空になるので、並び替える以前の状態に戻る。<BR></P>
+<P 
+class=column>COLUMN　データソースのデータ型の指定<BR><BR>昇順/降順によってどう並び替えられるかは、データの種類(文字列、数値、日付など)によって異なる。このため、各項目のデータの種類(データ型)をあらかじめ指定しておくことが重要になる。このサンプルであれば、データソースであるcar.txtの先頭行(ヘッダー行)がそれだ。car.txtのヘッダー行は次のようになっている。<BR><BR>name,maker,color,year:Int,price:Int<BR><BR>year:Int,price:Int 
+の部分がデータ型の指定だ。Intは整数型の指定なので、year項目とprice項目のデータは整数値として扱われることになる。指定方法は｢項目名:データ型｣とする。データ型を指定しなければ、自動的に文字型になる。このため、name項目、maker項目、color項目のデータは文字列として扱われる。<BR><BR>データ型を正しく指定しないと、並び替えや絞込ができないので注意したい。たとえば、car.txtのヘッダー行を次のように指定したとしよう。<BR><BR>name,maker,color,year,price<BR><BR>この場合、すべての項目のデータは文字列として扱われることになる。この状態でprice項目、つまり価格によってレコードを並び替えても、数値が文字列として扱われるため、数値の昇順/降順では並び替えられない。あるいは、100万円以上という条件で絞り込もうとしても、｢800000｣や1500000｣が文字列として扱われるため、条件そのものが成立せず、絞込はできなくなる。注意したいポイントだ。ヘッダー行で指定できるデータ型は次のとおりだ。<BR><BR>String……文字列(初期設定)<BR>Date……日付データ<BR>Boolen……真偽値<BR>Int……整数値<BR>Float……浮動小数値</P>
+<P><BR>先のサンプルは、価格の昇順/降順でレコードを並び替えるだけだった。並び替えの仕組みを知るうえでは、シンプルで分かりやすいと思うが、どうせなら、すべての項目について昇順/降順で並び替えられた方が便利だろう。次がそのサンプルだ。スクリプトに少し工夫を加えただけで、並び替えの方法そのものは、すでに紹介した以上のことはしていない。 
+</P>
+<P>【<A 
+href="http://www.makoto3.net/document/databind/smp013.html">サンプル13</A>:smp013.html】</P>
+<P 
+class=source>&lt;HTML&gt;<BR>&lt;HEAD&gt;<BR>&lt;TITLE&gt;&lt;/TITLE&gt;<BR>&lt;SCRIPT 
+LANGUAGE="JavaScript"&gt;<BR>function sortRecord() {<BR>&nbsp;&nbsp;&nbsp; var 
+condition = form1.sort_order.value + 
+form1.sort_field.value<BR>&nbsp;&nbsp;&nbsp; carData.Sort = 
+condition<BR>&nbsp;&nbsp;&nbsp; 
+carData.Reset()<BR>}<BR>&lt;/SCRIPT&gt;<BR>&lt;/HEAD&gt;<BR>&lt;BODY&gt;<BR><BR>&lt;FORM 
+ID="form1"&gt;<BR>&lt;SELECT ID="sort_field" 
+onchange="sortRecord()"&gt;<BR>&lt;OPTION SELECTED 
+VALUE="name"&gt;車名<BR>&lt;OPTION VALUE="maker"&gt;メーカー<BR>&lt;OPTION 
+VALUE="color"&gt;色<BR>&lt;OPTION VALUE="year"&gt;生産年<BR>&lt;OPTION 
+VALUE="price"&gt;価格<BR>&lt;/SELECT&gt;<BR>&lt;SELECT ID="sort_order" 
+onchange="sortRecord()"&gt;<BR>&lt;OPTION SELECTED VALUE="+"&gt;昇順<BR>&lt;OPTION 
+VALUE="-"&gt;降順<BR>&lt;/SELECT&gt;<BR>&lt;INPUT TYPE="button" VALUE="RESET" 
+onclick="carData.Sort='';carData.Reset()"&gt;<BR>&lt;/FORM&gt;<BR><BR>&lt;TABLE 
+DATASRC="#carData" BORDER=1 
+STYLE="font-size:9pt;"&gt;<BR>&lt;THEAD&gt;<BR>&lt;TR 
+BGCOLOR="silver"&gt;<BR>&lt;TD&gt;車名&lt;/TD&gt;<BR>&lt;TD&gt;メーカー&lt;/TD&gt;<BR>&lt;TD&gt;色&lt;/TD&gt;<BR>&lt;TD&gt;生産年&lt;/TD&gt;<BR>&lt;TD&gt;価格&lt;/TD&gt;<BR>&lt;/TR&gt;<BR>&lt;/THEAD&gt;<BR>&lt;TBODY&gt;<BR>&lt;TR&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="name"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="maker"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="color"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="year"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="price"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;/TR&gt;<BR>&lt;/TBODY&gt;<BR>&lt;/TABLE&gt;<BR>&lt;/DIV&gt;<BR><BR>&lt;!-- 
+データベース用オブジェクトの指定 --&gt;<BR>&lt;OBJECT ID=carData 
+CLASSID="clsid:333C7BC4-460F-11D0-BC04-0080C7055A83"&gt;<BR>&lt;PARAM 
+NAME="DataURL" VALUE="car.txt"&gt;<BR>&lt;PARAM NAME="UseHeader" 
+VALUE="true"&gt;<BR>&lt;/OBJECT&gt;<BR>&lt;/BODY&gt;<BR>&lt;/HTML&gt; </P>
+<P>左のリストで項目を選び、右のリストで昇順/降順を指定すれば、即座にレコードが並び替えられる。&lt;RESET&gt;ボタンは、先のサンプルと同じだ。<BR><BR>リストには&lt;SELECT&gt;タグを使っている。&lt;SELECT&gt;タグについては省略するので、分からない方はHTMLの書籍等で調べてほしい。ポイントになる記述だけを簡略化して抜き出すと、次のようになる。 
+</P>
+<P class=source>&lt;FORM ID="form1"&gt;<BR>&lt;SELECT ID="sort_field" 
+onchange="sortRecord()"&gt;<BR>&nbsp;&nbsp;&nbsp; 
+:<BR>&lt;/SELECT&gt;<BR>&lt;SELECT ID="sort_order" 
+onchange="sortRecord()"&gt;<BR>&nbsp;&nbsp;&nbsp; 
+:<BR>&lt;/SELECT&gt;<BR>&lt;/FORM&gt; </P>
+<P>まず、&lt;FORM&gt;のIDを｢form1｣とし、その内側にある2つの&lt;SELECT&gt;のIDを｢sort_field｣、｢sort_order｣としている。そして、2つの&lt;SELECT&gt;タグでは、onchange="sortRecord()" 
+として、選択された値が変わったときにsortRecord()関数を実行するようにしてある。IDの指定は、このsortRecord()関数で重要な役割を演じる。sortRecord()関数の定義は次のとおりだ。 
+</P>
+<P class=source>function sortRecord() {<BR>&nbsp;&nbsp;&nbsp; var condition = 
+form1.sort_order.value + form1.sort_field.value<BR>&nbsp;&nbsp;&nbsp; 
+carData.Sort = condition<BR>&nbsp;&nbsp;&nbsp; carData.Reset()<BR>} </P>
+<P>まず、ローカル変数conditionに、form1.sort_order.valueとform1.sort_field.valueを結合した値を入れる。｢form1｣｢sort_order｣｢sort_field｣は、先に指定したIDだ。このように、｢&lt;FORM&gt;のID.&lt;SELECT&gt;のID.value｣と記述することで、そのSELECT要素で選択されている値(value)を参照できる。だから、form1.sort_order.valueは"+"か"-"の文字列になる。そして、form1.sort_field.valueは"name"、"maker"、"color"、"year"、"price"のいずれかの文字列になる。この2つの文字列を結合するから、ローカル変数conditionには、"+color"、"-price"、"+color"といった文字列が入ることになるわけだ。<BR><BR>ここまで分かれば、あとは簡単だろう。carData.Sort 
+= condition 
+でSortプロパティに並び替えの条件を設定し、carData.Reset()でその条件で並び替えを行っているだけだ。<BR><BR>並び替えの仕組みが分かれば、あとはいろいろ応用ができると思う。このサンプルは、その一例にすぎない。項目名の文字列をクリックするごとに、その項目のデータを基準にレコードを昇順/降順に並び替えたり、ラジオボタンを使ったり……等々。並び替えの仕組みそのものは非常にシンプルだから、あとはスクリプトの力量とアイデア次第というところだ。 
+</P>
+<H2><A name=■レコードの絞込>■レコードの絞込</A></H2>
+<P>絞込とは、特定の条件に合うレコードだけを表示し、条件に合わないレコードを消してしまうことだ。先の中古車データなら、｢白い車｣とか｢100万円以下の車｣、｢白い車で100万円以下の車｣といった条件に合うレコードだけを表示できるわけだ。次が、そのサンプルだ。 
+</P>
+<P>【<A 
+href="http://www.makoto3.net/document/databind/smp014.html">サンプル14</A>:smp014.html】</P>
+<P 
+class=source>&lt;HTML&gt;<BR>&lt;HEAD&gt;<BR>&lt;TITLE&gt;&lt;/TITLE&gt;<BR>&lt;/HEAD&gt;<BR>&lt;BODY&gt;<BR><BR>&lt;BUTTON 
+onclick="carData.object.Filter='color=白';carData.Reset();"&gt;白い車&lt;/BUTTON&gt;<BR>&lt;BUTTON 
+onclick="carData.object.Filter='price&lt;=1000000';carData.Reset();"&gt;100万以下の車&lt;/BUTTON&gt;<BR>&lt;BUTTON 
+onclick="carData.object.Filter='color=白&amp;price&lt;=1000000';carData.Reset();"&gt;白で100万以下の車&lt;/BUTTON&gt;<BR>&lt;BUTTON 
+onclick="carData.object.Filter='';carData.Reset();"&gt;RESET&lt;/BUTTON&gt;<BR><BR>&lt;TABLE 
+DATASRC="#carData" BORDER=1 
+STYLE="font-size:9pt;"&gt;<BR>&lt;THEAD&gt;<BR>&lt;TR 
+BGCOLOR="silver"&gt;<BR>&lt;TD&gt;車名&lt;/TD&gt;<BR>&lt;TD&gt;メーカー&lt;/TD&gt;<BR>&lt;TD&gt;色&lt;/TD&gt;<BR>&lt;TD&gt;生産年&lt;/TD&gt;<BR>&lt;TD&gt;価格&lt;/TD&gt;<BR>&lt;/TR&gt;<BR>&lt;/THEAD&gt;<BR>&lt;TBODY&gt;<BR>&lt;TR&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="name"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="maker"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="color"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="year"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="price"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;/TR&gt;<BR>&lt;/TBODY&gt;<BR>&lt;/TABLE&gt;<BR>&lt;/DIV&gt;<BR><BR>&lt;!-- 
+データベース用オブジェクトの指定 --&gt;<BR>&lt;OBJECT ID=carData 
+CLASSID="clsid:333C7BC4-460F-11D0-BC04-0080C7055A83"&gt;<BR>&lt;PARAM 
+NAME="DataURL" VALUE="car.txt"&gt;<BR>&lt;PARAM NAME="UseHeader" 
+VALUE="true"&gt;<BR>&lt;PARAM NAME="TextQualifier" 
+VALUE=""&gt;<BR>&lt;/OBJECT&gt;<BR>&lt;/BODY&gt;<BR>&lt;/HTML&gt; </P>
+<P>ページ中のボタンに表示される文字のとおり、&lt;白い車&gt;ボタンをクリックすれば｢色｣が｢白｣のレコードだけに絞り込まれ、&lt;100万以下の車&gt;ボタンなら、｢価格｣が｢1000000｣以下のレコードだけが絞り込まれ、&lt;白い車で100万以下の車&gt;ボタンなら、｢色｣が｢白｣かつ｢価格｣が｢1000000｣以下のレコードだけが絞り込まれて表示される。&lt;RESET&gt;ボタンなら、絞り込まれる前の状態に戻る(すべてのレコードが表示される)。<BR><BR>4つのボタンには、onclickに続けて、直接スクリプトを書いている。4つのボタンのクリックで実行されるスクリプトを見てみよう。 
+</P>
+<P>&lt;白い車&gt;ボタン</P>
+<P class=source>carData.object.Filter="color=白"<BR>carData.Reset() </P>
+<P>&lt;100万以下の車&gt;ボタン</P>
+<P class=source>carData.object.Filter="price&lt;=1000000"<BR>carData.Reset() 
+</P>
+<P>&lt;白で100万以下の車&gt;ボタン</P>
+<P 
+class=source>carData.object.Filter="color=白&amp;price&lt;=1000000"<BR>carData.Reset() 
+</P>
+<P>&lt;RESET&gt;ボタン</P>
+<P class=source>carData.object.Filter=""<BR>carData.Reset() </P>
+<P>いずれも、carData.object.Filter=に続けて絞込の条件を指定してある。carDataがデータソースオブジェクトのIDで、以下、｢.object.Filter=｣として右辺に条件を記述する。｢object.Filter=｣の部分は固定と考えていい。そして、並び替えと同様にReset()メソッドを実行する。<BR><BR>条件は、｢項目名=データ｣のように、項目名とデータを｢=｣などの記号で結んで式にする。｢=｣の部分に使える記号は次のとおりだ。 
+</P>
+<P>&nbsp;&nbsp;&nbsp; = …… 等しい<BR>&nbsp;&nbsp;&nbsp; &gt; …… 
+より大きい<BR>&nbsp;&nbsp;&nbsp; &gt;= …… 以上<BR>&nbsp;&nbsp;&nbsp; &lt; …… 
+より小さい<BR>&nbsp;&nbsp;&nbsp; &lt;= …… 以下<BR>&nbsp;&nbsp;&nbsp; &lt;&gt; …… 等しくない 
+</P>
+<P>条件にはワイルドカードの*も使える。たとえば｢maker=*ダ｣とすれば、maker項目のデータが｢ダ｣で終わるレコードが絞り込まれる。この例なら、｢ホンダ｣と｢マツダ｣のレコードが絞り込まれることになる。｢maker=ダ*｣なら｢ダ｣で始まるデータ、｢maker=*ダ*｣なら｢ダ｣を含むデータとなる。<BR><BR>複数の条件をANDやORで結ぶこともできる。ANDなら&amp;、ORなら|を使う。例を示しておこう。 
+</P>
+<P>color=白&amp;price&lt;=1000000……色が白で100万円以下の車<BR>maker=ホンダ|maker=マツダ……メーカーがホンダかマツダの車<BR>(maker=ホンダ|maker=マツダ)&amp;year&gt;94……メーカーがホンダかマツダで94年以降に生産された車 
+</P>
+<P>絞込の方法は、以上だ。思った以上に簡単なのが分かったと思う。<BR></P>
+<P class=part><A name=PART5></A>PART5　補足情報</P>
+<H2><A name="■Tabular Data Controlのプロパティ">■Tabular Data Controlのプロパティ</A></H2>
+<P>TDC(Tabular Data 
+Control)が、IE4に最初から用意されているデータソースオブジェクトであることは、先に紹介した。TDCをWebページで扱えるようにするには、次のように記述すればいい。これまでのサンプルにも、すべてこの記述が含まれていた。 
+</P>
+<P class=source>&lt;OBJECT ID=carData 
+CLASSID="clsid:333C7BC4-460F-11D0-BC04-0080C7055A83"&gt;<BR>&lt;PARAM 
+NAME="DataURL" VALUE="car.txt"&gt;<BR>&lt;PARAM NAME="UseHeader" 
+VALUE="true"&gt;<BR>&lt;PARAM NAME="TextQualifier" 
+VALUE=""&gt;<BR>&lt;/OBJECT&gt; </P>
+<P>ここで、&lt;PARAM&gt;タグに注目しよう。これは、TDCに用意されているプロパティの指定だ。たとえば、&lt;PARAM 
+NAME="DataURL" 
+VALUE="car.txt"&gt;なら、NAME="DataURL"がプロパティ名、VALUE="car.txt"がそのプロパティの値となる。ここでは、TDCのプロパティをまとめて紹介しておこう。なお、けっこう細かいので、すべてを理解する必要はないと思う。参考程度にとどめておけばいいだろう(ボクもよく分かってない)。 
+</P>
+<P><STRONG>AppendData<BR></STRONG>新しいデータソースを指定したとき、そのデータを現在のデータに追加するか、置き換えるかの指定。値はtrueかfalse。trueなら追加され、falseなら置き換わる。初期設定はfalse。試してないので、実際の動作は未確認。 
+</P>
+<P>指定例：&lt;PARAM NAME="AppendData" VALUE="true"&gt; </P>
+<P><STRONG>CaseSensitive<BR></STRONG>大文字と小文字を区別するかどうかの指定。値はtrueかfalse。trueなら区別され、falseなら区別されない。初期設定はtrue。試してないので、実際の動作は未確認。 
+</P>
+<P>指定例：&lt;PARAM NAME="CaseSensitive" VALUE="false"&gt; </P>
+<P><STRONG>CharSet<BR></STRONG>データソースのテキストファイルの文字セットの指定。試してないので、実際の動作は未確認。 </P>
+<P>指定例：&lt;PARAM NAME="CharSet" VALUE="iso-2022-jp"&gt; </P>
+<P><STRONG>DataURL<BR></STRONG>データソースのテキストファイルの指定。 </P>
+<P>指定例：&lt;PARAM NAME="DataURL" VALUE="car.txt"&gt; </P>
+<P><STRONG>EscapeChar<BR></STRONG>エスケープキャラクターの指定。FieldDelim、RowDelim、TextQualifierで指定した文字そのものをデータとして扱いたいとき、その直前に入れる文字。たとえば、データソース中に次のようなレコードがあるとする。 
+</P>
+<P>サニー,ニッサン,シルバー,96,1200000 </P>
+<P>このうち、｢1200000｣に3桁ごとのカンマを入れて｢1,200,000｣とすると、初期設定では｢1｣｢200｣｢000｣の3つの文字列として扱われてしまう。この場合、EscapeCharにたとえば｢\｣を指定しておくと、次のように記述することで、カンマをデータの一部として扱うことが可能になる(この場合、｢1200000｣のデータ型は文字列とする)。 
+</P>
+<P>サニー,ニッサン,シルバー,96,1\,200\,000 </P>
+<P>初期設定ではEscapeCharは指定されていない。 </P>
+<P>指定例：&lt;PARAM NAME="EscapeChar" VALUE="\"&gt; </P>
+<P><STRONG>FieldDelim<BR></STRONG>項目データの区切りを示す記号の指定。初期設定は｢,｣。以下は、FieldDelimにタブを指定する例。 
+</P>
+<P>指定例：&lt;PARAM NAME="FieldDelim" VALUE="&amp;#09;"&gt; </P>
+<P><STRONG>Filter<BR></STRONG>レコードを絞り込んで表示する条件。初期設定は空文字。 </P>
+<P>指定例：&lt;PARAM NAME="Filter" VALUE="price&lt;1000000"&gt; </P>
+<P><STRONG>Language<BR></STRONG>データソースのテキストファイルの言語の指定。試してないので、実際の動作は未確認。 </P>
+<P><STRONG>RowDelim<BR></STRONG>レコードの区切りを示す記号の指定。初期設定は改行コード。 </P>
+<P><STRONG>Sort<BR></STRONG>レコードを並び替えて表示する条件。初期設定は空文字。 </P>
+<P>指定例：&lt;PARAM NAME="Sort" VALUE="+price"&gt; </P>
+<P><STRONG>TextQualifier<BR></STRONG>文字列データであることを明示的に示す記号の指定。初期設定はダブルクォート(")。データソース中で、たとえば次のように指定しておけば、｢1,200,000｣の｢,｣は文字列の一部として扱われる。 
+</P>
+<P>サニー,ニッサン,シルバー,96,"1,200,000" </P>
+<P>指定例：&lt;PARAM NAME="TextQualifier" VALUE="'"&gt; </P>
+<P><STRONG>UseHeader<BR></STRONG>データソースの1行目をヘッダー行とするかどうかの指定。値はtrueかfalseのいずれか。trueならヘッダー行として扱い、falseならデータ行として扱う。 
+</P>
+<P>指定例：&lt;PARAM NAME="UseHeader" VALUE="false"&gt; </P>
+<H2><A name=■ヘッダー行がない場合の処理>■ヘッダー行がない場合の処理</A></H2>
+<P>ここまでのサンプルでは、データソースであるテキストファイルの先頭がヘッダー行であることを前提にしていた。原則として、項目名とデータ型を指定できるヘッダー行は、あるにこしたことはない。しかし、場合によってはヘッダー行のないデータを扱う必要に迫られるかもしれない。以下は、そうしたケースでの処理方法だ。｢ヘッダー行は必ず付ける｣ということなら、読み飛ばしていただいてけっこうだ。<BR><BR>ヘッダー行のないテキストファイルでは、1行目からいきなりデータが書かれている。たとえば、次のようになっているわけだ。このファイルをcar_nohead.txtとしよう。 
+</P>
+<P>【car_nohead.txt】</P>
+<P 
+class=source>アコード,ホンダ,白,92,800000<BR>マークⅡ,トヨタ,白,94,1500000<BR>カムリ,トヨタ,黒,90,550000<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+:<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : </P>
+<P>この場合、カレントレコードを表示したり、全レコードを繰り返しテーブルで表示するにはどうしたらいいだろう。これまで紹介したように、いずれの場合もDATASRCとDATAFLDを指定する必要があるが、項目名がないためdataFldが指定できない。<BR><BR>答えは簡単。column1、column2、column3……という文字列を使うのだ。ただし、データ型の指定がないため、すべてのデータは初期設定の文字列として扱われる。したがって、並び替えや絞込では大きな制限を受けざるをえない。この意味でも、ヘッダー行はできるだけ付けたほうがいい。<BR><BR>次のサンプルは、ヘッダー行のないcar_nohead.txtをデータソースとする、繰り返しテーブルの例だ。 
+</P>
+<P>【<A 
+href="http://www.makoto3.net/document/databind/smp015.html">サンプル15</A>:smp015.html】</P>
+<P 
+class=source>&lt;HTML&gt;<BR>&lt;HEAD&gt;<BR>&lt;TITLE&gt;&lt;/TITLE&gt;<BR>&lt;/HEAD&gt;<BR>&lt;BODY&gt;<BR>&lt;BUTTON 
+onclick="carData.object.Filter='column3=シルバー';carData.Reset();"&gt;シルバーの車&lt;/BUTTON&gt;<BR>&lt;BUTTON 
+onclick="carData.Sort='-column5';carData.Reset();"&gt;価格降順&lt;/BUTTON&gt;<BR>&lt;BUTTON 
+onclick="carData.Sort='';carData.object.Filter='';carData.Reset();"&gt;RESET&lt;/BUTTON&gt;<BR>&lt;TABLE 
+DATASRC="#carData" BORDER=1 
+STYLE="font-size:9pt;"&gt;<BR>&lt;THEAD&gt;<BR>&lt;TR 
+BGCOLOR="silver"&gt;<BR>&lt;TD&gt;車名&lt;/TD&gt;<BR>&lt;TD&gt;メーカー&lt;/TD&gt;<BR>&lt;TD&gt;色&lt;/TD&gt;<BR>&lt;TD&gt;生産年&lt;/TD&gt;<BR>&lt;TD&gt;価格&lt;/TD&gt;<BR>&lt;/TR&gt;<BR>&lt;/THEAD&gt;<BR>&lt;TBODY&gt;<BR>&lt;TR&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="column1"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="column2"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="column3"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="column4"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="column5"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;/TR&gt;<BR>&lt;/TBODY&gt;<BR>&lt;/TABLE&gt;<BR>&lt;/DIV&gt;<BR><BR>&lt;!-- 
+データベース用オブジェクトの指定 --&gt;<BR>&lt;OBJECT ID=carData 
+CLASSID="clsid:333C7BC4-460F-11D0-BC04-0080C7055A83"&gt;<BR>&lt;PARAM 
+NAME="DataURL" VALUE="car_nohead.txt"&gt;<BR>&lt;PARAM NAME="UseHeader" 
+VALUE="false"&gt;<BR>&lt;/OBJECT&gt;<BR>&lt;/BODY&gt;<BR>&lt;/HTML&gt;</P>
+<P>3つのボタンで絞込と並び替えも行っているが、価格の数値(column5項目のデータ)も文字列として扱われるため、数値の大小での並び替えはできない。ソースの記述は、これまでの内容が分かっていれば特に難しくないので、ヘッダー行のないデータを扱う際の参考にしてほしい。<BR></P>
+<P class=part><A name=PART6></A>PART6　スクリプト作成に役立つ<BR>いくつかの実験</P>
+<P>ここまで分かったら、スクリプトを駆使して、バリバリのデータベースライクなWebページを作りたいと思うだろう。実際、スクリプトとスタイルシートが分かっていれば、かなりのことができると思う。ただし、まだ少し知っておきたい知識が残っている。少しばかりストイックすぎる気もするが、それをここで紹介したい。一見すると地味な内容なので斜め読みでかまわないが、スクリプトを書いていて何か分からないことが起きたら、もう一度目を通してみよう。解決の糸口が見つかるかもしれない。なお、いちばん最初のrecordNumberプロパティだけは理解しておきたい。スクリプトを書くうえで強力な武器になるはずだ。 
+</P>
+<H2><A 
+name=■recordNumberプロパティは繰り返しテーブルの表示順>■recordNumberプロパティは繰り返しテーブルの表示順</A></H2>
+<P>まず、これまでに紹介しなかったrecordNumberプロパティを取り上げよう。これは、繰り返しテーブルで表示されるレコードの表示順のことで、表示される順番に1、2、3……という整数値をとる。次のサンプルは、繰り返しテーブルで表示されたレコード(行)をクリックすると、そのレコードのrecordNumberプロパティをアラート表示する例だ。 
+</P>
+<P>【<A 
+href="http://www.makoto3.net/document/databind/smp016.html">サンプル16</A>:smp016.html】</P>
+<P 
+class=source>&lt;HTML&gt;<BR>&lt;HEAD&gt;<BR>&lt;TITLE&gt;&lt;/TITLE&gt;<BR>&lt;/HEAD&gt;<BR>&lt;BODY&gt;<BR><BR>&lt;TABLE 
+ID="table1" DATASRC="#carData" BORDER=1 
+STYLE="font-size:9pt"&gt;<BR>&lt;THEAD&gt;<BR>&lt;TR 
+BGCOLOR="silver"&gt;<BR>&lt;TD&gt;車名&lt;/TD&gt;<BR>&lt;TD&gt;メーカー&lt;/TD&gt;<BR>&lt;TD&gt;色&lt;/TD&gt;<BR>&lt;TD&gt;生産年&lt;/TD&gt;<BR>&lt;TD&gt;価格&lt;/TD&gt;<BR>&lt;/TR&gt;<BR>&lt;/THEAD&gt;<BR>&lt;TBODY&gt;<BR>&lt;TR 
+STYLE="cursor:hand;" 
+onclick="alert(this.recordNumber)"&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="name"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="maker"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="color"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="year"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="price"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;/TR&gt;<BR>&lt;/TBODY&gt;<BR>&lt;/TABLE&gt;<BR><BR>&lt;!-- 
+データベース用オブジェクトの指定 --&gt;<BR>&lt;OBJECT ID=carData 
+CLASSID="clsid:333C7BC4-460F-11D0-BC04-0080C7055A83"&gt;<BR>&lt;PARAM 
+NAME="DataURL" VALUE="car.txt"&gt;<BR>&lt;PARAM NAME="UseHeader" 
+VALUE="true"&gt;<BR>&lt;/OBJECT&gt;<BR>&lt;/BODY&gt;<BR>&lt;/HTML&gt; </P>
+<P>ポイントになっているのは、次の行だ。 </P>
+<P class=source>&lt;TR STYLE="cursor:hand;" 
+onclick="alert(this.recordNumber)"&gt; </P>
+<P>まず、STYLE="cursor:hand;" 
+はスタイルシートの指定なので、データバインドには無関係なのだが、ついでに解説しておくと、カーソルを手の形にする指定だ。そして、clickイベントで実行されるスクリプトが、"alert(this.recordNumber)"。thisは、&lt;TR&gt;というタグそのもの(というか&lt;TR&gt;というオブジェクト)を指す。JavaScriptに不慣れだとthisの意味は理解しづらいと思うので、分からなければ無理に理解することはない。あえて理解しようとするなら、thisは｢これ｣｢こいつ｣と考えていい。つまり、スクリプトの意味は｢クリックされたら、こいつのrecordNumberプロパティをアラート表示しろ｣ということだ。<BR><BR>そして、ここが重要なのだけれど、この表は繰り返しテーブルだということだ。つまり、記述の上では&lt;TR&gt;～&lt;/TR&gt;が1つの1行だけなのに、その&lt;TR&gt;～&lt;/TR&gt;の部分が繰り返し表示されて複数行の表になっている。&lt;TR&gt;～&lt;/TR&gt;の部分が繰り返されるわけだから、&lt;TR&gt;タグ内に書いた 
+STYLE="cursor:hand;" と onclick="alert(this.recordNumber)" 
+も繰り返されることになる。<BR>　その結果、各行(レコード)にマウスカーソルを置くとカーソルが手の形になり、クリックすると｢こいつ｣、つまり｢この行(＝レコード)｣のrecordNumberプロパティ｣がアラート表示されることになるのだ。<BR><BR>｢なんだか分からない｣と思われても当然のような説明で恐縮なのだが、分からなかったらごめんなさい。ただ、こんなに短いスクリプトで、繰り返しテーブルの各行(レコード)の表示順を取り出せることだけには、注目してほしいと思う。つまり、クリックしたレコードが何番目なのかをスクリプトで知ることができるのだ。得られた情報は、スクリプトで何かしたいとき、とても便利な情報として利用できる。 
+</P>
+<H2><A 
+name=■｢並び替え｣｢カレントレコード｣｢recordNumberプロパティ｣の関係>■並び替え、カレントレコード、recordNumberプロパティの関係</A></H2>
+<P>並び替えの方法はすでに紹介した。ここでは、並び替えを行うと、カレントレコードとrecordNumberプロパティがどう変化するかを確認しておきたい。<BR><BR>ここまでにサンプルとした中古車の繰り返しテーブルを思い出してほしい。ページを読み込んだ直後は、データソースであるテキストファイルの順番に各レコードが表示される。そして、そのときカレントレコードは先頭のレコードになっている。<BR><BR>さて、ここで価格の安い順(降順)に並び替えたとしよう。この場合、カレントレコードは、 
+</P>
+<P>並び替える前の先頭レコード<BR>並び替えた後の先頭レコード </P>
+<P>のどちらになるだろうか？ 
+さらに、recordNumberプロパティはどう変化するだろう。読み込んだ直後は、表示される順番に1、2、3……となっているはずだが、並び替えた後は、 </P>
+<P>並び替える前の順番が受け継がれる<BR>並び替えた後の順番になる </P>
+<P>のどちらだろうか？ 次のサンプルは、以上の2点を確認するためのものだ。 </P>
+<P>【<A 
+href="http://www.makoto3.net/document/databind/smp017.html">サンプル17</A>:smp017.html】</P>
+<P 
+class=source>&lt;HTML&gt;<BR>&lt;HEAD&gt;<BR>&lt;TITLE&gt;&lt;/TITLE&gt;<BR>&lt;/HEAD&gt;<BR>&lt;BODY&gt;<BR>&lt;BUTTON 
+onclick="carData.Sort='+price';carData.Reset()"&gt;価格昇順&lt;/BUTTON&gt;<BR>&lt;BUTTON 
+onclick="carData.Sort='-price';carData.Reset()"&gt;価格降順&lt;/BUTTON&gt;<BR>&lt;BUTTON 
+onclick="carData.Sort='';carData.Reset()"&gt;RESET&lt;/BUTTON&gt;&lt;BR&gt;<BR>&lt;SPAN 
+DATASRC="#carData" DATAFLD="name"&gt;&lt;/SPAN&gt;:<BR>&lt;SPAN 
+DATASRC="#carData" DATAFLD="maker"&gt;&lt;/SPAN&gt;:<BR>&lt;SPAN 
+DATASRC="#carData" DATAFLD="color"&gt;&lt;/SPAN&gt;:<BR>&lt;SPAN 
+DATASRC="#carData" DATAFLD="year"&gt;&lt;/SPAN&gt;:<BR>&lt;SPAN 
+DATASRC="#carData" DATAFLD="price"&gt;&lt;/SPAN&gt;<BR>&lt;TABLE ID="table1" 
+DATASRC="#carData" BORDER=1 STYLE="font-size:9pt"&gt;<BR>&lt;THEAD&gt;<BR>&lt;TR 
+BGCOLOR="silver"&gt;<BR>&lt;TD&gt;車名&lt;/TD&gt;<BR>&lt;TD&gt;メーカー&lt;/TD&gt;<BR>&lt;TD&gt;色&lt;/TD&gt;<BR>&lt;TD&gt;生産年&lt;/TD&gt;<BR>&lt;TD&gt;価格&lt;/TD&gt;<BR>&lt;/TR&gt;<BR>&lt;/THEAD&gt;<BR>&lt;TBODY&gt;<BR>&lt;TR 
+STYLE="cursor:hand;" 
+onclick="alert(this.recordNumber)"&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="name"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="maker"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="color"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="year"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="price"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;/TR&gt;<BR>&lt;/TBODY&gt;<BR>&lt;/TABLE&gt;<BR><BR>&lt;!-- 
+データベース用オブジェクトの指定 --&gt;<BR>&lt;OBJECT ID=carData 
+CLASSID="clsid:333C7BC4-460F-11D0-BC04-0080C7055A83"&gt;<BR>&lt;PARAM 
+NAME="DataURL" VALUE="car.txt"&gt;<BR>&lt;PARAM NAME="UseHeader" 
+VALUE="true"&gt;<BR>&lt;/OBJECT&gt;<BR>&lt;/BODY&gt;<BR>&lt;/HTML&gt; </P>
+<P>このサンプルでは、カレントレコードを表示すると同時に繰り返しテーブルも表示している。そして、&lt;価格昇順&gt;&lt;価格降順&gt;&lt;RESET&gt;の3つのボタンを用意し、レコードの並び替えができる。さらに、繰り返しテーブルの各レコード(行)をクリックすると、そのレコードのrecordNumberプロパティがアラート表示される。<BR><BR>ソースは、これまで扱った以上の内容ではないので、解説は省略する。ポイントは、3つのボタンをクリックして並び替えを行うと、並び替えたあとの先頭レコードがカレントレコードになることだ。さらに、レコードをクリックしてrecordNumberプロパティを調べても、並び替えたあとの順番に1、2、3……となる。まとめると、次のとおりだ。 
+</P>
+<P>------------------------------------------------------------------------------------<BR>並び替えを行うと、並び替え後の先頭レコードがカレントレコードになる。recordNumberプロパティは表示される順番に1、2、3……となる。<BR>------------------------------------------------------------------------------------ 
+</P>
+<P>これだけだと、｢だからどうした｣と思われるだけだろうが、スクリプトを使っていろいろやっていると、必ずこの知識が必要になるときがくる。 </P>
+<H2><A 
+name=■｢絞込｣｢カレントレコード｣｢recordCountプロパティ｣｢recordNumberプロパティ｣の関係>■絞込、カレントレコード、recordCountプロパティ、recordNumberプロパティの関係</A></H2>
+<P>絞込を行うと、繰り返しテーブルに表示されるレコード数は少なくなる。では、そのときレコードの総数を示すrecordNumberプロパティはどう変化するだろうか。表示されるレコードが少なくなるから、recordNumberプロパティも少なくなるのだろうか。あるいは、もともとのレコード数が維持されるのだろうか。<BR><BR>さらに、絞込を行うと、カレントレコードはどう変化するだろう。たとえば、ページを読み込んだ直後は、先頭にある｢ホンダのアコード｣のレコードがカレントレコードになるが、｢トヨタ｣のレコードだけを絞り込んだら、カレントレコードは｢ホンダのアコード｣のままだろうか、あるいは絞り込んだあとの先頭レコードだろうか。<BR><BR>もう1つ、recordNumberプロパティはどうだろう。繰り返しテーブルで全レコードを表示している状態では、先頭から順番に1、2、3……となるのは分かる。では、絞り込んだ結果、絞込前にrecordNumberプロパティが5、7、10だった3つのレコードだけが表示されたらどうだろうか。各レコードのrecordNumberプロパティは5、7、10のままだろうか。それとも、表示される順番に1、2、3となるだろうか。<BR><BR>次のサンプルが、以上の疑問の答えになっている。 
+</P>
+<P>【<A 
+href="http://www.makoto3.net/document/databind/smp018.html">サンプル18</A>:smp018.html】</P>
+<P 
+class=source>&lt;HTML&gt;<BR>&lt;HEAD&gt;<BR>&lt;TITLE&gt;&lt;/TITLE&gt;<BR>&lt;SCRIPT 
+LANGUAGE="JavaScript"&gt;<BR>function toyotaFilter() {<BR>&nbsp;&nbsp;&nbsp; 
+carData.object.Filter="maker=トヨタ"<BR>&nbsp;&nbsp;&nbsp; 
+carData.Reset()<BR>&nbsp;&nbsp;&nbsp; checkTotal()<BR>}<BR>function 
+mazdaFilter() {<BR>&nbsp;&nbsp;&nbsp; 
+carData.object.Filter="maker=マツダ"<BR>&nbsp;&nbsp;&nbsp; 
+carData.Reset()<BR>&nbsp;&nbsp;&nbsp; checkTotal()<BR>}<BR>function 
+resetRecord() {<BR>&nbsp;&nbsp;&nbsp; 
+carData.object.Filter=""<BR>&nbsp;&nbsp;&nbsp; 
+carData.Reset()<BR>&nbsp;&nbsp;&nbsp; checkTotal()<BR>}<BR>function checkTotal() 
+{<BR>&nbsp;&nbsp;&nbsp; input1.value = 
+carData.recordset.recordCount<BR>}<BR>&lt;/SCRIPT&gt;<BR>&lt;/HEAD&gt;<BR>&lt;BODY 
+onload="checkTotal()"&gt;<BR>&lt;BUTTON 
+onclick="toyotaFilter()"&gt;トヨタ車&lt;/BUTTON&gt;<BR>&lt;BUTTON 
+onclick="mazdaFilter()"&gt;マツダ車&lt;/BUTTON&gt;<BR>&lt;BUTTON 
+onclick="resetRecord()"&gt;RESET&lt;/BUTTON&gt;&lt;BR&gt;<BR>recordCount=&lt;INPUT 
+ID="input1" SIZE=2&gt;&lt;/INPUT&gt;&lt;BR&gt;<BR>&lt;SPAN DATASRC="#carData" 
+DATAFLD="name"&gt;&lt;/SPAN&gt;:<BR>&lt;SPAN DATASRC="#carData" 
+DATAFLD="maker"&gt;&lt;/SPAN&gt;:<BR>&lt;SPAN DATASRC="#carData" 
+DATAFLD="color"&gt;&lt;/SPAN&gt;:<BR>&lt;SPAN DATASRC="#carData" 
+DATAFLD="year"&gt;&lt;/SPAN&gt;:<BR>&lt;SPAN DATASRC="#carData" 
+DATAFLD="price"&gt;&lt;/SPAN&gt;<BR>&lt;TABLE ID="table1" DATASRC="#carData" 
+BORDER=1 STYLE="font-size:9pt"&gt;<BR>&lt;THEAD&gt;<BR>&lt;TR 
+BGCOLOR="silver"&gt;<BR>&lt;TD&gt;車名&lt;/TD&gt;<BR>&lt;TD&gt;メーカー&lt;/TD&gt;<BR>&lt;TD&gt;色&lt;/TD&gt;<BR>&lt;TD&gt;生産年&lt;/TD&gt;<BR>&lt;TD&gt;価格&lt;/TD&gt;<BR>&lt;/TR&gt;<BR>&lt;/THEAD&gt;<BR>&lt;TBODY&gt;<BR>&lt;TR 
+STYLE="cursor:hand;" 
+onclick="alert(this.recordNumber)"&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="name"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="maker"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="color"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="year"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="price"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;/TR&gt;<BR>&lt;/TBODY&gt;<BR>&lt;/TABLE&gt;<BR>&lt;!-- 
+データベース用オブジェクトの指定 --&gt;<BR>&lt;OBJECT ID=carData 
+CLASSID="clsid:333C7BC4-460F-11D0-BC04-0080C7055A83"&gt;<BR>&lt;PARAM 
+NAME="DataURL" VALUE="car.txt"&gt;<BR>&lt;PARAM NAME="UseHeader" 
+VALUE="true"&gt;<BR>&lt;/OBJECT&gt;<BR>&lt;/BODY&gt;<BR>&lt;/HTML&gt;</P>
+<P>3つのボタンの下には、レコード総数を示すrecordCountプロパティの値が表示される。次の行が、その表示箇所の記述だ。 </P>
+<P class=source>recordCount=&lt;INPUT ID="input1" 
+SIZE=2&gt;&lt;/INPUT&gt;&lt;BR&gt; </P>
+<P>そして、ヘッダー部に、recordCountプロパティを表示するcheckTotal()関数を定義している。 </P>
+<P class=source>function checkTotal() {<BR>&nbsp;&nbsp;&nbsp; input1.value = 
+carData.recordset.recordCount<BR>} </P>
+<P>そして、このcheckTotal()を、ページが読み込まれたとき(onload)、3つのボタンのいずれかがクリックされたとき実行している。<BR><BR>読み込んだ直後は、繰り返しテーブルで全レコードが表示されるので数値は19になる。絞込の各ボタンをクリックすれば、この数値が変化するのが確認できるだろう。つまり、recordCountプロパティは、絞り込んだ後に表示されるレコード数ということになる。<BR><BR>recordCountプロパティの下は、カレントレコードの表示だ。絞り込むと、カレントレコードは絞り込んだ後の先頭レコードになるのが確認できるはずだ。<BR><BR>各レコードをクリックすると、そのレコードのrecordNumberプロパティがアラート表示される。絞り込む前も後も、表示される順番に1、2、3……となる。つまり、絞り込んでも、recordNumberプロパティはあくまで表示されているレコードの順番になるということだ。まとめると、次のとおりだ。 
+</P>
+<P>------------------------------------------------------------------------------------<BR>絞込を行うと、絞込後の先頭レコードがカレントレコードになる。さらに、recordCountプロパティは絞込後に表示されているレコード数になる。recordNumberプロパティは表示される順番に1、2、3……となる。<BR>------------------------------------------------------------------------------------ 
+</P>
+<P>これも、｢だから、何なんだ｣かもしれないが、やはりスクリプトをいろいろと書いていくと、貴重な情報になると思う。 </P>
+<H2><A 
+name=■｢nextPage()メソッド｣｢previousPage()メソッド｣｢カレントレコード｣｢recordNumberプロパティ｣>■nextPage()メソッド、previousPage()メソッド、カレントレコード、recordNumberプロパティ、</A>recordCountプロパティの関係</H2>
+<P>さて、最後の実験だ。先に、繰り返しテーブルでDATAPAGESIZE属性を指定すれば、一度に表示するレコード数を制限できることを紹介した。そして、nextPage()とpreviousPage()メソッドを使って、ページを切り替えられることも紹介した。ここでも、やはりいくつかの疑問が生じる。<BR><BR>まず、一度に表示するレコード数を制限したとき、レコード総数のrecordCountプロパティはいくつになるだろう。表示されているレコード数になるだろうか。あるいは、表示されていないレコードも含めた総数になるだろうか。<BR><BR>次に、nextPage()とpreviousPage()メソッドでページを切り替えたとき、カレントレコードはどうなるだろうか。たとえば、読み込んだ直後は、先頭レコードの｢ホンダのアコード｣がカレントレコードだ。そして、nextPage()メソッドで次ページに切り替えたら、表示上の先頭レコードが｢マツダのデミオ｣になったとする。このとき、カレントレコードは｢ホンダのアコード｣｢マツダのデミオ｣のどらだろうか。<BR><BR>同じく、recordNumberプロパティも疑問だ。読み込んだ直後は、1、2、3……となるのは分かる。では、nextPage()メソッドで次ページを表示したとき、表示上の先頭レコードのrecordNumberプロパティは1になるだろうか。それとも、前ページからの続きの番号になるだろうか。<BR><BR>次のサンプルが、こうした疑問の答えだ。 
+</P>
+<P>【<A 
+href="http://www.makoto3.net/document/databind/smp019.html">サンプル19</A>:smp019.html】</P>
+<P 
+class=source>&lt;HTML&gt;<BR>&lt;HEAD&gt;<BR>&lt;TITLE&gt;&lt;/TITLE&gt;<BR>&lt;SCRIPT 
+LANGUAGE="JavaScript"&gt;<BR>function checkTotal() {<BR>&nbsp;&nbsp;&nbsp; 
+input1.value = 
+carData.recordset.recordCount<BR>}<BR>&lt;/SCRIPT&gt;<BR>&lt;/HEAD&gt;<BR>&lt;BODY 
+onload="checkTotal()"&gt;<BR>&lt;BUTTON 
+onclick="table1.previousPage()"&gt;&amp;lt;-&lt;/BUTTON&gt;<BR>&lt;BUTTON 
+onclick="table1.nextPage()"&gt;-&amp;gt;&lt;/BUTTON&gt;&lt;BR&gt;<BR>recordCount=&lt;INPUT 
+ID="input1" SIZE=2&gt;&lt;/INPUT&gt;&lt;BR&gt;<BR>&lt;SPAN DATASRC="#carData" 
+DATAFLD="name"&gt;&lt;/SPAN&gt;:<BR>&lt;SPAN DATASRC="#carData" 
+DATAFLD="maker"&gt;&lt;/SPAN&gt;:<BR>&lt;SPAN DATASRC="#carData" 
+DATAFLD="color"&gt;&lt;/SPAN&gt;:<BR>&lt;SPAN DATASRC="#carData" 
+DATAFLD="year"&gt;&lt;/SPAN&gt;:<BR>&lt;SPAN DATASRC="#carData" 
+DATAFLD="price"&gt;&lt;/SPAN&gt;<BR>&lt;TABLE ID="table1" DATASRC="#carData" 
+DATAPAGESIZE=5 BORDER=1 STYLE="font-size:9pt"&gt;<BR>&lt;THEAD&gt;<BR>&lt;TR 
+BGCOLOR="silver"&gt;<BR>&lt;TD&gt;車名&lt;/TD&gt;<BR>&lt;TD&gt;メーカー&lt;/TD&gt;<BR>&lt;TD&gt;色&lt;/TD&gt;<BR>&lt;TD&gt;生産年&lt;/TD&gt;<BR>&lt;TD&gt;価格&lt;/TD&gt;<BR>&lt;/TR&gt;<BR>&lt;/THEAD&gt;<BR>&lt;TBODY&gt;<BR>&lt;TR 
+STYLE="cursor:hand;" 
+onclick="alert(this.recordNumber)"&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="name"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="maker"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="color"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="year"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="price"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;/TR&gt;<BR>&lt;/TBODY&gt;<BR>&lt;/TABLE&gt;<BR>&lt;!-- 
+データベース用オブジェクトの指定 --&gt;<BR>&lt;OBJECT ID=carData 
+CLASSID="clsid:333C7BC4-460F-11D0-BC04-0080C7055A83"&gt;<BR>&lt;PARAM 
+NAME="DataURL" VALUE="car.txt"&gt;<BR>&lt;PARAM NAME="UseHeader" 
+VALUE="true"&gt;<BR>&lt;/OBJECT&gt;<BR>&lt;/BODY&gt;<BR>&lt;/HTML&gt;</P>
+<P>2つのボタンはpreviousPage()とnextPage()メソッドでページを切り替える。その下が、レコード総数のrecordCountプロパティの値、その下がカレントレコードだ。各レコードをクリックすると、そのレコードのrecordNumberプロパティがアラート表示されるのは、これまでのサンプルと同じだ。このサンプルで分かることは、次のとおり(実際に試してほしい)。 
+</P>
+<P>------------------------------------------------------------------------------------<BR>DATAPAGESIZEで一度に表示するページ数を制限しても、nextPage()メソッド、previousPage()メソッドでページを切り替えてもカレントレコード、recordCountプロパティ、recordNumberプロパティは変化しない。<BR>------------------------------------------------------------------------------------ 
+</P>
+<P>つまり、並び替えや絞込とは異なり、DATAPAGESIZEの指定、nextPage()とpreviousPage()によるページ切替は、カレントレコード、recordCountプロパティ、recordNumberプロパティにいっさい影響を与えないのである。これも、データバインドを活用していくうえで、重要な知識になるだろう。</P>
+<P>　</P>
+<P class=part><A name=PART7></A>PART7　活用してみよう </P>
+<P>最終回は、これまでの知識を応用して、より実践的なページを作ってみる。作成したのは、｢中古車データベースのデモ｣と｢7桁郵便番号検索～東京編｣の2つだ。あくまでサンプルだから、ソースは短く、スクリプトも大げさではない。にもかかわらず、2つのサンプルからは、応用･活用のアイデアがいろいろ思い浮かぶのではないかと思う。 
+</P>
+<H2><A name=■中古車データベースのデモ>■中古車データベースのデモ</A></H2>
+<P>このページでは、繰り返しテーブルを使っている。絞込や並び替えは用意していない。ポイントは、レコードをクリックすると背景が赤で文字が白になり、マーキー表示の文章も、クリックしたレコード(クルマ)の紹介文に切り替わることだ。これには、recordNumberプロパティが重要な役割を果たしている。まずは、ソースを示そう。 
+</P>
+<P>【<A 
+href="http://www.makoto3.net/document/databind/smp020.html">サンプル20</A>:smp020.html】</P>
+<P 
+class=source>&lt;HTML&gt;<BR>&lt;HEAD&gt;<BR>&lt;TITLE&gt;&lt;/TITLE&gt;<BR>&lt;SCRIPT 
+LANGUAGE="JavaScript"&gt;<BR>var i = 1<BR>function chStyle() 
+{<BR>&nbsp;&nbsp;&nbsp; table1.rows[i].style.backgroundColor = 
+"white"<BR>&nbsp;&nbsp;&nbsp; table1.rows[i].style.color = 
+"black"<BR>&nbsp;&nbsp;&nbsp; i = 
+carData.recordset.AbsolutePosition<BR>&nbsp;&nbsp;&nbsp; 
+table1.rows[i].style.backgroundColor = "red"<BR>&nbsp;&nbsp;&nbsp; 
+table1.rows[i].style.color = "white"<BR>}<BR>function chRecord(select_record) 
+{<BR>&nbsp;&nbsp;&nbsp; carData.recordset.AbsolutePosition = 
+select_record.recordNumber<BR>&nbsp;&nbsp;&nbsp; 
+chStyle()<BR>}<BR>&lt;/SCRIPT&gt;<BR>&lt;/HEAD&gt;<BR>&lt;BODY 
+onload="chStyle()"&gt;<BR>&lt;CENTER&gt;<BR>&lt;MARQUEE 
+STYLE="background-color:blue;color:white;font-size:18pt;"<BR>DATASRC="#carData" 
+DATAFLD="introduction"&gt;<BR>&lt;/MARQUEE&gt;<BR>&lt;P&gt;<BR>&lt;TABLE 
+ID="table1" DATASRC="#carData" BORDER=1 
+STYLE="font-size:9pt;width:500;"&gt;<BR>&lt;THEAD&gt;<BR>&lt;TR 
+BGCOLOR="silver"&gt;<BR>&lt;TD&gt;車名&lt;/TD&gt;<BR>&lt;TD&gt;メーカー&lt;/TD&gt;<BR>&lt;TD&gt;色&lt;/TD&gt;<BR>&lt;TD&gt;生産年&lt;/TD&gt;<BR>&lt;TD&gt;価格&lt;/TD&gt;<BR>&lt;/TR&gt;<BR>&lt;/THEAD&gt;<BR>&lt;TBODY&gt;<BR>&lt;TR 
+STYLE="cursor:hand;" onclick="chRecord(this)"&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="name"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="maker"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="color"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="year"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="price"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;/TR&gt;<BR>&lt;/TBODY&gt;<BR>&lt;/TABLE&gt;<BR>&lt;/CENTER&gt;<BR>&lt;!-- 
+データベース用オブジェクトの指定 --&gt;<BR>&lt;OBJECT ID=carData 
+CLASSID="clsid:333C7BC4-460F-11D0-BC04-0080C7055A83"&gt;<BR>&lt;PARAM 
+NAME="DataURL" VALUE="car_long.txt"&gt;<BR>&lt;PARAM NAME="UseHeader" 
+VALUE="true"&gt;<BR>&lt;/OBJECT&gt;<BR>&lt;/BODY&gt;<BR>&lt;/HTML&gt; </P>
+<P>データソースとして指定したのは、car_long.txtというカンマ限りのテキストファイルだ。その中身は、次のようになっている。 </P>
+<P 
+class=source>name,maker,color,year:Int,price:Int,introduction<BR>アコード,ホンダ,白,92,800000,"ワンオーナー車。丁寧に使われていたので、程度はかなりのモノ。お買い得車。"<BR>マークⅡ,トヨタ,白,94,1500000,"トヨタの定番高級車。エンジン、内装ともに最上ランク。ちょっと高級志向のあなたに！"<BR>カムリ,トヨタ,黒,90,550000,"黒のカムリは希少。オヤジ車と侮るべからず！"<BR>&nbsp;&nbsp;&nbsp; 
+:<BR>&nbsp;&nbsp;&nbsp; : </P>
+<P>これまでのサンプルで使ったcar.txtとのちがいは、introductionという項目を追加していることだ。この項目のデータは、各クルマの紹介文だ。繰り返しテーブルでintroduction項目のデータを表示することもできるが、そうすると、表が横長になってしまう。そこで、このintroduction項目のデータはマーキーとして表示してある。<BR><BR>スクリプトを見ていこう。まず、グローバル変数iには｢1｣が入る。そして、ページが読み込まれると、chStyle()関数が実行される。chStyle()関数の定義は次のとおりだ。 
+</P>
+<P class=source>function chStyle() {<BR>&nbsp;&nbsp;&nbsp; 
+table1.rows[i].style.backgroundColor = "white"<BR>&nbsp;&nbsp;&nbsp; 
+table1.rows[i].style.color = "black"<BR>&nbsp;&nbsp;&nbsp; i = 
+carData.recordset.AbsolutePosition<BR>&nbsp;&nbsp;&nbsp; 
+table1.rows[i].style.backgroundColor = "red"<BR>&nbsp;&nbsp;&nbsp; 
+table1.rows[i].style.color = "white"<BR>} </P>
+<P>ここでポイントなのが、rowsという配列だ。table1は繰り返しテーブルのIDだが、rowsという配列を使うことで、この表の行を特定できる。たとえば、table1.rows[0]なら先頭行、table1.rows[1]なら2行目……といった具合(0から始まることに注意)。これを利用して、各行のスタイルであるbackgroundColor(背景色)とcolor(文字色)を指定している。ページ読込直後はiに1が入っているから、 
+</P>
+<P class=source>table1.rows[1].style.backgroundColor = 
+"white"<BR>table1.rows[1].style.color = "black" </P>
+<P>によって、2行目のレコードの背景が白、文字が黒になる。次に、変数iには、 </P>
+<P class=source>i = carData.recordset.AbsolutePosition </P>
+<P>によってカレントレコードの番号が入る。読込直後はカレントレコードは先頭、つまり1番のレコードだから、iには1が入る。そして、 </P>
+<P class=source>table1.rows[1].style.backgroundColor = 
+"white"<BR>table1.rows[1].style.color = "black" </P>
+<P>によって、2行目の同じレコードの背景が赤、文字が白になる。<BR><BR>なんでこんな面倒なことをしているかというと、このchStyle()関数は、繰り返しテーブルの各レコードをクリックしたときにも実行しているからだ。レコードをクリックすると、そのレコードの背景を赤、文字を白にすると同時に、1つ前のレコードの背景色を白、文字を黒に戻さなければならない。この動きを理解するために、各レコードをクリックしたとき実行されるchRecord(select_record)関数を見てみよう。chRecord(select_record)関数の定義は次のとおりだ。 
+</P>
+<P class=source>function chRecord(select_record) {<BR>&nbsp;&nbsp;&nbsp; 
+carData.recordset.AbsolutePosition = 
+select_record.recordNumber<BR>&nbsp;&nbsp;&nbsp; chStyle()<BR>} </P>
+<P>この関数は、レコードをクリックすると、chRecord(this)の形式で実行されるため、引数のselect_recordには、クリックされたレコードそのものが入る。そして、そのレコードのrecordNumberプロパティを、カレントレコードの番号に入れる。これによって、クリックしたレコードがカレントレコードになる。その後、chStyle()関数を実行する。仮に、5番目のレコードをクリックしたとしよう。すると、カレントレコードが5番目になったあと、再びchStyle()関数が実行される。chStyle()関数の動きを見てみよう。<BR><BR>まず、iにはまだ1が入っているはずだ。だから、先頭のレコードは背景色が白、文字が黒に戻る。その後で、iにはカレントレコードの番号である5が入る、そして、5番目の(つまりクリックした)レコードの背景が赤、文字が白になる。<BR><BR>以上が、クリックしたレコードだけ色が変化する仕掛けだ。では、マーキーはどうだろう。マーキーの記述は次のとおりだ。 
+</P>
+<P class=source>&lt;MARQUEE 
+STYLE="background-color:blue;color:white;font-size:18pt;"<BR>DATASRC="#carData" 
+DATAFLD="introduction"&gt;<BR>&lt;/MARQUEE&gt; </P>
+<P>ここには何の仕掛けもない。カレントレコードのintroduction項目のデータが表示されるだけだ。繰り返しテーブルでレコードをクリックすると、そのレコードがカレントレコードになるから、マーキーにも、そのレコードのintroduction項目のデータが表示されるにすぎない。<BR><BR>さて、このサンプル、クルマの画像ファイルを使えば、もっと実用的になりそうだ。レコード数がたくさんあれば、ページを切り替えられるようにしたり、絞込、並び替えの機能を盛り込んでもいい。データソースのテキストファイルは、Excelなどで簡単に作成できるから、データを更新するのもそれほど手間ではないだろう。 
+</P>
+<H2><A name=■7桁郵便番号検索～東京編>■7桁郵便番号検索～東京編</A></H2>
+<P>今度は、絞込を中心にしたサンプルだ。東京都の5桁の旧郵便番号、7桁の郵便番号、住所1(区名)、住所2(町名、ビル名など)に条件を設定し、レコードを絞り込める。たとえば｢住所1｣に｢練馬区｣と入力して&lt;絞込&gt;ボタンをクリックすれば、練馬区のレコードだけが表示される。文字は一部でかまわない。たとえば｢住所2｣に｢神｣と入力して絞り込めば、住所2に｢神｣という文字を含むレコードだけが表示される。｢住所1｣を｢練馬区｣、｢住所2｣を｢神｣にして、練馬区のうち住所に｢神｣という文字を含むレコードといったand検索も可能だ。<BR><BR>絞込を解除するなら&lt;絞込解除&gt;ボタンをクリックし、&lt;、&gt;ボタンでページを切り替えられる。また、絞り込まれたレコード数が｢絞り込まれたレコード数/総レコード数｣の形式で表示される。ソースは次のとおり。 
+</P>
+<P>【<A 
+href="http://www.makoto3.net/document/databind/smp021.html">サンプル21</A>:smp021.html】</P>
+<P 
+class=source>&lt;HTML&gt;<BR>&lt;HEAD&gt;<BR>&lt;TITLE&gt;&lt;/TITLE&gt;<BR>&lt;SCRIPT 
+LANGUAGE="JavaScript"&gt;<BR>function filterRec() {<BR>&nbsp;&nbsp;&nbsp; var 
+check_cond = input1.value + input2.value + input3.value + 
+input4.value<BR>&nbsp;&nbsp;&nbsp; if(check_cond != "") 
+{<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; var cond1 = "old_num=" + "*" + 
+input1.value + "*"<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; var cond2 = 
+"new_num=" + "*" + input2.value + 
+"*"<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; var cond3 = "address2=" + "*" 
++ input3.value + "*"<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; var cond4 = 
+"address3=" + "*" + input4.value + 
+"*"<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; var cond_all = cond1 + "&amp;" 
++ cond2 + "&amp;" + cond3 + "&amp;" + 
+cond4<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tokyoData.object.Filter = 
+cond_all<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+tokyoData.Reset()<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+checkCount()<BR>&nbsp;&nbsp;&nbsp; }<BR>}<BR><BR>function filterReset() 
+{<BR>&nbsp;&nbsp;&nbsp; input1.value = ""<BR>&nbsp;&nbsp;&nbsp; input2.value = 
+""<BR>&nbsp;&nbsp;&nbsp; input3.value = ""<BR>&nbsp;&nbsp;&nbsp; input4.value = 
+""<BR>&nbsp;&nbsp;&nbsp; tokyoData.object.Filter = ""<BR>&nbsp;&nbsp;&nbsp; 
+tokyoData.Reset()<BR>&nbsp;&nbsp;&nbsp; checkCount()<BR>}<BR><BR>function 
+checkTotal() {<BR>&nbsp;&nbsp;&nbsp; span1.innerText = 
+tokyoData.recordset.recordCount<BR>&nbsp;&nbsp;&nbsp; span2.innerText = 
+tokyoData.recordset.recordCount<BR>}<BR><BR>function checkCount() 
+{<BR>&nbsp;&nbsp;&nbsp; span1.innerText = 
+tokyoData.recordset.recordCount<BR>}<BR><BR>&lt;/SCRIPT&gt;<BR>&lt;/HEAD&gt;<BR>&lt;BODY 
+onload="checkTotal()"&gt;<BR>&lt;CENTER&gt;<BR>&lt;BUTTON 
+onclick="table1.previousPage()"&gt;&amp;lt;&lt;/BUTTON&gt;<BR>&lt;BUTTON 
+onclick="table1.nextPage()"&gt;&amp;gt;&lt;/BUTTON&gt;<BR>&lt;BUTTON 
+onclick="filterRec()"&gt;絞込&lt;/BUTTON&gt;<BR>&lt;BUTTON 
+onclick="filterReset()"&gt;絞込解除&lt;/BUTTON&gt;<BR><BR>[&lt;SPAN 
+ID="span1"&gt;&lt;/SPAN&gt;/<BR>&lt;SPAN 
+ID="span2"&gt;&lt;/SPAN&gt;]<BR><BR>&lt;TABLE ID="table1" DATASRC="#tokyoData" 
+DATAPAGESIZE=15 STYLE="font-size:9pt;"&gt;<BR>&lt;THEAD&gt;<BR>&lt;TR 
+STYLE="background-color:navy;color:white;"&gt;<BR>&lt;TD 
+ALIGN="center"&gt;旧郵便番号&lt;BR&gt;&lt;INPUT ID="input1" SIZE=8 
+STYLE="font-size:8pt;"&gt;&lt;/INPUT&gt;&lt;/TD&gt;<BR>&lt;TD 
+ALIGN="center"&gt;7桁郵便番号&lt;BR&gt;&lt;INPUT ID="input2" SIZE=10 
+STYLE="font-size:8pt;"&gt;&lt;/INPUT&gt;&lt;/TD&gt;<BR>&lt;TD 
+ALIGN="center"&gt;住所1&lt;BR&gt;&lt;INPUT ID="input3" SIZE=10 
+STYLE="font-size:8pt;"&gt;&lt;/INPUT&gt;&lt;/TD&gt;<BR>&lt;TD 
+ALIGN="center"&gt;住所2&lt;BR&gt;&lt;INPUT ID="input4" SIZE=30 
+STYLE="font-size:8pt;"&gt;&lt;/INPUT&gt;&lt;/TD&gt;<BR>&lt;/TR&gt;<BR>&lt;/THEAD&gt;<BR><BR>&lt;TBODY&gt;<BR>&lt;TR 
+STYLE="background-color:silver"&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="old_num"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="new_num"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="address2"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;TD&gt;&lt;SPAN 
+DATAFLD="address3"&gt;&lt;/SPAN&gt;&lt;/TD&gt;<BR>&lt;/TR&gt;<BR>&lt;/TBODY&gt;<BR>&lt;/TABLE&gt;<BR><BR>&lt;/CENTER&gt;<BR>&lt;!-- 
+データベース用オブジェクトの指定 --&gt;<BR>&lt;OBJECT ID=tokyoData 
+CLASSID="clsid:333C7BC4-460F-11D0-BC04-0080C7055A83"&gt;<BR>&lt;PARAM 
+NAME="DataURL" VALUE="tokyo.csv"&gt;<BR>&lt;PARAM NAME="UseHeader" 
+VALUE="true"&gt;<BR>&lt;/OBJECT&gt;<BR>&lt;/BODY&gt;<BR>&lt;/HTML&gt;</P>
+<P><BR>用意するデータソースのテキストファイルのtokyo.csvは、次のような中身をしている。 </P>
+<P 
+class=source>old_num:STRING,new_num:STRING,address_f1:STRING,address_f2:STRING,address_f3:STRING,<BR>=&gt;address1:STRING,address2:STRING,address3:STRING<BR>100,1000000,ﾄｳｷｮｳﾄ,ﾁﾖﾀﾞｸ,ｲｶﾆｹｲｻｲｶﾞﾅｲﾊﾞｱｲ,東京都,千代田区,以下に掲載がない場合<BR>102,1020072,ﾄｳｷｮｳﾄ,ﾁﾖﾀﾞｸ,ｲｲﾀﾞﾊﾞｼ,東京都,千代田区,飯田橋<BR>102,1020082,ﾄｳｷｮｳﾄ,ﾁﾖﾀﾞｸ,ｲﾁﾊﾞﾝﾁｮｳ,東京都,千代田区,一番町<BR>101,1010032,ﾄｳｷｮｳﾄ,ﾁﾖﾀﾞｸ,ｲﾜﾓﾄﾁｮｳ,東京都,千代田区,岩本町<BR>101,1010047,ﾄｳｷｮｳﾄ,ﾁﾖﾀﾞｸ,ｳﾁｶﾝﾀﾞ,東京都,千代田区,内神田<BR>100,1000011,ﾄｳｷｮｳﾄ,ﾁﾖﾀﾞｸ,ｳﾁｻｲﾜｲﾁｮｳ,東京都,千代田区,内幸町<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+: <BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : </P>
+<P>繰り返しテーブル、一度に表示するレコード数、ページの切替、そして、絞込とその解除方法については、これまでに紹介したので繰り返さない。このページのポイントは、4つの入力フォームに入力された文字をAND条件で絞り込む仕掛け、および絞込を行ったときに、絞り込まれたレコード数を表示する仕掛けの2つだ。<BR><BR>まず、入力フォームには&lt;INPUT&gt;を使っている。たとえば旧郵便番号の入力箇所の記述は次のようになっている。 
+</P>
+<P class=source>&lt;TD ALIGN="center"&gt;旧郵便番号&lt;BR&gt;&lt;INPUT ID="input1" 
+SIZE=8 STYLE="font-size:8pt;"&gt;&lt;/INPUT&gt;&lt;/TD&gt; </P>
+<P>つまり、｢旧郵便番号｣という文字と&lt;INPUT&gt;を1つのセル内にいっしょに書き込み、&lt;BR&gt;タグで2行にしているにすぎない。&lt;INPUT&gt;タグのIDはinput1だ。同様に、｢7桁郵便番号｣にはinput2、｢住所1｣にはinput3、｢住所2｣にはinput4という&lt;INPUT&gt;タグを入れてある。<BR><BR>&lt;絞込&gt;ボタンをクリックすると、filterRec()関数が実行される。filterRec()関数の定義は次のとおりだ。 
+</P>
+<P class=source>function filterRec() {<BR>var check_cond = input1.value + 
+input2.value + input3.value + input4.value<BR>&nbsp;&nbsp;&nbsp; if(check_cond 
+!= "") {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; var cond1 = "old_num=" + 
+"*" + input1.value + "*"<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; var cond2 
+= "new_num=" + "*" + input2.value + 
+"*"<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; var cond3 = "address2=" + "*" 
++ input3.value + "*"<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; var cond4 = 
+"address3=" + "*" + input4.value + 
+"*"<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; var cond_all = cond1 + "&amp;" 
++ cond2 + "&amp;" + cond3 + "&amp;" + 
+cond4<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tokyoData.object.Filter = 
+cond_all<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+tokyoData.Reset()<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+checkCount()<BR>&nbsp;&nbsp;&nbsp; }<BR>} </P>
+<P>まず、先ほどの4つの&lt;INPUT&gt;タグのvalue、つまり入力された文字が連結されて変数check_condに入る。そして、変数check_condが空かどうか調べる。空なら何もしない。空でなければ、つまり何か4つの&lt;INPUT&gt;タグに何かが入力されていれば、if文の内部が実行される。<BR><BR>たとえば、｢住所1｣に｢練馬｣と入力し、他に何も入力しないで&lt;絞込&gt;ボタンをクリックすると、変数cond1～cond4には次のような文字列が入ることになる。 
+</P>
+<P>cond1……old_num=**<BR>cond2……new_num=**<BR>cond3……address2=練馬<BR>cond4……address3=** 
+</P>
+<P>変数cond_allは、この4つの変数を"&amp;"で連結した文字列が入るから、この場合なら、次の文字列が入ることになる。 </P>
+<P>old_num=**&amp;new_num=**&amp;address2=練馬&amp;address3=** </P>
+<P>あとは、この変数old_numを条件に絞込を行っているだけだ。**はワイルドカードで、けっきょくすべてのレコードを意味することになるから、address2=練馬という条件にひっかかるレコードだけが絞り込まれることになる。以上が、複数の条件をANDで結んで絞り込む仕掛けだ。<BR><BR>そして、絞り込んだあとには、checkCount()関数が実行される。定義は次のとおりだ。 
+</P>
+<P>function checkCount() {<BR>span1.innerText = 
+tokyoData.recordset.recordCount<BR>} </P>
+<P>前回、絞込を行うと、レコード総数を示すrecordCountの値は、絞り込んだ後のレコード数になることを紹介した。要するに、checkCount()関数は、絞り込んだあとでspan1というIDの&lt;SPAN&gt;タグの中の文字を、このrecordCountにしているだけだ(innerTextについて分からない方は調べてほしい)。<BR><BR>なお、ページを読み込んだ直後には、checkTotal()関数も実行している。定義は次のとおりだ。 
+</P>
+<P class=source>function checkTotal() {<BR>span1.innerText = 
+tokyoData.recordset.recordCount<BR>span2.innerText = 
+tokyoData.recordset.recordCount<BR>} </P>
+<P>これで、span1とspan2に総レコード数が表示される。span2の方は、このあと数値が変化することはない。総レコード数をつねに表示しておきたいからだ。これに対し、span1の方は、絞込が行われるごとに先ほどのcheckCount()関数が実行されるから、絞り込まれたレコード数へと変化することになる。 
+</P>
+<H2><A name=■より高度なトピック>■より高度なトピック</A></H2>
+<P>さて、長々と解説してきたデータバインドも、とりあえずこれでおしまいだ。ただし、まだまだ解説していなかったり、ボクもよく分かっていないトピックがウンとある。<BR><BR>たとえば、レコードを追加したり削除することもできる。あるいは、特定のレコードをマークして、一時的にメモリに記憶しておくこともできるようだ。<BR><BR>さらに、データソースであるテキストファイルの読込状態をチェックするイベントハンドラもある。データバインドでは、HTMLファイルとデータソースであるテキストファイルをサーバから読み込み、そのあとクライアントで処理を行うわけだが、テキストファイルが大きいと、やはり読込に時間がかかってしまう。完全に読み込む前にユーザーが絞込などを行うと、エラーになる可能性があるわけだ。そこで、その回避策として、こうしたイベントハンドラが用意されているのだ。<BR><BR>他にも、まだあるので、関心のある方は調べてみよう。もしも要望があれば、筆者も調べてみたいが、まぁ、要望はないだろうなぁ(まず、ここまで読む人はいない気もする。予想が外れればいいんたけれど)。<BR><BR>そういえば、最近マイクロソフトのHTMLエディタであるFrontPage98を購入し、使ってみた。立派に、データバインドも利用できる。ただし、使い方がよく分からない。データバインドの基本が分かっていないと、使いこなせないのではないかと思う。<BR><BR>さて、このデータバインド、IE4のDynamicHTMLの中では、商利用やIE4をクライアントとするイントラネットをターゲットにしている感が強い。実際、Webページの見た目をどうこうするタイプの機能ではないので、個人の一般ユーザーのあいだでは、あまり盛り上がらないだろう。が、見てのとおり、可能性と実用性はある。良くも悪くも、Windows98は普及し、どのマシンでもIE4が走っている時代がくるだろう。あと2～3年もすれば、データバインドが注目を浴び始めるだろうとボクは思っている。<BR><BR>ご意見、ご感想があれば、ぜひメールでいただけると幸いだ。 
+</P>
+<P align=right>井上健語(<A 
+href="mailto:makoto3@st.rim.or.jp">makoto3@st.rim.or.jp</A>)<BR><BR></P></BODY></HTML>

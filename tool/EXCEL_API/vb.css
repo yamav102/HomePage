@@ -1,0 +1,151 @@
+﻿@charset "UTF-8";
+body{
+	
+	margin:0em;
+	margin-left:1em;
+	background-color:#302727;
+	
+}
+.content{
+	
+	background-color:#dfd;
+	padding-bottom:1em;
+	color:#000;
+}table{
+
+	table-layout:auto;
+	margin-left:2em;
+	width:80%;
+
+	}
+td,th,caption{
+
+	padding:0.5em;
+	line-height:130%;
+	letter-spacing: 0.5px;
+	white-space:normal;
+
+}
+
+table#hanrei{width:0;}
+table.kicchiri{
+	table-layout:fixed;
+	background-color:#FFE;	
+	border-collapse: collapse;
+}
+td{
+	padding:0.5em,0.5em,0.5em,0.5em;
+/*上右下左の順*/
+	}	
+hr{margin:0.5em;}
+
+ul{width:75%;}
+
+/****************************************
+API関数の宣言部分と実行部分を区別するため
+実行部分用のスタイルを別途用意
+******************************************/
+.codeApi{
+	margin:1em,1em,1em,2em;
+	margin-left:2em;
+	padding:1em;
+	background-color:#fee;
+	width:75%;
+	border-style:solid;
+	border-width:6px 1px 1px 3px;
+	border-color:#633;
+	border-top-color:#663;
+	}
+.tdApi{
+	background-color:#fee;
+	border-style:solid;
+	border-width:6px 1px 1px 3px;
+	border-color:#633;
+	border-top-color:#663;
+	}
+
+.codeConst{
+	margin:0em;
+	padding:1em;
+	background-color:#eef;
+	border-style:solid;
+	border-width:6px 1px 1px 3px;
+	border-color:#336;
+	border-top-color:#366;
+	}
+
+.tdConst{
+	background-color:#eef;
+	border-style:solid;
+	border-width:6px 1px 1px 3px;
+	border-color:#336;
+	border-top-color:#366;
+	}
+
+.codeProc{
+	margin:1em,1em,1em,2em;	
+	margin-left:2em;
+	padding:1em;
+	background-color:#eee;
+	width:75%;
+	border-style:solid;
+	border-width:6px 1px 1px 3px;
+	border-color:#333;
+	border-top-color:#363;
+	}
+
+.tdProc{
+	background-color:#eee;
+	border-style:solid;
+	border-width:6px 1px 1px 3px;
+	border-color:#333;
+	border-top-color:#363;
+	}
+	
+h1{	
+	padding:1em 1em;
+	font-weight:normal;
+	background-color:#ffd;
+	}
+
+h2{	
+	font-size:100%;
+	background-color:#333;
+	color:white;
+	margin-left:1em;
+	width:80%;
+	padding:5px;
+	}
+h3{
+	font-size:80%;
+	text-decoration:underline;
+	margin-left:1em;
+	}
+p{
+	margin-left:2em;
+	width:75%;
+	}
+
+blockquote{
+	width:75%;
+	}
+
+em{
+	background-color:#ff3;
+	font-style:normal;
+	}
+.REM{
+	color:green;
+	}
+pre{
+	line-height:125%;
+}
+	li{
+	padding-bottom:1em;
+	line-height:1.5em;
+}
+*{
+	font-family:"arial", "ＭＳ ゴシック",sans-serif;
+	letter-spacing: 1.5px
+
+}

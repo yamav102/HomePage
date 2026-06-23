@@ -1,0 +1,780 @@
+http://msdn.microsoft.com/ja-jp/vstudio/dd283301
+Skip to main content
+サインイン
+日本 (日本語)
+ホームライブラリスキルアップダウンロード拡張サポートコミュニティフォーラムギャラリーMSDN サイト マップ
+評価してください:  	
+Visual Studio デベロッパー センター > スキルアップ > 
+連載コラムと記事 > COM プログラミングの基本 > COM プログラミングの基本 (上)
+
+COM プログラミングの基本 (上)
+
+Fumiaki Yoshimatsu (吉松 史彰)
+株式会社アスキーNT
+ソリューション事業部 教育部
+
+November 1, 1999
+
+サンプルファイル (Zip形式 combasics1.zip 9.56KB)
+はじめに
+
+はじめまして。株式会社アスキーNTの吉松です。
+とあるご縁で今度 「COM プログラミングの基本」 
+なるコラムを書かせていただけることになりました。
+昨年の Microsoft Tech・Ed Yokohama では 
+「RDO から ADO への移行」、今年は 
+「ADO パフォーマンスチューニング」 
+の各セッションを担当させていただきましたので、
+その場でお会いしたことがある方も中にはいらっしゃると思います。
+
+COM プログラミングはじめの一歩
+
+さて、本題です。このサイトにアクセスされている方で、
+COM という言葉をまったく聴いたことのない方はいないと思います。
+では COM についてはどういう印象をお持ちでしょうか? 
+
+「小難しい」?
+
+ COM が難しいと思われている理由の一つは、
+COM について書かれている書籍、
+雑誌の記事などの文献ではほとんどがその第1・2章を 
+「IUnknown と IClassFactory」 
+などの難解な説明から始めているからではないでしょうか。
+確かにこれらは重要ですが、
+COM プログラミングを始めるために、
+最初に理解しなければならないことではありません。
+
+では何を最初に理解するべきなのでしょうか?
+
+インターフェイスベースのプログラミング
+
+あっ、答えを書いてしまいました。
+そうです。インターフェイスベースのプログラミング、
+あるいは「インターフェイスとは何か」を理解するのが 
+COM を理解する上での大事な基盤になります。
+そこで今回は COM と離れたところで、
+インターフェイスベースプログラミングとは何か? 
+を説明することにしましょう。
+
+COM を理解するにはインターフェイスの理解が必須です。
+COM との関係は大ありですのでご心配なく。
+
+
+インターフェイスとは何か
+
+インターフェイスを説明するには、
+身近な例をあげるのが一番です。
+
+身近な例といえば、あなたは今何をしていますか? 
+そう、このコラムを読んでいます（ですよね? ）。
+
+ところで、私が持っている
+「インターフェイスベースのプログラミング」
+の知識をこうしてあなたと共有できるのはなぜでしょうか? 
+
+答えは簡単。私が自分の頭の中にある知識を文字で表現したからです。
+
+このとき、あなたは私の頭の中に直接アクセスしているわけではなく、
+私が公開した文字 にアクセスしています。
+
+別の例をあげてみましょう。
+私がコンピュータのハードディスクに保存した数ビットの情報を、
+あなたが目で読んで意味を理解できるのはなぜでしょうか? 
+
+これはコンピュータが自分の中に持っているビット列を人間の目にわかりやすい形で
+出力してくれたからですね。
+
+これをユーザ インターフェイスと呼んでいます。
+
+もう1つ例をあげます。
+プログラマはなぜ Windows に対して、
+「ファイルを開け」「ファイルを保存しろ」
+という命令を発行できるのでしょうか? 
+
+これはWindows がプログラマに対して自分が持っている
+「ファイルを開く」「ファイルを保存する」
+という機能を公開しているからですね。
+
+これは API、
+すなわちアプリケーション プログラミング インターフェイスと呼ばれています。
+
+言い換えると、私たちの普段の生活
+（たとえば最初の、私とあなたの関係）
+やコンピュータの世界（あなたとコンピュータの関係）
+からデベロッパーの世 界（プログラマと Windows の関係）
+にいたるまで、およそコミュニケーション（通信）というものは
+必ず何らかのインターフェイスをとおして行われています。
+
+上の例では、文字、ユーザ インターフェイス、
+API がインターフェイスになっています。
+
+システム開発の世界では?
+
+ほとんどのコンピュータシステム開発は、
+2人以上のデベロッパーが協力して行っています。
+そのような開発プロジェクトでは、
+設計段階でシステムをモ ジュール化して、
+個々のモジュールをそれぞれ
+別々のプログラマがコーディングするという
+手順を踏むことが多いものです。
+
+たとえばある人はデータベースにア クセスするコードに集中し、
+別の人は ユーザインターフェイス部分に集中する
+ということが考えられます。
+
+そうでもしなければ、
+「できるだけ早く、しかも安く」開発するなどという要件
+には到底応 えられません。
+
+2人が別々に開発したコードはあとで結びつけて
+1つのシステムにするわけです。
+
+どうやって結びつけるのでしょう? 
+ユーザインターフェイス部分を開発している
+デベロッパーはどうやって 
+データベース部分のコードを呼び出すのでしょうか? 
+2つをあとから結びつけることができるように、
+ユーザインターフェイス部分、
+データベース部分の開発に入る前に、
+やり取りの方法を定義しておくのが一般的 です。
+
+設計段階で、関数の名前、引数、戻り値、機能などを決めておいて、
+その情報を共有するわけです。
+
+この作業を「インターフェイスの定義」と呼んでも良 いでしょう。
+
+システムエンジニアリングの世界では昔から、
+テスト工程といえば単体(モジュール)テスト、
+結合テスト、システムテストという流れで進むものと相場 
+が決まっています。
+「部分」のテストをまず行ってバグをつぶしたら、
+相互作用の面に移るわけです。
+
+結合テストが必要な理由は、
+あらかじめ定義しておいたイ ンターフェイスをお互いに守っているか
+どうか確認するためです。
+
+たとえば データベース部分のデベロッパーが内緒で関数に
+引数をひとつ追加してしまっているかもしれません。
+1つ 1つの「部分」はきちんと動いても、
+結合すると動かなくなるわけです。
+
+また結合テストは、
+システム納品前だけではなく、
+ある部分のバージョンアップや
+バグ フィックスを行うたびに行う必要があります。
+
+そのときにまたインターフェイス定義を守っているかどうか
+確認しないといけないからです。
+
+もしバージョンアッ プするためにはどうしても
+インターフェイス定義を変更しなければならない場合は、
+バージョンアップした部分だけでなく、
+すべての部分についてバージョン アップを行う必要が出てきます。
+これがこれまでのシステムの保守性を低くする要因でした。
+では保守性を高めるにはどうしたら良いのでしょうか?
+
+この問いは非常に簡単な答えが存在します。
+
+つまり、インターフェイスを絶対不変のものとして扱えばよいのです。
+インターフェイスがあとから変わって しまうことがないのですから、
+結合テストは（極端な言い方ですが）1回やれば十分になります。
+
+データベース部分をバージョンアップしたからといって 
+ユーザインターフェイス部分のコードも書き直す必要はありません。
+
+必要なタイミングで部分部分を別々にバージョンアップしていくことができます。
+このよう な、絶対不変のインターフェイス定義を元に
+プログラミングを行うことを インターフェイスベースプログラミングと呼びます。
+
+インターフェイスの一般的な定義
+
+インターフェイスベースプログラミングの良さをわかっていただいたところで、
+そのベースとなるインターフェイスの定義について触れておきましょう。
+
+ 一般的な定義を行うなら： 
+「インターフェイスとは、
+それがあらわすものがどんな機能を
+持っているかを表現する抽象的データ型である」
+
+ と定義することができます。
+最初の、このコラムを書いた私と
+それを読んでいるあなたとの関係に戻ってみると、
+あなたが私について知っているのは、
+「私が COM プログラミングについて文字
+（しかも日本語）で表現することができる」ということです。
+
+このコラムを読むためにそれ以上のことを知る必要はありません。
+私 の国籍や職業から、
+私がどんなツールを使ってこれを書いたか、
+それはどんな OS で動いているのかを
+知る必要はまったくないわけです。
+また、プログラマが OS について知っている
+（知る必要がある）のは、
+それがファイルを開いて返すことができる、
+ということであって、
+どうやってファイルを開くかを知る必要はあり ません。
+
+より一般的に言うならば
+インターフェイスを通じて何かにアクセスするために必要な知識は
+「そのインターフェイスがどんな機能を提供するか」
+であっ て、
+「その処理がどうやって行われているのか」ではありません。
+であれば、インターフェイスには「どんな機能を提供するか（What）」
+を定義すればよい ことになります。
+「その処理をどうやって行うのか（How）」を示す必要はないのです。
+インターフェイス定義に How を含めないのですから、
+インターフェイスにはプログラムコードは一切含まれないことになります。
+これを インターフェイスと実装の分離と呼ん でいます。
+
+インターフェイスと実装を分離することで、
+インターフェイスベースプログラミングの原則、
+すなわち「インターフェイスは不変である」というルー ルを守りつつ、
+実装部はいかようにでも変更できるようになります。
+
+バックエンドで稼動する 
+DBMS を ORACLE から SQL Server に変えたとしても、
+それを ユーザインターフェイス部分を作成している
+プログラマに知らせる必要はありません。
+データベース部分のプログラマがインターフェイスはそのままに、
+その実 装だけを SQL Server 対応に変更すれば良いからです。
+
+つまりインターフェイスとは、
+あるものを外から見たときの見え方です。
+外からの見え方が変わらなければ、
+内部はいかように も変えることができます。
+
+インターフェイスはそれ自体には実装コードが含まれていませんので、
+何も実行することができません。
+
+実際の処理を行うには、
+そのインターフェイスを 通じて機能を提供する
+実装コードを別途定義します。
+
+データベース部分のコードを実行するためには、
+ユーザインターフェイス部分のコードは 
+データベースインターフェイスそのものを起動するのではなく、
+データベースインターフェイスを実装している実装コードを起動します。
+
+このとき、インター フェイスを実装している実装コードの
+テンプレートのことを クラスと呼び、
+クラスを起動（インスタンス化）した結果作成された実装コードを 
+オブジェクトと呼びます。
+
+ユーザインターフェイス部分は 
+データベース クラスをインスタンス化して 
+データベース オブジェクトを作成し、
+データベース オブジェクトが公開する
+インターフェイスを介して 
+データベース オブジェクトの機能にアクセスするわけです。
+
+インターフェイスベースプログラミングの実際
+
+能書きばかりではつまらないので、
+そろそろサンプルコードを例に
+インターフェイスベースプログラミングを実際にやってみましょう。
+イメージとしては、
+
+    インターフェイス設計者がインターフェイスファイルを作成する。
+    各インターフェイスをどのクラスに実装するかを決める。
+    クラス実装者が実装ファイルを作成する。
+    すべてを 1プロジェクトに結合してビルドして完成とする。
+
+というような進め方で1つのサンプルを作成していきます。
+シナリオ
+
+私事で恐縮ですが、
+今年 (1999年) に入ってすぐ、
+スキーで骨折しまして、先月までずっと病院に通っておりました。
+待合室で考えたシナリオなのでどうしても以下のようなものになってしまいました。
+
+病院の受付と患者と医者のやり取りを想定したシナリオ
+
+    患者は受付に行く
+    受付は患者に保険証の掲示を求める
+    受付は患者のカルテから適切な医者のところへ患者を案内する
+    医者は患者に病状を聞く
+    医者は患者を治療する
+    患者は受付にお金を支払う
+
+この3者のやり取りから、
+インターフェイスを抽出してみましょう。
+
+このとき気をつけることは、
+クライアント（アクセスの主体）
+が要求するサービスだけに着目することです。
+ここでは以下のようにモデル化してみました。
+
+			 	サービス							クライアント
+患者(IPatient)	保険証を見せる(GetHealthInsurance)	受付
+お金を払う		(Pay)								受付
+病状を伝える	(TellHowIFeelBad)					医者
+受付(IClerk)	医者を案内する(DispatchPatient)		患者
+医者(IDoctor)	治療する(Treat)						受付
+
+どうでしょうか? 医者の「治療する」機能のクライアントが受付、
+というのがピンとこないかもしれませんが、
+これは患者を割り当てて治療する命令は患者ではなく
+受付が行うものだと思われるからです（私が通った病院ではそうでした）。
+
+インターフェイス作成
+
+それでは設計内容を元にインターフェイスを作成してみましょう。
+ここからは VB、VC++、VJ++ の開発環境ごとにその流れを追います。
+いずれもバージョン 6.0 を対象にします。
+VB の場合
+
+VB ではインターフェイスとクラスが分けられません。
+クラスモジュールに Public Function を定義することで、
+それをインターフェイスとして扱います。
+
+リスト 1: IPatient.cls
+
+    Public Function GetHealthInsurance() As String
+    End Function
+    Public Function Pay(ByVal HowMuch As Long) As Long
+    End Function
+    Public Function TellHowIFeelBad() As String
+    End Function
+
+リスト 2: IDoctor.cls
+
+    Public Function Treat(Patient As IPatient) As Long
+    End Function
+
+リスト 3: IClerk.cls
+
+    Public Function DispatchPatient(Patient As IPatient) As Long
+    End Function
+
+VC++の場合
+
+C++ では、インターフェイスは抽象基底クラスとして定義するのが一般的です。
+以下の手順でインターフェイスを作成します。
+
+リスト 4: hospitalitf.h
+
+    #include "wtypes.h"
+    class IPatient{
+    public :
+        virtual wchar_t *GetHealthInsurance(void) const = 0;
+        virtual long Pay(long HowMuch) const = 0;
+        virtual wchar_t *TellHowIFeelBad(void) const = 0;
+    };
+     
+    class IDoctor{
+    public :
+        virtual long Treat(IPatient* patient) const = 0;
+    }
+     
+    class IClerk{
+    public :
+        virtual long DispatchPatient(IPatient* patient) const = 0;
+    }
+
+VJ++ の場合
+
+Java は 3つの中で一番新しい言語であり、
+インターフェイスベースプログラミングを明示的にサポートします。
+以下の手順でインターフェイスを作成します。
+
+リスト 5: IPatient.java
+
+    public interface IPatient{
+        public String GetHealthInsurance();
+        public long Pay(long HowMuch);
+        public String TellHowIFeelBad();
+    }
+
+リスト 6: IDoctor.java
+
+    public interface IDoctor{
+        public long Treat(IPatient patient);
+    }
+
+リスト 7: IClerk.java
+
+    public interface IClerk{
+        public long DispatchPatient(IPatient patient);
+    }
+
+クラス定義
+
+インターフェイス設計が行われたところで、
+今度は各インターフェイスを
+どのクラスに実装していくかを決めます。
+
+1つのクラスにいくつでもインター フェイスを
+指定してそれを実装することができます。
+また 1つのインターフェイスが複数のクラスに実装されることもありえます。
+今回のシナリオで、
+もし小さな町医者を想定しているならば 
+SmallClinic クラスには IClerk と IDoctor インターフェイスを
+両方とも実装することになるでしょう。
+一人の人間が医者と受付を兼ねていることを表すためです。
+
+大学病院を想定するならば LargeHospitalDoctor クラスには 
+IClerk インターフェイスは実装しないでしょう。
+大学病院の医師が受付も兼ねるなどということはないからです。
+また患者が1人きりでは病院が立ち行きませんので、 
+複数の人間クラスが IPatient インターフェイスを実装して、
+病院を訪れることになるでしょう。
+たとえば、Skier クラスが 
+IPatient インターフェイスを実装して、
+そのインスタンスが病院に担ぎ込まれるかもしれません。
+
+このインスタンスは、医者の IPatient.TellHowIFeelBad 呼び出しに対して
+「足の骨が折れた」と答えることでしょう。
+
+また Boxer クラスが病院に担ぎ込まれるかもしれません。
+このインスタンスは IPatient.TellHowIFeelBad 呼び出しに対して
+「目がよく見えない」と答えるかも知れません。
+
+いずれにしても医者は SkierもBoxer も
+「患者」としてひとくくりに扱えることに注意してください。
+
+今回は、簡単にするために以下のクラスを作成することにしました。
+
+クラス名	実装するインターフェイス名
+SmallClinic	IClerk
+IDoctor
+SomethingBad	IPatient
+実装
+
+それではクラスの実装コードを書きましょう。
+それぞれのクラスは自分に割り当てられた全インターフェイスの
+全メソッドを必ず実装していなければいけ ないことに注意してください。
+ここでは簡単な実装コードを用意して、
+インターフェイスベースプログラミングが実際に使えることを確認します。
+VB の場合
+
+標準 EXE プロジェクトを作成して、
+先ほどのインターフェイス定義ファイルをプロジェクトに追加しておきます。
+フォームにテキストボックスとコマンドボタンを貼り付 けて、
+以下のコードを実装します。
+VB では、クラスに実装するインターフェイスを明示するために 
+Implements キーワードをつかうことに注意してください。
+
+リスト 8: SmallClinic.cls
+
+    Implements IClerk
+    Implements IDoctor
+    Private Function IDoctor_Treat(Patient As IPatient) As Long
+      Dim Where As String
+      Where = Patient.TellHowIFeelBad()
+      If Where = "I have a head ache" Then
+        MsgBox "Try aspirin."
+      ElseIf Where = "I have a stomach ache" Then
+        MsgBox "Try 胃腸薬."
+      Else
+        MsgBox "You are going to die soon.  Sorry."
+      End If
+    End Function
+
+    Private Function IClerk_DispatchPatient(Patient As IPatient) As Long
+      Dim HI As String
+      Dim dr As IDoctor
+      Dim howmuch As Long
+      Dim actualpay As Long
+      HI = Patient.GetHealthInsurance()
+      If HI = "VALID" Then
+        Set dr = Me
+        howmuch = dr.Treat(Patient)
+        Set dr = Nothing
+        actualpay = Patient.Pay(howmuch)
+        IClerk_DispatchPatient = 0
+        MsgBox "You're all set."
+      Else
+        MsgBox "We cannot treat you."
+        IClerk_DispatchPatient = -1
+      End If
+    End Function
+
+リスト 9: SomethingBad.cls
+
+    Implements IPatient
+    Private Function IPatient_GetHealthInsurance() As String
+      IPatient_GetHealthInsurance = "VALID"
+    End Function
+    Private Function IPatient_Pay(ByVal howmuch As Long) As Long
+      IPatient_Pay = 1
+    End Function
+    Private Function IPatient_TellHowIFeelBad() As String
+      IPatient_TellHowIFeelBad = Form1.Text1.Text
+    End Function
+
+リスト 10: Form1.frm
+
+    Private Sub Command1_Click()
+      Dim pa As IPatient
+      Dim clk As Iclerk
+      Dim hospital As SmallClinic
+      Dim ouch As SomethingBad
+      Set ouch = New SomethingBad
+      Set pa = ouch
+      Set hospital = New SmallClinic
+      Set clk = hospital
+      clk.DispatchPatient pa
+    End Sub
+
+これで完成です。
+プログラムを実行して、
+テキストボックスに「I have a stomach ache」か、
+「I have a head ache」と入力してコマンドボタンをクリックしてください。
+医者の処方が聞けるでしょう。
+
+VC++ の場合
+
+C++ の場合はインターフェイスからクラスを派生させることで、
+クラスとインターフェイスの対応をとります。
+
+リスト 11: SmallClinic.h
+
+    #ifndef _HOSPITALITF_
+    #include "hospitalitf.h"
+    #define _HOSPITALITF_
+    #endif
+    class SmallClinic : public IDoctor, public IClerk
+    {
+    public:
+        long Treat(IPatient* patient) const;
+        long DispatchPatient(IPatient* patient) const;
+    public:
+        SmallClinic(){};
+        ~SmallClinic(){};
+    };
+
+リスト 12: SomethigBad.h
+
+    #ifndef _HOSPITALITF_
+    #include "hospitalitf.h"
+    #define _HOSPITALITF_
+    #endif
+    class SomethingBad : public IPatient
+    {
+    public:
+        wchar_t *GetHealthInsurance(void) const;
+        long Pay(long HowMuch) const;
+        wchar_t *TellHowIFeelBad(void) const;
+    public:
+        SomethingBad(){};
+        ~SomethingBad(){};
+    };
+
+リスト 13: SmallClinic.cpp
+
+    #include "windows.h"
+    #include "SmallClinic.h"
+    long SmallClinic::Treat(IPatient* patient) const{
+        wchar_t *Where;
+        Where = patient->TellHowIFeelBad();
+        if (wcscmp(Where, L"I have a head ache") == 0){
+            MessageBox(0, "Try aspirin.", "", MB_OK);
+            return 100L;
+        }else if (wcscmp(Where, L"I have a stomach ache") == 0){
+            MessageBox(0, "Try 胃腸薬", "", MB_OK);
+            return 1000L;
+        }else{
+            MessageBox(0, "You are going to die soon.  Sorry.", "", MB_OK);
+            return 1000L;
+        }
+    }
+    long SmallClinic::DispatchPatient(IPatient* patient) const{
+        wchar_t *HI;
+        HI = patient->GetHealthInsurance();
+        if (wcscmp(HI, L"VALID") == 0){
+            IDoctor *doc;
+            doc = (IDoctor*)this;
+            long howmuch = doc->Treat(patient);
+            long actualpay = patient->Pay(howmuch);
+            return 0L;
+        }else{
+            MessageBox(0, "We cannot treat you.", "", 0);
+            return -1L;
+        }
+    }
+
+リスト 14: SomethingBad.cpp
+
+    #include "windows.h"
+    #include "SomethingBad.h"
+    extern wchar_t *HowAmI;
+    wchar_t* SomethingBad::GetHealthInsurance(void) const{
+        wchar_t *buf = (wchar_t*)malloc(6);
+        wcscpy(buf, L"VALID");
+        return buf;
+    }
+    long SomethingBad::Pay(long HowMuch) const{
+        return 1L;
+    }
+    wchar_t* SomethingBad::TellHowIFeelBad(void) const{
+        wchar_t *buf = (wchar_t*)malloc(wcslen(HowAmI));
+        wcscpy(buf, HowAmI);
+        return buf;
+    }
+
+リスト 15: main.cpp
+
+    #include "Somethingbad.h"
+    #include "SmallClinic.h"
+    wchar_t *HowAmI;
+    int wmain(int argc, wchar_t *argv[], wchar_t *envp[]){
+        SmallClinic *doc;
+        SomethingBad *pa;
+        pa = new SomethingBad();
+        HowAmI = argv[1];
+        doc = new SmallClinic();
+        doc->DispatchPatient((IPatient*)pa);
+        return 0;
+    }
+
+ビルドして実行してみます。
+コマンドプロンプトで「sample.exe "I have a head ache"」
+とパラメータをつけて実行してみてください。医者の処方が聞けるでしょう。
+
+ご注意: サンプルプログラムのため、
+エラー処理をしておりません。
+パラメータを指定しないとアプリケーションエラーとなります。
+
+VJ++ の場合
+
+Java ではクラスがインターフェイスを実装する（Implements）
+することを指定してクラスとインターフェイスとの対応をとります。
+
+リスト 16: SmallClinic.java
+
+    public class SmallClinic implements IClerk, IDoctor
+    {
+        public long DispatchPatient(IPatient patient){
+          String HI = patient.GetHealthInsurance();
+            if (HI.compareTo("VALID") == 0){
+            IDoctor doc;
+            doc = (IDoctor)this;
+            long howmuch = doc.Treat(patient);
+            doc = null;
+            long actualpay = patient.Pay(howmuch);
+            return 0;
+            }else{
+            com.ms.win32.User32.MessageBox(0, "We cannot treat you.", "", );
+            return -1;
+           }
+        }
+        public long Treat(IPatient patient){
+          String where;
+          where = patient.TellHowIFeelBad();
+          if (where.compareTo("I have a head ache") == 0){
+            com.ms.win32.User32.MessageBox(0, "Try aspirin.","", 0);
+            return 100;
+          }else if (where.compareTo("I have a stomach ache") == 0){
+            com.ms.win32.User32.MessageBox(0, "Try 胃腸薬.","", 0);
+            return 1000;
+          }else{
+        com.ms.win32.User32.MessageBox(0, "You are going to die soon. Sorry.", "", 0);
+            return 0;
+         }
+        }
+    }
+
+リスト 17: SomethingBad.java
+
+    public class SomethingBad implements IPatient 
+    {
+        private String HowAmI;
+        public static void main(String[] args){
+            SmallClinic doc;
+            SomethingBad pa;
+            pa = new SomethingBad();
+            pa.HowAmI = args[0];
+            doc = new SmallClinic();
+            doc.DispatchPatient((IPatient)pa);
+            return;
+        }
+        public String GetHealthInsurance(){
+            return new String("VALID");
+        };
+        public long Pay(long HowMuch){
+            return 1;
+        };
+        public String TellHowIFeelBad(){
+            return HowAmI;
+        };
+    }
+
+ビルドして実行してみます。
+コマンドプロンプトで
+「wjview <パス名>somethingbad.class "I have a head ache"」
+とパラメータをつけて実行してみてください。医者の処方が聞けるでしょう。
+
+ご注意: サンプルプログラムのため、エラー処理をしておりません。
+パラメータを指定しないとアプリケーションエラーとなります。
+
+メリット
+
+さて、インターフェイスベースプログラミングを導入することによって
+何が変わったのでしょうか? 
+
+たとえば IDoctor.Treat メソッドを考えてみましょう。
+サンプルでは単に「薬をのめ」といわれるだけです。
+さらにこの医者は頭痛と腹痛にしか対応できません。
+
+おそらくバージョン 2 を開発するにあたって変更が加えられることでしょう。
+
+たとえばバージョン 2 では手術をする機能が追加されるかもしれません。
+そのとき患者や受付は、医者の機能変更にあわせてコードを書き直す必要があるでしょうか? 
+本物の病院では、医者が勉強して新しいことができるようになったからといって、
+受付や患者までそれにあわせて勉強しなければいけないなんてことはありませ ん。
+それと同じように、インターフェイスベースプログラミングでも、
+医者が IDoctor インターフェイスを公開する限り、
+患者や受付のコードは以前と同じように動作しつづけるはずです。
+
+ここにインターフェイスベースプログラミングのメリット があります。
+つまり、医者、受付、患者それぞれを別々に機能追加していくことができるのです。
+しかも結合テストは最初にしっかり行っておけば良いのです。 
+これによって、バージョン 2 以降の開発工数が大幅に短縮されることが予想できます。
+でも...
+
+今回はすべてのコードを最終的には1つのプロジェクトにあつめてコンパイルしました。
+したがって、SmallClinic のコードが書き直されると、
+他のコードを書き直していなくてもプロジェクトをビルドしなおす必要があります。
+これでは保守性の向上は限定的なものになって しまいます。
+
+SmallClinic と IPatient 実装コードを別プロジェクトにすればよいのですが、
+そうすると今度は2つのプロジェクト間の通信プログラムを作らなければなりません。
+
+2つのプログラムが 同じマシンで実行されるなら
+ LPC で、別マシン上で、ネットワーク経由で実行されるならソケットで? 
+やりとりは同期型、非同期型? 結果的に開発工数は 2倍ではすまないでしょう。
+
+また、今回は VB で作ったインターフェイスから 
+VB のコードを作成しました。でも、
+SmallClinic は忙しいから C++ で書いて、
+患者のほうは VB で簡単に作りたい、
+という要望もあると思います。
+
+VB で作ったインターフェイスは C++ では直接読めません。
+逆も同様です。どうしたらいいのでしょうか?
+
+これらの問題を解決してくれるフレームワークをもう皆さんはご存知のはずです。
+
+そう、COM です。COM はインターフェイスベースプログラミングを行った上でおきる、
+こうした問題を解決するためのフレームワークであり、OS の付加機能なのです。
+
+次回はこれらの問題点を解決するための COM-Way をご紹介していきましょう。
+
+	Fumiaki Yoshimatsu: 株式会社アスキー NT に勤務し、
+主として Windows NT/2000 関連の Microsoft University コースのトレーナーを担当しています。
+1999年度 MCSP MCT アワードの受賞者です。
+現在は、Windows DNA、COM、MTS、ADO/OLE DB などのテクノロジにフォーカスした、
+デベロッパー向けのトレーニング コースの開発および教育を行っています。
+11/15 大阪で開催の Microsoft Developer Days '99 Osaka では、
+「ADSI によるディレクトリ対応アプリケーションの開発」の
+セッションスピーカーを担当します。
+
+
+ 
+
+ 
+
+ページのトップへ
+プロファイル (個人情報) の管理 | お問い合わせ先 | MSDN Flash ニュースレター | 日本での個人情報の取り扱い | サイトマップ | 特定商取引法に基づく表示
+(c) 2012 Microsoft. All rights reserved.使用条件 | 商標 | プライバシー

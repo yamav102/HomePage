@@ -1,0 +1,13 @@
+
+<script type="text/javascript">
+function aa(){
+var myaler=f1.input1.value;
+
+alert(myaler);
+return false;
+}
+</script>
+<form onsubmit="return aa()" id="f1"><input type="text" size="25" id="input1">入力文字列を
+<input type="submit" value="アラート表示" onclick="aa()"></form>
+buttonを使用するとボタンにフォーカスがあたらない。submitを使うとボタンにフォーカスはあたるが同じページに移動してしまう。onsubmit="retrun false"を指定してフォーカスをあてつつページが移動しないようにする。
+

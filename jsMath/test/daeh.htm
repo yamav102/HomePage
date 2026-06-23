@@ -1,0 +1,180 @@
+﻿<div class="myArea">
+
+<h1>
+楕円の軌跡を描く
+</h1>
+
+<script src="http://yamav102.cocolog-nifty.com/jsMath/easy/load.js"></script>
+<script src="http://yamav102.cocolog-nifty.com/jsMath/jsMath.js"></script>
+
+
+<noscript>
+「加法定理の証明」：このページの閲覧はJavaScriptが有効である必要があります。
+</noscript>
+<p>
+このページの数式の表示には<a href="http://www.math.union.edu/~dpvc/jsMath/download/jsMath-fonts.html" target="_blank">
+<dfn>TeX</dfn>フォントのインストール</a>が必要です。
+数式の表示に時間がかかる場合があるかも知れません。推奨ブラウズ：FireFox
+</p>
+「楕円とは、平面上のある2定点からの距離の和が一定となるような点の集合から作られる
+曲線である」と言う事で、図のように２つの点を紐でつないで、筆記具をあてがい、
+紐が弛まないようにグルリとしてやると作図する事ができます。
+<p>
+<p>
+次の式は、大抵のサイトで「（楕円の方程式の）標準形」として
+紹介されています。「標準形」というのは、「標準形の楕円」とは別に、
+この世には皆さんの想像を絶するような「楕円」もあるのです、
+という事なのではなく、「楕円の方程式としては、この式の形を標準とします」
+という程度の意味なんだと思われます。
+数学の素養を積んで来なかった人間が、気まぐれに数学に触れると、
+要らぬ想像をアレコレさせられてしまいます。
+</p>
+<div class="math" style="text-align: left;">
+　　　\frac{x^2}{a^2}+\frac{y^2}{b^2}=1
+</div>
+<p>
+a 、 b というのは、楕円には、
+長さの違う（円で言うところの）「半径」の値が２つ必要ですので、
+その２つの値をそれぞれ表しています。
+</p>
+<p>
+楕円の長い方の円で言うところの直径を「長軸」、短い方を「短軸」と呼びます。
+長軸と短軸の交点を「中心」と呼び、「中心」とは別に、楕円の縁からの距離の和が一定になる
+条件を満たす２点は「焦点」と呼ばれるようです。
+</p>
+<p>
+２定点（焦点）に紐をつけて楕円を作図する時に、鉛筆がプラス方向のＸ軸上にある状態を
+観察します。楕円の中心から、マイナス側にある焦点までの距離 F をプラス方向に折り返してやると、
+紐の長さは、中心から鉛筆までの距離のちょうど２倍になっている事が判ります。
+つまり紐の長さは長軸の長さに等しい事になります。この紐の長さを 2a とします。
+</p>
+<p>
+鉛筆の位置がＹ軸上に来ると、紐は、長さ a で二分されます。
+短軸を中心で二分した長さを b とします。
+中心から焦点までの距離 F は、
+</p>
+<div class="math" style="text-align: left;">
+　　　F=\sqrt{a^2-b^2}
+</div>
+<p>
+で求まります。２つの焦点に紐をつけて楕円を作図する場合は、
+焦点座標を決めるところから作業が始まりますが、方程式から
+楕円を描く場合は、a と b の長さが決まれば
+描く事ができますので、F がどんな値であるかを考える必要はありません。
+</p>
+
+<h2>楕円の方程式の証明</h2>
+<p>
+a1 + a2 = 2a より、
+</p>
+<div class="math" style="text-align: left;">
+　　　\sqrt{(x-F)^2+y^2}+\sqrt{(x+F)^2+y^2}=2a
+</div>
+<div class="math" style="text-align: left;">
+　　　\sqrt{(x-F)^2+y^2}=2a-\sqrt{(x+F)^2+y^2}
+</div>
+<p>
+両辺を二乗して、
+</p>
+<div class="math" style="text-align: left;">
+　　　x^2-2xF+F^2+y^2=4a^2-4a\sqrt{(x+F)^2+y^2}+x^2+2xF+F^2+y^2
+</div>
+<div class="math" style="text-align: left;">
+　　　-4xF=4a^2-4a\sqrt{(x+F)^2+y^2}
+</div>
+<div class="math" style="text-align: left;">
+　　　a\sqrt{(x+F)^2+y^2}=a^2+xF
+</div>
+<p>
+更に、両辺を二乗、
+</p>
+<div class="math" style="text-align: left;">
+　　　a^2(x^2+2fF+F^2+y^2)=a^4+2a^2xF+x^2F^2
+</div>
+<div class="math" style="text-align: left;">
+　　　a^2x^2-x^2F^2+a^2y^2=a^4-a^2F^2
+</div>
+<div class="math" style="text-align: left;">
+　　　x^2(a^2-F^2)+a^2y^2=a^2(a^2-F^2)
+</div>
+<p>
+両辺を <span class="math">a^2(a^2-F^2)</span> で割る。
+</p>
+<div class="math" style="text-align: left;">
+　　　\frac{x^2(a^2-F^2)}{a^2(a^2-F^2)}+\frac{a^2y^2}{a^2(a^2-F^2)}=1
+</div>
+<div class="math" style="text-align: left;">
+　　　\frac{x^2}{a^2}+\frac{y^2}{a^2-F^2}=1
+</div>
+<p>
+<span class="math">a^2-F^2=b^2</span> ですので、
+</p>
+<div class="math" style="text-align: left;">
+　　　\frac{x^2}{a^2}+\frac{y^2}{b^2}=1
+</div>
+<p>
+以上で、楕円の方程式の標準形を導出できます。
+</p>
+<p>
+上の証明は a > b の楕円から証明していますが、 a < b の縦長の楕円で証明する場合、
+式のスタートが、<span class="math">\sqrt{(y+F)^2+x^2}+\sqrt{(y-F)^2+x^2}=2b</span>
+になるものの、式を整理していくと、結局のところ同じ方程式が導出されます。
+但し、焦点Ｆは y軸上に存在する事にはなります。ここで言いたいのは、縦に長い楕円でも、
+横に潰れた楕円を描く場合でも、使用する方程式は１つで良いという事です。
+</p>
+<h2>動的な楕円の軌跡</h2>
+<p>
+楕円の方程式の標準形を、y = f(x)の形にして、エクセルの散布図で
+楕円を描いてみます。
+</p>
+<div class="math" style="text-align: left;">
+　　　\frac{x^2}{a^2}+\frac{y^2}{b^2}=1
+</div>
+<div class="math" style="text-align: left;">
+　　　\frac{y^2}{b^2}=1-\frac{x^2}{a^2}
+</div>
+<div class="math" style="text-align: left;">
+　　　y^2=b^2(1-\frac{x^2}{a^2})
+</div>
+<div class="math" style="text-align: left;">
+　　　y=b\sqrt{1-\frac{x^2}{a^2}}
+</div>
+<p>
+正と負の２つの解があり、１８０°～３６０°の範囲の y はマイナスの値になります。
+x の値には、cos(x) がゼロ度の時長軸の長さになるように、
+cos(x) * a を指定します。
+</p>
+<p>
+角度の増加に合わせて楕円の軌跡が描かれます。
+</p>
+<p>
+横長の楕円と縦長の楕円では、証明式のスタートが違う為、証明式の冒頭に、
+</p>
+<blockquote>
+a > b > 0 の場合、
+</blockquote>
+<p>
+とか、
+</p>
+<blockquote>
+b > a > 0 の場合、
+</blockquote>
+<p>
+と、式の成立条件が書かれています。こういう書き方は、
+「円の径の大きさは絶対値で語る」という慣習のためでしょうか、
+b も a もマイナスであっても式が破綻するという訳ではありません。
+ a は式の分母なので 0 を指定すると破綻しますが、b は 0 で
+あっても、楕円が x軸上に直線で描画されるだけで、式が破綻する
+という事にはなりません。因みに a = b の時、楕円は「円」になります。
+</p>
+<p>
+a、b の何れかがマイナスの値をとる時、角度の増加に対して、
+逆方向に楕円の軌跡が描かれます。
+</p>
+<p>
+b > a の時は、縦長の楕円が描かれます。
+</p>
+<p>
+以上、楕円の軌跡を描いてみて気がついた事をまとめてみました(*- -)。
+</p>
+</div>

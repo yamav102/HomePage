@@ -1,0 +1,29 @@
+﻿<head>
+<link rel="stylesheet" href="highlight.js/styles/vs.css">
+
+<script type="text/javascript" src="highlight.js/highlight.pack.js"></script>
+
+<script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+</head>
+<pre>
+<code>
+if a=b then msgbox "ab"
+        //オブジェクトのキーを操作する
+        var book = new Object();
+        book.title = 'JavaScript 本格入門';
+        book.publish = '技術評論社';
+        book.price = '3000'
+        for (var k in book) {
+            document.writeln(k + ' は、' +book[k]);
+            document.writeln('&lt;br&gt;');
+            document.writeln('k は、' + k);
+            document.writeln('&lt;br&gt;');
+        }
+        //title は、JavaScript 本格入門
+        //k は、title
+        //publish は、技術評論社
+        //k は、publish
+        //price は、3000
+        //k は、price
+</code>
+</pre>

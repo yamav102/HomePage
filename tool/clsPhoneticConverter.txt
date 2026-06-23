@@ -1,0 +1,186 @@
+'clsPhoneticConverter クラス
+'ワークシート、元のセル、元のセルのヨミガナを表示するセル　をコンストラクタに渡して使う
+'アルファベット以外のヨミを表示するが、アルファベットは残ってしまうので、
+'アルファベットをカタカナに置き換えないとセルを移動できないという機能がある
+
+'■使い方------------------------------------------
+'Sheetモジュール
+'Private mヨミガナMngr As clsPhoneticConverter
+'
+'Private Sub Worksheet_Activate()
+'    Set mヨミガナMngr = New clsPhoneticConverter
+'    mヨミガナMngr.init Me, [a1], [a2]
+'End Sub
+'--------------------------------------------------
+
+Option Explicit
+
+Private mPreActiveCells As Collection
+
+Private WithEvents mWs As Worksheet
+Private mRng As Range
+Private mYomiRng As Range
+
+'手動コンストラクタ
+Public Sub init(ws As Worksheet, rng As Range, yomiRng As Range)
+    Set mWs = ws
+    Set mRng = rng
+    Set mYomiRng = yomiRng
+End Sub
+
+Private Sub proc1()
+    With mYomiRng
+        .Value = cnvStrKanaAll(mRng, vbKatakana)
+    End With
+End Sub
+
+Private Function IsAlpha(ch As String) As Boolean
+    '65～90がASCII大文字のアルファベット
+    Dim c As Long
+    c = AscW(StrConv(ch, vbNarrow + vbUpperCase))
+    If c > 64 And c < 91 Then
+        IsAlpha = True
+    Else
+        IsAlpha = False
+    End If
+End Function
+
+Private Function oldRange() As Range
+
+    If mPreActiveCells Is Nothing Then
+        Set mPreActiveCells = New Collection
+    End If
+    
+    If mPreActiveCells.Count > 1 Then
+        With mPreActiveCells
+            Set oldRange = .Item(.Count - 1)
+        End With
+    End If
+    
+End Function
+
+Private Sub CheckAlph(rng As Range)
+    
+    Dim i As Long
+    Dim indxes As New Collection
+    Dim v
+    Dim flg As Boolean
+    
+    With rng
+    
+        With .Font
+            .ColorIndex = xlAutomatic
+            .Bold = False
+        End With
+        
+        For i = 1 To Len(.Text)
+            If IsAlpha(Mid$(.Text, i, 1)) Then
+               
+                
+               indxes.Add i
+               flg = True
+               
+            End If
+        Next
+        
+        If flg Then
+            MsgBox "アルファベットにヨミに置き換えてください", vbInformation, ThisWorkbook.Name
+            .Select
+        End If
+        mPreActiveCells.Add rng
+        
+        If CBool(indxes.Count) Then
+            For Each v In indxes
+                With .Characters(Start:=v, Length:=1)
+                    .Font.Bold = True
+                    .Font.Color = vbRed
+                End With
+            Next
+        End If
+    End With
+    
+End Sub
+
+Private Sub mWs_Change(ByVal Target As Range)
+
+    Application.EnableEvents = False
+    With Target
+        
+        If .Address = mRng.Address Then
+            'mRngの入力値のヨミガナをmYomiRngに表示
+            Call proc1
+        End If
+                
+        If .Address = mYomiRng.Address Then
+            .Value = StrConv(.Value, vbKatakana + vbWide)
+            'mYomiRngのヨミガナにアルファベットが含まれていればアルファベットがなくなるまで他のセルを選択させない
+            Call CheckAlph(mYomiRng)
+        End If
+        
+    End With
+    Application.EnableEvents = True
+End Sub
+
+Private Sub mWs_SelectionChange(ByVal Target As Range)
+
+    Application.EnableEvents = False
+    If mPreActiveCells Is Nothing Then
+        Set mPreActiveCells = New Collection
+    End If
+    mPreActiveCells.Add ActiveCell
+
+    Dim preCell As Range
+    Set preCell = oldRange
+
+    If preCell Is Nothing Then
+        Set preCell = mYomiRng
+    End If
+
+    If preCell.Address = mYomiRng.Address Then
+        Call CheckAlph(mYomiRng)
+    End If
+
+    Application.EnableEvents = True
+    
+End Sub
+
+Function cnvStrKanaAll(rng As Range, mode As VbStrConv) As String
+
+    If Len(rng.Value) = 0 Then
+        cnvStrKanaAll = vbNullString
+    Else
+        rng.SetPhonetic
+
+        Dim v As Phonetics
+        Dim y As Phonetics
+        Dim s As String
+        Dim i As Long
+        Dim yomicl As New Collection
+        Dim ymCnt As Long
+
+        Set v = rng.Phonetics
+
+        For Each y In v
+            yomicl.Add Array(y.Text, y.Length)
+
+        Next
+
+
+        For i = 1 To Len(rng.Text)
+            '"亜"はShiftJisでの漢字の最小
+            '"亜"より小さいcodeの文字を「記号」とみなす
+            If Hex(Asc(Mid$(rng.Text, i, 1))) < Hex(Asc("亜")) Then
+                s = s & Mid$(rng.Text, i, 1)
+
+            Else
+                ymCnt = ymCnt + 1
+                s = s & yomicl.Item(ymCnt)(0)
+                i = i + yomicl.Item(ymCnt)(1) - 1
+
+
+            End If
+        Next
+        cnvStrKanaAll = StrConv(s, mode)
+    End If
+
+End Function

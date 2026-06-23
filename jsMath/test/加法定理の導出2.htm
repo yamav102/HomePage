@@ -1,0 +1,479 @@
+﻿<!--<script src="http://yamav102.cocolog-nifty.com/jsMath/easy/load.js"></script>
+<script src="http://yamav102.cocolog-nifty.com/jsMath/jsMath.js"></script>-->
+<script src="../easy/load.js"></script>
+<script src="../jsMath.js"></script>
+<link rel="stylesheet" href="b.css" type="text/css">
+<div class="myArea">
+<noscript>
+「加法定理の証明」：このページの閲覧はJavaScriptが有効である必要があります。
+</noscript>
+<h1>TEST中… IEだけが表示崩れるの調整中…　　(ヽ´ω`)</h1>
+<p>
+このページの数式の表示には<a href="http://www.math.union.edu/~dpvc/jsMath/download/jsMath-fonts.html" target="_blank">
+<dfn>TeX</dfn>フォントのインストール</a>が必要です。
+数式の表示に時間がかかる場合があるかも知れません。
+</p>
+<h1>
+加法定理の証明
+</h1>
+
+<div class="iebm2" style="text-align: left; padding-left: 2em;">
+<a href="#sinp" style="text-decoration: none;"><span class="math">
+\sin(\alpha+\beta)=\sin\alpha\cos\beta+\cos\alpha\sin\beta</span></a></div>
+<div style="text-align: left; padding-left: 2em;">
+<a href="#sinm" style="text-decoration: none;"><span class="math">
+\sin(\alpha-\beta)=\sin\alpha\cos\beta-\cos\alpha\sin\beta</span></a></div>
+<div style="text-align: left; padding-left: 2em;">
+<a href="#cosp" style="text-decoration: none;"><span class="math">
+\cos(\alpha+\beta)=\cos\alpha\cos\beta-\sin\alpha\sin\beta</span></a></div>
+<div style="text-align: left; padding-left: 2em;">
+<a href="#cosm" style="text-decoration: none;"><span class="math">
+\cos(\alpha-\beta)=\cos\alpha\cos\beta+\sin\alpha\sin\beta</span></a></div>
+<div style="text-align: left; padding-left: 2em;">
+<a href="#tanp" style="text-decoration: none;"><span class="math">
+\tan(\alpha+\beta)={\tan\alpha+\tan\beta \over 1- \tan\alpha\tan\beta}</span></a>
+</div>
+<div style="text-align: left; padding-left: 2em;">
+<a href="#tanm" style="text-decoration: none;"><span class="math">
+\tan(\alpha-\beta)={\tan\alpha-\tan\beta \over 1+ \tan\alpha\tan\beta}</span></a>
+</div>
+<div style="text-align: left; padding-left: 2em; padding-top: 0.5em;">
+<h2>＜証明の補足＞</h2>
+</div>
+<div style="text-align: left; padding-left: 3em;">
+<a href="#sceqone" style="text-decoration: none;"><span class="math">\sin^2\theta+\cos^2\theta=1&nbsp; である証明</span></a>
+</div>
+<div style="text-align: left; padding-left: 3em; margin-top: 0.5em;">
+<a href="#yogen" style="text-decoration: none;">余弦定理の証明</a>
+</div>
+<div style="text-align: left; padding-left: 3em;">
+<a href="#cmeqcp" style="text-decoration: none;"><span class="math">\cos(-\beta)=\cos(\beta)</span>
+</a><a href="#cmeqcp" style="text-decoration: none;">
+<span class="math">、\sin(-\beta)=-\sin(\beta)&nbsp; である事の図説</span></a></div>
+<div style="text-align: left; padding-left: 3em; margin-top: 0.5em;">
+<a href="#coseqsin" style="text-decoration: none;"><span class="math">\cos(90^\circ-\theta)=\sin\theta&nbsp; である証明
+</span></a></div>
+
+<hr />
+<div class="hstyle">
+<h2 class="iebm" id="cosm">
+<span class="math">\cos(\alpha-\beta)=\cos\alpha\cos\beta+\sin\alpha\sin\beta 　の導出</span>
+</h2>
+</div>
+
+<p><img border="0" alt="単位円上の任意の点 、Ｐ、Ｑ" src="http://yamav102.cocolog-nifty.com/photos/uncategorized/2013/12/02/photo_3.gif" />
+
+
+ <br />
+</p>
+
+<p>単位円上の任意の点 、
+</p>
+<p>
+<span class="math">P(\cos\alpha,\sin\alpha)</span>
+、<span class="math">Q(\cos\beta,\sin\beta)</span></p>
+<p>
+について、三平方の定理から、</p>
+<div class="math" style="text-align: left; text-indent: 2em;">
+ PQ^2=(\cos\alpha-\cos\beta)^2+(\sin\alpha-\sin\beta)^2
+</div>
+<div style="text-align: left; text-indent: 7em; margin-bottom: 2em;">
+<span class="math">=<span class="bred">\cos^2\alpha</span> -2\cos\alpha\cos\beta + \cos^2\beta + <span class="bred">\sin^2\alpha</span> -2\sin\alpha\sin\beta +\sin^2\beta</span></div>
+<div style="text-align: left;">
+<a href="#sceqone" style="text-decoration: none;"><span class="math">
+\sin^2\theta+\cos^2\theta=1</span></a></div>
+<p>なので、</p>
+<div style="text-align: left; text-indent: 7em;">
+<span class="math" style="padding-right: 0.5em;">=2-2\cos\alpha\cos\beta-2\sin\alpha\sin\beta&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; …①</span>
+</div>
+<p class="ietm">
+また、<a href="#yogen">余弦定理</a>から、
+</p>
+<div class="math" style="text-align: left; text-indent: 2em;">
+ PQ^2=1^2+1^2-2\cos(\alpha-\beta)
+</div>
+<div style="text-align: left; text-indent: 7em;">
+<span class="math" style="padding-right: 0.5em;">=2-2\cos(\alpha-\beta)&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; …②</span>
+
+</div>
+<p class="ietm">
+① = ② なので、
+</p>
+<div class="math" style="text-align: left; text-indent: 2em;">
+2-2\cos\alpha\cos\beta-2\sin\alpha\sin\beta=2-2\cos(\alpha-\beta)
+</div>
+<p class="ietm">
+式を整理して、
+</p>
+<div class="math" style="text-align: left; text-indent: 2em;">
+\cos(\alpha-\beta)=\cos\alpha\cos\beta+\sin\alpha\sin\beta
+</div>
+<p class="ietm">
+を導出できる。
+</p>
+<div class="hstyle">
+<h2 class="iebm" id="cosp">
+<span class="math">\cos(\alpha+\beta)=\cos\alpha\cos\beta-\sin\alpha\sin\beta　の導出</span>
+</h2>
+</div>
+<div class="math" style="text-align: left; text-indent: 2em;">
+\cos(\alpha-\beta)=\cos\alpha\cos\beta+\sin\alpha\sin\beta
+</div>
+<p class="ietm">
+の、<strong>β</strong>を<strong> (-β)</strong> に置き換える。
+</p>
+<div class="math" style="text-align: left; text-indent: 2em;">
+\cos(\alpha-(-\beta))=\cos\alpha\cos(-\beta)+\sin\alpha\sin(-\beta)
+</div>
+
+<p class="ietm">
+<a href="#cmeqcp" style="text-decoration: none;"><strong>cos(-β) = cos(β)、sin(-β) = -sin(β)</strong></a> なので、公式、
+</p>
+<div class="math" style="text-align: left; text-indent: 2em;">
+\cos(\alpha+\beta)=\cos\alpha\cos\beta-\sin\alpha\sin\beta
+</div>
+<p class="ietm">
+を導出できる。
+</p>
+<h2 id="sinp">
+<span class="math">\sin(\alpha+\beta)=\sin\alpha\cos\beta+\cos\alpha\sin\beta　の導出
+</span></h2>
+
+<div class="math" style="text-align: left; text-indent: 2em;">
+\cos(\alpha-\beta)=\cos\alpha\cos\beta+\sin\alpha\sin\beta</div>
+<p class="ietm">
+の、<strong>α</strong>　を、<strong>(90°- α)</strong>　に置き換える。
+</p>
+<div class="math" style="text-align: left; text-indent: 2em;">
+\cos((90^\circ-\alpha)-\beta)=\cos(90^\circ-\alpha)\cos\beta+\sin(90^\circ-\alpha)\sin\beta
+</div>
+<p class="ietm">
+<a href="#coseqsin" style="text-decoration: none; text-indent: 1em;"><strong>
+cos(90° - θ) = sin θ</strong></a> なので、
+</p>
+<p>
+左辺、
+</p>
+<div class="math" style="text-align: left; text-indent: 2em;">
+\cos((90^\circ-\alpha)-\beta)=\cos(90^\circ-(\alpha+\beta)
+</div>
+<div class="ietmlm">
+<div class="math" style="text-align: left; text-indent: 7em;">
+=\sin(\alpha+\beta)
+</div>
+</div>
+<p>
+また、<a href="#sineqcos"><span class="math">\sin90^\circ-\theta=\cos\theta</span></a> なので、
+</p>
+<p>
+右辺、
+</p>
+<div class="math" style="text-align: left; text-indent: 2em;">
+\cos(90^\circ-\alpha)\cos\beta+\sin(90^\circ-\alpha)\sin\beta=\sin\alpha\cos\beta+\cos\alpha\sin\beta
+</div>
+<p>
+右辺 = 左辺で、
+</p>
+<div class="math" style="text-align: left; text-indent: 2em;">
+\sin(\alpha+\beta)=\sin\alpha\cos\beta+\cos\alpha\sin\beta
+</div>
+<p>
+を導出できる。
+</p>
+<div class="hstyle">
+<h2 id="sinm">
+<span class="math">\sin(\alpha-\beta)=\sin\alpha\cos\beta-\cos\alpha\sin\beta</span>　の導出
+</h2>
+</div>
+<p>
+<span class="math">\sin(\alpha+\beta)=\sin\alpha\cos\beta+\cos\alpha\sin\beta</span>
+ の、<span class="math">\beta</span>　を　<span class="math">(-\beta)</span>　に置き換える。
+</p>
+<div style="text-align: left; text-indent: 6.3em;">
+<span class="math">\sin(\alpha+(-\beta))=\sin\alpha\cos(-\beta)+\cos\alpha\sin(-\beta)</span>
+</div>
+<p>
+<a href="#smeqsm"><span class="math">\sin(-\beta)=-\sin(\beta)</span></a>、
+<a href="#cmeqcp"><span class="math">\cos(-\beta)=\cos(\beta)</span></a>　なので、公式、
+</p>
+<div class="math" style="text-align: left; text-indent: 2em;">
+\sin(\alpha-\beta)=\sin\alpha\cos\beta-\cos\alpha\sin\beta
+</div>
+<p>
+を導出できる。
+</p>
+<div class="hstyle">
+<h2 id="tanp">
+<span class="math">\tan(\alpha+\beta)=\frac{\tan\alpha+\tan\beta}{1-\tan\alpha\tan\beta}</span>　の導出
+</h2>
+</div>
+<div style="text-align: left; text-indent: 2em;"><span class="math">
+\tan(\alpha+\beta)=\frac{\sin(\alpha+\beta)}{\cos(\alpha+\beta)}
+</span>　より、
+</div>
+<div style="text-align: left; text-indent: 2em;"><span class="math">
+\tan(\alpha+\beta)=\frac{\sin\alpha\cos\beta+\cos\alpha\sin\beta}{\cos\alpha\cos\beta-\sin\alpha\sin\beta}
+</span>
+</div>
+<p>
+分子・分母を　<span class="math">\cos\alpha\cos\beta</span>　で割る。
+</p>
+<div class="math" style="text-align: left; text-indent: 2em;">
+\tan(\alpha+\beta)=\frac{\frac{\sin\alpha\cos\beta}{\cos\alpha\cos\beta}+\frac{\cos\alpha\sin\beta}{\cos\alpha\cos\beta}}
+{\frac{\cos\alpha\cos\beta}{\cos\alpha\cos\beta}-\frac{\sin\alpha\sin\beta}{\cos\alpha\cos\beta}}
+</div>
+<p>
+式を整理して、公式、
+</p>
+<div class="math" style="text-align: left; text-indent: 2em;">
+\tan(\alpha+\beta)={\tan\alpha+\tan\beta \over 1- \tan\alpha\tan\beta}
+</div>
+<p>
+を導出できる。
+</p>
+<div class="hstyle">
+<h2 id="tanm">
+<span class="math">\tan(\alpha-\beta)=\frac{\tan\alpha-\tan\beta}{1+\tan\alpha\tan\beta}</span>　の導出
+</h2>
+</div>
+<div style="text-align: left; text-indent: 2em;"><span class="math">
+\tan(\alpha-\beta)=\frac{\sin(\alpha-\beta)}{\cos(\alpha-\beta)}
+</span>　より、
+</div>
+<div style="text-align: left; text-indent: 2em;"><span class="math">
+\tan(\alpha-\beta)=\frac{\sin\alpha\cos\beta-\cos\alpha\sin\beta}{\cos\alpha\cos\beta+\sin\alpha\sin\beta}
+</span>
+</div>
+<p>
+分子・分母を　<span class="math">\cos\alpha\cos\beta</span>　で割る。
+</p>
+<div class="math" style="text-align: left; text-indent: 2em;">
+\tan(\alpha-\beta)=\frac{\frac{\sin\alpha\cos\beta}{\cos\alpha\cos\beta}-\frac{\cos\alpha\sin\beta}{\cos\alpha\cos\beta}}
+{\frac{\cos\alpha\cos\beta}{\cos\alpha\cos\beta}+\frac{\sin\alpha\sin\beta}{\cos\alpha\cos\beta}}
+</div>
+<p>
+式を整理して、公式、
+</p>
+<div class="math" style="text-align: left; text-indent: 2em;">
+\tan(\alpha-\beta)={\tan\alpha-\tan\beta \over 1+\tan\alpha\tan\beta}
+</div>
+<p>
+を導出できる。
+</p>
+
+<hr />
+<div class="hstyle">
+<h2>
+＜証明の補足＞
+</h2>
+</div>
+<div class="hstyle">
+<h3 id="sceqone">
+<span class="math">\sin^2\theta+\cos^2\theta=1</span>　の証明
+</h3>
+</div>
+<p><img border="0" alt="Abc" title="Abc" src="http://yamav102.cocolog-nifty.com/photos/uncategorized/2013/12/03/abc.gif" />
+
+
+ <br />
+</p>
+
+<p>直角三角形ABCにおいて、
+</p>
+<div class="math" style="text-align: left; text-indent: 2em;">
+\sin\theta=\frac{a}{b}
+</div>
+<div class="math" style="text-align: left; text-indent: 2em;">
+\cos\theta=\frac{c}{b}
+</div>
+<p style="text-align: left; text-indent: 2em;">∴</p>
+<div class="math" style="text-align: left; text-indent: 2em;">
+<span class="math">\sin^2\theta+\cos^2\theta=\frac{a^2}{b^2}+\frac{c^2}{b^2}</span>
+</div>
+<div class="math" style="text-align: left; text-indent: 9em;">
+=\frac{a^2+c^2}{b^2}
+</div>
+<p>
+三平方の定理 より、
+</p>
+<div style="text-align: left; text-indent: 2em;">
+<span class="math">\sin^2\theta+\cos^2\theta=1</span> を導く事が出来る。（証明おわり）
+</div>
+<div class="hstyle">
+<h3 id="yogen">余弦定理の証明</h3></div>
+
+<p>三平方の定理では直角三角形の三角比を求める事が出来るが、
+余弦定理を使うと、三角形一般の２辺と、その２辺に挟まれる角度から残る一辺の長さが求まる。</p> △ABCにおいて以下の関係式が成り立つ。
+
+<div class="math" style="text-align: left; text-indent: 2em;">
+a^2=b^2+c^2-2bc\cdot\cos A
+</div>
+<div class="math" style="text-align: left; text-indent: 2em;">
+b^2=a^2+c^2-2ac\cdot\cos B
+</div>
+<div class="math" style="text-align: left; text-indent: 2em;">
+c^2=a^2+b^2-2ab\cdot\cos C
+</div>
+<p>∠Aの角度と∠Aを挟む辺 b、cの長さが判っている場合の証明</p>
+
+<p><img border="0" src="http://yamav102.cocolog-nifty.com/photos/uncategorized/2013/12/03/photo_2.gif" title="Photo_2" alt="Photo_2" /></p>
+<p>
+△ABCについて、
+</p>
+<div class="math" style="text-align: left; text-indent: 2em;">
+<span class="math">
+a^2=b^2\cdot\sin^2 A+(c-b\cdot\cos A)^2
+</span>
+</div>
+<div class="math" style="text-align: left; text-indent: 2.7em;">
+<span class="math">
+=b^2\cdot\sin^2 A+c^2-2\cdot c\cdot b\cos A+b^2\cos^2 A
+</span>
+</div>
+<div class="math" style="text-align: left; text-indent: 2.7em;">
+<span class="math">
+=b^2(\sin^2 A+\cos^2 A)+c^2-2cb\cdot\cos A
+</span>
+</div>
+<div class="math" style="text-align: left; text-indent: 2.7em;">
+<span class="math">
+=b^2+c^2-2cb\cdot\cos A
+</span>
+</div>
+<p>
+∴ 以下の式は成り立つ。
+</p>
+<div class="math" style="text-align: left; text-indent: 2em;">
+a^2=b^2+c^2-2bc\cdot\cos A</div>
+<p>
+∠b、∠cについても同じ事が言えるので、
+</p>
+<div class="math" style="text-align: left; text-indent: 2em;">
+b^2=a^2+c^2-2ac\cdot\cos B
+</div>
+<div class="math" style="text-align: left; text-indent: 2em;">
+c^2=a^2+b^2-2ab\cdot\cos C
+</div>
+<p>
+上記２つの式も成り立つ。（証明おわり）
+</p>
+<p>
+因みに、∠Aが90度の時 cosA = 0 になり、余弦定理の中に三平方の定理が現れる。 </p>
+
+<p><img border="0" src="http://yamav102.cocolog-nifty.com/photos/uncategorized/2013/12/03/photo_3.gif" title="Photo_3" alt="Photo_3" />
+
+
+</p>
+<div class="hstyle">
+<h3 id="cmeqcp">
+<span class="math">\cos(-\beta)=\cos(\beta)
+、\sin(-\beta)=-\sin(\beta)</span>　である事の図説
+</h3>
+</div>
+<div><img border="0" src="http://yamav102.cocolog-nifty.com/photos/uncategorized/2013/12/02/cossin_2.gif" title="Cossin_2" alt="Cossin_2" />
+
+
+ <br />
+</div>
+
+<div class="hstyle">
+<h3 id="coseqsin">
+<span class="math">\cos(90^\circ-\theta)=\sin\theta</span>　の証明
+</h3>
+</div>
+<p><img border="0" src="http://yamav102.cocolog-nifty.com/photos/uncategorized/2013/12/03/2.png" title="2" alt="2" />
+
+
+<br />
+</p>
+
+<p>図より、直角三角形ABCにおいて以下の関係式が成り立つ。
+</p>
+<div class="math" style="text-align: left;">
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; \sin A=\frac{CB}{AC}=\cos C=\sin (90^\circ - C)
+</div>
+<div class="math" style="text-align: left;">
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; \cos A=\frac{AB}{AC}=\sin C=\cos (90^\circ - C)
+</div>
+<div class="math" style="text-align: left;">
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; \tan A=\frac{CB}{AB}=\frac{1}{\tan C}
+</div>
+<div class="math" style="text-align: left;">
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; \tan C=\frac{AB}{CB}=\frac{1}{\tan A}
+</div>
+<p>
+<span class="math">
+\cos A=\frac{AB}{AC}=\sin C=\cos (90^\circ - C)
+</span> より、
+<span class="math">\cos(90^\circ-\theta)=\sin\theta</span>　式は
+成り立つ。
+</p>
+<p>（証明おわり）</p>
+<p style="margin-top: 2em;">
+以上
+</p>
+</div>
+<div>
+<p>
+参考：<a href="http://kimball.blog.so-net.ne.jp/2007-12-08-1" target="_blank">
+ｊｓＭａｔｈでＢＬＯＧに数式を入力できますぞぃ！！＼(^o^)／
+</a>
+</p>
+</div>
+
+
+<p><script type="text/javascript">
+
+      if(window.navigator.appName=='Microsoft Internet Explorer'){
+          alert(window.navigator.appName);
+          var bmlist = document.getElementsByClassName('iebm');
+          for(var i = 0; i < bmlist.length; i++){
+            bmlist.item(i).style.marginBottom='2.5em';
+
+          }
+          var bmlist2 = document.getElementsByClassName('iebm2');
+          for(var i = 0; i < bmlist2.length; i++){
+            bmlist2.item(i).style.marginBottom='-1em';
+
+          }
+          var tmlist = document.getElementsByClassName('ietm');
+          for(var i = 0; i < tmlist.length; i++){
+            tmlist.item(i).style.marginTop='2.5em';
+
+          }
+          var tplist = document.getElementsByClassName('ietp');
+          for(var i = 0; i < tplist.length; i++){
+            tplist.item(i).style.paddingTop='-20px';
+
+          }
+          var ndlist = document.getElementsByClassName('iend');
+          for(var i = 0; i < ndlist.length; i++){
+            ndlist.item(i).style.textDecoration='none';
+
+          }
+
+          var tmlmlist = document.getElementsByClassName('ietmlm');
+          for(var i = 0; i < tmlmlist.length; i++){
+            tmlmlist.item(i).style.marginTop='2.5em';
+            tmlmlist.item(i).style.marginLeft='7em';
+          }
+      }
+/*           
+      var hstylelist = document.getElementsByClassName('hstyle');
+      for(var i = 0; i < hstylelist.length; i++){
+      hstylelist.item(i).style.color='royalblue';
+      hstylelist.item(i).style.backgroundColor='oldlace';
+      hstylelist.item(i).style.padding='3px';
+      hstylelist.item(i).style.borderBottom = "solid 1px royalblue"; 
+      hstylelist.item(i).style.marginTop = ".4em"; 
+      hstylelist.item(i).style.marginBottom = ".7em"; 
+      } 
+*/
+/* だめ。onload の class=math に上書きされてしまう
+      var bredlist =document.getElementsByClassName('bred'); 
+      for(var i = 0; i < bredlist.length; i++){
+      bredlist.item(i).style.backgroundColor='pink';
+      } 
+*/
+</script>
+</p>

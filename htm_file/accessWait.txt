@@ -1,0 +1,34 @@
+Option Explicit
+'指定時間 Wait する。
+'例:1.5秒待つ⇒　Call SecWait(1.5)
+Sub SecWait(Sec As Single)
+    
+    'Timer関数返り値の最大値 24!*60!*60!
+    Const TimerMax As Single = 86400!
+
+    If Sec < 0 Then
+        Err.Raise 513, , "負の時間が指定されました"
+    End If
+    If Sec >= TimerMax Then
+        Err.Raise 514, , "24時間以上を指定する事はできません"
+    End If
+
+    Dim releaseTime As Single
+    Dim startTime As Single
+    
+    startTime = Timer()
+    releaseTime = Sec + startTime
+    
+    '実行中に日をまたいでしまった場合の処理
+    If releaseTime >= TimerMax Then
+        releaseTime = releaseTime - TimerMax
+       
+        Do
+          'Timer関数が0に戻るまで待機
+        Loop Until Timer() < 1
+    End If
+    
+    Do
+        '何もしないループ
+    Loop Until releaseTime < Timer()
+End Sub

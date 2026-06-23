@@ -1,0 +1,107 @@
+<html>
+<head>
+<title>MsDosめも</title>
+<meta http-equiv="content-type" content="text/html; charset=shift_jis">
+<script language="javascript">
+function sortRecord() {
+var sortField = form1.sort_field.value
+var sortOrder = form1.sort_order.value
+tdcdata.Sort = sortOrder + sortField
+tdcdata.Reset()
+}
+var totalNum
+function setNum(){
+	totalNum=tdcdata.recordset.recordcount
+	window.status = totalNum + "/" + totalNum
+}
+function checkRecord()	{
+	window.status = tdcdata.recordset.recordcount + "/" + totalNum;
+	return false;
+}
+function checkbikou()	{
+	tdcdata.object.filter="bikou=*不可*"
+	tdcdata.reset()
+	checkRecord()
+}
+function setDefault()	{
+	tdcdata.object.filter=''
+	tdcdata.reset()
+	checkRecord()
+}
+function chfilter(){
+	var cond = form2.input1.value
+	if(cond !="")	{
+		tdcdata.object.filter = "command=*" + cond + "*|explanation=*" + cond + "*"
+		tdcdata.reset();
+	}
+}
+function emptyFilter()	{
+		tdcdata.object.filter = ""
+		tdcdata.reset()
+}
+
+</script>
+<style type="text/css">
+<!--
+
+body{background-color:black;
+color:#fff;
+margin:0px 100px 20px 100px;}
+td{padding:10px;}
+-->
+
+</style>
+
+</head>
+
+<body onload="setNum()">
+<!-データベース用オブジェクトの指定-->
+
+<object id="tdcdata" classid="clsid:333c7bc4-460f-11d0-bc04-0080c7055a83">
+<param name="dataurl" value="msdos.csv">
+<param name="useheader" value="true">
+<param name="TextQualifier" value="'">
+</object>
+<a href="./card.htm" target=_top style="float:right;">カード表示</a><br style="clear:both">
+
+<form id="form1" onsubmit="return false">
+<select id="sort_field" onchange="sortRecord()">
+<option value="command">コマンド
+<option value="explanation">説明
+</select>
+
+<select id="sort_order" style="font-size:10pt" onchange="sortRecord()">
+<option value="+" selected>昇順
+<option value="-">降順
+</select>
+</form><h1>msdosメモ</h1>
+
+<form onsubmit="chfilter();return checkRecord();">
+<input type="button" onclick="table1.previousPage()" value="前のページ">
+<input type="button" onclick="table1.nextPage()" value="次のページ">
+<input type="button" value="プロンプト上で実行不可のもの" onclick="tdcdata.object.filter='bikou=*不可*';tdcdata.reset();checkbikou();">
+</form>
+<form id="form2" style="font-family:Comic sans MS,Arial" onsubmit="chfilter();return checkRecord();">
+<input type="text" size="25" id="input1">が含まれるレコードを
+<input type="submit" value="絞り込む">
+<input type="button" value="解除" onclick="emptyFilter()">
+</form>
+
+<table id="table1" datasrc="#tdcdata" border="1" datapagesize="5">
+<thead>
+<tr>
+<th>コマンド<br>使用例<br>トピック</th>
+<th>説明</th>
+<th>プロンプト上での実行</th>
+</thead>
+<tbody>
+<tr>
+<td><span datafld="command"></span></td>
+<td><span datafld="explanation"></span></td>
+<td><span datafld="bikou"></span></td>
+</tr>
+</tbody>
+</table>
+
+</body>
+</html>

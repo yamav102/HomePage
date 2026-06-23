@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<meta name="GENERATOR" content="IBM WebSphere Studio Homepage Builder Version 6.5.0.0 for Windows">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<TITLE>BGM SELECT</TITLE>
+</HEAD>
+<BODY bgcolor="#00ffff">
+
+
+
+
+
+
+
+
+<div id="rr32d" style="position:absolute;top:0px;left:0px;width:1px;height:1px;"></div>
+<script language="JavaScript"><!--
+rr32html='<form name="rr32f"><select name="rr32s" onchange="rr32ch();"><option>';
+rr32html+='ＢＧＭ選択';
+D=document;rr32i=0;
+rr32data=new Array(
+'key the metal idol','key2.mp3',
+'ピアノ協奏曲第一番第一楽章','Emo_Pcon1_wpf1 (1).mid',
+'ピアノ協奏曲第一番第二楽章','Emo_Pcon1_wpf2.mid',
+'ピアノ協奏曲第一番第三楽章','Emo_Pcon1_wpf3.mid',
+'ファンファーレ・フォー・ザ・コモンマン','fanfare.mp3',
+'end');
+for(rr32i=0;rr32i<((rr32data.length-1)/2);rr32i++){
+ rr32html+='<option>'+rr32data[rr32i*2];}
+rr32html+='</select></form>';D.write(rr32html);
+function rr32ch(){
+ if(D.rr32f.rr32s.selectedIndex!=0){
+  rr32html='<embed src="'+rr32data[D.rr32f.rr32s.selectedIndex*2-1];
+  rr32html+='" autostart=true hidden=true loop=true REPEAT=true>';
+ }else{rr32html='';}
+ if(D.layers){with(D.layers['rr32d'].document){open();write(rr32html);close();}}
+ if(D.all){D.all('rr32d').innerHTML=rr32html;}};
+--></script>
+<TABLE width="245" bgcolor="#009999">
+  <COL span="1" width="1">
+  <COL span="1" width="1">
+  <TBODY>
+    <TR>
+      <TD align="center" width="46" height="40"><img src="gazou/otokonoko.gif" width="50" height="56" border="0" align="middle"></TD>
+      <TD height="40" width="179"><MARQUEE direction="UP" loop="0" scrollamount="1" scrollderai="200" height="30"> 
+曲を止めるには<br>
+      窓をとじてください<br>midiデータは<br><A href="http://www003.upp.so-net.ne.jp/furunovsky/index.html" target="_blank">Фуруновский</A><br>
+さんより提供され<br>ています</MARQUEE></TD>
+    </TR>
+  </TBODY>
+</TABLE>
+</BODY>
+</HTML>

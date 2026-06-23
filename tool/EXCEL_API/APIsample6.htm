@@ -1,0 +1,1141 @@
+<html lang="Ja">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html401/strict.dtd">
+<meta http-equiv="Content-Type" content="text/html,charset=shift_jis">
+<!--        <meta http-equiv="Content-Type" 
+            content="text/html; charset=iso-2022-jp"> -->
+<meta name="description" content="Win32API">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta name="robots" content="noindex,nofollow">
+
+<link rel="stylesheet" type="text/css" href="./vb.css">
+<title>Win32APIサンプル_6</title>
+
+<body>
+<div class="content">
+
+<h1>■Win32APIサンプル６</h1>
+
+<table id="hanrei">
+<tr>
+<td class="tdApi">API関数宣言</td>
+<td class="tdConst">定数宣言・構造体</td>
+<td class="tdProc">プロシージャのサンプル</td>
+</tr>
+</table>
+<h2>コントロールメニューを無効／ 有効にする</h2>
+<pre class="codeApi"><pre class="codeConst"><span class="REM">
+'▼スタイルを取得する定数
+'ウィンドウプロシージャのアドレス､またはそれを示すハンドルを取得する</span>
+ Const GWL_WNDPROC = -4&
+<span class="REM">'アプリケーションのインスタンスハンドルを取得する</span>
+ Const GWL_HINSTANCE = -6&
+<span class="REM">'親アプリケーションのインスタンスハンドルを取得する</span>
+ Const GWL_HWNDPARENT = -8&
+<span class="REM">'ウィンドウのIDを取得する</span>
+ Const GWL_ID = -12&
+<span class="REM">'ウィンドウスタイルを取得する</span>
+ Const GWL_STYLE = -16&
+<span class="REM">'拡張ウィンドウスタイルを取得する</span>
+ Const GWL_EXSTYLE = -20&
+<span class="REM">'ウィンドウに関連付けられたアプリケーション定義の32ビット値を取得する</span>
+ Const GWL_USERDATA = -21&
+
+
+<span class="REM">'▼ウィンドウスタイル
+'スタイルを持つオーバラップウィンドウ</span>
+ Const WS_OVERLAPPED = &H0&
+<span class="REM">'ポップアップウィンドウ</span>
+ Const WS_POPUP = &H80000000
+<span class="REM">'子ウィンドウ</span>
+ Const WS_CHILD = &H40000000
+<span class="REM">'最小化されたウィンドウ</span>
+ Const WS_MINIMIZE = &H20000000
+<span class="REM">'可視のウィンドウ</span>
+ Const WS_VISIBLE = &H10000000
+<span class="REM">'使用禁止のウィンドウ</span>
+ Const WS_DISABLED = &H8000000
+<span class="REM">'互いに関連する兄弟ウィンドウをクリップ</span>
+ Const WS_CLIPSIBLINGS = &H4000000
+<span class="REM">'子ウィンドウが占める領域を除外</span>
+ Const WS_CLIPCHILDREN = &H2000000
+<span class="REM">'最大表示されたウィンドウ</span>
+ Const WS_MAXIMIZE = &H1000000
+<span class="REM">'タイトルバーを持つウィンドウ</span>
+ Const WS_CAPTION = &HC00000
+<span class="REM">'境界を持つウィンドウ</span>
+ Const WS_BORDER = &H800000
+<span class="REM">'二重境界を持ちタイトルを持たないウィンドウ</span>
+ Const WS_DLGFRAME = &H400000
+<span class="REM">'垂直スクロールバーを持つウィンドウ</span>
+ Const WS_VSCROLL = &H200000
+<span class="REM">'水平スクロールバーを持つウィンドウ</span>
+ Const WS_HSCROLL = &H100000
+<span class="REM">'タイトルバーにコントロールメニューボックスを持つウィンドウ</span>
+ Const WS_SYSMENU = &H80000
+<span class="REM">'ウィンドウのサイズ変更に使える太い枠を持つウィンドウ</span>
+ Const WS_THICKFRAME = &H40000
+<span class="REM">'方向キーで次のコントロールに移動できるコントロールグループの最初のコントロール</span>
+ Const WS_GROUP = &H20000
+<span class="REM">'Tabキーを使って移動できるコントロール</span>
+ Const WS_TABSTOP = &H10000
+
+<span class="REM">'最小化ボタンを持つウィンドウ</span>
+ Const WS_MINIMIZEBOX = &H20000
+<span class="REM">'最大表示ボタンを持つウィンドウ</span>
+ Const WS_MAXIMIZEBOX = &H10000
+
+ Const WS_TILED = WS_OVERLAPPED
+ Const WS_ICONIC = WS_MINIMIZE
+ Const WS_SIZEBOX = WS_THICKFRAME
+ Const WS_OVERLAPPEDWINDOW = _
+    (WS_OVERLAPPED Or WS_CAPTION Or WS_SYSMENU Or WS_THICKFRAME _
+    Or WS_MINIMIZEBOX Or WS_MAXIMIZEBOX)
+    
+ Const WS_TILEDWINDOW = WS_OVERLAPPEDWINDOW
+
+ Const WS_POPUPWINDOW = (WS_POPUP Or WS_BORDER Or WS_SYSMENU)
+
+ Const WS_CHILDWINDOW = (WS_CHILD)
+
+<span class="REM">'拡張ウィンドウスタイル
+'タイトルバーを持ち(オプション)二重境界を持つウィンドウ</span>
+ Const WS_EX_DLGMODALFRAME = &H1&
+<span class="REM">'子ウィンドウが作成または破棄されたときに、
+'親ウィンドウにWM_PARENTNOTIFYメッセージを送らない</span>
+ Const WS_EX_NOPARENTNOTIFY = &H4&
+<span class="REM">'すべてのトップレベルでないウィンドウの上に配置</span>
+ Const WS_EX_TOPMOST = &H8&
+<span class="REM">'ドラッグ＆ドロップされたファイルを受け入れる</span>
+ Const WS_EX_ACCEPTFILES = &H10&
+<span class="REM">'透過状態になる</span>
+ Const WS_EX_TRANSPARENT = &H20&</pre>
+
+<span class="REM"><a name="GetWindowLong"></a>'----------------------------------------------
+'ウィンドウに関する情報を取得する関数
+'
+'戻り値     成功 = 要求したデータ(32ビット値)
+'           失敗 = 0
+'----------------------------------------------</span>
+Declare Function GetWindowLong Lib "user32" _
+    Alias "GetWindowLongA" _
+    (ByVal hwnd As Long, _
+    ByVal nIndex As Long) As Long
+
+
+<span class="REM"><a name="SetWindowLong"></a>'----------------------------------------------
+'ウィンドウの属性を変更する関数
+'
+'戻り値     成功 = 変更前の値
+'           失敗 = 0
+'----------------------------------------------</span>
+Declare Function SetWindowLong Lib "user32" _
+    Alias "SetWindowLongA" _
+    (ByVal hwnd As Long, _
+    ByVal nIndex As Long, _
+    ByVal dwNewLong As Long) As Long
+    
+    
+<span class="REM"><a name="DrawMenuBar"></a>'----------------------------------------------
+'ウィンドウのメニューバーを再描画する関数
+'
+'戻り値     成功 = 0以外
+'           失敗 = 0
+'----------------------------------------------</span>
+Declare Function DrawMenuBar Lib "user32" _
+    (ByVal hwnd As Long) As Long
+
+</pre>
+
+
+<pre class="codeProc"><a name="SetWindowLong_Sample"></a><span class="REM">'summary:コントロールメニューを無効にする</span>
+Sub SetWindowLong_Sample()
+    Dim hwnd As Long
+    Dim lngNewLong As Long
+    Dim rc As Long
+    
+    Dim strClassName As String  <span class="REM">'クラス名</span>
+    
+    MsgBox _
+        "タイトルバーの［コントロールメニュー］ボックス、" & _
+        "［閉じる］［最大化］［最小化］ボタンを無効にします" & vbCr & _
+        "有効にするときには「SetWindowLong_Sample2」を実行してください"
+
+    <span class="REM">'Excelのクラス名を指定</span>
+    strClassName = "XLMAIN"
+    
+    <span class="REM">'ウィンドウのハンドルを取得</span>
+    hwnd = FindWindow(strClassName, _
+                    Application.Caption)
+    <span class="REM">'Excel2002の場合は　変数=Application.Hwnd　でもよい</span>
+    
+    <span class="REM">'ウィンドウに関する情報を取得</span>
+    lngNewLong = GetWindowLong(hwnd, _
+                            GWL_STYLE)
+    
+    <span class="REM">'ウィンドウの属性を変更</span>
+    rc = SetWindowLong(hwnd, _
+                    GWL_STYLE, _
+                    lngNewLong And (Not WS_SYSMENU))
+    
+    <span class="REM">'ウィンドウのメニューバーを再描画</span>
+    rc = DrawMenuBar(hwnd)
+End Sub</pre>
+
+<pre class="codeProc"><span class="REM"><a name="SetWindowLong_Sample2"></a>'コントロールメニューを有効にする</span>
+Sub SetWindowLong_Sample2()
+    Dim hwnd As Long
+    Dim lngNewLong As Long
+    Dim rc As Long
+    
+    Dim strClassName As String  <span class="REM">'クラス名</span>
+    
+    MsgBox "タイトルバーのコントロールメニューを有効にします"
+    
+    <span class="REM">'Excelのクラス名を指定</span>
+    strClassName = "XLMAIN"
+    
+    <span class="REM">'ウィンドウのハンドルを取得</span>
+    hwnd = FindWindow(strClassName, _
+                    Application.Caption)
+    <span class="REM">'Excel2002の場合は　変数=Application.Hwnd　でもよい
+    
+    'ウィンドウに関する情報を取得</span>
+    lngNewLong = GetWindowLong(hwnd, _
+                            GWL_STYLE)
+                            
+    <span class="REM">'ウィンドウの属性を変更</span>
+    rc = SetWindowLong(hwnd, _
+                    GWL_STYLE, _
+                    lngNewLong Or WS_SYSMENU)
+    
+    <span class="REM">'ウィンドウのメニューバーを再描画</span>
+    rc = DrawMenuBar(hwnd)
+End Sub</pre>
+<table border="1">
+<caption>▼ウィンドウスタイルの値とその内容</caption>
+<tr>
+<th>定数</th><th>値</th><th>内容</th>
+</tr>
+<tr>
+<td>WS_BORDER</td><td>&H800000</td><td>境界を持つウィンドウを作成する</td>
+</tr>
+<tr>
+<td>WS_CAPTION</td><td>&HC00000</td><td>タイトルバーを持つウィンドウを作成する（暗黙にWS_BORDER スタイルを持つ）。WS_DLGFRAMEスタイルと一緒に使うことはできない</td>
+</tr>
+<tr>
+<td>WS_CHILD</td><td>&H40000000</td><td>子ウィンドウを作成する。WS_POPUP スタイルと一緒に使うことはできない</td>
+</tr>
+<tr>
+<td>WS_CLIPCHILDREN</td><td>&H2000000</td><td>親ウィンドウの内部で描画するときに子ウィンドウが占める領域を除外する。親ウィンドウを作成するときに使う</td>
+</tr>
+<tr>
+<td>WS_CLIPSIBLINGS</td><td>&H4000000</td><td>互いに関連する兄弟ウィンドウをクリップする。つまり、ある特定の兄弟ウィンドウが描画メッセージを受け取ったときに、WS_CLIPSIBLINGS スタイルは更新される兄弟ウィンドウの領域からオーバラップするほかのすべての兄弟ウィンドウをクリップする（WS_CLIPSIBLINGS を指定しないで兄弟ウィンドウがオーバラップしていると、隣の兄弟ウィンドウのクライアント領域内を描画できるようになる）。必ずWS_CHILD スタイルと一緒に使う</td>
+</tr>
+<tr>
+<td>WS_DISABLED</td><td>&H8000000</td><td>初期状態で使用禁止のウィンドウを作成する</td>
+</tr>
+<tr>
+<td>WS_DLGFRAME</td><td>&H400000</td><td>二重境界を持ちタイトルを持たないウィンドウを作成する</td>
+</tr>
+<tr>
+<td>WS_GROUP</td><td>&H20000</td><td>ユーザーが方向キーを使って次のコントロールに移動できるコントロールグループの最初のコントロールを指定する。最初のコントロールの後でWS_GROUP スタイルをFALSE と指定して定義したコントロールはすべて同じグループに属す。次のWS_GROUP スタイルを持つコントロールは次のグループを開始する（つまり、次のグループの始まりが前のグループの終わりになる）</td>
+</tr>
+<tr>
+<td>WS_HSCROLL</td><td>&H100000</td><td>水平スクロールバーを持つウィンドウを作成する</td>
+</tr>
+<tr>
+<td>WS_MAXIMIZE</td><td>&H1000000</td><td>最大表示されたウィンドウを作成する</td>
+</tr>
+<tr>
+<td>WS_MAXIMIZEBOX</td><td>&H10000</td><td>最大表示ボタンを持つウィンドウを作成する</td>
+</tr>
+<tr>
+<td>WS_MINIMIZE</td><td>&H2000000</td><td>初期状態でアイコン化されたウィンドウを作成する。必ずWS_OVERLAPPED スタイルと一緒に使う</td>
+</tr>
+<tr>
+<td>WS_MINIMIZEBOX</td><td>&H20000</td><td>アイコン化ボタンを持つウィンドウを作成する</td>
+</tr>
+<tr>
+<td>WS_OVERLAPPED<br>WS_OVERLAPPEDWINDOW</td><td>&H0&</td><td>オーバラップウィンドウを作成する。オーバラップウィンドウは通常キャプションと境界を持つ
+	WS_OVERLAPPED 、WS_CAPTION 、
+	WS_SYSMENU 、WS_THICKFRAME 、
+	WS_MINIMIZEBOX、WS_MAXIMIZEBOX スタイルを持つオーバラップウィンドウを作成する</td>
+</tr>
+<tr>
+<td>WS_POPUP</td><td>&H80000000</td><td>ポップアップウィンドウを作成する。WS_CHILD スタイルと一緒に使うことはできない</td>
+</tr>
+<tr>
+<td>WS_POPUPWINDOW</td><td>&nbsp;</td><td>WS_BORDER、WS_POPUP、WS_SYSMENU スタイルを持つポップアップウィンドウを作成する。コントロールメニューを可視にするにはWS_CAPTION スタイルとWS_POPUPWINDOWを組み合わせなければならない</td>
+</tr>
+<tr>
+<td>WS_SYSMENU</td><td>&H80000</td><td>タイトルバーにコントロールメニューボックスを持つウィンドウを作成する。タイトルバーを持つウィンドウにだけ使う</td>
+</tr>
+<tr>
+<td>WS_TABSTOP</td><td>&H10000</td><td>ユーザーがTab キーを使って移動できるコントロールの1 つであることを指定する。ユーザーがTab キーを押すと次にWS_TABSTOP スタイルを持つコントロールに移動できる</td>
+</tr>
+<tr>
+<td>WS_THICKFRAME</td><td>&H40000</td><td>ウィンドウのサイズ変更に使うことができる、太い枠を持つウィンドウを作成する</td>
+</tr>
+<tr>
+<td>WS_VISIBLE</td><td>&H10000000</td><td>初期状態で可視のウィンドウを作成するWS_VSCROLL &H200000 垂直スクロールバーを持つウィンドウを作成する</td>
+</tr>
+</table>
+
+<table border="1">
+<caption>▼拡張ウィンドウスタイルの値とその内容</caption>
+<tr>
+<th>定数</th><th>値</th><th>内容</th>
+</tr>
+<tr>
+<td>WS_EX_ACCEPTFILES</td><td>&H10&</td><td>このスタイルを使って作成されたウィンドウは、ドラッグ＆ドロップされたファイルを受け入れることを指定する</td>
+</tr>
+<tr>
+<td>WS_EX_CLIENTEDGE</td><td>&H200&</td><td>ウィンドウの境界の縁を3D で見えるように指定する</td>
+</tr>
+<tr>
+<td>WS_EX_CONTEXTHELP</td><td>&H400&</td><td>ウィンドウのタイトルバーに疑問符(?)を付加する。疑問符をクリックしたとき、カーソルのポインタは疑問符に変わる。子ウィンドウがクリックされたとき、子ウィンドウはWM_HELP メッセージを受け取る</td>
+</tr>
+<tr>
+<td>WS_EX_CONTROLPARENT</td><td>&H10000&</td><td>Tab キーによるウィンドウ間の移動を許す</td>
+</tr>
+<tr>
+<td>WS_EX_DLGMODALFRAME</td><td>&H1&</td><td>引数dwStyle にWS_CAPTION スタイルフラグを指定することによりタイトルバーを持ち（オプション）、二重境界を持つウィンドウを指定する</td>
+</tr>
+<tr>
+<td>WS_EX_LEFT</td><td>&H0&</td><td>ウィンドウに一般的な左揃えプロパティを与える。これはデフォルトとなる</td>
+</tr>
+<tr>
+<td>WS_EX_LEFTSCROLLBAR</td><td>&H4000&</td><td>垂直スクロールバーをクライアント領域の左に置く</td>
+</tr>
+<tr>
+<td>WS_EX_LTRREADING</td><td>&H0&</td><td>左から右へのリーディングオーダープロパティを使ったウィンドウテキストを表示する。デフォルト値</td>
+</tr>
+<tr>
+<td>WS_EX_MDICHILD</td><td>&H40&</td><td>MDI 子ウィンドウを作成する</td>
+</tr>
+<tr>
+<td>WS_EX_NOPARENTNOTIFY</td><td>&H4&</td><td>このスタイルを指定して作成された子ウィンドウは、子ウィンドウが作成または破棄されたときに親ウィンドウにWM_PARENTNOTIFY メッセージを送らないことを指定する</td>
+</tr>
+<tr>
+<td>WS_EX_OVERLAPPEDWINDOW</td><td>&nbsp;</td><td>WS_EX_CLIENTEDGE とWS_EX_WINDOWEDGE スタイル の組み合わせ</td>
+</tr>
+<tr>
+<td>WS_EX_PALETTEWINDOW</td><td>&nbsp;</td><td>WS_EX_WINDOWEDGE 、WS_EX_TOOLWINDOW とWS_EX_TOPMOST スタイルの組み合わせ</td>
+</tr>
+<tr>
+<td>WS_EX_RIGHT</td><td>&H1000&</td><td>ウィンドウに一般的な右揃えプロパティを与える。これはウィンドウクラスに依存する</td>
+</tr>
+<tr>
+<td>WS_EX_RIGHTSCROLLBAR</td><td>&H0&</td><td>垂直スクロールバーがあるならばクライアント領域の右に置く。デフォルト値</td>
+</tr>
+<tr>
+<td>WS_EX_RTLREADING</td><td>&H2000&</td><td>右から左へのリーディングオーダープロパティを使ったウィンドウテキストを表示する</td>
+</tr>
+<tr>
+<td>WS_EX_STATICEDGE</td><td>&H20000&</td><td>ユーザーの入力を受け付けないアイテムのために使用する3D 境界を持つウィンドウを作成する</td>
+</tr>
+<tr>
+<td>WS_EX_TOOLWINDOW</td><td>&H80&</td><td>フローティングツールバーを使用するためにツールウィンドウを作成する。ツールウィンドウは正常なタイトルバーよりも短いタイトルバーを持ち、そしてウィンドウタイトルがより小さいフォントを使っている。タスクバーまたは［Alt］＋［Tab］キーが押されたとき現れるウィンドウにはツールウィンドウは現れない</td>
+</tr>
+<tr>
+<td>WS_EX_TOPMOST</td><td>&H8&</td><td>このスタイルを使って作成されたウィンドウは、すべてのトップレベルでないウィンドウの上に置かれ、そのウィンドウがアクティブでなくなってもそのままトップレベルに残ることを指定する。アプリケーションはSetWindowPos メンバ関数を使ってこの属性の追加や削除ができる</td>
+</tr>
+<tr>
+<td>WS_EX_TRANSPARENT</td><td>&H20&</td><td>このスタイルを使って作成されたウィンドウは透過状態になることを指定する。つまり、このウィンドウの下にあるウィンドウが見えなくなることはない。このスタイルを使って作成されたウィンドウは、そのウィンドウの下にある兄弟ウィンドウがすべて更新されたあとにだけWM_PAINT メッセージを受け取る</td>
+</tr>
+<tr>
+<td>WS_EX_WINDOWEDGE</td><td>&H100&</td><td>浮き出した境界線を持つウィンドウを指定する</td>
+</tr>
+</table>
+<h2>ユーザーフォームから［×］ボタンを削除する</h2>
+<pre class="codeProc"><a name="UserForm_Initialize3"></a><span class="REM">'summary:ユーザーフォームの閉じるボタンを非表示にする</span>
+Private Sub UserForm_Initialize()
+    Dim hwnd As Long
+    Dim lngNewLong As Long
+    Dim rc As Long
+    
+    Dim strClassName As String  <span class="REM">'クラス名</span>
+    
+    MsgBox "ユーザーフォームの［×］ボタンを非表示にします" & vbCr & _
+        "確認したら［閉じる］ボタンでユーザーフォームを閉じてください"
+
+    <span class="REM">'ユーザーフォームのクラス名を指定</span>
+    strClassName = "ThunderDFrame"
+    <span class="REM">'strClassName = "ThunderXFrame"         'Excel97の場合</span>
+    
+    <span class="REM">'ウィンドウのハンドルを取得</span>
+    hwnd = FindWindow(strClassName, _
+                    Me.Caption)
+    
+    <span class="REM">'ウィンドウに関する情報を取得</span>
+    lngNewLong = GetWindowLong(hwnd, _
+                            GWL_STYLE)
+    
+    <span class="REM">'ウィンドウの属性を変更</span>
+    rc = SetWindowLong(hwnd, _
+                    GWL_STYLE, _
+                    lngNewLong And (Not WS_SYSMENU))
+    
+    <span class="REM">'ウィンドウのメニューバーを再描画</span>
+    rc = DrawMenuBar(hwnd)
+End Sub
+
+
+Private Sub cmdClick_Click()
+    Unload Me
+End Sub</pre>
+
+<pre class="codeApi"><a name="GetSystemMenu"></a>
+'--------------------------------------------------------------------------
+'ウィンドウメニュー(システムメニューまたは
+'コントロールメニューとも呼ばれる)のハンドルを取得する関数
+'
+'戻り値    bRevert パラメータが FALSE = ウィンドウメニューのコピーのハンドル
+'          bRevert パラメータが TRUE = NULL
+'--------------------------------------------------------------------------
+Declare Function GetSystemMenu Lib "user32" _
+    (ByVal hwnd As Long, _
+    ByVal bRevert As Long) As Long
+
+</pre><pre class="codeApi"><a name="DeleteMenu"></a><span class="REM">'--------------------------------------------------------------------------
+'メニューからメニュー項目を削除する関数
+'
+'戻り値     成功 = 0以外
+'           失敗 = 0
+'--------------------------------------------------------------------------</span>
+Declare Function DeleteMenu Lib "user32" _
+    (ByVal hMenu As Long, _
+    ByVal nPosition As Long, _
+    ByVal wFlags As Long) As Long
+
+<pre class="codeConst">
+Public Const MF_BYCOMMAND = &H0&
+Public Const MF_BYPOSITION = &H400&
+
+<span class="REM">'System Menu Command Values</span>
+ Const SC_SIZE = &HF000&
+ Const SC_MOVE = &HF010&
+ Const SC_MINIMIZE = &HF020&
+ Const SC_MAXIMIZE = &HF030&
+ Const SC_NEXTWINDOW = &HF040&
+ Const SC_PREVWINDOW = &HF050&
+ Const SC_CLOSE = &HF060&
+ Const SC_VSCROLL = &HF070&
+ Const SC_HSCROLL = &HF080&
+ Const SC_MOUSEMENU = &HF090&
+ Const SC_KEYMENU = &HF100&
+ Const SC_ARRANGE = &HF110&
+ Const SC_RESTORE = &HF120&
+ Const SC_TASKLIST = &HF130&
+ Const SC_SCREENSAVE = &HF140&
+ Const SC_HOTKEY = &HF150&</pre></pre>
+
+<pre class="codeProc"><a name="UserForm_Initializemukou"></a><span class="REM">'summary:ユーザーフォームの閉じるボタンを無効にする</span>
+Private Sub UserForm_Initialize()
+    Dim hwnd As Long
+    Dim hMenu As Long
+    Dim rc As Long
+    
+    Dim strClassName As String  <span class="REM">'クラス名</span>
+    
+    MsgBox "ユーザーフォームの［×］ボタンを無効にします" & vbCr & _
+        "確認したら［閉じる］ボタンでユーザーフォームを閉じてください"
+
+    <span class="REM">'ユーザーフォームのクラス名を指定</span>
+    strClassName = "ThunderDFrame"
+    <span class="REM">'strClassName = "ThunderXFrame"         'Excel97の場合
+
+    'ウィンドウのハンドルを取得</span>
+    hwnd = FindWindow(strClassName, _
+                    Me.Caption)
+
+    <span class="REM">'ウィンドウに関する情報を取得</span>
+    hMenu = GetSystemMenu(hwnd, _
+                        0&)
+
+    <span class="REM">'［閉じる］ボタンを無効にする</span>
+    rc = DeleteMenu(hMenu, _
+                    SC_CLOSE, _
+                    MF_BYCOMMAND)
+    
+    <span class="REM">'ウィンドウのメニューバーを再描画</span>
+    rc = DrawMenuBar(hwnd)
+End Sub
+
+
+Private Sub cmdClick_Click()
+    Unload Me
+End Sub</pre>
+
+<p>以下のサンプルはユーザーフォームに最小化・最大化ボタンを付加し、リサイズを可能にします。</p>
+<pre class="codeProc"><a name="UserForm_Initialize1"></a><span class="REM">'summary:ユーザーフォームに最小化・最大化ボタンを付加し、リサイズを可能にする</span>
+Private Sub UserForm_Initialize()
+
+    Dim hwnd As Long
+    Dim lngNewLong As Long
+    Dim rc As Long
+    
+    Dim strClassName As String  <span class="REM">'クラス名</span>
+    
+    MsgBox "ユーザーフォームに最大化・最小化ボタンを付加し、リサイズも可能にします" & vbCr & _
+        "確認したら［閉じる］ボタンでユーザーフォームを閉じてください"
+
+    <span class="REM">'ユーザーフォームのクラス名を指定</span>
+    strClassName = "ThunderDFrame"
+    <span class="REM">'strClassName = "ThunderXFrame"         'Excel97の場合
+    
+    'ウィンドウのハンドルを取得</span>
+    hwnd = FindWindow(strClassName, _
+                    Me.Caption)
+    
+    <span class="REM">'ウィンドウに関する情報を取得</span>
+    lngNewLong = GetWindowLong(hwnd, _
+                            GWL_STYLE)
+    
+
+    rc = SetWindowLong(hwnd, _
+                    GWL_STYLE, _
+                    lngNewLong Or WS_THICKFRAME Or WS_MAXIMIZEBOX Or WS_MINIMIZEBOX)
+    
+    rc = DrawMenuBar(hwnd)
+End Sub
+
+
+Private Sub cmdClick_Click()
+    Unload Me
+End Sub</pre>
+<h2>レジストリ・INI ファイルの操作</h2>
+<p>レジストリは、Windows と、その上で動く高度なアプリケーションの情報を管理するための膨大なデータベースで、
+次のようにカテゴリ分けされている。</p>
+<table border="1">
+<caption>▼ルートキーのカテゴリーとその内容</caption>
+<tr>
+<th>カテゴリー（定数）</th><th>値</th><th>内容</th>
+</tr>
+<tr>
+<td>HKEY_CLASSES_ROOT</td><td>&H80000000</td><td>ソフトウェアの設定情報</td>
+</tr>
+<td>HKEY_CURRENT_USER</td><td>&H80000001</td><td>特定のユーザー環境の設定情報</td>
+</tr>
+<tr><td>HKEY_LOCAL_MACHINE</td><td>&H80000002</td><td>ローカルコンピュータの設定情報</td>
+</tr>
+<tr>
+<td>HKEY_USERS</td><td>&H80000003</td><td>すべてのユーザー環境の設定情報</td>
+</tr>
+<tr>
+<td>HKEY_CURRENT_CONFIG</td><td>&H80000005</td><td>現在のハードウェアの設定情報</td>
+</tr>
+</table>
+<h3>●VBAで出来るレジストリ操作</h3>
+<p>VBAでもレジストリを操作する事ができます。ただし、
+HKEY_CURRENT_USERの下にあるSoftware内のVB and VBA Program Setting内に限られます。</p>
+<pre class="codeProc"><span class="REM">'summary:●レジストリへの登録<a name="VBA_SaveSetting_Sample"></a>
+'HKEY_CURRENT_USER\Software\VB and VBA Program Setting\に
+'AppName:=MyApp, Section:=Startup, Key:=Top, Setting:=75と
+'AppName:=MyApp, Section:=Startup, Key:=Left, Setting:=25
+'を作成します。</span>
+Sub VBA_SaveSetting_Sample()
+    SaveSetting "MyApp", "Startup", "Top", 75
+    SaveSetting "MyApp", "Startup", "Left", 25
+End Sub
+</pre>
+<pre class="codeProc"><span class="REM">'summary:●レジストリデータの取得</span><a name="VBA_GetSetting_Sample"></a>
+Sub VBA_GetSetting_Sample()
+    Dim myRegVal As String
+    
+    myRegVal = GetSetting("MyApp", "Startup", "Top")
+    MsgBox myRegVal    <span class="REM">'75が返る</span>
+End Sub</pre>
+<pre class="codeProc"><span class="REM">'summary:●レジストリMyApp\Startup内の全てのデータを取得する</span><a name="VBA_GetAllSettings"></a>
+Sub VBA_GetAllSettings()
+    Dim myRegvalAry As Variant
+    Dim i As Integer
+    
+    myRegvalAry = VBA.Interaction.GetAllSettings("MyApp", "Startup")
+    
+    For i = 0 To UBound(myRegvalAry)
+        <span class="REM">'Left : 25、Top : 75 が返る</span>
+        Debug.Print myRegvalAry(i, 0) & " : " & myRegvalAry(i, 1)
+    Next i
+        
+End Sub</pre>
+<pre class="codeProc">
+<span class="REM">'summary:●レジストリデータを削除する</span><a name="VBA_DeleteSetting"></a>
+Sub VBA_DeleteSetting()
+    DeleteSetting "MyApp"
+    <span class="REM">'個別に削除することも出来ます。
+    'DeleteSetting "MyApp", "Startup", "Left"</span>
+End Sub</pre>
+<h3>●APIによるレジストリの操作</h3>
+<pre class="codeApi"><a name="RegCreateKeyEx"></a><span class="REM">'---------------------------------------------------
+'レジストリキーを作成する関数
+'キーがすでに存在している場合はそのキーをオープンする関数
+'
+'戻り値     成功 = ERROR_SUCCESS(=0)
+'           失敗 = 0以外
+'---------------------------------------------------</span>
+Declare Function RegCreateKeyEx Lib "advapi32.dll" _
+    Alias "RegCreateKeyExA" _
+    (ByVal hKey As Long, _
+    ByVal lpSubKey As String, _
+    ByVal Reserved As Long, _
+    ByVal lpClass As String, _
+    ByVal dwOptions As Long, _
+    ByVal samDesired As Long, _
+    lpSecurityAttributes As SECURITY_ATTRIBUTES, _
+    phkResult As Long, _
+    lpdwDisposition As Long) As Long
+    
+<a name="RegCloseKey"></a><span class="REM">'---------------------------------------------------
+'レジストリキーを閉じる関数
+'
+'戻り値     成功 = ERROR_SUCCESS(=0)
+'           失敗 = 0以外
+'---------------------------------------------------</span>
+Declare Function RegCloseKey Lib "advapi32.dll" _
+    (ByVal hKey As Long) As Long
+        
+<pre class="codeConst">
+ Const ERROR_SUCCESS = 0
+
+ Const HKEY_CLASSES_ROOT = &H80000000
+ Const HKEY_CURRENT_USER = &H80000001
+ Const HKEY_LOCAL_MACHINE = &H80000002
+ Const HKEY_USERS = &H80000003
+ Const HKEY_PERFORMANCE_DATA = &H80000004
+ Const HKEY_CURRENT_CONFIG = &H80000005
+ Const HKEY_DYN_DATA = &H80000006
+
+<span class="REM">'設定内容をレジストリに保存</span>
+ Const REG_OPTION_NON_VOLATILE = 0
+
+<span class="REM">'レジストリの値を取得</span>
+ Const KEY_QUERY_VALUE = &H1&
+<span class="REM"> 'レジストリの値を設定</span>
+ Const KEY_SET_VALUE = &H2&
+<span class="REM"> 'サブキーを作成</span>
+ Const KEY_CREATE_SUB_KEY = &H4&
+<span class="REM"> 'サブキーを列挙</span>
+ Const KEY_ENUMERATE_SUB_KEYS = &H8&
+<span class="REM"> 'レジストリの内容変更通知を要求</span>
+ Const KEY_NOTIFY = &H10&
+<span class="REM"> 'キーオブジェクトとのリンクを作成</span>
+ Const KEY_CREATE_LINK = &H20&
+<span class="REM">' Const KEY_ALL_ACCESS = _
+'   ((STANDARD_RIGHTS_ALL Or KEY_QUERY_VALUE _
+'   Or KEY_SET_VALUE Or KEY_CREATE_SUB_KEY _
+'   Or KEY_ENUMERATE_SUB_KEYS _
+'   Or KEY_NOTIFY Or KEY_CREATE_LINK) _
+'   And (Not SYNCHRONIZE))</span>
+
+ Const STANDARD_RIGHTS_ALL = &H1F0000
+ Const SYNCHRONIZE = &H100000
+
+<span class="REM"> 'キーを新規作成</span>
+ Const REG_CREATED_NEW_KEY = &H1
+<span class="REM"> '既存キーを開く</span>
+ Const REG_OPENED_EXISTING_KEY = &H2
+
+<span class="REM"> '文字列</span>
+ Const REG_SZ = 1
+<span class="REM"> 'バイナリデータ</span>
+ Const REG_BINARY = 3
+<span class="REM"> '32ビット数値</span>
+ Const REG_DWORD = 4
+ Const REG_DWORD_LITTLE_ENDIAN = 4
+ Const REG_DWORD_BIG_ENDIAN = 5
+ Const REG_EXPAND_SZ = 2
+ Const REG_LINK = 6
+ Const REG_MULTI_SZ = 7
+ Const REG_NONE = 0
+ Const REG_RESOURCE_LIST = 8
+ 
+Type SECURITY_ATTRIBUTES
+    nLength As Long
+    lpSecurityDescriptor As Long
+    bInheritHandle As Long
+End Type</pre></pre>
+<pre class="codeProc"><a name="RegCreateKeyEx_Sample"></a><span class="REM">'summary:レジストリキーを作成する</span>
+Sub RegCreateKeyEx_Sample()
+    Dim lngKey As Long
+    Dim strSubKey As String
+    Dim udtSECURITYATTRIBUTES As SECURITY_ATTRIBUTES
+    Dim lngResult As Long
+    Dim lngDisposition As Long
+    Dim rc As Long
+    
+    lngKey = HKEY_CURRENT_USER
+    strSubKey = "Software\Microsoft\Windows\CurrentVersion\Test"
+
+    rc = RegCreateKeyEx(lngKey, _
+                        strSubKey, _
+                        0&, _
+                        vbNullString, _
+                        REG_OPTION_NON_VOLATILE, _
+                        KEY_CREATE_SUB_KEY, _
+                        udtSECURITYATTRIBUTES, _
+                        lngResult, _
+                        lngDisposition)
+
+    Call RegCloseKey(lngResult)
+    
+    MsgBox _
+        "HKEY_CURRENT_USER\Software\Microsoft\" & _
+        "Windows\CurrentVersion\Test" & Chr(13) & _
+        "を作成しました" & Chr(13) & Chr(13) & _
+        "レジストリエディタで確認してください"
+End Sub</pre>
+<pre class="codeApi"><a name="RegDeleteKey"></a><span class="REM">'---------------------------------------------------
+'レジストリキーとそのサブキー削除する関数
+'
+'戻り値     成功 = ERROR_SUCCESS(=0)
+'           失敗 = 0以外
+'---------------------------------------------------</span>
+Declare Function RegDeleteKey Lib "advapi32.dll" _
+    Alias "RegDeleteKeyA" _
+    (ByVal hKey As Long, _
+    ByVal lpSubKey As String) As Long
+</pre>
+<pre class="codeProc"><a name="RegDeleteKey_Sample"></a><span class="REM">'summary:レジストリキーを削除する(その1)</span>
+Sub RegDeleteKey_Sample()
+    Dim lngKey As Long
+    Dim strSubKey As String
+    Dim rc As Long
+  
+    Dim intRtn As Integer
+    
+    intRtn = _
+        MsgBox( _
+        "このプログラムを実行する前に RegCreateKeyEx_Sample を実行して" & Chr(13) & _
+        "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Test " & _
+        "を作成しましたか?", vbYesNo + vbExclamation)
+
+    If intRtn = vbNo Then Exit Sub
+      
+    lngKey = HKEY_CURRENT_USER
+    strSubKey = "Software\Microsoft\Windows\CurrentVersion\Test"
+
+    rc = RegDeleteKey(lngKey, strSubKey)
+    
+    MsgBox _
+        "HKEY_CURRENT_USER\Software\Microsoft\" & _
+        "Windows\CurrentVersion\Test" & Chr(13) & _
+        "を削除しました" & Chr(13) & Chr(13) & _
+        "レジストリエディタで確認してください"
+End Sub</pre>
+<pre class="codeApi"><a name="RegOpenKeyEx"></a><span class="REM">'---------------------------------------------------
+'レジストリキーを開く関数
+'
+'戻り値     成功 = ERROR_SUCCESS(=0)
+'           失敗 = 0以外
+'---------------------------------------------------</span>
+Declare Function RegOpenKeyEx Lib "advapi32.dll" _
+    Alias "RegOpenKeyExA" _
+    (ByVal hKey As Long, _
+    ByVal lpSubKey As String, _
+    ByVal ulOptions As Long, _
+    ByVal samDesired As Long, _
+    phkResult As Long) As Long</pre>
+
+<pre class="codeProc"><a name="RegDeleteKey_Sample2"></a><span class="REM">'summary:レジストリキーを削除する(その2)
+'レジストリを開いてから削除します。
+'開いたレジストリは閉じなければなりません。</span>
+Sub RegDeleteKey_Sample2()
+    Dim lngKey As Long
+    Dim strSubKey As String
+    Dim lngResult As Long
+    Dim rc As Long
+  
+    Dim intRtn As Integer
+    
+    intRtn = _
+        MsgBox("このプログラムを実行する前に RegCreateKeyEx_Sample を実行して" _
+        & Chr(13) & _
+        "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Test " & _
+        "を作成しましたか?", vbYesNo + vbExclamation)
+    If intRtn = vbNo Then Exit Sub
+          
+    lngKey = HKEY_CURRENT_USER
+    strSubKey = "Software\Microsoft\Windows\CurrentVersion"
+    
+    <span class="REM">'レジストリキーを開く</span>
+    rc = RegOpenKeyEx(lngKey, _
+                    strSubKey, _
+                    0&, _
+                    KEY_ENUMERATE_SUB_KEYS, _
+                    lngResult)
+
+    If rc <> ERROR_SUCCESS Then
+        MsgBox "関数の呼び出しに失敗しました"
+        Exit Sub
+    End If
+    
+    rc = RegDeleteKey(lngResult,"Test")
+
+    <span class="REM">'レジストリキーを閉じる</span>
+    Call RegCloseKey(lngResult)
+    
+    MsgBox _
+        "HKEY_CURRENT_USER\Software\Microsoft\Windows\" & _
+        "CurrentVersion\Test" & Chr(13) & _
+        "を削除しました" & Chr(13) & Chr(13) & _
+        "レジストリエディタで確認してください"
+End Sub</pre>
+<p>レジストリキーに値は「文字列」「バイナリ」「32 ビット数値」の
+３つに大別されます。以下は、それぞれの値をレジストリに登録するサンプルです。</p>
+<pre class="codeApi"><a name="RegSetValueEx"></a><span class="REM">'---------------------------------------------------
+'レジストリキーの値フィールドにデータを格納する関数
+'
+'戻り値     成功 = ERROR_SUCCESS(=0)
+'           失敗 = 0以外
+'---------------------------------------------------</span>
+Declare Function RegSetValueEx Lib "advapi32.dll" _
+    Alias "RegSetValueExA" _
+    (ByVal hKey As Long, _
+    ByVal lpValueName As String, _
+    ByVal Reserved As Long, _
+    ByVal dwType As Long, _
+    lpData As Any, _
+    ByVal cbData As Long) As Long
+</pre>
+<pre class="codeProc"><a name="RegSetValueEx_Sample"></a><span class="REM">'summary:レジストリキーに値を保存する</span>
+<a name="RegSetValueEx_Sample"></a>
+Sub RegSetValueEx_Sample()
+
+    Dim lngKey As Long
+    Dim strSubKey As String
+    Dim lngResult As Long
+    
+    Dim vntData As Variant
+    Dim bytData(1 To 5) As Byte, i As Long
+    Dim rc As Long
+  
+    Dim intRtn As Integer
+    
+    intRtn = _
+         MsgBox("このプログラムを実行する前に " & _
+         "RegCreateKeyEx_Sample を実行して" & Chr(13) & _
+        "HKEY_CURRENT_USER\Software\Microsoft\Windows\" & _
+        "CurrentVersion\Test を作成しましたか?", vbYesNo + vbExclamation)
+        
+    If intRtn = vbNo Then Exit Sub
+          
+    lngKey = HKEY_CURRENT_USER
+    strSubKey = "Software\Microsoft\Windows\CurrentVersion\Test"
+    
+    <span class="REM">'レジストリキーを開く</span>
+    rc = RegOpenKeyEx(lngKey, _
+                    strSubKey, _
+                    0&, _
+                    KEY_SET_VALUE, _
+                    lngResult)
+
+    If rc <> ERROR_SUCCESS Then
+        MsgBox "関数の呼び出しに失敗しました"
+        Exit Sub
+    End If
+    
+    <span class="REM">'文字列を保存</span>
+    vntData = "StringTest"
+    
+    S_RegSetValueEx_Sample lngResult, vntData
+    
+    <span class="REM">'数値を保存</span>
+    vntData = 12345
+    
+    S_RegSetValueEx_Sample lngResult, vntData
+    
+    <span class="REM">'バイナリ値を保存</span>
+    For i = 1 To 5
+        bytData(i) = i
+    Next
+    vntData = bytData
+
+    S_RegSetValueEx_Sample lngResult, vntData
+
+    Call RegCloseKey(lngResult)
+        
+    MsgBox _
+        "HKEY_CURRENT_USER\Software\Microsoft\Windows\" & _
+        "CurrentVersion\Test" & Chr(13) & _
+        "に値を保存しました" & Chr(13) & Chr(13) & _
+        "レジストリエディタで確認してください"
+End Sub
+
+Sub S_RegSetValueEx_Sample(phkResult As Long, DataValue As Variant)
+
+    Dim strBuffer As String
+    Dim lngBuffer As Long
+    Dim bytBuffer() As Byte
+    Dim rc As Long
+
+    <span class="REM">'データのタイプ別にレジストリに保存する</span>
+    Select Case VarType(DataValue)
+        Case vbString                             <span class="REM">'文字列</span>
+            strBuffer = DataValue
+            rc = RegSetValueEx(phkResult, _
+                                "String", _
+                                0&, _
+                                REG_SZ, _
+                                ByVal strBuffer, _
+                                Len(strBuffer) + 1)
+
+        Case vbInteger, vbLong, vbBoolean   <span class="REM">'32ビット数値</span>
+            lngBuffer = DataValue
+            rc = RegSetValueEx(phkResult, _
+                                "Long", _
+                                0&, _
+                                REG_DWORD, _
+                                lngBuffer, _
+                                4)
+
+        Case vbByte Or vbArray              <span class="REM">'バイナリデータ</span>
+            bytBuffer = DataValue
+            rc = RegSetValueEx(phkResult, _
+                                "Binary", _
+                                0&, _
+                                REG_BINARY, _
+                                bytBuffer(1), _
+                                5)
+    End Select
+
+    If rc <> ERROR_SUCCESS Then
+        MsgBox "関数の呼び出しに失敗しました"
+        End
+    End If
+End Sub</pre>
+
+<pre class="codeApi"><a name="RegQueryValueEx"></a><span class="REM">'---------------------------------------------------
+'レジストリキーの値を取得する関数
+'
+'戻り値     成功 = ERROR_SUCCESS(=0)
+'           失敗 = 0以外
+'---------------------------------------------------</span>
+Declare Function RegQueryValueEx Lib "advapi32.dll" _
+    Alias "RegQueryValueExA" _
+    (ByVal hKey As Long, _
+    ByVal lpValueName As String, _
+    ByVal lpReserved As Long, _
+    lpType As Long, _
+    lpData As Any, _
+    lpcbData As Long) As Long
+</pre>
+<pre class="codeProc"><a name=" RegQueryValueEx_Sample"></a><span class="REM">'summary:レジストリキーの値を取得する</span>
+<a name="RegQueryValueEx_Sample"></a>
+Sub RegQueryValueEx_Sample()
+
+    Dim lngKey As Long
+    Dim strSubKey As String
+    Dim lngResult As Long
+    
+    Dim strBuffer As String * 80
+    Dim lngBuffer As Long
+    Dim bytBuffer(1 To 5) As Byte, i As Long
+    
+    Dim strBinary As String
+    Dim rc As Long
+  
+    Dim intRtn As Integer
+    
+    intRtn = _
+        MsgBox("このプログラムを実行する前に " & _
+        "RegSetValueEx_Sample を実行して" & Chr(13) & _
+        "HKEY_CURRENT_USER\Software\Microsoft\Windows\" & _
+        "CurrentVersion\Test に値を保存しましたか?", vbYesNo + vbExclamation)
+        
+    If intRtn = vbNo Then Exit Sub
+          
+    lngKey = HKEY_CURRENT_USER
+    strSubKey = "Software\Microsoft\Windows\CurrentVersion\Test"
+    
+    rc = RegOpenKeyEx(lngKey, _
+                    strSubKey, _
+                    0&, _
+                    KEY_QUERY_VALUE, _
+                    lngResult)
+
+    If rc <> ERROR_SUCCESS Then
+        MsgBox "関数の呼び出しに失敗しました"
+        Exit Sub
+    End If
+
+    <span class="REM">'文字列</span>
+    strSubKey = "String"
+    rc = RegQueryValueEx(lngResult, _
+                        strSubKey, _
+                        0&, _
+                        REG_SZ, _
+                        ByVal strBuffer, _
+                        Len(strBuffer))
+                        
+    MsgBox strSubKey & vbTab & Left(strBuffer, InStr(strBuffer, vbNullChar) - 1)
+    
+    <span class="REM">'32ビット数値</span>
+    strSubKey = "Long"
+    rc = RegQueryValueEx(lngResult, _
+                        strSubKey, _
+                        0&, _
+                        REG_DWORD, _
+                        lngBuffer, _
+                        Len(lngBuffer))
+    MsgBox strSubKey & vbTab & lngBuffer
+    
+    <span class="REM">'バイナリデータ</span>
+    strSubKey = "Binary"
+    rc = RegQueryValueEx(lngResult, _
+                        strSubKey, _
+                        0&, _
+                        REG_BINARY, _
+                        bytBuffer(1), _
+                        5)
+    For i = 1 To 5
+        strBinary = strBinary & Space(1) & Format(Hex(bytBuffer(i)), "00")
+    Next
+    strBinary = Mid(strBinary, 2)
+    
+    MsgBox strSubKey & vbTab & strBinary
+    
+    Call RegCloseKey(lngResult)
+End Sub</pre>
+<pre class="codeApi"><a name="RegDeleteValue"></a><span class="REM">'---------------------------------------------------
+'レジストリキーの値を削除する関数
+'
+'戻り値     成功 = ERROR_SUCCESS(=0)
+'           失敗 = 0以外
+'---------------------------------------------------</span>
+Declare Function RegDeleteValue Lib "advapi32.dll" _
+    Alias "RegDeleteValueA" _
+    (ByVal hKey As Long, _
+    ByVal lpValueName As String) As Long
+</pre>
+<pre class="codeProc"><a name="RegDeleteValue_Sample"></a><span class="REM">'summary:レジストリキーの値を削除する</span>
+Sub RegDeleteValue_Sample()
+    Dim lngKey As Long
+    Dim strSubKey As String
+    Dim lngResult As Long
+    
+    Dim strValueName As String
+    Dim rc As Long
+  
+    Dim intRtn As Integer
+    
+    intRtn = _
+        MsgBox("このプログラムを実行する前に RegSetValueEx_Sample を実行して" _
+        & Chr(13) & _
+        "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Test " & _
+        "に値を保存しましたか?", vbYesNo + vbExclamation)
+        
+    If intRtn = vbNo Then Exit Sub
+          
+    lngKey = HKEY_CURRENT_USER
+    strSubKey = "Software\Microsoft\Windows\CurrentVersion\Test"
+    
+    <span class="REM">'レジストリキーを開く</span>
+    rc = RegOpenKeyEx(lngKey, _
+                    strSubKey, _
+                    0&, _
+                    KEY_SET_VALUE, _
+                    lngResult)
+    
+    If rc <> ERROR_SUCCESS Then
+        MsgBox "関数の呼び出しに失敗しました"
+        Exit Sub
+    End If
+
+    strValueName = "String"
+
+    rc = RegDeleteValue(lngResult, _
+                        strValueName)
+
+    Call RegCloseKey(lngResult)
+        
+    MsgBox _
+        "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Test" & _
+        Chr(13) & _
+        "の値を削除しました" & Chr(13) & Chr(13) & _
+        "レジストリエディタで確認してください"
+End Sub</pre>
+<pre class="codeApi"><span class="REM"><name="RegEnumKeyEx"></a>'---------------------------------------------------<a name="RegEnumKeyEx"></a>
+'レジストリキーのサブキーを列挙する
+'戻り値     成功 = ERROR_SUCCESS(=0)
+'           失敗 = 0以外
+'---------------------------------------------------</span>
+Declare Function RegEnumKeyEx Lib "advapi32.dll" _
+    Alias "RegEnumKeyExA" _
+    (ByVal hKey As Long, _
+    ByVal dwIndex As Long, _
+    ByVal lpName As String, _
+    lpcbName As Long, _
+    ByVal lpReserved As Long, _
+    ByVal lpClass As Long, _
+    lpcbClass As Long, _
+    lpftLastWriteTime As FILETIME) As Long
+<pre class="codeConst">
+Type FILETIME
+    dwLowDateTime As Long
+    dwHighDateTime As Long
+End Type</pre></pre>
+
+<pre class="codeProc"><a name="RegEnumKeyEx_Sample"></a><span class="REM">'summary: レジストリから、サブキーを列挙する</span>
+Sub RegEnumKeyEx_Sample()
+
+    Const lngRegSize As Long = 256
+
+    Dim lngKey As Long
+    Dim strSubkey As String
+    Dim lngResult As Long
+    Dim strRegKey As String
+    Dim lngIndex As Long
+    Dim udtFileTime As FILETIME
+    Dim astrFuncResult() As String
+    Dim i As Long
+    
+    
+    lngKey = HKEY_CURRENT_USER
+    strSubkey = "Software\Microsoft\Windows\CurrentVersion"
+    
+    <span class="REM">' レジストリを開く</span>
+    If RegOpenKeyEx(lngKey _
+                    , strSubkey, _
+                    0&, _
+                    KEY_ENUMERATE_SUB_KEYS, _
+                    lngResult) = 0& Then
+                    
+        lngIndex = 0
+        
+        Do
+            <span class="REM">' バッファの初期化</span>
+            strRegKey = String(lngRegSize, vbNull)
+            <span class="REM">' サブキーの取得</span>
+            If RegEnumKeyEx(lngResult, _
+                            lngIndex, _
+                            strRegKey, _
+                            lngRegSize, _
+                            0&, _
+                            0&, _
+                            0&, _
+                            udtFileTime) <> 0& Then Exit Do
+                            
+            ReDim Preserve astrFuncResult(lngIndex)
+            astrFuncResult(lngIndex) = _
+                   Left$(strRegKey, InStr(strRegKey, vbNullChar) - 1)
+            lngIndex = lngIndex + 1
+        Loop
+        <span class="REM">' レジストリを閉じる</span>
+        RegCloseKey lngResult
+    End If
+    
+    If UBound(astrFuncResult) > 0 Then
+    
+        For i = 0 To UBound(astrFuncResult)
+            Debug.Print astrFuncResult(i)
+        Next i
+        
+    End If
+    
+End Sub</pre>
+<hr>
+<div><a href="./index.htm">&gt;INDEX</a></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,419 @@
+<meta http-equiv="Content-Type" content="text/html; charset=shift_jis">
+
+<pre>
+
+ＭＳヘルプはＳＱＬ，ＤＡＯ，ＡＤＯに関する記述を素直に検索できないのが
+非っ常に不満。
+
+以下の場所にあったりするので、直接ファイルを読もう。
+
+C:\Program Files\Common Files\Microsoft Shared\OFFICE11\1041　以下の
+
+DAO360.CHM
+ADO210.CHM
+JETSQL40.CHM
+
+■エクセルでテキストファイルをデータベースとしてとりこみ
+<h2>Sub GetRecord()</h2>
+
+  Dim daoDB As DAO.DataBase
+  Dim daoCSV As Workspace
+  Dim strSQL As String
+  Dim daoRs As DAO.Recordset
+  Dim strPath, strFile As String
+  Dim WS As Worksheet
+    
+  strPath = CreateObject("wscript.shell").specialfolders("desktop")  'パスのみ（ファイル名は含まない）
+  strFile = "a.csv" 'strFile 'ファイル名のみ
+
+  Set daoCSV = DBEngine.Workspaces(0)
+  Set daoDB = daoCSV.OpenDatabase(strPath, 0, 0, "Text;")
+
+  strSQL = "SELECT * FROM [" & strFile & "] where 報告日=#" & DateSerial(2004, 3, 26) & "#;"
+
+  Set daoRs = daoDB.OpenRecordset(strSQL) ', dbOpenDynaset)
+
+  Debug.Print daoRs.RecordCount
+
+  Set WS = Sheet1
+  
+  With WS
+    .UsedRange.ClearContents
+    .Range("a2").CopyFromRecordset daoRs, 60
+  End With
+
+  Set daoRs = Nothing
+  daoDB.Close
+  Set daoDB = Nothing
+
+End Sub
+
+<h2>Sub SaveBKmdb()</h2>
+
+'Micorsoft ADO Ext.2.X for DDL and Securityに参照設定
+'Microsoft DAO X.X Object Libraryに参照設定
+'テーブルにリストされた名前のテーブルを持つmdbを作成します。
+
+    Dim strCon As String
+    Dim adxCat As New ADOX.Catalog
+    Dim strNewMdbPth As String
+    Dim strDB_Name As String
+    Dim strDB_Name2 As String
+    Dim strTbl_list As String
+    Dim i As Long
+    Dim RS As DAO.Recordset
+    Dim flg As Boolean
+    
+    On Error GoTo err_SaveBKmdb
+    
+    strTbl_list = "T_bk_list"
+    
+    strNewMdbPth = Application.CurrentDb.Name
+    strNewMdbPth = Left$(strNewMdbPth, InStrRev(strNewMdbPth, "\", -1, vbBinaryCompare))
+    strNewMdbPth = strNewMdbPth
+    
+    Do
+        strDB_Name = InputBox(strTbl_list _
+        & "に登録されているテーブルを持つmdbを作成します。" _
+        & "DB名を決めてください ""YJ""＆西暦下２桁月２桁：例）YJ0610", "DB名入力", "YJ####")
+    Loop Until Len(strDB_Name) > 0
+    
+    strDB_Name = strNewMdbPth & strDB_Name
+    strDB_Name2 = strDB_Name
+
+    i = 2
+
+    Do Until Len(Dir(strDB_Name2 & ".mdb")) = 0
+        strDB_Name2 = strDB_Name & "(" & i & ")"
+        i = i + 1
+    Loop
+    
+    strDB_Name = strDB_Name2 & ".mdb"
+    
+    strCon = _
+        "provider=microsoft.jet.oledb.4.0;" & _
+        "data source=" & strDB_Name
+    adxCat.Create strCon
+
+    Set adxCat = Nothing
+    
+    Set RS = CurrentDb.OpenRecordset(strTbl_list, dbOpenTable, dbSeeChanges, dbReadOnly)
+    RS.MoveFirst
+    '----------------------------------------
+	'以下コメント部分はSQLで実行する書き方。　
+　　　　'SQLだと主キーの設定までコピーされません
+    '----------------------------------------	
+    'DoCmd.SetWarnings False
+    For i = 1 To RS.RecordCount
+        DoCmd.CopyObject strDB_Name, RS(0).Value, acTable, RS(0).Value
+'        DoCmd.RunSQL _
+'            "select * into " _
+'            & RS(0).Value _
+'            & " in '' [Ms Access;DATABASE=" _
+'            & strDB_Name _
+'            & ";] from " _
+'            & RS(0).Value & ";"
+            
+            RS.MoveNext
+    Next i
+
+    'DoCmd.SetWarnings True
+
+    RS.Close
+
+end_SaveBKmdb:
+
+    If Not flg Then
+        MsgBox strDB_Name & " を作成しました", vbOKOnly, CurrentDb.Name
+    End If
+
+    Exit Sub
+
+err_SaveBKmdb:
+
+    MsgBox Err.Number & ":" & Err.Description, vbExclamation, CurrentDb.Name
+    flg = True
+    Resume end_SaveBKmdb
+    
+End Sub
+
+'■テーブル情報・クエリ情報のプロパティ情報を持つテーブルを作成する
+
+Option Compare Database
+Option Explicit
+
+Dim daoTable As DAO.TableDef
+Dim daoQuery As DAO.QueryDef
+Dim daoDB As DAO.Database
+Dim daoP As DAO.Property
+Dim daoT As DAO.TableDef
+Dim strT As String, strName As String
+Dim daoF As DAO.Field
+Dim daoRS As DAO.Recordset
+
+<h2>Sub Make_Tables_Query_DATA()</h2>
+
+    '-------------------------------------------
+    'Make_Tables_DATA Make_T_Queries_DATAの実行
+    '-------------------------------------------
+    Make_Tables_DATA
+    Make_T_Queries_DATA
+    MsgBox "done"
+
+End Sub
+'テーブル情報格納テーブル作成
+Sub Make_Tables_DATA()
+
+    Set daoDB = CurrentDb
+    
+    strT = "T_Tables_Data"
+    
+    For Each daoT In daoDB.TableDefs
+        If daoT.Name = strT Then
+            DoCmd.RunSQL "Drop Table " & strT & ";"
+            Exit For
+        End If
+    Next
+    
+    '▼テーブル作成
+    Set daoT = daoDB.CreateTableDef(strT)
+    
+    '▼プロパティフィールド作成
+    Set daoF = daoT.CreateField("Name", dbText)
+    daoT.Fields.Append daoF
+    Set daoF = daoT.CreateField("DateCreated", dbText)
+    daoT.Fields.Append daoF
+    Set daoF = daoT.CreateField("LastUpdated", dbText)
+    daoT.Fields.Append daoF
+    Set daoF = daoT.CreateField("RecordCount", dbLong)
+    daoT.Fields.Append daoF
+
+    Set daoF = daoT.CreateField("Description", dbText, 250)
+    daoT.Fields.Append daoF
+    
+    '▼テーブル追加
+    daoDB.TableDefs.Append daoT
+    
+    '▼プロパティ名取得のサンプル
+'    Dim i
+'    For i = 0 To daoDB.TableDefs.Count - 1
+    '    For Each daoP In daoDB.TableDefs(i).Properties
+    '        Debug.Print daoP.Name, daoP.Value
+    '    Next
+'    Next
+    
+    '▼レコードセットを開きプロパティフィールドプロパティを取り出す
+    Set daoRS = daoDB.OpenRecordset(strT, dbOpenDynaset)
+    
+    For Each daoTable In daoDB.TableDefs
+    
+        daoRS.AddNew
+    
+        For Each daoF In daoRS.Fields
+            On Error Resume Next
+            If daoF.Name = "RecordCount" Then
+                daoRS.Fields(daoF.Name) = f_RecCnt(daoTable.Name)
+            Else
+                daoRS.Fields(daoF.Name) = daoTable.Properties(daoF.Name).Value
+            End If
+            On Error GoTo 0
+        Next daoF
+    
+        daoRS.Update
+    
+    Next daoTable
+    
+    'MsgBox "done", , daoDB.Name
+    daoDB.Close: Set daoDB = Nothing
+    
+    Set daoT = Nothing
+
+End Sub
+
+'クエリー情報格納テーブル作成
+Sub Make_T_Queries_DATA()
+
+    On Error GoTo err_handle
+
+    Set daoDB = CurrentDb
+    
+    strT = "T_Queries_Data"
+    
+    For Each daoT In daoDB.TableDefs
+        If daoT.Name = strT Then
+            DoCmd.RunSQL "Drop Table " & strT & ";"
+            Exit For
+        
+        End If
+    Next
+    
+    '▼テーブル作成
+    Set daoT = daoDB.CreateTableDef(strT)
+    
+    '▼プロパティフィールド作成
+    Set daoF = daoT.CreateField("Name", dbText)
+    daoT.Fields.Append daoF
+    Set daoF = daoT.CreateField("DateCreated", dbText)
+    daoT.Fields.Append daoF
+    Set daoF = daoT.CreateField("LastUpdated", dbText)
+    daoT.Fields.Append daoF
+    Set daoF = daoT.CreateField("RecordCount", dbLong)
+    daoT.Fields.Append daoF
+    Set daoF = daoT.CreateField("Type", dbText)
+    daoT.Fields.Append daoF
+    Set daoF = daoT.CreateField("SQL", dbMemo)
+    daoT.Fields.Append daoF
+    Set daoF = daoT.CreateField("Description", dbText, 250)
+    daoT.Fields.Append daoF
+    
+    '▼テーブル追加
+    daoDB.TableDefs.Append daoT
+        
+    '▼レコードセットを開きプロパティフィールドプロパティを取り出す
+    Set daoRS = daoDB.OpenRecordset(strT, dbOpenDynaset)
+
+    For Each daoQuery In daoDB.QueryDefs
+        daoRS.AddNew
+        For Each daoF In daoRS.Fields
+            On Error Resume Next
+            If daoF.Name = "RecordCount" Then
+                
+                daoRS.Fields(daoF.Name) = f_RecCnt(daoQuery.Name)
+            Else
+                daoRS.Fields(daoF.Name) = daoQuery.Properties(daoF.Name).Value
+            End If
+            On Error GoTo 0
+        Next daoF
+        daoRS.Update
+    Next daoQuery
+        
+    'MsgBox "done", , daoDB.Name
+
+End_shori:
+        
+        daoDB.Close: Set daoDB = Nothing
+        Set daoT = Nothing
+    
+    Exit Sub
+    
+err_handle:
+        MsgBox Err.Number & ":" & Error$
+    Resume End_shori
+
+End Sub
+'引数にしたいしたテーブルかクエリのレコード数を返す
+Private Function f_RecCnt(ByVal T_Q_Name As String) As Long
+    Dim sql As String
+    Dim db As DAO.Database
+    Dim rs As DAO.Recordset
+    
+    On Error GoTo err_handle
+    
+    sql = "SELECT COUNT(*) FROM " & T_Q_Name & ";"
+    Set db = Application.CurrentDb
+    
+    Set rs = db.OpenRecordset(sql)
+    f_RecCnt = rs.Fields(0).Value
+    
+end_handle:
+    Set rs = Nothing
+    Set db = Nothing
+    
+    Exit Function
+err_handle:
+    'MsgBox Err.Number & " : " & Err.Description, vbExclamation
+    Resume end_handle
+    
+End Function
+
+
+'/テーブル情報・クエリ情報のプロパティ情報を持つテーブルを作成する（ここまで）
+
+
+
+
+
+'テーブルに説明を付ける
+<h2>Public Sub DescriptionAdd()</h2>
+    Dim Prop As DAO.Property
+    
+    Set Prop = CurrentDb.TableDefs("T_1").CreateProperty
+
+    With Prop
+        .Name = "Description"
+        .Type = dbText
+        .Value = "説明文を入れます"
+    End With
+
+    CurrentDb.TableDefs("T_1").Properties.Append Prop
+
+    Set Prop = Nothing
+    
+End Sub
+
+Descriptionがある場合はエラーになります。
+
+
+<h2>■TransferSpreadsheetを使わないでExcel出力</h2>
+'エクセルとＤＡＯに要参照設定
+
+Option Compare Database
+Option Explicit
+
+    Dim xlApp As Excel.Application
+    Dim WB As Workbook
+    Dim WS As Worksheet
+
+Function Make_xl() As Object
+
+    Set xlApp = New Excel.Application
+    Set WB = xlApp.Workbooks.Add
+    Set WS = WB.Sheets(1)
+    
+    xlApp.Visible = True
+    
+    
+End Function
+
+Sub Out_xl()
+        
+    Dim daoDb As DAO.Database
+    Dim daoTbl As DAO.TableDef
+    Dim daoRS As DAO.Recordset
+    Dim strT_name As String
+    Dim i As Long
+    
+    strT_name = "T_test"
+                
+    Set daoDb = CurrentDb
+    Set daoTbl = daoDb.TableDefs(strT_name)
+    Set daoRS = CurrentDb.OpenRecordset(strT_name, dbOpenTable, dbReadOnly)
+    
+    Make_xl
+        
+
+    WS.Range("a2").CopyFromRecordset daoRS
+    
+    For i = 1 To daoTbl.Fields.Count
+        With WS
+            .Cells(1, i).Value = daoTbl.Fields(i - 1).Name
+        End With
+    Next i
+    
+    With WS
+        .Range("a1").EntireRow.Font.Bold = True
+        .UsedRange.Borders.LineStyle = xlThin
+    End With
+
+    Set WS = Nothing
+    Set WB = Nothing
+    Set xlApp = Nothing
+                    
+    Set daoRS = Nothing
+    Set daoTbl = Nothing
+    Set daoDb = Nothing
+    
+End Sub
+'------------------------------------------------------ここまで
+</pre>
+

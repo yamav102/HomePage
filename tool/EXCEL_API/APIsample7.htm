@@ -1,0 +1,508 @@
+<html lang="Ja">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html401/strict.dtd">
+<meta http-equiv="Content-Type" content="text/html,charset=shift_jis">
+<meta name="description" content="Win32API">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta name="robots" content="noindex,nofollow">
+
+<link rel="stylesheet" type="text/css" href="./vb.css">
+<title>■Win32APIサンプル_7</title>
+
+<body>
+<div class="content">
+
+<h1>■Win32APIサンプル７</h1>
+
+<table id="hanrei">
+<tr>
+<td class="tdApi">API関数宣言</td>
+<td class="tdConst">定数宣言・構造体</td>
+<td class="tdProc">プロシージャのサンプル</td>
+</tr>
+</table>
+<h2>INI ファイルの操作</h2>
+<p>以下はiniファイルの構成です。iniファイルはレジストリのテキスト版です。</p>
+<pre class="codeProc">
+[Section]
+Key=値
+Key=値
+・
+・
+・
+</pre>
+<table border="1">
+<caption>▼Win32 API のINI ファイル関数</caption>
+<tr>
+<th>関数</td><th>機能</td>
+</tr>
+<tr>
+<td>GetPrivateProfileInt</td><td>INI ファイルの文字列を整数として取得する</td>
+</tr>
+<tr>
+<td>GetPrivateProfileSection</td><td>INI ファイルの指定したセクション内のすべてのキーと値を取得する</td>
+</tr>
+<tr>
+<td>GetPrivateProfileSectionNames</td><td>INI ファイルのすべてのセクションの名前を取得する</td>
+</tr>
+<tr>
+<td>GetPrivateProfileString</td><td>INI ファイルの文字列を取得する</td>
+</tr>
+<tr>
+<td>GetProfileInt</td><td>Win.ini ファイルの文字列を整数として取得する</td>
+</tr>
+<tr>
+<td>GetProfileSection</td><td> Win.ini ファイルの指定したセクション内のすべてのキーと値を取得する</td>
+</tr>
+<tr>
+<td>GetProfileString</td><td>Win.ini ファイルの文字列を取得する</td>
+</tr>
+<tr>
+<td>WritePrivateProfileSection</td><td>INI ファイルの指定したセクション内のすべてのキーと値を変更する</td>
+</tr>
+<tr>
+<td>WritePrivateProfileString</td><td>INI ファイルの文字列を変更する</td>
+</tr>
+<tr>
+<td>WriteProfileSection</td><td>Win.ini ファイルの指定したセクション内のすべてのキーと値を変更する</td>
+</tr>
+<tr>
+<td>WriteProfileString</td><td>Win.ini ファイルの文字列を変更する</td>
+</tr>
+</table>
+<p>関数名に「Private」が含まれないもの(GetProfileInt 関数など)は、操作できる対象がWin.ini ファイ
+ルに限定されます。それ以外の独自のINI ファイルを操作するときには、名前に「Private」
+が含まれるもの（GetPrivateProfileInt 関数など）を使用します。</p>
+<ul>
+<li>INIファイルに使用される文字は、大文字小文字を区別しません。</li>
+<li>INIファイルのファイル名に絶対パスを含めないとWINDOWSディレクトリにあるものと看做されます。
+INIファイルを自作する場合は絶対パスで指定します。</li>
+</ul>
+<pre class="codeProc">
+'test.ini
+[Section1]
+Key1=123
+Key2=456
+Key3="ABC"
+[Section2]
+Key4="DEF"
+Key5="XYZ"
+</pre>
+<pre class="codeApi"><a name="GetPrivateProfileInt"></a><span class="REM">'-------------------------------------------------------
+'INIファイルの文字列を整数として取得する関数
+'
+'戻り値     成功 = 指定したキーに対応する整数
+'           失敗 = nDefault
+'-------------------------------------------------------</span>
+Declare Function GetPrivateProfileInt Lib "kernel32" _
+    Alias "GetPrivateProfileIntA" _
+    (ByVal lpApplicationName As String, _
+    ByVal lpKeyName As String, _
+    ByVal nDefault As Long, _
+    ByVal lpFileName As String) As Long
+
+</pre>
+<pre class="codeProc"><a name="GetPrivateProfileInt_Sample"></a><span class="REM">'summary:INIファイルの文字列を整数として取得する</span>
+Sub GetPrivateProfileInt_Sample()
+    Dim strFileName As String
+    Dim rc As Long
+    
+    strFileName = ActiveWorkbook.Path & "\Test.ini"
+  
+    rc = GetPrivateProfileInt("Section1", _
+                            "Key1", _
+                            999, _
+                            strFileName)
+
+    MsgBox "[Section1]Key1: " & rc
+End Sub</pre>
+<pre class="codeApi"><a name="GetPrivateProfileSection"></a><span class="REM">'--------------------------------------------------------------
+'INIファイルの指定したセクション内のすべてのキーと値を取得する関数
+'
+'戻り値     バッファに格納された文字数(項目の区切りはNULL文字)
+'--------------------------------------------------------------</span>
+Declare Function GetPrivateProfileSection Lib "kernel32" _
+    Alias "GetPrivateProfileSectionA" _
+    (ByVal lpAppName As String, _
+    ByVal lpReturnedString As String, _
+    ByVal nSize As Long, _
+    ByVal lpFileName As String) As Long
+
+</pre>
+<pre class="codeProc"><a name="GetPrivateProfileSection_Sample"></a><span class="REM">'summary:INIファイルの指定したセクション内のすべてのキーと値を取得する</span>
+Sub GetPrivateProfileSection_Sample()
+    
+    Dim strFileName As String
+    Dim strReturnedString As String * 32767
+    Dim strKey As String
+    Dim rc As Long
+    Dim strReturnedString2 As String
+    
+    strFileName = ActiveWorkbook.Path & "\Test.ini"
+    
+    rc = GetPrivateProfileSection("Section2", _
+                                strReturnedString, _
+                                Len(strReturnedString), _
+                                strFileName)
+                                    
+    strReturnedString2 = _
+        Left(strReturnedString, _
+        InStr(strReturnedString, vbNullChar & vbNullChar) - 1)
+    
+    Debug.Print strReturnedString2  <span class="REM">'Key4="DEF" Key5="XYZ" が返る</span>
+End Sub</pre>
+<pre class="codeApi"><a name="GetPrivateProfileString"></a><span class="REM">'--------------------------------------------------------------
+'INIファイルの文字列を取得する関数
+'第1 引数にvbNullString を指定するとセクション名が列挙されます。また、
+'第2 引数にvbNullString を指定するとキー名が列挙されます。
+'戻り値     バッファに格納された文字数
+'--------------------------------------------------------------</span>
+Declare Function GetPrivateProfileString Lib "kernel32" _
+    Alias "GetPrivateProfileStringA" _
+    (ByVal lpApplicationName As String, _
+    ByVal lpKeyName As Any, _
+    ByVal lpDefault As String, _
+    ByVal lpReturnedString As String, _
+    ByVal nSize As Long, _
+    ByVal lpFileName As String) As Long
+
+</pre>
+<pre class="codeProc"><a name="GetPrivateProfileString_Sample"></a><span class="REM">'summary:INIファイルの文字列を取得する</span>
+Sub GetPrivateProfileString_Sample()
+    Dim strFileName As String
+    Dim strReturnedString As String * 32767
+    Dim strKey As String
+    Dim i As Integer
+    Dim blnFlag As Boolean
+    Dim rc As Long
+       
+    strFileName = ActiveWorkbook.Path & "\Test.ini"
+
+    rc = GetPrivateProfileString("Section2", _
+                                "Key4", _
+                                vbNullString, _
+                                strReturnedString, _
+                                Len(strReturnedString), _
+                                strFileName)
+
+    blnFlag = False
+
+    <span class="REM">'NULLが連続した場所がデータの終端</span>
+    For i = 1 To Len(strReturnedString)
+        If Mid(strReturnedString, i, 1) = vbNullChar Then
+            If blnFlag = True Then
+                Exit For
+            Else
+                strKey = strKey & Mid(strReturnedString, i, 1)
+                blnFlag = True
+            End If
+        Else
+            strKey = strKey & Mid(strReturnedString, i, 1)
+            blnFlag = False
+        End If
+    Next i
+    
+    strKey = Left(strKey, Len(strKey) - 1)
+        
+    Debug.Print strKey  <span class="REM">'DEF が返る</span>
+    MsgBox "イミディエイトウィンドウで結果を確認してください"
+End Sub</pre>
+<pre class="codeApi"><a name="WritePrivateProfileSection"></a><span class="REM">'--------------------------------------------------------------
+'INIファイルの指定したセクション内のすべてのキーと値を変更する関数
+'
+'戻り値     成功 = 0以外
+'           失敗 = 0
+'--------------------------------------------------------------</span>
+Declare Function WritePrivateProfileSection Lib "kernel32" _
+    Alias "WritePrivateProfileSectionA" _
+    (ByVal lpAppName As String, _
+    ByVal lpString As String, _
+    ByVal lpFileName As String) As Long
+
+</pre>
+<pre class="codeProc"><a name="WritePrivateProfileSection_Sample"></a><span class="REM">'summary:INIファイルの指定したセクション内のすべてのキーと値を変更する</span>
+Sub WritePrivateProfileSection_Sample()
+    Dim strFileName As String
+    Dim strString As String
+    Dim rc As Long
+    
+    strFileName = ThisWorkbook.Path & "\Test.ini"
+    Debug.Print strFileName
+    strString = "New Key1=ネットフェニックス" & vbNullChar & _
+        "New Key2=代表取締役" & vbNullChar & _
+        "New Key3=山田太郎" & vbNullChar & vbNullChar
+
+    rc = WritePrivateProfileSection("Section1", _
+                                    strString, _
+                                    strFileName)
+    If rc = 0 Then
+        MsgBox "失敗"
+    Else
+        MsgBox "Test.ini の内容を確認してください"
+    End If
+End Sub</pre>
+<p>INI ファイルの文字列を変更するときには、WritePrivateProfileString 関数を使います。
+第2 引数に指定したキーが存在するときにはそのキーの値を書き換え、存在しないときに
+はキーと値を追加します。また、第2 引数にvbNullString を指定すると、第1 引数で指定
+したセクションが削除されます。
+次が、そのサンプルプログラムです。</p>
+<pre class="codeApi"><a name="WritePrivateProfileString"></a><span class="REM">'--------------------------------------------------------------
+'INIファイルの文字列を変更する関数
+'
+'戻り値     成功 = 0以外
+'           失敗 = 0
+'--------------------------------------------------------------</span>
+Declare Function WritePrivateProfileString Lib "kernel32" _
+    Alias "WritePrivateProfileStringA" _
+    (ByVal lpApplicationName As String, _
+    ByVal lpKeyName As Any, _
+    ByVal lpString As Any, _
+    ByVal lpFileName As String) As Long
+
+</pre>
+<pre class="codeProc"><a name="WritePrivateProfileString_Sample"></a><span class="REM">'summary:INIファイルの文字列を変更する</span>
+Sub WritePrivateProfileString_Sample()
+    Dim strFileName As String
+    Dim rc As Long
+    
+    strFileName = ThisWorkbook.Path & "\Test.ini"
+
+    <span class="REM">'Key3の値を変更する</span>
+    rc = WritePrivateProfileString("Section1", _
+                                    "New Key3", _
+                                    "牧野直子", _
+                                    strFileName)
+
+    <span class="REM">'Key31を追加する</span>
+    rc = WritePrivateProfileString("Section1", _
+                                    "New Key31", _
+                                    "API for VBA", _
+                                    strFileName)
+    <span class="REM">'Section2を削除する</span>
+    rc = WritePrivateProfileString("Section2", _
+                                    vbNullString, _
+                                    vbNullString, _
+                                    strFileName)
+
+    MsgBox "Test.ini の内容を確認してください"
+End Sub</pre>
+<h2>その他の操作</h2>
+
+<pre class="codeApi"><a name="GetTickCount"></a><span class="REM">'--------------------------------------------------------
+'Windows起動からの経過時間をミリ秒単位で取得する関数
+'
+'戻り値     成功 = Windows起動からの経過時間
+'--------------------------------------------------------</span>
+Declare Function GetTickCount Lib "kernel32" () As Long
+
+</pre>
+<pre class="codeProc"><a name="GetTickCount_Sample"></a><span class="REM">'summary:コードの実行速度を計測する。VBAのtimer関数でもできます。</span>
+Sub GetTickCount_Sample()
+    Dim lngTimer1 As Long
+    Dim lngTimer2 As Long
+    
+    <span class="REM">'現在時間の取得</span>
+    lngTimer1 = GetTickCount()
+
+    MsgBox "［OK］ボタンを押してください"
+    
+    <span class="REM">'経過時間の取得</span>	
+    lngTimer2 = GetTickCount() - lngTimer1
+
+    MsgBox "［OK］ボタンを押すまでに " & _
+        lngTimer2 & " ミリ秒かかりました"
+End Sub</pre>
+<pre class="codeProc"><a name="GetTickCount_Sample2"></a><span class="REM">'summary:'Windowsを起動してから経過した時間(分)を取得</span>
+Sub GetTickCount_Sample2()
+
+    <span class="REM">'「4,294,967,295」ミリ秒(49.7日)が計測の上限</span>
+    Dim lngTimer As Long
+    Dim vntTimer As Variant
+    Dim rc As Long
+    Dim rc2 As Double
+    
+    <span class="REM">'Windowsを起動してから経過した時間を取得</span>
+    lngTimer = GetTickCount()
+    
+    vntTimer = CDec(lngTimer)
+    If vntTimer < 0 Then
+        vntTimer = vntTimer + 2 ^ 32
+    End If
+    
+    vntTimer = vntTimer / 1000 / 60
+    vntTimer = Int(vntTimer)
+    MsgBox "Windowsを起動してから経過した時間: " & _
+        Format(vntTimer, "#,###分")
+End Sub</pre>
+<pre class="codeApi"><a name="Sleep"></a><span class="REM">'-----------------------------
+'指定された時間だけ中断する関数(VBAのWaitメッソドは秒単位)
+'-----------------------------</span>
+Declare Sub Sleep Lib "kernel32" _
+    (ByVal dwMilliseconds As Long)
+
+</pre>
+<pre class="codeProc"><a name="Sleep_Sample"></a><span class="REM">'summary:ミリ秒単位でコードの実行を中断する(VBAのWaitメッソドは秒単位)</span>
+Sub Sleep_Sample()
+    Dim i As Integer
+    
+    Worksheets("Sheet2").Activate
+    
+    For i = 1 To 20
+        Cells(i, 1).Interior.ColorIndex = 3
+        Sleep 100
+        Cells(i, 1).Interior.ColorIndex = xlNone
+        Sleep 100
+    Next i
+End Sub</pre>
+<pre class="codeApi"><a name="GetCaretBlinkTime"></a><span class="REM">'-----------------------------------------
+'キャレット(カーソル)の点滅時間を取得する関数
+'
+'戻り値     成功 = 点滅時間(ミリ秒単位)
+'           失敗 = 0
+'------------------------------------------</span>
+Declare Function GetCaretBlinkTime Lib "user32" () As Long
+</pre>
+<pre class="codeApi"><a name="SetCaretBlinkTime"></a><span class="REM">'-----------------------------------------
+'キャレット(カーソル)の点滅速度を設定する関数
+'
+'戻り値     成功 = 0以外
+'           失敗 = 0
+'-----------------------------------------</span>
+Declare Function SetCaretBlinkTime Lib "user32" _
+    (ByVal wMSeconds As Long) As Long
+</pre>
+
+<pre class="codeProc"><a name="Get_SetCaretBlinkTime"></a><span class="REM">'userform</span><a name="SetCaretBlinkTime_Sample"></a>
+Option Explicit
+
+Dim lngtBlinkTime As Long
+
+Private Sub UserForm_Initialize()<a name="Private Sub UserForm_Initialize"></a>
+    <span class="REM">'コントロールパネルで設定されているキャレットの点滅時間を取得</span>
+    lngtBlinkTime = GetCaretBlinkTime()
+
+    lblBlinkTime.Caption = lngtBlinkTime & "ミリ秒"
+    
+    txtDuobleBTime.SetFocus
+End Sub
+
+
+Private Sub cmdDuobleBTime_Click()
+    Dim rc As Long
+
+    lblBlinkTime.Caption = lngtBlinkTime * 2 & "ミリ秒"
+    
+    txtDuobleBTime.SetFocus
+    
+    <span class="REM">'カーソルの点滅時間を現在の倍に設定</span>
+    rc = SetCaretBlinkTime(lngtBlinkTime * 2)
+End Sub
+
+
+Private Sub cmdQuit_Click()
+    Dim rc As Long
+    
+    MsgBox "カーソルの点滅時間を元の設定に戻します"
+    
+    <span class="REM">'カーソルの点滅時間を現在の倍に設定</span>
+    rc = SetCaretBlinkTime(lngtBlinkTime)
+
+    Unload Me
+End Sub</pre>
+<pre class="codeApi"><a name="PlaySound"></a><span class="REM">'-----------------------------------------
+'Wave音を鳴らす関数
+'
+'戻り値     成功 = 1
+'           失敗 = 0
+'-----------------------------------------</span>
+Declare Function PlaySound Lib "winmm.dll" _
+    Alias "PlaySoundA" _
+    (ByVal lpszName As String, _
+    ByVal hModule As Long, _
+    ByVal dwFlags As Long) As Long
+
+<pre class="codeConst"><span class="REM">
+'演奏方法</span>
+<span class="REM">'演奏終了まで戻らない</span>
+ Const SND_SYNC = &H0&
+<span class="REM">'非同期で再生</span>
+ Const SND_ASYNC = &H1&
+<span class="REM">'指定のファイルがないときデフォルトを実行しない</span>
+ Const SND_NODEFAULT = &H2&
+<span class="REM">'サウンドデータをメモリにロード</span>
+ Const SND_MEMORY = &H4&
+<span class="REM">'ループ再生</span>
+ Const SND_LOOP = &H8&
+<span class="REM">'すでに再生中のときは再生しない</span>
+ Const SND_NOSTOP = &H10&
+<span class="REM">'再生を中止する</span>
+ Const SND_PURGE = &H40&
+<span class="REM">'アプリケーション定義のサウンドを再生</span>
+ Const SND_APPLICATION = &H80&    
+<span class="REM">'サウンドドライバの使用中は再生しない</span>
+ Const SND_NOWAIT = &H2000
+<span class="REM">'lpszNameはシステムイベント名</span>
+ Const SND_ALIAS = &H10000
+<span class="REM">'lpszNameはファイル名</span>
+ Const SND_FILENAME = &H20000
+<span class="REM">'lpszNameはリソースID</span>
+ Const SND_RESOURCE = &H40004
+<span class="REM">'定義済みサウンドID</span>
+ Const SND_ALIAS_ID = &H110000
+
+ Const SND_VALID = &H1F&
+ Const SND_VALIDFLAGS = &H17201F
+ Const SND_RESERVED = &HFF000000
+ Const SND_TYPE_MASK = &H170007
+
+<span class="REM">'パスの最大長</span>
+ Const MAX_PATH = 260</pre></pre>
+<pre class="codeProc"><a name="PlaySound_Sample"></a><span class="REM">'Wave音を鳴らす</span>
+Sub PlaySound_Sample()
+    Dim strBuffer As String * MAX_PATH
+    Dim strPath As String
+    Dim rc As Long
+
+    <span class="REM">'Windowsディレクトリのパス名を取得</span>
+    rc = GetWindowsDirectory(strBuffer, _
+                            Len(strBuffer))
+    
+    <span class="REM">'取得したデータから必要な文字列だけを抽出</span>
+    strPath = Left(strBuffer, _
+        InStr(strBuffer, vbNullChar) - 1)
+
+    <span class="REM">'Wave音を鳴らす</span>
+    rc = PlaySound _
+        (strPath & "\Media\Windows XP Startup.wav", _
+        0&, _
+        SND_ASYNC Or SND_LOOP)
+End Sub</pre>
+<pre class="codeProc"><a name="PlaySound_Sample2"></a><span class="REM">'summary:Wave 音を止める</span>
+Sub PlaySound_Sample2()
+    Dim rc As Long
+    
+    rc = PlaySound(vbNullString, _
+    0&, _
+    0&)
+End Sub</pre>
+<p>VBAのChdirステートメントではLAN上のディレクトリをカレントディレクトリにすることは出来ません。</p>
+<pre class="codeApi"><a name="SetCurrentDirectory"></a><span class="REM">'-------------------------------------------------------------
+'カレントプロセスのカレントディレクトリを変更する関数
+'
+'戻り値     成功 = 0以外
+'           失敗 = 0
+'-------------------------------------------------------------</span>
+Declare Function SetCurrentDirectory Lib "kernel32" _
+    Alias "SetCurrentDirectoryA" _
+    (ByVal lpPathName As String) As Long
+</pre>
+<pre class="codeProc"><a name="SetCurrentDirectory_Sample"></a><span class="REM">'summary:ネットワーク接続されたパソコンのフォルダをカレントディレクトリにする</span>
+Sub SetCurrentDirectory_Sample()
+
+    SetCurrentDirectory "\\コンピュータ名\フォルダ名"
+
+End Sub</pre>
+<hr>
+<div><a href="./index.htm">&gt;INDEX</a></div>
+</div>
+</body>
+</html>

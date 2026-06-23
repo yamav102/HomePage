@@ -1,0 +1,102 @@
+IE
+
+<script src="../easy/load.js"></script>
+<script src="../jsMath.js"></script>
+<link rel="stylesheet" href="b.css" type="text/css">
+<style type="text/css">
+ a:hover{
+    background-color:mediumaquamarine;
+    text-decoration: none;
+ }.offset{
+   margin-left:3em;
+   height:1.5em;
+ }.math{
+   padding-right:.7em;
+ }
+</style>
+<div class="myArea">
+<p>dkdkdkdkd</p>
+
+<div class="divleft6">
+   <div class="math">
+      P(\cos\alpha,\sin\alpha)、Q(\cos\beta,\sin\beta)
+   </div>
+</div>
+
+<div class="divleft6">
+   <div class="math">
+あいうえお
+=\cos^2\alpha－2\cos\alpha\cos\beta＋\cos^2\beta＋\sin^2\alpha－2\sin\alpha\sin\beta+\sin^2\beta
+   </div>
+</div>
+
+<div class="divleft7">
+   <div class="math">
+      =\cos^2\alpha-2\cos\alpha\cos\beta+\cos^2\beta+\sin^2\alpha-2\sin\alpha\sin\beta+\sin^2\beta
+   </div>
+</div>
+
+<script type="text/javascript">
+/* IE10のtop位置のズレをなんとかしたい */
+
+   var offsetlist = document.getElementsByClassName('offset');
+   var off0list = document.getElementsByClassName('offset0');
+   var mathlist = document.getElementsByClassName('math');
+
+   for(var i = 0; i < offsetlist.length; i++){
+      offsetlist.item(i).style.position='relative';
+
+      if(window.navigator.appName=='Microsoft Internet Explorer'){
+
+         for(var h = 0; h < mathlist.length; h++){
+            if(mathlist.item(h).parentNode.className=='offset'){
+               mathlist.item(h).style.top="1.2em";
+               mathlist.item(h).style.position="absolute";
+               //mathlist.item(h).style.color="red";
+            }
+         }
+      }
+
+      else{
+
+         for(var h = 0; h < mathlist.length; h++){
+            if(mathlist.item(h).parentNode.className=='offset'){
+               mathlist.item(h).style.top=".6em";
+               mathlist.item(h).style.position="absolute";
+               //mathlist.item(h).style.color="red";
+            }
+         }
+      }
+   }
+   /* 
+    div要素の mathクラスにインデントをつける。末尾の数字はインデントの文字数
+    対象の mathクラスを divleft#クラスのブロック要素で囲んで使う
+   */
+
+
+   for(var i = 0; i < mathlist.length; i++){
+      if(mathlist.item(i).parentNode.className=='divleft2'){
+         mathlist.item(i).style.textAlign="left";
+         mathlist.item(i).style.textIndent="2em";
+         mathlist.item(i).style.marginTop="-1em";
+      }
+   }
+
+
+   for(var i = 0; i < mathlist.length; i++){
+      if(mathlist.item(i).parentNode.className=='divleft6'){
+         mathlist.item(i).style.textAlign="left";
+         mathlist.item(i).style.textIndent="6em";
+         mathlist.item(i).style.marginTop="-1em";
+      }
+   }
+
+   for(var i = 0; i < mathlist.length; i++){
+      if(mathlist.item(i).parentNode.className=='divleft7'){
+         mathlist.item(i).style.textAlign="left";
+         mathlist.item(i).style.textIndent="7.1em";
+         mathlist.item(i).style.marginTop="-1em";
+      }
+   }
+
+</script>

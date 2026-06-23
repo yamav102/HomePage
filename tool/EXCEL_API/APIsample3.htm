@@ -1,0 +1,682 @@
+<html lang="Ja">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html401/strict.dtd">
+<meta http-equiv="Content-Type" content="text/html,charset=Shift_jis">
+<meta name="description" content="Win32API">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta name="robots" content="noindex,nofollow">
+
+<link rel="stylesheet" type="text/css" href="./vb.css">
+<title>■Win32APIサンプル_3</title>
+
+<body>
+<div class="content">
+
+<h1>■Win32APIサンプル３</h1>
+
+<table id="hanrei">
+<tr>
+<td class="tdApi">API関数宣言</td>
+<td class="tdConst">定数宣言・構造体</td>
+<td class="tdProc">プロシージャのサンプル</td>
+</tr>
+</table>
+
+<h2>テンポラリファイルを作成する</h2>
+<pre class="codeApi">
+<pre class="codeConst">Const MAX_PATH = 260     <span class="REM">'パスの最大長</span></pre><span class="REM">
+'---------------------------------------------------------------------
+'テンポラリファイル用のディレクトリのパス名を取得する関数
+'
+'戻り値     成功 = lpBufferバッファに書き込まれた文字数(終端のNullを除く)
+'           失敗 = 0
+'---------------------------------------------------------------------</span>
+Declare Function GetTempPath Lib "kernel32" _
+    Alias "GetTempPathA" _
+    (ByVal nBufferLength As Long, _
+    ByVal lpBuffer As String) As Long</pre>
+
+<pre class="codeApi"><span class="REM">
+'-----------------------------------------------------------------------
+'テンポラリファイルのファイル名もしくは実際にテンポラリファイルを作成する関数<a name="GetTempFileName"></a>
+'
+'戻り値     成功 = テンポラリファイル名に使われた一意な数
+'           失敗 = 0
+'-----------------------------------------------------------------------</span>
+Declare Function GetTempFileName Lib "kernel32" _
+    Alias "GetTempFileNameA" _
+    (ByVal lpszPath As String, _
+    ByVal lpPrefixString As String, _
+    ByVal wUnique As Long, _
+    ByVal lpTempFileName As String) As Long</pre>
+    
+<pre class="codeProc"><span class="REM">'summary:テンポラリファイルを作成する</span>
+Sub GetTempFileName_Sample()<a name="GetTempFileName_Sample"></a>
+
+    Dim strBuffer As String * MAX_PATH          <span class="REM">'テンポラリディレクトリのパス</span>
+    Dim strPath As String                       <span class="REM">'テンポラリディレクトリのパス</span>
+    
+    Dim strPrefixString As String               <span class="REM">'テンポラリファイル名のプリフィックス</span>
+    Dim strTempFileName As String * MAX_PATH    <span class="REM">'テンポラリファイル名</span>
+    
+    Dim strTempFN As String                     <span class="REM">'テンポラリファイル名</span>
+    Dim rc As Long
+    
+    <span class="REM">'テンポラリファイル用のディレクトリのパスを取得</span>
+    rc = GetTempPath(Len(strBuffer), _
+                    strBuffer)
+                    
+    <span class="REM">'取得したパスから必要な文字列だけを抽出</span>
+    strPath = Left(strBuffer, InStr(strBuffer, vbNullChar) - 1)
+    
+    <span class="REM">'ファイル名のプリフィックスを指定３文字を超える設定は桁落ちします</span>
+    strPrefixString = "api"
+    
+    <span class="REM">'テンポラリファイルを作成
+	'第1引数にカレントディレクトリを指定するときは"."を代入する
+	'第3引数に0&を指定する事でユニークなファイル名を作成する</span>
+    rc = GetTempFileName(strPath, _
+                        strPrefixString, _
+                        0&, _
+                        strTempFileName)
+                        
+    <span class="REM">'取得したファイル名から必要な文字列だけを抽出</span>
+    strTempFN = Left(strTempFileName, _
+        InStr(strTempFileName, vbNullChar) - 1)
+        
+    MsgBox strTempFN & " を作成しました" & Chr(13) & Chr(13) & _
+        "確認後自分で削除してください"
+    
+    Debug.Print strTempFN
+End Sub</pre>
+<h2>ファイルを検索する</h2>
+<pre class="codeApi"><pre class="codeConst">
+Const MAX_PATH = 260     <span class="REM">'パスの最大長</span></pre>
+<a name="SearchPath"><span class="REM">'--------------------------------------------
+'指定されたファイルを検索する関数
+'
+'戻り値     成功 = バッファにコピーされた文字数
+'           失敗 = 0
+'--------------------------------------------</span>
+Declare Function SearchPath Lib "kernel32" _
+    Alias "SearchPathA" _
+    (ByVal lpPath As String, _
+    ByVal lpFileName As String, _
+    ByVal lpExtension As String, _
+    ByVal nBufferLength As Long, _
+    ByVal lpBuffer As String, _
+    ByVal lpFilePart As String) As Long</span></a>
+</pre>
+<pre class="codeProc"><span class="REM">'**********************************
+'summary:ファイルを検索する
+'**********************************
+'検索フォルダにNULLを指定すると複数のフォルダを検索します。フォルダの順序については
+'MSDNを参照して下さい。サブフォルダまで検索することはありません。</span>
+<a name="SearchPath_Sample">Sub SearchPath_Sample()</a>
+    Dim strPath As String           <span class="REM">'検索するディレクトリ名</span>
+    Dim strFileName As String       <span class="REM">'検索対象のファイル名(フルパスも可能)</span>
+    Dim strExtention As String      <span class="REM">'拡張子</span>
+    Dim lngBufferLength As Long     <span class="REM">'パス名を受け取るバッファのサイズ</span>
+    Dim strBuffer As String * MAX_PATH <span class="REM">'パス名を受け取るバッファ</span>
+    Dim strFilePart As String       <span class="REM">'ディレクトリ名なしのファイル名へのポインタ</span>
+    Dim rc As Long
+    
+    <span class="REM">'ファイルを検索するパスを指定</span>
+    strPath = vbNullString
+    
+    <span class="REM">'ファイル名を指定</span>
+    strFileName = "Notepad"
+    
+    <span class="REM">'拡張子を指定</span>
+    strExtention = ".exe"
+    
+    
+    <span class="REM">'パス名を受け取るバッファのサイズを指定</span>
+    lngBufferLength = MAX_PATH
+    
+    <span class="REM">'ファイルを検索</span>
+    rc = SearchPath(strPath, _
+                    strFileName, _
+                    strExtention, _
+                    lngBufferLength, _
+                    strBuffer, _
+                    strFilePart)
+    
+    <span class="REM">'取得したパス名とファイル名を表示</span>
+    MsgBox Left(strBuffer, InStr(strBuffer, vbNullChar) - 1)
+End Sub
+</pre>
+<h2>拡張子に関連付けられたプログラム名を取得する</h2>
+<pre class="codeApi"><a name="FindExecutable"><pre class="codeConst">Const MAX_PATH = 260     <span class="REM">'パスの最大長</span></pre>
+<span class="REM">'-------------------------------------------------------------------
+'指定された拡張子に関連付けられているプログラム名とハンドルを取得する関数
+'
+'戻り値     成功 = 32を超える数値
+'           失敗 = 31以下の数値
+'-------------------------------------------------------------------</span></a>
+Declare Function FindExecutable Lib "shell32.dll" _
+    Alias "FindExecutableA" _
+    (ByVal lpFile As String, _
+    ByVal lpDirectory As String, _
+    ByVal lpResult As String) As Long
+
+<pre class="codeConst">
+Public Const ERROR_FILE_NOT_FOUND = 2&  <span class="REM">'ファイルが見つからない</span>
+Public Const ERROR_PATH_NOT_FOUND = 3&  <span class="REM">'パスが見つからない</span>
+Public Const ERROR_BAD_FORMAT = 11&     <span class="REM">'ファイルが無効</span></pre></pre>
+<pre class="codeProc">
+<a name="FindExecutable_Sample"><span class="REM">'summary:拡張子に関連付けられたプログラム名を取得する</span></a>
+Sub FindExecutable_Sample()
+    
+    Dim strFile As String               <span class="REM">'指定の拡張子を持つファイル名</span>
+    Dim strDirectory As String          <span class="REM">'デフォルトのディレクトリ名</span>
+    Dim strResult As String * MAX_PATH  <span class="REM">'プログラム名を受け取るバッファ</span>
+    Dim rc As Long
+    
+    Dim intRtn As Integer
+    
+    intRtn = _
+        MsgBox("このサンプルを実行するためには C:\Windows\setuplog.txt がなければなりません" _
+        & Chr(13) & Chr(13) & _
+        "準備は整っていますか?", vbYesNo + vbQuestion)
+        
+    If intRtn = vbNo Then Exit Sub
+    
+    <span class="REM">'拡張子(ファイル名)を指定</span>
+    strFile = "setuplog.txt"
+    
+    <span class="REM">'ディレクトリを指定</span>
+    <span class="REM">'&lt;使用しているOSに応じてディレクトリ名を変更してください&gt;</span>
+    strDirectory = "C:\Windows"
+    
+    <span class="REM">'関連付けられているプログラム名とハンドルを取得</span>
+    rc = FindExecutable(strFile, _
+                        strDirectory, _
+                        strResult)
+    
+    If rc > 32 Then                 <span class="REM">'関数呼び出し成功</span>
+        MsgBox "拡張子 txt に関連付けられたファイル: " & _
+            Left(strResult, InStr(strResult, vbNullChar) - 1)
+    Else                            <span class="REM">'関数呼び出し失敗</span>
+        Select Case rc
+            Case 0&
+                MsgBox "メモリ不足です"
+            Case ERROR_FILE_NOT_FOUND
+                MsgBox "ファイルが見つかりません"
+            Case ERROR_PATH_NOT_FOUND
+                MsgBox "パスが見つかりません"
+            Case ERROR_BAD_FORMAT
+                MsgBox "ファイルが無効です"
+            Case 31&
+                MsgBox "関連付けられているプログラムがありません"
+        End Select
+    End If
+    
+End Sub</pre>
+<h2>特別なディレクトリのパス名を取得する</h2>
+<p>以下のサンプルは Environ ("windir") でAPIを使用せずに取得できます。
+尚、VBA の Environ で使用できる環境変数の一覧は、コマンドプロンプトに Set と打ち込むことで
+一覧を表示できます。</p>
+<pre class="codeApi"><pre class="codeConst"><a name="GetWindowsDirectory"></a> Const MAX_PATH = 260     'パスの最大長
+</pre><span class="REM">
+'---------------------------------------------------------------------
+'Windowsディレクトリのパス名を取得する関数
+'
+'戻り値     成功 = lpBufferバッファに書き込まれた文字数(終端のNullを除く)
+'　　　　   失敗 = 0
+'---------------------------------------------------------------------</span>
+Declare Function GetWindowsDirectory Lib "kernel32" _
+    Alias "GetWindowsDirectoryA" _
+   (ByVal lpBuffer As String, _
+    ByVal nSize As Long) As Long</pre>
+<pre class="codeProc">
+<span class="REM">'summary:Windowsディレクトリのパス名を取得する</span>
+<a name="GetWindowsDirectory_Saple">Sub GetWindowsDirectory_Saple()</a>
+    Dim strBuffer As String * MAX_PATH  <span class="REM">'Windowsディレクトリのパス名</span>
+    Dim rc As Long
+    
+    Dim strPrompt As String
+        
+    <span class="REM">'Windowsディレクトリのパス名を取得</span>
+    rc = GetWindowsDirectory(strBuffer, _
+                            Len(strBuffer))
+    
+    <span class="REM">'取得したデータから必要な文字列だけを抽出</span>
+    strPrompt = Left(strBuffer, InStr(strBuffer, vbNullChar) - 1)
+   
+    MsgBox "Windowsディレクトリのパス名: " & strPrompt
+End Sub</pre>
+<pre class="codeApi"><a name="GetSystemDirectory"><pre class="codeConst">
+ Const MAX_PATH = 260     <span class="REM">'パスの最大長</span></a></pre>
+<span class="REM">'---------------------------------------------------------------------
+'Windowsシステムディレクトリのパス名を取得する
+'
+'戻り値     成功 = lpBufferバッファに書き込まれた文字数(終端のNullを除く)
+'　　　　   失敗 = 0
+'---------------------------------------------------------------------</span>
+Declare Function GetSystemDirectory Lib "kernel32" _
+    Alias "GetSystemDirectoryA" _
+    (ByVal lpBuffer As String, _
+    ByVal nSize As Long) As Long</pre><pre class="codeProc"><span class="REM">'summary:Windowsシステムディレクトリのパス名を取得する</span>
+<a name="GetSystemDirectory_Saple">Sub GetSystemDirectory_Saple()</a>
+    ><span class="REM">'Windowsシステムディレクトリのパス名</span>
+    Dim strBuffer As String * MAX_PATH
+    Dim rc As Long
+    
+    Dim strPrompt As String
+        
+    <span class="REM">'Windowsシステムディレクトリのパス名を取得</span>
+    rc = GetSystemDirectory(strBuffer, _
+                            Len(strBuffer))
+    
+    <span class="REM">'取得したデータから必要な文字列だけを抽出</span>
+    strPrompt = Left(strBuffer, InStr(strBuffer, vbNullChar) - 1)
+   
+    MsgBox "Windowsシステムディレクトリのパス名: " & strPrompt
+End Sub</pre>
+<h2>テンポラリファイル用のディレクトリのパス名を取得する</h2>
+<p>以下のサンプルは VBA の environ("temp") environ("tmp") で代用できます。</p>
+<pre class="codeApi"><pre class="codeConst"><a name="GetTempPath"></a>Const MAX_PATH = 260     <span class="REM">'パスの最大長</span></pre><span class="REM">
+'---------------------------------------------------------------------
+'テンポラリファイル用のディレクトリのパス名を取得する関数
+'
+'戻り値     成功 = lpBufferバッファに書き込まれた文字数(終端のNullを除く)
+'           失敗 = 0
+'---------------------------------------------------------------------</span>
+Declare Function GetTempPath Lib "kernel32" _
+    Alias "GetTempPathA" _
+    (ByVal nBufferLength As Long, _
+    ByVal lpBuffer As String) As Long</pre></pre>
+
+<pre class="codeProc"><span class="REM">'summary:テンポラリファイル用のディレクトリのパス名を取得する</span>
+<a name="GetTempPath_Sample">Sub GetTempPath_Sample()</a><span class="REM">
+    'テンポラリディレクトリのパス名</span>
+    Dim strBuffer As String * MAX_PATH
+    Dim rc As Long
+    
+    Dim strPrompt As String
+    
+    <span class="REM">'テンポラリファイル用のディレクトリのパスを取得</span>
+    rc = GetTempPath(Len(strBuffer), _
+                    strBuffer)
+                    
+    <span class="REM">'取得したパスから必要な文字列だけを抽出</span>
+    strPrompt = Left(strBuffer, InStr(strBuffer, vbNullChar) - 1)
+   
+    MsgBox "テンポラリファイル用のディレクトリのパス名: " & strPrompt
+    
+    Debug.Print strPrompt
+End Sub</pre>
+<h2>特殊フォルダのパスを取得する</h2>
+<pre class="codeApi"><a name="SHGetSpecialFolderLocation"></a><span class="REM">
+'--------------------------------
+' 特殊フォルダの位置を取得する関数
+'
+'戻り値     成功 = NOERROR(=0)
+'           失敗 = エラーコード
+'--------------------------------</span>
+Declare Function SHGetSpecialFolderLocation Lib "shell32.dll" _
+   (ByVal hWndOwner As Long, _
+    ByVal nFolder As Long, _
+    ppidl As Long) As Long
+<pre class="codeConst">
+ Const MAX_PATH = 260     <span class="REM">'パスの最大長</span>
+
+<span class="REM">'デスクトップフォルダ</span>
+ Const CSIDL_DESKTOP = &H0
+ <span class="REM">'インターネットフォルダ</span>
+ Const CSIDL_INTERNET = &H1
+ <span class="REM">'「Windows\プログラム」フォルダ</span>
+ Const CSIDL_PROGRAMS = &H2
+ <span class="REM">'コントロールパネルアプリケーション用アイコンフォルダ</span>
+ Const CSIDL_CONTROLS = &H3
+ <span class="REM">'プリンタフォルダ</span>
+ Const CSIDL_PRINTERS = &H4
+ <span class="REM">'マイドキュメントディレクトリ</span>
+ Const CSIDL_PERSONAL = &H5
+ <span class="REM">'お気に入りディレクトリ</span>
+ Const CSIDL_FAVORITES = &H6
+ <span class="REM">'スタートアップフォルダ</span>
+ Const CSIDL_STARTUP = &H7
+ <span class="REM">'最近使ったファイルフォルダ</span>
+ Const CSIDL_RECENT = &H8
+ <span class="REM">'SendToディレクトリ</span>
+ Const CSIDL_SENDTO = &H9
+ <span class="REM">'ごみ箱ディレクトリ</span>
+ Const CSIDL_BITBUCKET = &HA
+ <span class="REM">'スタートメニューフォルダ</span>
+ Const CSIDL_STARTMENU = &HB
+ <span class="REM">'デスクトップの物理的ディレクトリ</span>
+ Const CSIDL_DESKTOPDIRECTORY = &H10
+ <span class="REM">'マイコンピュータフォルダ</span>
+ Const CSIDL_DRIVES = &H11
+ <span class="REM">'NETWORKフォルダ</span>
+ Const CSIDL_NETWORK = &H12
+ <span class="REM">'NETHOODフォルダ</span>
+ Const CSIDL_NETHOOD = &H13
+ <span class="REM">'フォントフォルダ</span>
+ Const CSIDL_FONTS = &H14
+ <span class="REM">'ドキュメントテンプレートディレクトリ</span>
+ Const CSIDL_TEMPLATES = &H15
+ <span class="REM">'スタートメニューに表示されるプログラムとフォルダを含むディレクトリ(全ユーザー用)</span>
+ Const CSIDL_COMMON_STARTMENU = &H16
+ <span class="REM">'スタートメニューに表示されるプログラムグループを含むディレクトリ(全ユーザー用)</span>
+ Const CSIDL_COMMON_PROGRAMS = &H17
+ <span class="REM">'スタートアップフォルダに含まれるプログラムを含むディレクトリ(全ユーザー用)</span>
+ Const CSIDL_COMMON_STARTUP = &H18
+ <span class="REM">'デスクトップディレクトリ(全ユーザー用)</span>
+ Const CSIDL_COMMON_DESKTOPDIRECTORY = &H19
+ <span class="REM">'アプリケーション定義データ用共通ディレクトリ</span>
+ Const CSIDL_APPDATA = &H1A
+ <span class="REM">'プリンタリンクディレクトリ</span>
+ Const CSIDL_PRINTHOOD = &H1B
+ <span class="REM">'スタートアッププログラムグループ内のスタートアップディレクトリ(特定ユーザー用)</span>
+ Const CSIDL_ALTSTARTUP = &H1D
+ <span class="REM">'スタートアッププログラムグループ内のスタートアップディレクトリ(全ユーザー用)</span>
+ Const CSIDL_COMMON_ALTSTARTUP = &H1E
+ <span class="REM">'お気に入りディレクトリ(全ユーザー用)</span>
+ Const CSIDL_COMMON_FAVORITES = &H1F
+ <span class="REM">'インターネットキャッシュディレクトリ</span>
+ Const CSIDL_INTERNET_CACHE = &H20
+ <span class="REM">'インターネットクッキーディレクトリ</span>
+ Const CSIDL_COOKIES = &H21
+ <span class="REM">'インターネット履歴ディレクトリ</span>
+ Const CSIDL_HISTORY = &H22</pre></pre>
+
+<pre class="codeProc"><span class="REM">
+'特別なフォルダのパスを取得する
+'インターネットキャッシュディレクトリのパス名を取得する</span>
+<a name="SHGetSpecialFolderLocation_Sample">Sub SHGetSpecialFolderLocation_Sample()</a>
+    Dim lngWndOwner As Long
+    Dim lngFolder As Long
+    Dim lngPidl As Long
+    Dim strPath As String * MAX_PATH
+    Dim rc As Long
+    
+    Dim strClassName As String  <span class="REM">'クラス名</span>
+    Dim strPrompt As String
+     
+    <span class="REM">'Excelのクラス名を指定</span>
+    strClassName = "XLMAIN"
+
+    <span class="REM">'ダイアログボックスの親ウィンドウのハンドル</span>
+    lngWndOwner = FindWindow(strClassName, _
+                            Application.Caption)
+    <span class="REM">'Excel2002の場合は　変数=Application.Hwnd　でもよい
+    
+    'インターネットキャッシュディレクトリを指定</span>
+    lngFolder = CSIDL_INTERNET_CACHE
+    
+    <span class="REM">'インターネットキャッシュディレクトリのpidlを取得</span>
+    rc = SHGetSpecialFolderLocation(lngWndOwner, _
+                                    lngFolder, _
+                                    lngPidl)
+                                    
+    <span class="REM">'関数の呼び出しが成功したら</span>
+    If lngPidl <> 0 Then
+    
+        <span class="REM">'SHGetSpecialFolderLocationで取得した値からフォルダのフルパスを取得</span>
+        rc = SHGetPathFromIDList(lngPidl, _
+                                strPath)
+
+        strPrompt = Left(strPath, InStr(strPath, vbNullChar) - 1)
+        MsgBox "インターネットキャッシュディレクトリ: " & strPrompt
+    Else
+        MsgBox "関数の呼び出しに失敗しました"
+    End If
+    
+    <span class="REM">'割り当てられたメモリを開放</span>
+    Call CoTaskMemFree(lngPidl)
+End Sub</pre>
+<h2>ドライブの種類を判別する</h2><pre class="codeApi"><a name="GetDriveType"></a><span class="REM">'-----------------------------------
+'指定されたドライブの種類を調べる関数
+'
+'戻り値     ドライブの種類を識別する値
+'------------------------------------</span>
+Declare Function GetDriveType Lib "kernel32" _
+    Alias "GetDriveTypeA" _
+    (ByVal nDrive As String) As Long
+<pre class="codeConst">
+<span class="REM">'GetDriveType関数の返り値</span>
+ Const DRIVE_UNKNOWN = 0&     <span class="REM">'ドライブの種類が判別できない</span>
+ Const DRIVE_NO_ROOT_DIR = 1& <span class="REM">'指定のルートディレクトリが存在しない</span>
+ Const DRIVE_REMOVABLE = 2&   <span class="REM">'ドライブからディスクを抜くことができる</span>
+ Const DRIVE_FIXED = 3&       <span class="REM">'ドライブからディスクを抜くことができない</span>
+ Const DRIVE_REMOTE = 4&      <span class="REM">'リモート(ネットワーク)ドライブ</span>
+ Const DRIVE_CDROM = 5&       <span class="REM">'CD-ROMドライブ</span>
+ Const DRIVE_RAMDISK = 6&     <span class="REM">'RAMディスク</span></pre></pre>
+
+<pre class="codeProc"><a name="GetDriveType_Sample"></a><span class="REM">'summary:ドライブの種類を判別する</span>
+Sub GetDriveType_Sample()
+    Dim strDrive As String
+    
+    strDrive = InputBox(Prompt:="ドライブ名を入力してください", _
+        Default:="C:\")
+
+    If strDrive <> "" Then
+        Select Case GetDriveType(strDrive)
+            Case DRIVE_UNKNOWN
+                MsgBox "ドライブの種類が判別できません"
+            Case DRIVE_NO_ROOT_DIR
+                MsgBox "指定のルートディレクトリが存在しません"
+            Case DRIVE_REMOVABLE
+                MsgBox "リムーバルディスクです"
+            Case DRIVE_FIXED
+                MsgBox "固定ディスクです"
+            Case DRIVE_REMOTE
+                MsgBox "リモート(ネットワーク)ドライブです"
+            Case DRIVE_CDROM
+                MsgBox "CD-ROMドライブです"
+            Case DRIVE_RAMDISK
+                MsgBox "RAMディスクです"
+        End Select
+    End If
+End Sub</pre>
+<h2>エラー処理</h2>
+<p>Win32APIのエラーを取得する GetLastError 関数は、VBA から使用できないという制限がある。
+この仕様制限に対するため LastDLLError プロパティが用意されている。
+</p>
+<pre class="codeApi"><a name="SetErrorMode"></a><span class="REM">'-------------------------------------------------------
+'エラーの処理モードを設定する関数
+'
+'戻り値     以前のエラーモード
+'-------------------------------------------------------</span>
+Declare Function SetErrorMode Lib "kernel32" _
+    (ByVal wMode As Long) As Long
+
+<pre class="codeConst">
+<span class="REM">'OSは致命的なエラーに関するメッセージボックスを表示せず
+'呼び出し側のプロセスにエラーを送る</span>
+ Const SEM_FAILCRITICALERRORS = &H1& 
+<span class="REM">'OSは一般保護違反メッセージボックスを表示しない。
+'独自に一般保護違反を処理するデバッグアプリケーションにおいてのみ使用することと</span>
+ Const SEM_NOGPFAULTERRORBOX = &H2&
+<span class="REM">'WindowsNT RISCのみ : メモリアラインメントの違反を自動的に修復する。
+'x86プロセッサでは効果がない</span>
+ Const SEM_NOALIGNMENTFAULTEXCEPT = &H4&
+<span class="REM">'OSはファイルが見つからなかったときのメッセージボックスを表示せず、
+'呼び出し側プロセスにエラーを送る</span>
+ Const SEM_NOOPENFILEERRORBOX = &H8000&</pre></pre>
+<pre class="codeApi"><span class="REM"><a name="GetFileAttributes"></a>'-------------------------------------------------------
+'ファイルやディレクトリの属性を返す関数
+'属性を取得するVBAのGetAttr関数を使うことが推奨されます。
+'
+'戻り値     成功 = 指定したファイルまたはディレクトリの属性
+'           失敗 = &HFFFFFFFF(-1)
+'-------------------------------------------------------</span>
+Declare Function GetFileAttributes Lib "kernel32" _
+    Alias "GetFileAttributesA" _
+    (ByVal lpFileName As String) As Long
+<pre class="codeConst">
+<span class="REM">'読み取り専用</span>
+ Const FILE_ATTRIBUTE_READONLY = &H1&
+<span class="REM">'隠しファイルまたは隠しディレクトリ</span>
+ Const FILE_ATTRIBUTE_HIDDEN = &H2&
+<span class="REM">'OSのファイルの一部。またはOS専用のファイル</span>
+ Const FILE_ATTRIBUTE_SYSTEM = &H4&
+<span class="REM">'ディレクトリ</span>
+ Const FILE_ATTRIBUTE_DIRECTORY = &H10&
+<span class="REM">'アーカイブファイルまたはアーカイブディレクトリ</span>
+ Const FILE_ATTRIBUTE_ARCHIVE = &H20&
+<span class="REM">'特に属性はない</span>
+ Const FILE_ATTRIBUTE_NORMAL = &H80&
+<span class="REM">'テンポラリファイル</span>
+ Const FILE_ATTRIBUTE_TEMPORARY = &H100&
+<span class="REM">'圧縮ファイルまたは圧縮ディレクトリ</span>
+ Const FILE_ATTRIBUTE_COMPRESSED = &H800&
+
+<span class="REM">'ドライブの準備ができていない</span>
+ Const ERROR_NOT_READY = 21&
+<span class="REM">'ディスクがフォーマットされていない</span>
+ Const ERROR_GEN_FAILURE = 31&</pre></pre>
+
+<pre class="codeProc"><a name="GetFileAttributes_Sample"></a>
+<span class="REM">'summary:ファイルの属性を取得する（エラー処理　その1）</span>
+Sub GetFileAttributes_Sample()
+    Dim strDrive As String
+    Dim rc As Long
+    
+    Dim intRtn As Integer
+
+    intRtn = MsgBox("AドライブがFDでないときにはプログラムを書き換えてください" _
+        & Chr(13) & Chr(13) & _
+        "AドライブはFDですか?", vbYesNo + vbQuestion)
+
+    If intRtn = vbNo Then Exit Sub
+    
+    <span class="REM">'ルートディレクトリを指定</span>
+    strDrive = "A:\"
+    
+    <span class="REM">'ドライブの種類を取得</span>
+    rc = GetDriveType(strDrive)
+    
+    <span class="REM">'ドライブがFDの場合は</span>
+    If rc = DRIVE_REMOVABLE Then
+    
+        <span class="REM">'OSによるエラー処理を抑止して呼び出し側のプロセスにエラーを送る</span>
+        rc = SetErrorMode(SEM_FAILCRITICALERRORS)
+        
+        <span class="REM">'ルートディレクトリのファイル属性を取得</span>
+        rc = GetFileAttributes(strDrive)
+        
+        <span class="REM">'エラーが発生</span>
+        If rc = &HFFFFFFFF Then
+            Select Case Err.LastDllError
+                Case ERROR_NOT_READY
+                    MsgBox "デバイスの準備ができていません"
+                Case ERROR_GEN_FAILURE
+                    MsgBox "ディスクがフォーマットされていません"
+                Case Else
+                    MsgBox "状態を取得できません"
+            End Select
+        Else
+            MsgBox rc
+        End If
+        
+        <span class="REM">'エラーの処理モードを既定に設定</span>
+        rc = SetErrorMode(0&)
+    End If
+End Sub</pre>
+<pre class="codeApi"><a name="FormatMessage"></a><span class="REM">
+'-------------------------------------------------------
+'エラー番号をメッセージに変換する関数
+'
+'戻り値     成功 = バッファに格納されたバイト数(終端のNULLを文字除く)
+'           失敗 = 0
+'-------------------------------------------------------</span>
+Declare Function FormatMessage Lib "kernel32" _
+    Alias "FormatMessageA" _
+    (ByVal dwFlags As Long, _
+    lpSource As Any, _
+    ByVal dwMessageId As Long, _
+    ByVal dwLanguageId As Long, _
+    ByVal lpBuffer As String, _
+    ByVal nSize As Long, _
+    Arguments As Long) As Long
+
+<pre class="codeConst"><span class="REM">'FormatMessage関数にバッファの割り当てを要求する。
+'このフラグを指定した場合、lpBufferパラメータにPVOID型変数へのポインタを、
+'nSizeパラメータに出力メッセージバッファに割り当てるバイト数(ANSI版)
+'または文字数(Unicode版)の最小値を指定する。FormatMessage関数は、
+'書式化済みのメッセージを格納しておくのに十分なサイズのバッファを自動的に割り当て、
+'そのバッファへのポインタをlpBufferポインタに格納する。
+'このバッファが不要になったら、LocalFree関数を使ってバッファを解放する。
+'FORMAT_MESSAGE_ALLOCATE_BUFFERフラグを指定しなかった場合は、
+'アプリケーション側でバッファを用意しなければならない</span>
+ Const FORMAT_MESSAGE_ALLOCATE_BUFFER = &H100& 
+<span class="REM">'Argumentsパラメータを無視するよう要求する｡埋め込み挿入句は埋め込まれず､
+'メッセージ定義がそのままバッファに出力される</span>
+ Const FORMAT_MESSAGE_IGNORE_INSERTS = &H200&  
+<span class="REM">'メッセージ定義として､lpSourceパラメータで指定したNULLで終わる文字列を使用するよう要求する｡
+'FORMAT_MESSAGE_FROM_HMODULEフラグやFORMAT_MESSAGE_FROM_SYSTEMフラグと同時に指定することはできない</span>
+ Const FORMAT_MESSAGE_FROM_STRING = &H400&
+<span class="REM">'メッセージ定義として、モジュール内のメッセージ定義リソースを使用するよう要求する。
+'このフラグを指定した場合は、lpSourceパラメータにモジュールのハンドルを指定する。
+'lpSourceパラメータにNULLを指定すると、現在のプロセスのモジュールが指定されたものとみなされる。
+'FORMAT_MESSAGE_FROM_STRINGフラグと同時に指定することはできない</span>
+ Const FORMAT_MESSAGE_FROM_HMODULE = &H800&
+<span class="REM">'メッセージ定義として、システムメッセージテーブルリソースを使用するよう要求する。
+'このフラグは、GetLastError関数で取得したエラー値をメッセージテキストに変換する際に役立つ。
+'FORMAT_MESSAGE_FROM_HMODULEフラグと同時に指定した場合は、
+'FORMAT_MESSAGE_FROM_HMODULEフラグが優先される。
+'しかし、モジュール内にメッセージ定義リソースが見つからなかった場合は、
+'システムメッセージテーブルリソースが使われる</span>
+ Const FORMAT_MESSAGE_FROM_SYSTEM = &H1000&
+<span class="REM">'Argumentsパラメータに､va_list構造体ではなく､
+'32ビット値の配列へのポインタを指定した場合に､このフラグを指定する</span>
+ Const FORMAT_MESSAGE_ARGUMENT_ARRAY = &H2000&
+ Const FORMAT_MESSAGE_MAX_WIDTH_MASK = &HFF&</pre></pre>
+
+
+<pre class="codeProc"><span class="REM"><a name="GetFileAttributes_Sample2"></a>'summary:ファイルの属性を取得する（エラー処理　その2）</span>
+Sub GetFileAttributes_Sample2()
+    Dim strDrive As String
+    Dim strBuffer As String * 1024
+    Dim rc As Long
+    
+    Dim intRtn As Integer
+
+    intRtn = MsgBox("Aドライブがフロッピーデバイスでないときにはプログラムを書き換えてください" _
+        & Chr(13) & Chr(13) & _
+        "Aドライブはフロッピーデバイスですか?", vbYesNo + vbQuestion)
+
+    If intRtn = vbNo Then Exit Sub
+        
+    <span class="REM">'ルートディレクトリを指定</span>
+    strDrive = "A:\"
+    
+    <span class="REM">'ドライブの種類を取得</span>
+    rc = GetDriveType(strDrive)
+    
+    <span class="REM">'ドライブがリムーバルディスクのある場合は</span>
+    If rc = DRIVE_REMOVABLE Then
+    
+        <span class="REM">'OSによるエラー処理を抑止して呼び出し側のプロセスにエラーを送る</span>
+        rc = SetErrorMode(SEM_FAILCRITICALERRORS)
+        
+        <span class="REM">'ルートディレクトリのファイル属性を取得</span>
+        rc = GetFileAttributes(strDrive)
+        
+        <span class="REM">'エラーが発生</span>
+        If rc = &HFFFFFFFF Then
+            rc = FormatMessage(FORMAT_MESSAGE_IGNORE_INSERTS Or _
+                                FORMAT_MESSAGE_FROM_SYSTEM, _
+                                ByVal vbNullString, _
+                                Err.LastDllError, _
+                                0&, _
+                                strBuffer, _
+                                Len(strBuffer), _
+                                0&)
+            MsgBox _
+            Left(strBuffer, InStr(strBuffer, vbNullChar) - 1)
+        End If
+        
+        <span class="REM">'エラーの処理モードを既定に設定</span>
+        rc = SetErrorMode(0&)
+    End If
+End Sub</pre>
+
+<hr>
+<div><a href="./index.htm">&gt;INDEX</a></div>
+</div>
+</body>
+</html>
