@@ -107,17 +107,16 @@ oA.focus();}
 　</td>
 <td width="5"></td>
 <td colspan="1" align="left" height="116" width="193">
-<form name="form1" 
-      method="post" 
-      action="mailto:yamav102@gmail.com"
-      enctype="text/plain"
-      accept-charset="UTF-8"
-      onsubmit="this.action = this.action + '?subject=' + encodeURIComponent('メールフォームからの問い合わせ');">
+<form 
+    method="post" 
+    action="mailto:yamav102@gmail.com"
+    enctype="text/plain"
+    accept-charset="UTF-8"
+    onsubmit="this.action += '?subject=' + encodeURIComponent('問い合わせ'); return true;">
 
-    <p>お問い合わせ内容：</p>
-    <textarea name="コメント" rows="8" cols="50" placeholder="ここに内容を入力してください"></textarea><br><br>
+    <textarea name="コメント" rows="8" cols="20" placeholder="お問い合わせ"></textarea><br><br>
     
-    <input type="submit" value="メールアプリで送信">
+    <input type="submit" value="メールで送信">
     <input type="reset" value="リセット">
 </form>
 </td>
