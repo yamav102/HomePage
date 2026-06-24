@@ -1,143 +1,183 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta http-equiv="Content-Script-Type" content="text/javascript">
-<meta http-equiv="Content-Style-Type" content="text/css">
-<meta name="GENERATOR" content="IBM WebSphere Studio Homepage Builder Version 6.5.0.0 for Windows">
-<title>掲示板集</title>
-<style type="text/css">
-<!--
-@import url(../a06.css);
-A{
-color : green;
-text-decoration : underline;
-border-style : none;
-}
-.Class{
-text-decoration : none;
-color : black;
-}
-.Classa{
-font-size : xx-small;
-font-family : fantasy;
-color : aqua;
-border-width : thick;
-}
-TABLE{
-margin-right:auto;
-margin-left:auto;
-}
-#list{
-scrollbar-base-color:white;
-scrollbar-shadow-color:white;
-scrollbar-darkshadow-color:white;
-}
--->
-</style>
-<script type="text/JavaScript">
-<!--
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>掲示板集 - Retro Web Archive</title>
+    <style>
+        :root {
+            --main-red: #DF0000;
+            --accent-yellow: #FFDF5F;
+        }
 
-window.onload=function(){
-	var h = screen.availHeight - 500;//ﾊﾞｽの大雑把な高さpx
-	var oBus = document.getElementById('bus');
-	if(oBus);
-		with(oBus.style){
-			position = 'absolute';
-			top = h;
-		}
-	var h2 = screen.availHeight - h ;//listの高さpx
-	var olist = document.getElementById('list');
-	if(olist);
-	with(olist.style){
-		height = h2;
-		overflow='auto';
-		}
-SetFocus1();
-}
-function SetFocus1(){
-var oA = document.getElementById('l1');
-if(!oA) return;
-oA.focus();}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-// -->
-</script> </head>
+        body {
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            background: #f8f4e9;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background: var(--main-red);
+            color: white;
+            text-align: center;
+            padding: 1.5rem 1rem;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 2rem;
+        }
+
+        /* 掲示板リスト */
+        .list-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+        }
+
+        .list-container h2 {
+            color: var(--main-red);
+            margin-bottom: 1rem;
+            border-bottom: 3px solid var(--main-red);
+            padding-bottom: 0.5rem;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        li {
+            margin: 0.8rem 0;
+        }
+
+        a {
+            color: #0066cc;
+            text-decoration: none;
+            font-size: 1.05rem;
+        }
+
+        a:hover {
+            text-decoration: underline;
+            color: #ff6600;
+        }
+
+        /* バス部分 */
+        #bus {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
+        }
+
+        /* スマホ対応 */
+        @media (max-width: 768px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+            #bus {
+                bottom: 1rem;
+                transform: translateX(-50%) scale(0.85);
+            }
+        }
+    </style>
+</head>
 <body>
-<div id="list">
-<ul>
 
-<li><a id="l1" href="http://funky-groove.hp.infoseek.co.jp/hpb/" target=" _blank">HOMEPAGE BUILDER BBS & FAQ</a></li>
+    <header>
+        <h1>掲示板集</h1>
+        <p class="subtitle">2000年代のWebを懐かしむアーカイブ</p>
+    </header>
 
-<li><a href="http://cgi31.plala.or.jp/Its/wforum/wforum.cgi" target="_blank">Bulletin Board System</a>
-<li><a href="http://hpcgi2.nifty.com/yoshi-m/makehp/q_a/css/wforum.cgi?page=10&mode=" target="_blank">CSSなんでも質問箱</a>
+    <main>
+        <div class="list-container">
+            <h2>おすすめ掲示板リンク</h2>
+            <ul>
+                <li><a href="http://funky-groove.hp.infoseek.co.jp/hpb/" target="_blank">HOMEPAGE BUILDER BBS & FAQ</a></li>
+                <li><a href="http://cgi31.plala.or.jp/Its/wforum/wforum.cgi" target="_blank">Bulletin Board System</a></li>
+                <li><a href="http://hpcgi2.nifty.com/yoshi-m/makehp/q_a/css/wforum.cgi" target="_blank">CSSなんでも質問箱</a></li>
+                <li><a href="http://pcevery.acty-net.ne.jp/ml/pcevery/" target="_blank">パソコンなんでも会議室</a></li>
+                <li><a href="http://www.parkcity.ne.jp/~chaichan/bin/qanda.cgi?modefg=9" target="_blank">WEB相談室</a></li>
+                <li><a href="http://homepage2.nifty.com/winfaq/bbs9x.html" target="_blank">WIN98／Me掲示板</a></li>
+                <li><a href="http://moug.net/" target="_blank">Office & VBA</a></li>
+                <li><a href="http://excelfactory.net/excelboard/excelvba/excel.cgi" target="_blank">エクセルQ&Aサロン</a></li>
+                <li><a href="http://8112.teacup.com/alifu/bbs" target="_blank">vaio mind</a></li>
+                <li><a href="http://www.tagindex.com/bbs/index.html" target="_blank">TAG index</a></li>
+            </ul>
+        </div>
 
-<li style="text-filter:alpha(opacity=100);"><a href="http://pcevery.acty-net.ne.jp/ml/pcevery/" target="_blank">パソコンなんでも会議室</a>
-<li><a href="http://www.parkcity.ne.jp/~chaichan/bin/qanda.cgi?modefg=9" target="_blank">ＷＥＢ相談室</a>
-<li><a href="http://homepage2.nifty.com/winfaq/bbs9x.html" target="_blank">WIN９８／Me掲示板</a>
-<li><a href="http://moug.net/" target="_blank">Office&amp;VBA</a>
-<li><a href="http://excelfactory.net/excelboard/excelvba/excel.cgi" target="_blank">エクセルQ&amp;Aサロン</a>
-<li><a href="http://8112.teacup.com/alifu/bbs" target="_blank">vaio mind</a>
-<li><a href="http://www.tagindex.com/bbs/index.html" target="_blank" title="html css 掲示板">TAG index</a>
-</ul>
-</div>
-<div id="bus"><!--ﾊﾞｽここから-->
-<table cellpadding="0" cellspacing="0" border="0" width="345" height="1">
-<tbody>
-<tr>
-<td width="35" height="35" align="right">　</td>
-<td width="35" align="right"><img src="../gazou/front.gif" width="35" height="35" alt=""></td>
-<td width="20" bgcolor="#DF0000" align="right">　</td>
-<td colspan="2" bgcolor="#DF0000" align="right">
-<center><font color="#FFDF5F" style="font-size:1.3em;"><b class="a">= School Bus =</b></font></center>
-</td>
-<td align="left" class="a"><img src="../gazou/nigiuebasu.gif" width="35" height="35" alt=""></td>
-</tr>
-<tr>
-<td width="20" align="right">　</td>
-<td rowspan="2" colspan="2" bgcolor="#DF0000" align="right" valign="bottom" background="../gazou/buhin2.gif" class="a"><img src="../gazou/unntennshu.gif" width="45" height="60" alt=""><br>
-　</td>
-<td rowspan="2" colspan="4" bgcolor="#DF0000" background="../gazou/buhin2.gif" valign="bottom" align="right">
-<div align="left">
-<table border="0" cellpadding="0" cellspacing="0" class="a">
-<tbody>
-<tr>
-<td width="5"></td>
-<td bgcolor="#DF0000" background="../gazou/buhin2.gif" colspan="2" valign="bottom" align="left" height="116" width="46">
-<center>　<img alt="" src="../gazou/otokonoko.gif" width="50" height="55" align="bottom"></center>
-　</td>
-<td width="5"></td>
-<td colspan="1" align="left" height="116" width="193">
-<form 
-    method="post" 
-    action="mailto:yamav102@gmail.com"
-    enctype="text/plain"
-    accept-charset="UTF-8"
-    onsubmit="this.action += '?subject=' + encodeURIComponent('問い合わせ'); return true;">
+        <!-- バス -->
+        <div id="bus">
+            <table cellpadding="0" cellspacing="0" border="0" width="345" style="background:#DF0000; border-radius:8px; overflow:hidden;">
+                <!-- 元のテーブルの内容をほぼそのまま残しています（レトロ感） -->
+                <tbody>
+                    <tr>
+                       <td width="35" height="35" align="right">　</td>
+                       <td width="35" align="right"><img src="../gazou/front.gif" width="35" height="35" alt=""></td>
+                       <td width="20" bgcolor="#DF0000" align="right">　</td>
+                       <td colspan="2" bgcolor="#DF0000" align="right">
+                          <center><font color="#FFDF5F" style="font-size:1.3em;"><b class="a">= School Bus =</b></font></center>
+                       </td>
+                       <td align="left" class="a"><img src="../gazou/nigiuebasu.gif" width="35" height="35" alt=""></td>
+                    </tr>
+                    <tr>
+                       <td width="20" align="right">　</td>
+                       <td rowspan="2" colspan="2" bgcolor="#DF0000" align="right" valign="bottom" background="../gazou/buhin2.gif" class="a">
+                       <img src="../gazou/unntennshu.gif" width="45" height="60" alt=""><br>
+                       </td>
+                       <td rowspan="2" colspan="4" bgcolor="#DF0000" background="../gazou/buhin2.gif" valign="bottom" align="right">
+                       
+                    <div align="left">
+                    <table border="0" cellpadding="0" cellspacing="0" class="a">
+                    <tbody>
+                    <tr>
+                    <td width="5"></td>
+                    <td bgcolor="#DF0000" background="../gazou/buhin2.gif" colspan="2" valign="bottom" align="left" height="116" width="46">
+                    <center><img alt="" src="../gazou/otokonoko.gif" width="50" height="55" align="bottom"></center>
+                    </td>
+                    <td width="5"></td>
+                    <td colspan="1" align="left" height="116" width="193">
 
-    <textarea name="コメント" rows="8" cols="20" placeholder="お問い合わせ"></textarea><br><br>
-    
-    <input type="submit" value="メールで送信">
-    <input type="reset" value="リセット">
-</form>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</td>
-</tr>
-<tr>
-<td valign="bottom" align="right"><img src="../gazou/front.gif" width="35" height="35" alt=""></td>
-</tr>
-<tr>
-<td align="right"><img alt="" src="../gazou/furontbannpa.gif" width="35" height="50"></td>
-<td colspan="2" align="right"><img alt="" src="../gazou/tia.gif" width="55" height="50"></td>
-<td width="190" background="../gazou/busbuhin.gif" valign="top" align="right"><img src="../gazou/c01.gif" width="190" height="1" alt=""></td>
-<td width="56" align="right"><img alt="" src="../gazou/tia.gif" width="55" height="50"></td>
-<td align="right" class="a"><img alt="" src="../gazou/ushirobannpa.gif" width="35" height="50"></td>
-</tr>
-</tbody>
-</table>
-<!--ﾊﾞｽ--></div>
+                    <form 
+                        method="post" 
+                        action="mailto:yamav102@gmail.com"
+                        enctype="text/plain"
+                        accept-charset="UTF-8"
+                        onsubmit="this.action += '?subject=' + encodeURIComponent('問い合わせ'); return true;">
+
+                        <textarea name="コメント" rows="8" cols="20" placeholder="お問い合わせ"></textarea><br><br>                        
+                           <input type="submit" value="メールで送信">
+                        <input type="reset" value="リセット">
+                   </form>
+                  </td>
+                 </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </main>
 </body>
 </html>
